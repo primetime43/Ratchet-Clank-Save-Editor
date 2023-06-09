@@ -1,7 +1,7 @@
 # Ratchet Clank Save Editor
 Ratchet &amp; Clank Save Editor for PS3 OFW
 
-I originally made this back in 2014, I've decided to go back and rewrite the program some to improve it a bit.
+I originally made this back in 2013, I've decided to go back and rewrite the program some to improve it a bit.
 
 Here is a ratchet & clank save editor for all the Ratchet and Clanks (Ratchet & Clank™: Nexus, Ratchet & Clank® Future: Quest for Booty™, Ratchet & Clank Tools of Destruction, Ratchet & Clank, Ratchet & Clank: Going Commando, Ratchet & Clank: Up Your Arsenal, Ratchet: Deadlocked, Ratchet & Clank Future: Tools of Destruction and Ratchet & Clank Future: Quest for Booty). 
 I made this for fun for myself at first, but then figured that maybe others want to have a little advantage in the game also, so I decided to release it for ya.
@@ -12,7 +12,7 @@ I made this for fun for myself at first, but then figured that maybe others want
 ![image](https://github.com/primetime43/Ratchet-Clank-Save-Editor/assets/12754111/09c98af7-4aba-4fff-93b3-a867563370d0)
 
 
-
+# Reserach of the file structure of the save
 ```
 //Ratchet & Clank 1 (original)
 0x24 - Number of bolts (4 bytes)
