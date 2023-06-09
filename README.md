@@ -39,3 +39,8 @@ I made this for fun for myself at first, but then figured that maybe others want
 //Ratchet & Clank Quest For Booty
 0x274 - Number of bolts (4 bytes)
 ```
+
+Some files contained in the PS3 game save: (https://www.psdevwiki.com/ps3/PS3_Savedata)
+- GAME.SAV
+- PARAM.PFD (https://www.psdevwiki.com/ps3/PARAM.PFD)
+- PARAM.SFO (https://www.psdevwiki.com/ps3/PARAM.SFO)
