@@ -1,0 +1,208 @@
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.exe
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.deps.json
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.runtimeconfig.json
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.pdb
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\Microsoft.Extensions.ObjectPool.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ComponentModel.Composition.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ComponentModel.Composition.Registration.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Data.OleDb.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Data.SqlClient.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.DirectoryServices.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.DirectoryServices.AccountManagement.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.DirectoryServices.Protocols.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.IO.Ports.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Management.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Private.ServiceModel.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Reflection.Context.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Runtime.Caching.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Security.Cryptography.Pkcs.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Security.Cryptography.ProtectedData.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Security.Cryptography.Xml.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ServiceModel.Duplex.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ServiceModel.Http.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ServiceModel.NetTcp.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ServiceModel.Primitives.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ServiceModel.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ServiceModel.Security.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ServiceModel.Syndication.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.ServiceProcess.ServiceController.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Speech.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Threading.AccessControl.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\System.Web.Services.Description.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\cs\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\de\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\es\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\fr\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\it\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\ja\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\ko\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\pl\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\pt-BR\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\ru\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\tr\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\zh-Hans\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\zh-Hant\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\cs\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\de\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\es\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\fr\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\it\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\ja\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\ko\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\pl\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\pt-BR\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\ru\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\tr\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\zh-Hans\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\zh-Hant\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\linux-arm\native\libSystem.IO.Ports.Native.so
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\linux-arm64\native\libSystem.IO.Ports.Native.so
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\linux-x64\native\libSystem.IO.Ports.Native.so
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\osx-arm64\native\libSystem.IO.Ports.Native.dylib
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\osx-x64\native\libSystem.IO.Ports.Native.dylib
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win-arm64\native\sni.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win-x64\native\sni.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win-x86\native\sni.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\freebsd\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\illumos\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\ios\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\linux\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\osx\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\solaris\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\tvos\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Data.OleDb.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.DirectoryServices.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.DirectoryServices.AccountManagement.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\linux\lib\net7.0\System.DirectoryServices.Protocols.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\osx\lib\net7.0\System.DirectoryServices.Protocols.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.DirectoryServices.Protocols.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\unix\lib\net7.0\System.IO.Ports.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.IO.Ports.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Management.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Runtime.Caching.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.ServiceProcess.ServiceController.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Speech.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Threading.AccessControl.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.csproj.AssemblyReference.cache
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor.MainForm.resources
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor.Properties.Resources.resources
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.csproj.GenerateResource.cache
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.csproj.CoreCompileInputs.cache
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.csproj.CopyComplete
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\refint\Ratchet & Clank Save Editor.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.pdb
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.genruntimeconfig.cache
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\Ratchet & Clank Save Editor\obj\Debug\net7.0-windows\ref\Ratchet & Clank Save Editor.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.exe
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.deps.json
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.runtimeconfig.json
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\Ratchet & Clank Save Editor.pdb
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\Microsoft.Extensions.ObjectPool.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ComponentModel.Composition.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ComponentModel.Composition.Registration.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Data.OleDb.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Data.SqlClient.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.DirectoryServices.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.DirectoryServices.AccountManagement.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.DirectoryServices.Protocols.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.IO.Ports.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Management.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Private.ServiceModel.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Reflection.Context.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Runtime.Caching.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Security.Cryptography.Pkcs.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Security.Cryptography.ProtectedData.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Security.Cryptography.Xml.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ServiceModel.Duplex.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ServiceModel.Http.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ServiceModel.NetTcp.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ServiceModel.Primitives.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ServiceModel.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ServiceModel.Security.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ServiceModel.Syndication.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.ServiceProcess.ServiceController.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Speech.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Threading.AccessControl.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\System.Web.Services.Description.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\cs\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\de\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\es\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\fr\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\it\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\ja\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\ko\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\pl\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\pt-BR\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\ru\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\tr\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\zh-Hans\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\zh-Hant\System.Private.ServiceModel.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\cs\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\de\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\es\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\fr\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\it\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\ja\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\ko\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\pl\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\pt-BR\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\ru\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\tr\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\zh-Hans\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\zh-Hant\System.Web.Services.Description.resources.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\linux-arm\native\libSystem.IO.Ports.Native.so
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\linux-arm64\native\libSystem.IO.Ports.Native.so
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\linux-x64\native\libSystem.IO.Ports.Native.so
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\osx-arm64\native\libSystem.IO.Ports.Native.dylib
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\osx-x64\native\libSystem.IO.Ports.Native.dylib
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win-arm64\native\sni.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win-x64\native\sni.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win-x86\native\sni.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\freebsd\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\illumos\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\ios\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\linux\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\osx\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\solaris\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\tvos\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Data.Odbc.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Data.OleDb.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.DirectoryServices.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.DirectoryServices.AccountManagement.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\linux\lib\net7.0\System.DirectoryServices.Protocols.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\osx\lib\net7.0\System.DirectoryServices.Protocols.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.DirectoryServices.Protocols.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\unix\lib\net7.0\System.IO.Ports.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.IO.Ports.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Management.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Runtime.Caching.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.ServiceProcess.ServiceController.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Speech.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Threading.AccessControl.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.csproj.AssemblyReference.cache
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor.MainForm.resources
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor.Properties.Resources.resources
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.csproj.GenerateResource.cache
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.csproj.CoreCompileInputs.cache
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.csproj.CopyComplete
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\refint\Ratchet & Clank Save Editor.dll
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.pdb
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\Ratchet & Clank Save Editor.genruntimeconfig.cache
+C:\Users\primetime43\source\repos\Ratchet-Clank-Save-Editor\obj\Debug\net7.0-windows\ref\Ratchet & Clank Save Editor.dll
