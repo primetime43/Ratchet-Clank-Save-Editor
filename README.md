@@ -12,7 +12,7 @@ I made this for fun for myself at first, but then figured that maybe others want
 ![image](https://github.com/primetime43/Ratchet-Clank-Save-Editor/assets/12754111/09c98af7-4aba-4fff-93b3-a867563370d0)
 
 
-# Reserach of the file structure of the save
+# Research of the file structure of the save
 ```
 //Ratchet & Clank 1 (original)
 0x24 - Number of bolts (4 bytes)
