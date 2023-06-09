@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ratchet & Clank Into the Nexus Save Editor", "Red-EyeX32 - Test Drive Unlimited 2 Save Editor\Ratchet & Clank Into the Nexus Save Editor.csproj", "{C4EC60FC-4049-4567-9AF1-E79C07EDC36C}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ratchet & Clank Save Editor", "Ratchet & Clank Save Editor.csproj", "{C4EC60FC-4049-4567-9AF1-E79C07EDC36C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
