@@ -16,7 +16,7 @@ I made this for fun for myself at first, but then figured that maybe others want
 ```
 //Ratchet & Clank 1 (original)
 0x24 - Number of bolts (4 bytes)
-0x15b - Ammo for Blaster (Max value 200)(C (If you go above C8, the max, the game with reset to new game) 
+0x15b - Ammo for Blaster (Max value 200)(C (If you go above C8, the max, the game will reset to new game) 
 (All ammo is one byte) //That goes for all the ammo
 0x153 - Visibomb Ammo  (Max value 20) (14)
 0x14b - Devastator Ammo (Max value 20) (14)
