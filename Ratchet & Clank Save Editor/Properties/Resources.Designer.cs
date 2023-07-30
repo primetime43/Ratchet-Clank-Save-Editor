@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor.Properties {
+namespace primetime43_Ratchet_Clank_Save_Editor.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("primetime43_Ratchet_Clank_Save_Editor.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

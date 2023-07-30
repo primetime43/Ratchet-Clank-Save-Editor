@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor.Properties {
+namespace primetime43_Ratchet_Clank_Save_Editor.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

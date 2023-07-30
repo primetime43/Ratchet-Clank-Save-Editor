@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor
+namespace primetime43_Ratchet_Clank_Save_Editor
 {
     public class Encryption
     {

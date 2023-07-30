@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor</RootNamespace>
+    <RootNamespace>primetime43_Ratchet_Clank_Save_Editor</RootNamespace>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>

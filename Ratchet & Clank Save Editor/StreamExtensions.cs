@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Red_EyeX32___Test_Drive_Unlimited_2_Save_Editor
+namespace primetime43_Ratchet_Clank_Save_Editor
 {
     public static class StreamExtensions
     {
