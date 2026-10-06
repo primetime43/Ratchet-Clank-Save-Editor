@@ -1,0 +1,18 @@
+# Generated builds, intermediate files, and published output (all projects)
+**/[Bb]in/
+**/[Oo]bj/
+**/[Pp]ublish/
+/artifacts/
+
+# Local IDE state and per-user settings
+/.vs/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Test output and diagnostic build logs
+**/[Tt]est[Rr]esults/
+*.binlog
