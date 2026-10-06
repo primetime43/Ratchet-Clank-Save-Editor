@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using primetime43_Ratchet_Clank_Save_Editor;
@@ -14,7 +15,7 @@ internal static class Program
     private static int passed;
 
     [STAThread]
-    private static int Main()
+    private static int Main(string[] args)
     {
         ApplicationConfiguration.Initialize();
         string root = Path.Combine(Path.GetTempPath(), "RatchetClankSaveEditor-Tests-" + Guid.NewGuid().ToString("N"));
@@ -48,7 +49,7 @@ internal static class Program
                 File.WriteAllBytes(Path.Combine(folder, "PARAM.SFO"), data);
                 Throws<InvalidDataException>(() => SfoMetadata.Read(Path.Combine(folder, "PARAM.SFO")));
             });
-            foreach (string region in new[] { "NPUA80908", "BLES00301", "BCUS98127", "NPUA80643" })
+            foreach (string region in SaveProfile.SupportedRegions.Keys)
                 Check($"{region}: correct file, offsets, backups and repeat saves", () =>
                 {
                     string folder = Fixture(root, region);
@@ -59,20 +60,18 @@ internal static class Program
                     Equal(123, session.Bolts);
                     Equal(session.Profile.RaritaniumOffset.HasValue ? 45 : 0, session.Raritanium);
                     Same(original, Snapshot(folder));
-                    string backup = session.Save(int.MaxValue, 987, Path.Combine(root, "backups"));
+                    string backup = session.Save(session.Profile.MaximumBolts, 987, Path.Combine(root, "backups"));
                     Same(original, Snapshot(backup));
-                    Equal(int.MaxValue, ReadValue(folder, session.Profile.BoltsOffset, session.Profile.FileName));
+                    Equal(session.Profile.MaximumBolts, SaveData.ReadBolts(File.ReadAllBytes(Path.Combine(folder, session.Profile.FileName)), session.Profile)[0]);
                     if (session.Profile.RaritaniumOffset is int offset)
                         Equal(987, ReadValue(folder, offset, session.Profile.FileName));
                     Equal(session.Profile.FileName, tools.EncryptedFile);
                     string secondBackup = session.Save(999, 12, Path.Combine(root, "backups"));
                     True(backup != secondBackup, "Backups must be unique.");
                     Equal(999, session.Bolts);
-                    Equal(999, ReadValue(folder, session.Profile.BoltsOffset, session.Profile.FileName));
+                    Equal(999, SaveData.ReadBolts(File.ReadAllBytes(Path.Combine(folder, session.Profile.FileName)), session.Profile)[0]);
                     var expected = original[session.Profile.FileName].ToArray();
-                    BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(session.Profile.BoltsOffset), 999);
-                    if (session.Profile.RaritaniumOffset is int raritanium)
-                        BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(raritanium), 12);
+                    SaveData.Write(expected, session.Profile, session.CharacterBolts, 12);
                     True(expected.SequenceEqual(File.ReadAllBytes(Path.Combine(folder, session.Profile.FileName))), "Unrelated bytes changed.");
                 });
             Check("Encryption failures never change original files", () =>
@@ -85,6 +84,8 @@ internal static class Program
                 Same(original, Snapshot(folder));
                 Equal(123, session.Bolts);
             });
+            CompatibilityChecks(root);
+            NativeCryptoChecks(root);
             Check("Missing, unsupported, truncated and invalid saves are rejected", () =>
             {
                 string unsupported = Fixture(root, "NPUA80908");
@@ -145,11 +146,252 @@ internal static class Program
                 Same(original, Snapshot(folder));
             });
             Check("Compact UI loads, switches games and renders at higher scale", () => UiChecks(root));
+            if (args.Length == 2 && args[0] == "--samples") SampleChecks(root, Path.GetFullPath(args[1]));
             Console.WriteLine($"All {passed} regression checks passed.");
             return 0;
         }
         catch (Exception error) { Console.Error.WriteLine(error); return 1; }
         finally { Directory.Delete(root, true); }
+    }
+
+    private static void CompatibilityChecks(string root)
+    {
+        Check("All ten PS3 games have independently documented layouts", () =>
+        {
+            Equal(10, SaveProfile.SupportedRegions.Values.Distinct().Count());
+            foreach (var (region, offset, rare, key) in new[]
+            {
+                ("NPUA80643", 0x24, (int?)null, "01020304050607FACB0A0B0C0D0E0F10"),
+                ("NPEA00386", 0x24, (int?)0x28, "C0A3B3641C2AD1EF23153A48A3E12FE8"),
+                ("NPEA00387", 0x24, (int?)null, "C0A3B3641C2AD1EF23153A48A3E12FE7"),
+                ("NPUA80646", 0x24, (int?)null, "0403020105060700000A0B0C0D0E0F10"),
+                ("BCUS98124", 0x588, (int?)null, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
+            })
+            {
+                var profile = SaveProfile.ForRegion(region);
+                Equal(offset, profile.BoltsOffset); Equal(rare, profile.RaritaniumOffset); Equal(key, profile.Key);
+            }
+        });
+        Check("Trilogy checksum blocks are bounded and only the currency block changes", () =>
+        {
+            string folder = Fixture(root, "NPEA00387");
+            var profile = SaveProfile.ForRegion("NPEA00387");
+            byte[] original = File.ReadAllBytes(Path.Combine(folder, profile.FileName));
+            byte[] expected = original.ToArray();
+            expected[12] = expected[13] = expected[14] = expected[15] = 0xFF;
+            BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x24), 0x123456);
+            SaveData.Write(original, profile, new[] { 0x123456 }, 0);
+            True(expected.SequenceEqual(original), "Unedited block or unrelated bytes changed.");
+            BinaryPrimitives.WriteUInt32BigEndian(original.AsSpan(8), uint.MaxValue);
+            Throws<InvalidDataException>(() => SaveData.ReadBolts(original, profile));
+            BinaryPrimitives.WriteUInt32BigEndian(original.AsSpan(8), 0);
+            Throws<InvalidDataException>(() => SaveData.ReadBolts(original, profile));
+            Throws<InvalidDataException>(() => SaveData.ReadBolts(expected[..0x800], profile));
+            Equal(0x123456, SaveData.ReadBolts(expected[..^1], profile)[0]);
+        });
+        Check("Collection title IDs resolve to individual saves; conflicting games are rejected", () =>
+        {
+            string folder = Fixture(root, "NPEA00387");
+            string path = Path.Combine(folder, "PARAM.SFO");
+            File.WriteAllBytes(path, Sfo("NPEA00387", "BCES01503"));
+            Equal("NPEA00387", SfoMetadata.Read(path).Region);
+            File.WriteAllBytes(path, Sfo("NPEA00387", "NPUA80644"));
+            Throws<InvalidDataException>(() => SfoMetadata.Read(path));
+        });
+        Check("Decrypted saves retain their format, optional PFD and full backups", () =>
+        {
+            foreach (bool hasPfd in new[] { true, false })
+            {
+                string folder = Fixture(root, "BCUS98124");
+                if (!hasPfd) File.Delete(Path.Combine(folder, "PARAM.PFD"));
+                var original = Snapshot(folder);
+                var tools = new FakeTools { FailDecrypt = true, FailEncrypt = true };
+                using var session = SaveSession.Open(folder, tools, decrypted: true);
+                True(!session.IsEncrypted, "Raw saves must remain raw.");
+                Throws<InvalidOperationException>(session.UpdateIntegrity);
+                string backup = session.Save(456789, 0, Path.Combine(root, "backups"));
+                Same(original, Snapshot(backup));
+                Equal(0, tools.CryptoCalls);
+                Equal(456789, ReadValue(folder, 0x588, "GAME.SAV"));
+                if (hasPfd) True(original["PARAM.PFD"].SequenceEqual(File.ReadAllBytes(Path.Combine(folder, "PARAM.PFD"))), "Raw PFD changed.");
+            }
+        });
+        Check("RPCS3 metadata selects raw mode; a missing PS3 PFD is not guessed", () =>
+        {
+            string folder = Fixture(root, "BCES00511");
+            File.Delete(Path.Combine(folder, "PARAM.PFD"));
+            Throws<FileNotFoundException>(() => SaveSession.Open(folder, new FakeTools()));
+            File.WriteAllBytes(Path.Combine(folder, "PARAM.SFO"), Sfo("BCES00511", rpc: true));
+            using var session = SaveSession.Open(folder, new FakeTools { FailDecrypt = true });
+            True(!session.IsEncrypted, "RPCS3 metadata was not recognized.");
+        });
+        Check("Encryption output must round-trip exactly before originals are written", () =>
+        {
+            string folder = Fixture(root, "NPUA80908");
+            var original = Snapshot(folder);
+            using var session = SaveSession.Open(folder, new FakeTools { CorruptEncrypt = true });
+            Throws<InvalidDataException>(() => session.Save(999, 99, Path.Combine(root, "backups")));
+            Same(original, Snapshot(folder));
+            Equal(123, session.Bolts);
+        });
+        Check("All 4 One edits characters independently and writes both paired counters", () =>
+        {
+            string folder = Fixture(root, "BCUS98175");
+            using var session = SaveSession.Open(folder, new FakeTools());
+            byte[] expected = File.ReadAllBytes(Path.Combine(folder, "GAME.SAV"));
+            BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x1828), 444);
+            BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x182C), 444);
+            session.Save(new[] { 123, 444, 123, 123 }, 0, Path.Combine(root, "backups"));
+            True(expected.SequenceEqual(File.ReadAllBytes(Path.Combine(folder, "GAME.SAV"))), "Other characters changed.");
+            Equal(444, session.CharacterBolts[1]);
+            session.Save(new[] { 123, 444, 555, 123 }, 0, Path.Combine(root, "backups"));
+            Equal(444, ReadValue(folder, 0x1828, "GAME.SAV"));
+            Equal(555, ReadValue(folder, 0x2120, "GAME.SAV"));
+        });
+        Check("QForce uses its named float record and rejects ambiguous or absent fields", () =>
+        {
+            string folder = Fixture(root, "BCES01594");
+            var profile = SaveProfile.ForRegion("BCES01594");
+            byte[] data = File.ReadAllBytes(Path.Combine(folder, "GAME.SAV"));
+            byte[] expected = data.ToArray();
+            BinaryPrimitives.WriteSingleBigEndian(expected.AsSpan(0x12E), 99999);
+            SaveData.Write(data, profile, new[] { 99999 }, 0);
+            True(data.SequenceEqual(expected), "Wrong QForce field was changed.");
+            Throws<ArgumentOutOfRangeException>(() => SaveData.Write(data, profile, new[] { int.MaxValue }, 0));
+            BinaryPrimitives.WriteSingleBigEndian(data.AsSpan(0x12E), float.NaN);
+            Throws<InvalidDataException>(() => SaveData.ReadBolts(data, profile));
+            "player_bolts\0"u8.CopyTo(data.AsSpan(0x500));
+            Throws<InvalidDataException>(() => SaveData.ReadBolts(data, profile));
+            Throws<InvalidDataException>(() => SaveData.ReadBolts(new byte[20], profile));
+        });
+    }
+
+    private static void NativeCryptoChecks(string root)
+    {
+        foreach (ulong version in new ulong[] { 3, 4 })
+            foreach (string region in SaveProfile.SupportedRegions.GroupBy(p => p.Value).Select(g => g.First().Key))
+                Check($"PFD v{version} / {region}: real encryption round-trip and original bindings", () =>
+                {
+                    string folder = Fixture(root, region);
+                    var profile = SaveProfile.ForRegion(region);
+                    CreatePfd(folder, profile, version);
+                    byte[] bindings = PfdBinding.SfoHashes(File.ReadAllBytes(Path.Combine(folder, "PARAM.PFD")));
+                    using var tools = new Encryption();
+                    tools.Encrypt(folder, region, profile.FileName);
+                    using var session = SaveSession.Open(folder, tools);
+                    Equal(123, session.Bolts);
+                    int[] desired = session.CharacterBolts.Select((v, i) => 123456 + i).ToArray();
+                    session.Save(desired, 999, Path.Combine(root, "backups"));
+                    True(bindings.SequenceEqual(PfdBinding.SfoHashes(File.ReadAllBytes(Path.Combine(folder, "PARAM.PFD")))), "Owner bindings changed.");
+                    using var reopened = SaveSession.Open(folder, tools);
+                    True(desired.SequenceEqual(reopened.CharacterBolts), "Currency failed native crypto round-trip.");
+                    Equal(profile.RaritaniumOffset.HasValue ? 999 : 0, reopened.Raritanium);
+                    var snapshot = Snapshot(folder);
+                    Throws<InvalidOperationException>(reopened.PatchMetadata);
+                    Same(snapshot, Snapshot(folder));
+                    byte[] corrupt = snapshot[profile.FileName].ToArray();
+                    corrupt[^1] ^= 1;
+                    File.WriteAllBytes(Path.Combine(folder, profile.FileName), corrupt);
+                    var tampered = Snapshot(folder);
+                    Throws<InvalidOperationException>(() => SaveSession.Open(folder, tools));
+                    Same(tampered, Snapshot(folder));
+                });
+        Check("Malformed PFD tables and changed SFO bindings are rejected", () =>
+        {
+            string folder = Fixture(root, "NPUA80908");
+            CreatePfd(folder, SaveProfile.ForRegion("NPUA80908"), 4);
+            byte[] pfd = File.ReadAllBytes(Path.Combine(folder, "PARAM.PFD"));
+            byte[] sfo = File.ReadAllBytes(Path.Combine(folder, "PARAM.SFO"));
+            sfo[^1] ^= 1;
+            Throws<InvalidDataException>(() => PfdBinding.Preserve(pfd, pfd.ToArray(), sfo));
+            BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(96), ulong.MaxValue);
+            Throws<InvalidDataException>(() => PfdBinding.SfoHashes(pfd));
+            Throws<InvalidDataException>(() => PfdBinding.SfoHashes(new byte[119]));
+        });
+    }
+
+    // Build a format-valid but synthetic PFD without using native update to sign
+    // it. Native pfdtool must independently verify our v3/v4 signature updates.
+    private static void CreatePfd(string folder, SaveProfile profile, ulong version)
+    {
+        const int capacity = 7, entries = 120 + capacity * 8;
+        byte[] pfd = new byte[32768];
+        BinaryPrimitives.WriteUInt64BigEndian(pfd, 0x50464442);
+        BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(8), version);
+        BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(96), capacity);
+        BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(104), capacity);
+        BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(112), 2);
+        for (int i = 0; i < capacity; i++) BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(120 + i * 8), ulong.MaxValue);
+        byte[] signature = new byte[64];
+        for (int i = 0; i < 20; i++) signature[40 + i] = (byte)(i + 31);
+        using var aes = Aes.Create();
+        aes.Key = Convert.FromHexString("D413B89663E1FE9F75143D3BB4565274");
+        aes.EncryptCbc(signature, pfd.AsSpan(16, 16), PaddingMode.None).CopyTo(pfd, 32);
+        byte[] secureId = Convert.FromHexString(profile.Key);
+        byte[] gameHashKey = new byte[20];
+        int idIndex = 0;
+        for (int i = 0; i < gameHashKey.Length; i++)
+            gameHashKey[i] = i switch { 1 => 11, 2 => 15, 5 => 14, 8 => 10, _ => secureId[idIndex++] };
+        for (int i = 0; i < 2; i++)
+        {
+            string name = i == 0 ? "PARAM.SFO" : profile.FileName;
+            int entry = entries + i * 272;
+            ulong hash = 0;
+            foreach (byte c in Encoding.ASCII.GetBytes(name)) hash = unchecked(hash * 31 + c);
+            int bucket = (int)(hash % capacity);
+            ulong next = BinaryPrimitives.ReadUInt64BigEndian(pfd.AsSpan(120 + bucket * 8));
+            BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(120 + bucket * 8), (ulong)i);
+            BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(entry), next);
+            Encoding.ASCII.GetBytes(name).CopyTo(pfd, entry + 8);
+            byte[] contents = File.ReadAllBytes(Path.Combine(folder, name));
+            BinaryPrimitives.WriteUInt64BigEndian(pfd.AsSpan(entry + 264), (ulong)contents.Length);
+            byte[] key = i == 0 ? Convert.FromHexString("0C08000E090504040D010F000406020209060D03") : gameHashKey;
+            HMACSHA1.HashData(key, contents).CopyTo(pfd, entry + 144);
+            if (i == 0)
+                for (int j = 0; j < 60; j++) pfd[entry + 164 + j] = (byte)(j + 3);
+            else
+            {
+                byte[] fileKey = Enumerable.Range(0, 64).Select(n => (byte)(n + 1)).ToArray();
+                aes.EncryptCbc(fileKey, gameHashKey.AsSpan(0, 16), PaddingMode.None).CopyTo(pfd, entry + 80);
+            }
+        }
+        PfdBinding.Preserve(pfd, pfd, File.ReadAllBytes(Path.Combine(folder, "PARAM.SFO")));
+        File.WriteAllBytes(Path.Combine(folder, "PARAM.PFD"), pfd);
+    }
+
+    private static void SampleChecks(string root, string samples)
+    {
+        var samplePaths = Directory.GetFiles(samples, "PARAM.SFO", SearchOption.AllDirectories);
+        True(samplePaths.Length > 0, "No sample save folders found.");
+        foreach (string sfo in samplePaths)
+        {
+            string source = Path.GetDirectoryName(sfo);
+            var metadata = SfoMetadata.Read(sfo);
+            Check("Public sample " + metadata.Region + ": read, save, reopen and byte-preserving round trip", () =>
+            {
+                var original = Snapshot(source);
+                string folder = Path.Combine(root, "Real sample " + metadata.Region + " " + Guid.NewGuid().ToString("N"));
+                Directory.CreateDirectory(folder);
+                foreach (string path in Directory.GetFiles(source)) File.Copy(path, Path.Combine(folder, Path.GetFileName(path)));
+                using var tools = new Encryption();
+                using var session = SaveSession.Open(folder, tools);
+                Console.WriteLine($"  {session.Profile.Name}: {session.Bolts} bolts / {session.Raritanium} raritanium, {(session.IsEncrypted ? "encrypted" : "RPCS3")}");
+                var profile = session.Profile;
+                byte[] expected = File.ReadAllBytes(Path.Combine(session.WorkingFolder, profile.FileName));
+                int desired = session.Bolts == 999999 ? 123456 : 999999;
+                int rare = profile.RaritaniumOffset.HasValue ? 999 : 0;
+                SaveData.Write(expected, profile, new[] { desired }, rare);
+                string backup = session.Save(desired, rare, Path.Combine(root, "backups"));
+                Same(original, Snapshot(backup));
+                if (session.IsEncrypted)
+                    True(PfdBinding.SfoHashes(original["PARAM.PFD"]).SequenceEqual(PfdBinding.SfoHashes(File.ReadAllBytes(Path.Combine(folder, "PARAM.PFD")))),
+                        "Original console/disc/authentication hashes were overwritten.");
+                using var reopened = SaveSession.Open(folder, tools);
+                Equal(desired, reopened.Bolts); Equal(rare, reopened.Raritanium);
+                True(expected.SequenceEqual(File.ReadAllBytes(Path.Combine(reopened.WorkingFolder, profile.FileName))), "Real sample data failed to round-trip.");
+                Same(original, Snapshot(source));
+            });
+        }
     }
 
     private static void UiChecks(string root)
@@ -173,7 +415,8 @@ internal static class Program
         True(tabs.TabPages[0].Text == "Game Save Information" && tabs.TabPages[1].Text == "Game Save Editing",
             "Keep the original tab order and names.");
         Capture(form, Path.Combine(artifacts, "ui-compact-empty.png"));
-        foreach (string region in new[] { "BLES00301", "NPUA80908" })
+        foreach (string region in new[] { "BLES00301", "NPUA80643", "NPEA00386", "NPEA00387", "NPUA80646",
+            "BCUS98127", "BCUS98124", "BCUS98175", "BCES01594", "NPUA80908" })
         {
             (sessionField.GetValue(form) as SaveSession)?.Dispose();
             string folder = Fixture(root, region);
@@ -191,6 +434,26 @@ internal static class Program
             True(Field<NumericUpDown>(form, "CasinoChipsNumericUpDown").Visible == session.Profile.RaritaniumOffset.HasValue,
                 "Raritanium visibility did not reset on game switch.");
             True(Field<Button>(form, "SaveImageButton").Enabled == hasArtwork, "Artwork should enable export only when present.");
+            var characters = Field<ComboBox>(form, "CharacterComboBox");
+            bool characterGame = session.Profile.Layout == CurrencyLayout.Characters;
+            True(characters.Visible == characterGame, "Character selector visibility did not reset.");
+            Equal((decimal)session.Profile.MaximumBolts, Field<NumericUpDown>(form, "MoneyNumericUpDown").Maximum);
+            if (characterGame)
+            {
+                var money = Field<NumericUpDown>(form, "MoneyNumericUpDown");
+                money.Value = 111;
+                characters.SelectedIndex = 1;
+                Equal(123m, money.Value);
+                money.Value = 444;
+                characters.SelectedIndex = 0;
+                Equal(111m, money.Value);
+                money.Value = 123;
+                characters.SelectedIndex = 1;
+                Equal(444m, money.Value);
+                money.Value = 123;
+                Capture(form, Path.Combine(artifacts, "ui-all4one.png"));
+                Equal(initialTitle, form.Text);
+            }
             tabs.SelectedIndex = 1;
             if (hasArtwork)
             {
@@ -218,7 +481,7 @@ internal static class Program
                 using var image = new Bitmap(form.Width, form.Height);
                 form.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size));
                 image.Save(Path.Combine(artifacts, $"ui-compact-{i}.png"));
-                foreach (var control in Descendants(tabs.SelectedTab).Where(c => c.Visible && c.Parent is not NumericUpDown && c is TextBox or NumericUpDown or Button))
+                foreach (var control in Descendants(tabs.SelectedTab).Where(c => c.Visible && c.Parent is not NumericUpDown && c is TextBox or NumericUpDown or Button or ComboBox))
                 {
                     True(control.Width >= 50 && control.Height >= 20, $"Clipped control: {control.Name} / {control.Text}");
                     True(control.Parent.ClientRectangle.Contains(control.Bounds), $"Control exceeds its layout: {control.Text}, bounds {control.Bounds}, parent {control.Parent.ClientRectangle}, window {size}");
@@ -262,27 +525,55 @@ internal static class Program
         File.WriteAllBytes(Path.Combine(folder, "PARAM.SFO"), Sfo(region));
         File.WriteAllText(Path.Combine(folder, "PARAM.PFD"), "Test integrity");
         var profile = SaveProfile.ForRegion(region);
-        byte[] data = Enumerable.Repeat((byte)0x55, 0x1100).ToArray();
+        byte[] data = Enumerable.Repeat((byte)0x55, 0x2300).ToArray();
+        "IGSD"u8.CopyTo(data);
+        if (profile.HasChecksumBlocks)
+        {
+            BinaryPrimitives.WriteUInt32BigEndian(data, 0x808);
+            BinaryPrimitives.WriteUInt32BigEndian(data.AsSpan(8), 0x800);
+            BinaryPrimitives.WriteUInt32BigEndian(data.AsSpan(12), 0x1234);
+            BinaryPrimitives.WriteUInt32BigEndian(data.AsSpan(0x810), (uint)(data.Length - 0x818));
+            BinaryPrimitives.WriteUInt32BigEndian(data.AsSpan(0x814), 0x5678);
+        }
         BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(profile.BoltsOffset), 123);
+        if (profile.Layout == CurrencyLayout.Characters)
+            foreach (int characterOffset in new[] { 0x638, 0x1828, 0x2120, 0xF30 })
+            {
+                BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(characterOffset), 123);
+                BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(characterOffset + 4), 456);
+            }
+        if (profile.Layout == CurrencyLayout.NamedFloat)
+        {
+            "player_bolts\0"u8.CopyTo(data.AsSpan(0x120));
+            BinaryPrimitives.WriteSingleBigEndian(data.AsSpan(0x12E), 123);
+        }
         if (profile.RaritaniumOffset is int offset) BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(offset), 45);
         File.WriteAllBytes(Path.Combine(folder, profile.FileName), data);
         File.WriteAllText(Path.Combine(folder, "EXTRA.DAT"), "Preserve this too");
         return folder;
     }
 
-    private static byte[] Sfo(string region)
+    private static byte[] Sfo(string region, string titleId = null, bool rpc = false)
     {
-        var fields = new Dictionary<string, string>
+        byte[] parameters = new byte[1024];
+        BinaryPrimitives.WriteUInt32LittleEndian(parameters.AsSpan(24), 42);
+        Convert.FromHexString("000000010085000F0123456789ABCDEF").CopyTo(parameters, 28);
+        var fields = new Dictionary<string, byte[]>
         {
-            ["SUB_TITLE"] = "Planète Veldin", ["ACCOUNT_ID"] = "0001020304050607", ["SAVEDATA_DIRECTORY"] = region + "-SAVE1"
+            ["SUB_TITLE"] = Encoding.UTF8.GetBytes("Planète Veldin\0"),
+            ["ACCOUNT_ID"] = Encoding.UTF8.GetBytes("0001020304050607\0"),
+            ["SAVEDATA_DIRECTORY"] = Encoding.UTF8.GetBytes(region + "-SAVE1\0"),
+            ["PARAMS"] = parameters
         };
+        if (titleId != null) fields["TITLE_ID"] = Encoding.UTF8.GetBytes(titleId + "\0");
+        if (rpc) fields["RPCS3_BLIST"] = Encoding.UTF8.GetBytes("ICON0.PNG/GAME.SAV\0");
         using var keys = new MemoryStream();
         using var values = new MemoryStream();
         using var index = new MemoryStream();
         using var writer = new BinaryWriter(index, Encoding.UTF8, true);
         foreach (var field in fields)
         {
-            byte[] value = Encoding.UTF8.GetBytes(field.Value + "\0");
+            byte[] value = field.Value;
             writer.Write((ushort)keys.Position);
             writer.Write((ushort)0x0204);
             writer.Write(value.Length);
@@ -329,19 +620,31 @@ internal static class Program
         public string DecryptedFile;
         public string EncryptedFile;
         public bool FailEncrypt;
+        public bool FailDecrypt;
+        public bool CorruptEncrypt;
+        public int CryptoCalls;
         public void Decrypt(string folder, string region, string file)
         {
+            CryptoCalls++;
+            if (FailDecrypt) throw new InvalidOperationException("Decryption must not be called for raw saves");
             DecryptedFile = file;
             File.WriteAllText(Path.Combine(folder, "PARAM.PFD"), "Decrypted integrity");
         }
         public void Encrypt(string folder, string region, string file)
         {
+            CryptoCalls++;
             EncryptedFile = file;
             File.WriteAllText(Path.Combine(folder, "PARAM.PFD"), "Encrypted integrity");
             if (FailEncrypt) throw new InvalidOperationException("Simulated encryption failure");
+            if (CorruptEncrypt)
+            {
+                byte[] data = File.ReadAllBytes(Path.Combine(folder, file));
+                data[^1] ^= 1;
+                File.WriteAllBytes(Path.Combine(folder, file), data);
+            }
         }
         public void Update(string folder, string region) => File.WriteAllText(Path.Combine(folder, "PARAM.PFD"), "Updated integrity");
-        public void Patch(string folder) => File.WriteAllBytes(Path.Combine(folder, "PARAM.SFO"), Sfo("NPUA80908"));
+        public void Patch(string folder, bool encrypted) => File.WriteAllBytes(Path.Combine(folder, "PARAM.SFO"), Sfo("NPUA80908"));
     }
 
     private sealed class PartialReadStream : MemoryStream

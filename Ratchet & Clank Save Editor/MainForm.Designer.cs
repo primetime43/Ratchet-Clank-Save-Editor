@@ -65,6 +65,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openDecryptedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -77,6 +78,21 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             ((System.ComponentModel.ISupportInitialize)(this.SaveGameImagePictureBox)).BeginInit();
             this.GameSaveEditingTabPage.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.CharacterLabel = new System.Windows.Forms.Label
+            {
+                Name = "CharacterLabel", Text = "Character:", AutoSize = true,
+                Location = new System.Drawing.Point(6, 103), Visible = false
+            };
+            this.CharacterComboBox = new System.Windows.Forms.ComboBox
+            {
+                Name = "CharacterComboBox", DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList,
+                Location = new System.Drawing.Point(131, 99), Size = new System.Drawing.Size(110, 21),
+                TabIndex = 15, Visible = false
+            };
+            this.CharacterComboBox.Items.AddRange(SaveData.CharacterNames);
+            this.CharacterComboBox.SelectedIndexChanged += new System.EventHandler(this.CharacterChanged);
+            this.groupBox3.Controls.Add(this.CharacterLabel);
+            this.groupBox3.Controls.Add(this.CharacterComboBox);
             ((System.ComponentModel.ISupportInitialize)(this.CasinoChipsNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MoneyNumericUpDown)).BeginInit();
             this.MenuStrip.SuspendLayout();
@@ -368,6 +384,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openFolderToolStripMenuItem,
+            this.openDecryptedToolStripMenuItem,
             this.toolStripSeparator1,
             this.saveAllToolStripMenuItem,
             this.toolStripSeparator2,
@@ -383,6 +400,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.openFolderToolStripMenuItem.Text = "Open Folder";
             this.openFolderToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O;
             this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
+            this.openDecryptedToolStripMenuItem.Name = "openDecryptedToolStripMenuItem";
+            this.openDecryptedToolStripMenuItem.Text = "Open Decrypted Folder (RPCS3)";
+            this.openDecryptedToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.O;
+            this.openDecryptedToolStripMenuItem.Click += new System.EventHandler(this.openDecryptedToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -481,6 +502,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private System.Windows.Forms.MenuStrip MenuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openDecryptedToolStripMenuItem;
+        private System.Windows.Forms.ComboBox CharacterComboBox;
+        private System.Windows.Forms.Label CharacterLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;

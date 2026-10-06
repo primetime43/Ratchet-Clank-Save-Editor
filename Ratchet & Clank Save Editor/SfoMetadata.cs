@@ -12,6 +12,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public string Region { get; private set; }
         public string AccountId => Text("ACCOUNT_ID");
         public string Planet => Text("SUB_TITLE");
+        public bool IsRpcS3 => fields.ContainsKey("RPCS3_BLIST");
 
         private string Text(string key) => fields.TryGetValue(key, out var value)
             ? Encoding.UTF8.GetString(value).TrimEnd('\0') : string.Empty;
@@ -45,7 +46,16 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
             string directory = metadata.Text("SAVEDATA_DIRECTORY");
             string region = metadata.Text("TITLE_ID");
-            if (string.IsNullOrEmpty(region) && directory.Length >= 9) region = directory.Substring(0, 9);
+            // Trilogy disc collections still save under each individual PSN game ID.
+            // Prefer the supported save-directory ID over an enclosing collection ID.
+            string directoryRegion = directory.Length >= 9 ? directory.Substring(0, 9) : string.Empty;
+            if (SaveProfile.SupportsRegion(directoryRegion))
+            {
+                if (SaveProfile.SupportsRegion(region) && SaveProfile.ForRegion(region) != SaveProfile.ForRegion(directoryRegion))
+                    throw new InvalidDataException("PARAM.SFO contains conflicting game identifiers.");
+                region = directoryRegion;
+            }
+            else if (string.IsNullOrEmpty(region)) region = directoryRegion;
             if (region.Length != 9)
                 throw new InvalidDataException("PARAM.SFO does not contain a valid game region.");
             metadata.Region = region;

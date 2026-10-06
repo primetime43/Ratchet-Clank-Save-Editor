@@ -15,7 +15,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public string WorkingFolder => working.Path;
         public SfoMetadata Metadata { get; private set; }
         public SaveProfile Profile { get; private set; }
-        public int Bolts { get; private set; }
+        private int[] boltsValues;
+        public int Bolts => boltsValues[0];
+        public IReadOnlyList<int> CharacterBolts => Array.AsReadOnly(boltsValues);
+        public bool IsEncrypted { get; private set; }
         public int Raritanium { get; private set; }
         public bool MetadataChanged { get; private set; }
         public string LastBackup { get; private set; }
@@ -28,14 +31,15 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.tools = tools;
         }
 
-        public static SaveSession Open(string folder, ISaveTools tools)
+        public static SaveSession Open(string folder, ISaveTools tools, bool decrypted = false)
         {
             var session = new SaveSession(folder, tools);
             try
             {
                 session.Metadata = SfoMetadata.Read(Path.Combine(session.Folder, "PARAM.SFO"));
                 session.Profile = SaveProfile.ForRegion(session.Metadata.Region);
-                foreach (string name in new[] { "PARAM.PFD", session.Profile.FileName })
+                session.IsEncrypted = !decrypted && !session.Metadata.IsRpcS3;
+                foreach (string name in session.IsEncrypted ? new[] { "PARAM.PFD", session.Profile.FileName } : new[] { session.Profile.FileName })
                     if (!File.Exists(Path.Combine(session.Folder, name)))
                         throw new FileNotFoundException($"The save folder is missing {name}.");
                 session.originalHashes = HashFiles(session.Folder);
@@ -48,7 +52,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!string.Equals(copiedMetadata.Region, session.Metadata.Region, StringComparison.OrdinalIgnoreCase))
                     throw new IOException("The game region changed while opening the save. Please open it again.");
                 session.Metadata = copiedMetadata;
-                tools.Decrypt(session.WorkingFolder, session.Metadata.Region, session.Profile.FileName);
+                if (session.IsEncrypted) tools.Decrypt(session.WorkingFolder, session.Metadata.Region, session.Profile.FileName);
                 session.ReadValues();
                 return session;
             }
@@ -57,42 +61,46 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private void ReadValues()
         {
-            using var stream = File.OpenRead(Path.Combine(WorkingFolder, Profile.FileName));
-            Profile.ValidateLength(stream.Length);
-            stream.Position = Profile.BoltsOffset;
-            Bolts = stream.ReadInt32();
-            Raritanium = 0;
-            if (Profile.RaritaniumOffset is int offset)
-            {
-                stream.Position = offset;
-                Raritanium = stream.ReadInt32();
-            }
-            if (Bolts < 0 || Raritanium < 0)
-                throw new InvalidDataException("The save contains invalid currency values. Check that decryption succeeded and the game is supported.");
+            byte[] data = File.ReadAllBytes(Path.Combine(WorkingFolder, Profile.FileName));
+            boltsValues = SaveData.ReadBolts(data, Profile);
+            Raritanium = SaveData.ReadRaritanium(data, Profile);
         }
 
         public string Save(int bolts, int raritanium, string backupRoot = null)
         {
-            if (bolts < 0 || raritanium < 0) throw new ArgumentOutOfRangeException(nameof(bolts));
+            int[] values = (int[])boltsValues.Clone();
+            values[0] = bolts;
+            return Save(values, raritanium, backupRoot);
+        }
+
+        public string Save(IReadOnlyList<int> bolts, int raritanium, string backupRoot = null)
+        {
+            int[] values = bolts.ToArray();
             EnsureUnchanged();
             using var candidate = new TemporaryDirectory();
             CopyFiles(WorkingFolder, candidate.Path);
-            using (var stream = File.Open(Path.Combine(candidate.Path, Profile.FileName), FileMode.Open, FileAccess.ReadWrite))
-            {
-                Profile.ValidateLength(stream.Length);
-                stream.Position = Profile.BoltsOffset;
-                stream.WriteInt32(bolts);
-                if (Profile.RaritaniumOffset is int offset)
-                {
-                    stream.Position = offset;
-                    stream.WriteInt32(raritanium);
-                }
-            }
+            string candidateData = Path.Combine(candidate.Path, Profile.FileName);
+            byte[] expected = File.ReadAllBytes(candidateData);
+            SaveData.Write(expected, Profile, values, raritanium);
+            File.WriteAllBytes(candidateData, expected);
             // Encrypt and update integrity in isolation. Failed tools never touch the source.
-            tools.Encrypt(candidate.Path, Metadata.Region, Profile.FileName);
+            if (IsEncrypted)
+            {
+                tools.Encrypt(candidate.Path, Metadata.Region, Profile.FileName);
+                // Prove that the encrypted output decrypts to the complete edited data,
+                // not merely that pfdtool produced a successful integrity report.
+                using var verification = new TemporaryDirectory();
+                CopyFiles(candidate.Path, verification.Path);
+                tools.Decrypt(verification.Path, Metadata.Region, Profile.FileName);
+                if (!expected.SequenceEqual(File.ReadAllBytes(Path.Combine(verification.Path, Profile.FileName))))
+                    throw new InvalidDataException("Encryption round-trip verification failed. The original save was not changed.");
+            }
+            var candidateMetadata = SfoMetadata.Read(Path.Combine(candidate.Path, "PARAM.SFO"));
+            if (!string.Equals(candidateMetadata.Region, Metadata.Region, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException("Saving unexpectedly changed the game region. The original save was not changed.");
             foreach (string name in CommitFiles)
                 if (!File.Exists(Path.Combine(candidate.Path, name)))
-                    throw new IOException($"Encryption did not produce {name}.");
+                    throw new IOException($"Saving did not produce {name}.");
 
             // Prepare the next baseline before writing to the source. Once the commit
             // succeeds, no further disk operation can misreport it as a failed save.
@@ -123,7 +131,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
                 throw new IOException($"Saving failed. Original files are backed up in:\n{backup}", new AggregateException(errors));
             }
-            Bolts = bolts;
+            boltsValues = values;
             Raritanium = Profile.RaritaniumOffset.HasValue ? raritanium : 0;
             // Future saves overwrite both editable values in a fresh candidate.
             // Keep the decrypted working copy intact; only source files are encrypted.
@@ -132,23 +140,29 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return backup;
         }
 
-        private string[] CommitFiles => new[] { Profile.FileName, "PARAM.SFO", "PARAM.PFD" };
+        private string[] CommitFiles => IsEncrypted
+            ? new[] { Profile.FileName, "PARAM.SFO", "PARAM.PFD" }
+            : new[] { Profile.FileName, "PARAM.SFO" };
 
         public void PatchMetadata()
         {
             using var candidate = new TemporaryDirectory();
             CopyFiles(WorkingFolder, candidate.Path);
-            tools.Patch(candidate.Path);
+            tools.Patch(candidate.Path, IsEncrypted);
             var metadata = SfoMetadata.Read(Path.Combine(candidate.Path, "PARAM.SFO"));
             if (!string.Equals(metadata.Region, Metadata.Region, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException("The metadata patch unexpectedly changed the game region.");
             File.Copy(Path.Combine(candidate.Path, "PARAM.SFO"), Path.Combine(WorkingFolder, "PARAM.SFO"), true);
+            if (IsEncrypted)
+                File.Copy(Path.Combine(candidate.Path, "PARAM.PFD"), Path.Combine(WorkingFolder, "PARAM.PFD"), true);
             Metadata = metadata;
             MetadataChanged = true;
         }
 
         public void UpdateIntegrity()
         {
+            if (!IsEncrypted)
+                throw new InvalidOperationException("Decrypted/RPCS3 saves do not use PS3 encryption integrity. Save changes in decrypted format instead.");
             using var candidate = new TemporaryDirectory();
             CopyFiles(WorkingFolder, candidate.Path);
             tools.Update(candidate.Path, Metadata.Region);

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,8 +16,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private SaveSession session;
         private bool busy;
         private bool allowClose;
+        private bool loadingValues;
+        private int selectedCharacter;
+        private int[] pendingBolts;
         private bool Dirty => session != null && (session.MetadataChanged ||
-            MoneyNumericUpDown.Value != session.Bolts ||
+            (pendingBolts != null && !pendingBolts.SequenceEqual(session.CharacterBolts)) ||
             (session.Profile.RaritaniumOffset.HasValue && CasinoChipsNumericUpDown.Value != session.Raritanium));
 
         public MainForm()
@@ -26,7 +30,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             UpdateTitle();
         }
 
-        private async void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void openFolderToolStripMenuItem_Click(object sender, EventArgs e) => await OpenFolder(false);
+        private async void openDecryptedToolStripMenuItem_Click(object sender, EventArgs e) => await OpenFolder(true);
+
+        private async Task OpenFolder(bool decrypted)
         {
             if (busy) return;
             if (Dirty && MessageBox.Show(this, "Discard unsaved edits and open another save?", "Unsaved changes",
@@ -34,45 +41,56 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             using var dialog = new FolderBrowserDialog
             {
                 Description = "Select a Ratchet & Clank PS3 save folder",
-                UseDescriptionForTitle = true, ShowNewFolderButton = false,
+                UseDescriptionForTitle = true,
+                ShowNewFolderButton = false,
                 SelectedPath = session?.Folder ?? string.Empty
             };
             if (dialog.ShowDialog(this) != DialogResult.OK) return;
             string selectedFolder = dialog.SelectedPath;
             await RunOperation("Opening and decrypting save…", async () =>
             {
-                var loaded = await Task.Run(() => SaveSession.Open(selectedFolder, tools));
+                var loaded = await Task.Run(() => SaveSession.Open(selectedFolder, tools, decrypted));
                 session?.Dispose();
                 session = loaded;
                 ShowSession();
-                StatusLabel.Text = $"Loaded {session.Profile.Name} · Original save preserved";
+                StatusLabel.Text = $"{session.Profile.Name} · {(session.IsEncrypted ? "PS3 encrypted" : "Decrypted / RPCS3")}";
             });
         }
 
         private void ShowSession()
         {
-            AccountIDTextBox.Text = session.Metadata.AccountId;
-            GameVersionTextBox.Text = session.Metadata.Region;
-            GameSaveKeyTextBox.Text = session.Profile.Key;
-            PlanetTextBox.Text = session.Metadata.Planet;
-            MoneyNumericUpDown.Value = session.Bolts;
-            CasinoChipsNumericUpDown.Value = session.Raritanium;
-            CasinoChipsLabel.Visible = CasinoChipsNumericUpDown.Visible = session.Profile.RaritaniumOffset.HasValue;
-            SaveGameImagePictureBox.Image?.Dispose();
-            SaveGameImagePictureBox.Image = null;
-            string icon = Path.Combine(session.WorkingFolder, "ICON0.PNG");
-            if (File.Exists(icon))
+            loadingValues = true;
+            try
             {
-                try
+                pendingBolts = session.CharacterBolts.ToArray();
+                selectedCharacter = 0;
+                CharacterComboBox.SelectedIndex = 0;
+                CharacterComboBox.Visible = CharacterLabel.Visible = session.Profile.Layout == CurrencyLayout.Characters;
+                AccountIDTextBox.Text = session.Metadata.AccountId;
+                GameVersionTextBox.Text = session.Metadata.Region;
+                GameSaveKeyTextBox.Text = session.Profile.Key;
+                PlanetTextBox.Text = session.Metadata.Planet;
+                MoneyNumericUpDown.Maximum = session.Profile.MaximumBolts;
+                MoneyNumericUpDown.Value = session.Bolts;
+                CasinoChipsNumericUpDown.Value = session.Raritanium;
+                CasinoChipsLabel.Visible = CasinoChipsNumericUpDown.Visible = session.Profile.RaritaniumOffset.HasValue;
+                SaveGameImagePictureBox.Image?.Dispose();
+                SaveGameImagePictureBox.Image = null;
+                string icon = Path.Combine(session.WorkingFolder, "ICON0.PNG");
+                if (File.Exists(icon))
                 {
-                    // Clone into memory so no file remains locked while the save is open.
-                    using var image = Image.FromFile(icon);
-                    SaveGameImagePictureBox.Image = new Bitmap(image);
+                    try
+                    {
+                        // Clone into memory so no file remains locked while the save is open.
+                        using var image = Image.FromFile(icon);
+                        SaveGameImagePictureBox.Image = new Bitmap(image);
+                    }
+                    catch (ArgumentException) { }
+                    catch (IOException) { }
+                    catch (OutOfMemoryException) { } // GDI+ uses this for invalid image data as well.
                 }
-                catch (ArgumentException) { }
-                catch (IOException) { }
-                catch (OutOfMemoryException) { } // GDI+ uses this for invalid image data as well.
             }
+            finally { loadingValues = false; }
             UpdateTitle();
         }
 
@@ -82,14 +100,17 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             if (session == null || busy) return false;
             ValidateChildren();
-            int bolts = decimal.ToInt32(MoneyNumericUpDown.Value);
+            pendingBolts[selectedCharacter] = decimal.ToInt32(MoneyNumericUpDown.Value);
+            int[] bolts = pendingBolts.ToArray();
             int raritanium = decimal.ToInt32(CasinoChipsNumericUpDown.Value);
-            return await RunOperation("Encrypting and saving changes…", async () =>
+            return await RunOperation("Verifying and saving changes…", async () =>
             {
                 string backup = await Task.Run(() => session.Save(bolts, raritanium));
+                pendingBolts = session.CharacterBolts.ToArray();
                 UpdateTitle();
                 StatusLabel.Text = "Saved successfully · Original backed up";
-                MessageBox.Show(this, $"Your save has been encrypted and saved.\n\nOriginal backup:\n{backup}",
+                string format = session.IsEncrypted ? "encrypted PS3" : "decrypted/RPCS3";
+                MessageBox.Show(this, $"Your changes have been saved in {format} format.\n\nOriginal backup:\n{backup}",
                     "Save complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             });
         }
@@ -114,6 +135,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             busy = value;
             UseWaitCursor = value;
             openFolderToolStripMenuItem.Enabled = !value;
+            openDecryptedToolStripMenuItem.Enabled = !value;
+            UpdateAccountIDButton.Enabled = session?.IsEncrypted == true && !value;
             BackupButton.Enabled = session != null && !value;
             RefreshSaveActions();
             TabControl.Enabled = session != null && !value;
@@ -123,10 +146,22 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private void ValuesChanged(object sender, EventArgs e)
         {
-            if (busy) return;
+            if (busy || loadingValues) return;
+            if (pendingBolts != null) pendingBolts[selectedCharacter] = decimal.ToInt32(MoneyNumericUpDown.Value);
             UpdateTitle();
             if (Dirty) StatusLabel.Text = "Unsaved changes · Save to apply your edits";
             else if (session != null) StatusLabel.Text = "No pending changes";
+        }
+
+        private void CharacterChanged(object sender, EventArgs e)
+        {
+            if (loadingValues || busy || session == null || CharacterComboBox.SelectedIndex < 0) return;
+            pendingBolts[selectedCharacter] = decimal.ToInt32(MoneyNumericUpDown.Value);
+            selectedCharacter = CharacterComboBox.SelectedIndex;
+            loadingValues = true;
+            try { MoneyNumericUpDown.Value = pendingBolts[selectedCharacter]; }
+            finally { loadingValues = false; }
+            UpdateTitle();
         }
 
         private void RefreshSaveActions()
