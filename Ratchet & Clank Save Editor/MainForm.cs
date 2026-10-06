@@ -9,6 +9,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 {
     public partial class MainForm : Form
     {
+        private static readonly string WindowTitle = "Ratchet & Clank Save Editor v" +
+            typeof(MainForm).Assembly.GetName().Version.ToString(3);
         private readonly Encryption tools = new();
         private SaveSession session;
         private bool busy;
@@ -21,6 +23,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             InitializeComponent();
             SetBusy(false);
+            UpdateTitle();
         }
 
         private async void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -133,7 +136,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private void UpdateTitle()
         {
-            Text = "Ratchet & Clank Save Editor" + (Dirty ? " • Unsaved changes" : string.Empty);
+            Text = WindowTitle + (Dirty ? " • Unsaved changes" : string.Empty);
             RefreshSaveActions();
         }
 

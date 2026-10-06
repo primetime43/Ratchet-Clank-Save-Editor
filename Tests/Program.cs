@@ -155,6 +155,8 @@ internal static class Program
     private static void UiChecks(string root)
     {
         using var form = new MainForm();
+        string initialTitle = form.Text;
+        True(initialTitle.StartsWith("Ratchet & Clank Save Editor v"), "The title should display the app version at startup.");
         var sessionField = typeof(MainForm).GetField("session", BindingFlags.Instance | BindingFlags.NonPublic);
         var show = typeof(MainForm).GetMethod("ShowSession", BindingFlags.Instance | BindingFlags.NonPublic);
         var busy = typeof(MainForm).GetMethod("SetBusy", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -199,8 +201,10 @@ internal static class Program
             var bolts = Field<NumericUpDown>(form, "MoneyNumericUpDown");
             bolts.Value++;
             True(Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Editing currency should enable save.");
+            Equal(initialTitle + " • Unsaved changes", form.Text);
             bolts.Value = session.Bolts;
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Reverting an edit should disable save.");
+            Equal(initialTitle, form.Text);
         }
         foreach (var size in new[] { new Size(499, 248) })
         {
