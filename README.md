@@ -77,6 +77,7 @@ The download script verifies pinned archive hashes and stores public samples onl
 
 ### Format references
 
+- [Tools of Destruction save map](docs/ToolsOfDestructionSaveFormat.md): initial read-only analysis of BCES00052_SAVE_1, wrapper headers, inventory records, gameplay names and unknown regions. Includes a repeatable inspection script; candidate fields are not enabled for editing.
 - [RatchetModding's save backends](https://github.com/RatchetModding/slimseditor/blob/master/slimseditor/backends.py): PS3 byte order, remaster player blocks and file names. Its [game definitions](https://github.com/RatchetModding/slimseditor/tree/master/slimseditor/game) document trilogy currency offsets.
 - [Apollo's PS3 save-patch database](https://github.com/bucanero/apollo-patches/tree/main/PS3): A Crack in Time (`0x588`), All 4 One's character counters, and Full Frontal Assault's `player_bolts` record. Keys are retained from the bundled game-key database; the native configuration is generated from the application's catalog to avoid mismatches.
 - [flatz's PFD format definitions](https://github.com/bucanero/pfd_sfo_tools/blob/master/pfdtool/src/pfd_internal.h) and [integrity routines](https://github.com/bucanero/pfd_sfo_tools/blob/master/pfdtool/src/pfd.c): factual v3/v4 layout and signature algorithms; `PfdBinding.cs` is an independent implementation.
