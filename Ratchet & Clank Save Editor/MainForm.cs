@@ -47,7 +47,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             };
             if (dialog.ShowDialog(this) != DialogResult.OK) return;
             string selectedFolder = dialog.SelectedPath;
-            await RunOperation("Opening and decrypting save…", async () =>
+            await RunOperation("Backing up and opening save…", async () =>
             {
                 var loaded = await Task.Run(() => SaveSession.Open(selectedFolder, tools, decrypted));
                 session?.Dispose();

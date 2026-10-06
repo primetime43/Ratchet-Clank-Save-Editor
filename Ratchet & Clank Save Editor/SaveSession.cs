@@ -22,8 +22,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public int Raritanium { get; private set; }
         public bool MetadataChanged { get; private set; }
         public string LastBackup { get; private set; }
-        public static string BackupRoot => Path.Combine(Environment.GetFolderPath(
-            Environment.SpecialFolder.LocalApplicationData), "RatchetClankSaveEditor", "Backups");
+        public static string BackupRoot => Path.Combine(AppContext.BaseDirectory, "Backups");
 
         private SaveSession(string folder, ISaveTools tools)
         {
@@ -31,7 +30,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.tools = tools;
         }
 
-        public static SaveSession Open(string folder, ISaveTools tools, bool decrypted = false)
+        public static SaveSession Open(string folder, ISaveTools tools, bool decrypted = false, string backupRoot = null)
         {
             var session = new SaveSession(folder, tools);
             try
@@ -52,6 +51,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!string.Equals(copiedMetadata.Region, session.Metadata.Region, StringComparison.OrdinalIgnoreCase))
                     throw new IOException("The game region changed while opening the save. Please open it again.");
                 session.Metadata = copiedMetadata;
+                // Protect the untouched source before any tool processes the working copy.
+                try { session.BackUp(backupRoot); }
+                catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+                {
+                    throw new IOException("Could not create the automatic backup. The save was not opened and the original files were not changed.\n" + error.Message, error);
+                }
                 if (session.IsEncrypted) tools.Decrypt(session.WorkingFolder, session.Metadata.Region, session.Profile.FileName);
                 session.ReadValues();
                 return session;
@@ -179,6 +184,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             CopyFiles(Folder, destination);
             if (!SameHashes(originalHashes, HashFiles(destination)))
                 throw new IOException("The save folder changed while backing up. Please open it again.");
+            EnsureUnchanged();
             LastBackup = destination;
             return destination;
         }

@@ -49,18 +49,94 @@ internal static class Program
                 File.WriteAllBytes(Path.Combine(folder, "PARAM.SFO"), data);
                 Throws<InvalidDataException>(() => SfoMetadata.Read(Path.Combine(folder, "PARAM.SFO")));
             });
+            Check("Default backups stay beside the executable, independent of working directory", () =>
+            {
+                string previousDirectory = Environment.CurrentDirectory;
+                try
+                {
+                    Environment.CurrentDirectory = root;
+                    Equal(Path.Combine(AppContext.BaseDirectory, "Backups"), SaveSession.BackupRoot);
+                    True(!SaveSession.BackupRoot.StartsWith(root, StringComparison.OrdinalIgnoreCase),
+                        "Backups must not follow the working directory.");
+                }
+                finally { Environment.CurrentDirectory = previousDirectory; }
+            });
+            Check("Opening creates a verified full backup before decryption", () =>
+            {
+                string folder = Fixture(root, "NPUA80908");
+                var original = Snapshot(folder);
+                string backupRoot = Path.Combine(root, "before-decryption-backups");
+                string backup = null;
+                var tools = new FakeTools
+                {
+                    BeforeDecrypt = () =>
+                    {
+                        backup = Directory.GetDirectories(Path.Combine(backupRoot, Path.GetFileName(folder))).Single();
+                        Same(original, Snapshot(backup));
+                        Same(original, Snapshot(folder));
+                    }
+                };
+                using var session = SaveSession.Open(folder, tools, backupRoot: backupRoot);
+                Equal(backup, session.LastBackup);
+                Same(original, Snapshot(session.LastBackup));
+                True(!original["PARAM.PFD"].SequenceEqual(File.ReadAllBytes(Path.Combine(session.WorkingFolder, "PARAM.PFD"))),
+                    "The backup must retain the original PFD, not the processed working copy.");
+            });
+            Check("Reopening keeps separate automatic backups after sessions close", () =>
+            {
+                string folder = Fixture(root, "NPUA80908");
+                var original = Snapshot(folder);
+                string firstBackup;
+                string secondBackup;
+                using (var first = SaveSession.Open(folder, new FakeTools(), backupRoot: Path.Combine(root, "backups")))
+                    firstBackup = first.LastBackup;
+                using (var second = SaveSession.Open(folder, new FakeTools(), backupRoot: Path.Combine(root, "backups")))
+                    secondBackup = second.LastBackup;
+                True(firstBackup != secondBackup, "Reopening must never overwrite an earlier backup.");
+                Same(original, Snapshot(firstBackup));
+                Same(original, Snapshot(secondBackup));
+                Same(original, Snapshot(folder));
+            });
+            Check("Automatic backup failures stop opening without calling decryption", () =>
+            {
+                string blockedRoot = Path.Combine(root, "backup-root-is-a-file");
+                File.WriteAllText(blockedRoot, "Cannot create a backup directory here.");
+                foreach (bool decrypted in new[] { false, true })
+                {
+                    string folder = Fixture(root, "NPUA80908");
+                    var original = Snapshot(folder);
+                    var tools = new FakeTools();
+                    Throws<IOException>(() => SaveSession.Open(folder, tools, decrypted, blockedRoot));
+                    Equal(0, tools.CryptoCalls);
+                    Same(original, Snapshot(folder));
+                }
+            });
+            Check("A failed decryption retains the untouched automatic backup", () =>
+            {
+                string folder = Fixture(root, "NPUA80908");
+                var original = Snapshot(folder);
+                string backupRoot = Path.Combine(root, "failed-decryption-backups");
+                Throws<InvalidOperationException>(() => SaveSession.Open(folder, new FakeTools { FailDecrypt = true }, backupRoot: backupRoot));
+                string backup = Directory.GetDirectories(Path.Combine(backupRoot, Path.GetFileName(folder))).Single();
+                Same(original, Snapshot(backup));
+                Same(original, Snapshot(folder));
+            });
             foreach (string region in SaveProfile.SupportedRegions.Keys)
                 Check($"{region}: correct file, offsets, backups and repeat saves", () =>
                 {
                     string folder = Fixture(root, region);
                     var tools = new FakeTools();
                     var original = Snapshot(folder);
-                    using var session = SaveSession.Open(folder, tools);
+                    using var session = SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "backups"));
                     Equal(session.Profile.FileName, tools.DecryptedFile);
                     Equal(123, session.Bolts);
                     Equal(session.Profile.RaritaniumOffset.HasValue ? 45 : 0, session.Raritanium);
                     Same(original, Snapshot(folder));
+                    string openingBackup = session.LastBackup;
+                    Same(original, Snapshot(openingBackup));
                     string backup = session.Save(session.Profile.MaximumBolts, 987, Path.Combine(root, "backups"));
+                    True(openingBackup != backup, "Saving must keep the opening backup and create a new one.");
+                    Same(original, Snapshot(openingBackup));
                     Same(original, Snapshot(backup));
                     Equal(session.Profile.MaximumBolts, SaveData.ReadBolts(File.ReadAllBytes(Path.Combine(folder, session.Profile.FileName)), session.Profile)[0]);
                     if (session.Profile.RaritaniumOffset is int offset)
@@ -79,7 +155,7 @@ internal static class Program
                 string folder = Fixture(root, "NPUA80908");
                 var tools = new FakeTools { FailEncrypt = true };
                 var original = Snapshot(folder);
-                using var session = SaveSession.Open(folder, tools);
+                using var session = SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "backups"));
                 Throws<InvalidOperationException>(() => session.Save(999, 999, Path.Combine(root, "backups")));
                 Same(original, Snapshot(folder));
                 Equal(123, session.Bolts);
@@ -90,21 +166,21 @@ internal static class Program
             {
                 string unsupported = Fixture(root, "NPUA80908");
                 File.WriteAllBytes(Path.Combine(unsupported, "PARAM.SFO"), Sfo("UNKNOWN01"));
-                Throws<InvalidDataException>(() => SaveSession.Open(unsupported, new FakeTools()));
+                Throws<InvalidDataException>(() => SaveSession.Open(unsupported, new FakeTools(), backupRoot: Path.Combine(root, "backups")));
                 string missing = Fixture(root, "NPUA80643");
                 File.Delete(Path.Combine(missing, "USR-DATA"));
-                Throws<FileNotFoundException>(() => SaveSession.Open(missing, new FakeTools()));
+                Throws<FileNotFoundException>(() => SaveSession.Open(missing, new FakeTools(), backupRoot: Path.Combine(root, "backups")));
                 string truncated = Fixture(root, "NPUA80908");
                 File.WriteAllBytes(Path.Combine(truncated, "GAME.SAV"), new byte[10]);
-                Throws<InvalidDataException>(() => SaveSession.Open(truncated, new FakeTools()));
+                Throws<InvalidDataException>(() => SaveSession.Open(truncated, new FakeTools(), backupRoot: Path.Combine(root, "backups")));
                 string negative = Fixture(root, "NPUA80643");
                 using (var file = File.OpenWrite(Path.Combine(negative, "USR-DATA"))) { file.Position = 0x24; file.WriteInt32(-1); }
-                Throws<InvalidDataException>(() => SaveSession.Open(negative, new FakeTools()));
+                Throws<InvalidDataException>(() => SaveSession.Open(negative, new FakeTools(), backupRoot: Path.Combine(root, "backups")));
             });
             Check("External changes block save and backup", () =>
             {
                 string folder = Fixture(root, "NPUA80908");
-                using var session = SaveSession.Open(folder, new FakeTools());
+                using var session = SaveSession.Open(folder, new FakeTools(), backupRoot: Path.Combine(root, "backups"));
                 File.WriteAllText(Path.Combine(folder, "PARAM.PFD"), "Changed externally");
                 var changed = Snapshot(folder);
                 Throws<IOException>(() => session.Save(9, 9, Path.Combine(root, "backups")));
@@ -115,7 +191,7 @@ internal static class Program
             {
                 string folder = Fixture(root, "NPUA80908");
                 var original = Snapshot(folder);
-                using var session = SaveSession.Open(folder, new FakeTools());
+                using var session = SaveSession.Open(folder, new FakeTools(), backupRoot: Path.Combine(root, "backups"));
                 // Hold the second file against replacement so the first replacement succeeds then rolls back.
                 using var locked = File.Open(Path.Combine(folder, "PARAM.SFO"), FileMode.Open, FileAccess.Read, FileShare.Read);
                 Throws<IOException>(() => session.Save(999, 999, Path.Combine(root, "backups")));
@@ -127,7 +203,7 @@ internal static class Program
             {
                 string folder = Fixture(root, "NPUA80908");
                 var original = Snapshot(folder);
-                using var session = SaveSession.Open(folder, new FakeTools());
+                using var session = SaveSession.Open(folder, new FakeTools(), backupRoot: Path.Combine(root, "backups"));
                 session.PatchMetadata();
                 session.UpdateIntegrity();
                 True(session.MetadataChanged, "Metadata should be pending.");
@@ -141,7 +217,7 @@ internal static class Program
                 var original = Snapshot(folder);
                 using var tools = new Encryption();
                 // Deliberately invalid PARAM.PFD: the legacy exe silently returns exit code zero.
-                Throws<InvalidOperationException>(() => SaveSession.Open(folder, tools));
+                Throws<InvalidOperationException>(() => SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "backups")));
                 Throws<InvalidOperationException>(() => tools.Update(folder, "NPUA80643"));
                 Same(original, Snapshot(folder));
             });
@@ -206,8 +282,10 @@ internal static class Program
                 if (!hasPfd) File.Delete(Path.Combine(folder, "PARAM.PFD"));
                 var original = Snapshot(folder);
                 var tools = new FakeTools { FailDecrypt = true, FailEncrypt = true };
-                using var session = SaveSession.Open(folder, tools, decrypted: true);
+                using var session = SaveSession.Open(folder, tools, decrypted: true, backupRoot: Path.Combine(root, "backups"));
                 True(!session.IsEncrypted, "Raw saves must remain raw.");
+                Same(original, Snapshot(session.LastBackup));
+                Equal(0, tools.CryptoCalls);
                 Throws<InvalidOperationException>(session.UpdateIntegrity);
                 string backup = session.Save(456789, 0, Path.Combine(root, "backups"));
                 Same(original, Snapshot(backup));
@@ -220,16 +298,16 @@ internal static class Program
         {
             string folder = Fixture(root, "BCES00511");
             File.Delete(Path.Combine(folder, "PARAM.PFD"));
-            Throws<FileNotFoundException>(() => SaveSession.Open(folder, new FakeTools()));
+            Throws<FileNotFoundException>(() => SaveSession.Open(folder, new FakeTools(), backupRoot: Path.Combine(root, "backups")));
             File.WriteAllBytes(Path.Combine(folder, "PARAM.SFO"), Sfo("BCES00511", rpc: true));
-            using var session = SaveSession.Open(folder, new FakeTools { FailDecrypt = true });
+            using var session = SaveSession.Open(folder, new FakeTools { FailDecrypt = true }, backupRoot: Path.Combine(root, "backups"));
             True(!session.IsEncrypted, "RPCS3 metadata was not recognized.");
         });
         Check("Encryption output must round-trip exactly before originals are written", () =>
         {
             string folder = Fixture(root, "NPUA80908");
             var original = Snapshot(folder);
-            using var session = SaveSession.Open(folder, new FakeTools { CorruptEncrypt = true });
+            using var session = SaveSession.Open(folder, new FakeTools { CorruptEncrypt = true }, backupRoot: Path.Combine(root, "backups"));
             Throws<InvalidDataException>(() => session.Save(999, 99, Path.Combine(root, "backups")));
             Same(original, Snapshot(folder));
             Equal(123, session.Bolts);
@@ -237,7 +315,7 @@ internal static class Program
         Check("All 4 One edits characters independently and writes both paired counters", () =>
         {
             string folder = Fixture(root, "BCUS98175");
-            using var session = SaveSession.Open(folder, new FakeTools());
+            using var session = SaveSession.Open(folder, new FakeTools(), backupRoot: Path.Combine(root, "backups"));
             byte[] expected = File.ReadAllBytes(Path.Combine(folder, "GAME.SAV"));
             BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x1828), 444);
             BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x182C), 444);
@@ -278,12 +356,12 @@ internal static class Program
                     byte[] bindings = PfdBinding.SfoHashes(File.ReadAllBytes(Path.Combine(folder, "PARAM.PFD")));
                     using var tools = new Encryption();
                     tools.Encrypt(folder, region, profile.FileName);
-                    using var session = SaveSession.Open(folder, tools);
+                    using var session = SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "backups"));
                     Equal(123, session.Bolts);
                     int[] desired = session.CharacterBolts.Select((v, i) => 123456 + i).ToArray();
                     session.Save(desired, 999, Path.Combine(root, "backups"));
                     True(bindings.SequenceEqual(PfdBinding.SfoHashes(File.ReadAllBytes(Path.Combine(folder, "PARAM.PFD")))), "Owner bindings changed.");
-                    using var reopened = SaveSession.Open(folder, tools);
+                    using var reopened = SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "backups"));
                     True(desired.SequenceEqual(reopened.CharacterBolts), "Currency failed native crypto round-trip.");
                     Equal(profile.RaritaniumOffset.HasValue ? 999 : 0, reopened.Raritanium);
                     var snapshot = Snapshot(folder);
@@ -293,7 +371,7 @@ internal static class Program
                     corrupt[^1] ^= 1;
                     File.WriteAllBytes(Path.Combine(folder, profile.FileName), corrupt);
                     var tampered = Snapshot(folder);
-                    Throws<InvalidOperationException>(() => SaveSession.Open(folder, tools));
+                    Throws<InvalidOperationException>(() => SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "backups")));
                     Same(tampered, Snapshot(folder));
                 });
         Check("Malformed PFD tables and changed SFO bindings are rejected", () =>
@@ -374,7 +452,7 @@ internal static class Program
                 Directory.CreateDirectory(folder);
                 foreach (string path in Directory.GetFiles(source)) File.Copy(path, Path.Combine(folder, Path.GetFileName(path)));
                 using var tools = new Encryption();
-                using var session = SaveSession.Open(folder, tools);
+                using var session = SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "backups"));
                 Console.WriteLine($"  {session.Profile.Name}: {session.Bolts} bolts / {session.Raritanium} raritanium, {(session.IsEncrypted ? "encrypted" : "RPCS3")}");
                 var profile = session.Profile;
                 byte[] expected = File.ReadAllBytes(Path.Combine(session.WorkingFolder, profile.FileName));
@@ -386,7 +464,7 @@ internal static class Program
                 if (session.IsEncrypted)
                     True(PfdBinding.SfoHashes(original["PARAM.PFD"]).SequenceEqual(PfdBinding.SfoHashes(File.ReadAllBytes(Path.Combine(folder, "PARAM.PFD")))),
                         "Original console/disc/authentication hashes were overwritten.");
-                using var reopened = SaveSession.Open(folder, tools);
+                using var reopened = SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "backups"));
                 Equal(desired, reopened.Bolts); Equal(rare, reopened.Raritanium);
                 True(expected.SequenceEqual(File.ReadAllBytes(Path.Combine(reopened.WorkingFolder, profile.FileName))), "Real sample data failed to round-trip.");
                 Same(original, Snapshot(source));
@@ -426,10 +504,11 @@ internal static class Program
                 using var artwork = new Bitmap(16, 16);
                 artwork.Save(Path.Combine(folder, "ICON0.PNG"));
             }
-            var session = SaveSession.Open(folder, new FakeTools());
+            var session = SaveSession.Open(folder, new FakeTools(), backupRoot: Path.Combine(root, "backups"));
             sessionField.SetValue(form, session);
             show.Invoke(form, null);
             busy.Invoke(form, new object[] { false });
+            True(Field<Button>(form, "OpenBackupButton").Enabled, "Open Backups should be available immediately after opening.");
             tabs.SelectedIndex = 1;
             True(Field<NumericUpDown>(form, "CasinoChipsNumericUpDown").Visible == session.Profile.RaritaniumOffset.HasValue,
                 "Raritanium visibility did not reset on game switch.");
@@ -623,9 +702,11 @@ internal static class Program
         public bool FailDecrypt;
         public bool CorruptEncrypt;
         public int CryptoCalls;
+        public Action BeforeDecrypt;
         public void Decrypt(string folder, string region, string file)
         {
             CryptoCalls++;
+            BeforeDecrypt?.Invoke();
             if (FailDecrypt) throw new InvalidOperationException("Decryption must not be called for raw saves");
             DecryptedFile = file;
             File.WriteAllText(Path.Combine(folder, "PARAM.PFD"), "Decrypted integrity");
