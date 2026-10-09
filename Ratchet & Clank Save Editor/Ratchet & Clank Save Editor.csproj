@@ -8,9 +8,9 @@
     <ApplicationIcon>Ratchet.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="../docs/maps/ToolsOfDestruction.BCUS98127.v02.00.json" LogicalName="Research.Tod.Map.json" />
-    <EmbeddedResource Include="../docs/maps/ToolsOfDestruction.BCUS98127.v02.00.WeaponConfigs.json" LogicalName="Research.Tod.Configs.json" />
-    <EmbeddedResource Include="../docs/ToolsOfDestructionElfMap.md" LogicalName="Research.Tod.ElfNotes.md" />
-    <EmbeddedResource Include="../docs/ToolsOfDestructionSaveFormat.md" LogicalName="Research.Tod.SaveNotes.md" />
+    <EmbeddedResource Include="../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json" LogicalName="Research.Tod.Map.json" />
+    <EmbeddedResource Include="../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/WeaponConfigs.json" LogicalName="Research.Tod.Configs.json" />
+    <EmbeddedResource Include="../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/ElfMap.md" LogicalName="Research.Tod.ElfNotes.md" />
+    <EmbeddedResource Include="../docs/PS3/ToolsOfDestruction/SaveFormat.md" LogicalName="Research.Tod.SaveNotes.md" />
   </ItemGroup>
 </Project>

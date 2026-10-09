@@ -14,9 +14,10 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-ROOT = Path(__file__).resolve().parents[1]
-MAP_PATH = ROOT / "docs/maps/ToolsOfDestruction.BCUS98127.v02.00.json"
-SPEC = importlib.util.spec_from_file_location("tod_import", ROOT / "Tools/IDA/import_tod_map.py")
+ROOT = next(parent for parent in Path(__file__).resolve().parents
+            if (parent / "Ratchet And Clank Save Editor.sln").is_file())
+MAP_PATH = ROOT / "docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json"
+SPEC = importlib.util.spec_from_file_location("tod_import", ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py")
 IMPORTER = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(IMPORTER)
 MAPPING = json.loads(MAP_PATH.read_text(encoding="utf-8"))
@@ -105,7 +106,7 @@ class MapChecks(unittest.TestCase):
 
     def test_weapon_asset_fingerprints_and_native_bindings(self):
         import runpy
-        hashes = runpy.run_path(str(ROOT / "Tools/Inspect-TodWeaponConfigs.py"))["REFERENCE_HASHES"]
+        hashes = runpy.run_path(str(ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponConfigs.py"))["REFERENCE_HASHES"]
         configuration = MAPPING["weapon_configuration"]
         self.assertEqual(configuration["asset_weapon_count"], 28)
         self.assertEqual(configuration["asset_modifier_count_including_start_nodes"], 204)
@@ -161,7 +162,7 @@ class MapChecks(unittest.TestCase):
         if ELF_PATH is None:
             self.skipTest("Pass --elf to reproduce the native catalog")
         import runpy
-        report = runpy.run_path(str(ROOT / "Tools/Inspect-TodWeaponBindings.py"))["inspect"](ELF_PATH)
+        report = runpy.run_path(str(ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponBindings.py"))["inspect"](ELF_PATH)
         by_id = {item["id"]: item for item in report["constructor_calls"]}
         for item in MAPPING["weapon_configuration"]["inventory_catalog"]:
             decoded = by_id[item["id"]]

@@ -8,8 +8,9 @@ import struct
 import tempfile
 import unittest
 
-ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("storage", ROOT / "Tools/Inspect-TodStateStorage.py")
+ROOT = next(parent for parent in Path(__file__).resolve().parents
+            if (parent / "Ratchet And Clank Save Editor.sln").is_file())
+SPEC = importlib.util.spec_from_file_location("storage", ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodStateStorage.py")
 TOOL = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(TOOL)
 ELF, SAVE = None, None
@@ -51,7 +52,7 @@ class StorageChecks(unittest.TestCase):
     def test_reproduces_map_and_layout(self):
         self.require_elf()
         report = TOOL.inspect(ELF)
-        mapping = json.loads((ROOT / "docs/maps/ToolsOfDestruction.BCUS98127.v02.00.json").read_text())
+        mapping = json.loads((ROOT / "docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json").read_text())
         self.assertEqual(report, mapping["state_storage"])
         self.assertEqual(report["equipment_history"]["offsets"], ["0x42c", "0x430", "0x434"])
         self.assertEqual(report["rle_blocks"]["count"], 21)

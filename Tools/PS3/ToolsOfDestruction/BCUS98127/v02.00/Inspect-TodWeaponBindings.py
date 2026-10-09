@@ -11,8 +11,9 @@ import json
 from pathlib import Path
 import struct
 
-ROOT = Path(__file__).resolve().parents[1]
-MAP_PATH = ROOT / "docs/maps/ToolsOfDestruction.BCUS98127.v02.00.json"
+ROOT = next(parent for parent in Path(__file__).resolve().parents
+            if (parent / "Ratchet And Clank Save Editor.sln").is_file())
+MAP_PATH = ROOT / "docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json"
 
 
 def signed(value, bits):

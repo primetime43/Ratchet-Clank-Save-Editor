@@ -4,10 +4,10 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 595 annotations, 118 imports, evidence, byte signatures and twenty structure definitions.
-- [Ghidra importer](../Tools/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
-- [IDA importer](../Tools/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
-- [Save-format notes](ToolsOfDestructionSaveFormat.md): file-relative offsets, inventory records and wrapper headers.
+- [Shared address map](maps/NativeMap.json): 595 annotations, 118 imports, evidence, byte signatures and twenty structure definitions.
+- [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
+- [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
+- [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
 
 The importers modify the **analysis database only**, not the executable or saves. They check the input SHA-256 and all supplied byte signatures before applying annotations. Existing custom names, comments and types are preserved; repeated imports do not duplicate identical notes. Types are added to the type manager but are **not automatically applied** to ELF globals or save bytes. The imported names are descriptive research labels, not recovered original symbols.
 
@@ -206,7 +206,7 @@ The auxiliary initializer `0x35DC80` clears currency and initializes a 32-word s
 
 ### Progression, skill points and armor
 
-The supplied encrypted `BCUS98127_SAVE_1` now provides a same-title USA reference alongside the original European plaintext sample. The normal editor decryption path produced a private plaintext snapshot without changing any original files. Its non-private observations are in `usa_reference_save`; see [save-format notes](ToolsOfDestructionSaveFormat.md#code-backed-progression-and-armor) for hashes and values. An encryption round-trip on a disposable clone is not an in-game load test.
+The supplied encrypted `BCUS98127_SAVE_1` now provides a same-title USA reference alongside the original European plaintext sample. The normal editor decryption path produced a private plaintext snapshot without changing any original files. Its non-private observations are in `usa_reference_save`; see [save-format notes](../../SaveFormat.md#code-backed-progression-and-armor) for hashes and values. An encryption round-trip on a disposable clone is not an in-game load test.
 
 The key pointer proof is initializer `0x23E650`: `0x23E73C` loads TOC slot `0x897B38`, whose word is `0x101EFB20`; `0x23E744` stores it into hero member `+0x1A68`. Hero member accesses therefore refer to the identified serialized block, not an arbitrary runtime object.
 
@@ -227,7 +227,7 @@ The key pointer proof is initializer `0x23E650`: `0x23E73C` loads TOC slot `0x89
 | `0x1E2568` / `0x1E25F0` | Read/reset/update saved float `0x428`; update clamps 1..20 |
 | `0x2D1860` | Returns whether saved word `0x906EC` is nonzero; called by multiplier and armor availability |
 
-Native registration `0x294E90` exports all 60 `SKILLPOINT_*` IDs and count60; registration `0x28440` exports the five `ARMOR_*` IDs and count5. [Inspect-TodProgression.py](../Tools/Inspect-TodProgression.py) decodes their literal float exports and TOC name pointers, not string order or guessed enum numbering. It also reads all 60 definition records: points, name tag, description tag and **unknown** member `+0xC`. Localization tags are numeric IDs, not direct pointers or recovered English descriptions. Runtime localization branches are not fully reconstructed.
+Native registration `0x294E90` exports all 60 `SKILLPOINT_*` IDs and count60; registration `0x28440` exports the five `ARMOR_*` IDs and count5. [Inspect-TodProgression.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodProgression.py) decodes their literal float exports and TOC name pointers, not string order or guessed enum numbering. It also reads all 60 definition records: points, name tag, description tag and **unknown** member `+0xC`. Localization tags are numeric IDs, not direct pointers or recovered English descriptions. Runtime localization branches are not fully reconstructed.
 
 The shared `progression` section contains **478** additional original-ELF byte guards and the complete catalogs. The types `TOD_SaveArmorState_verified` (relative to save `0x444`) and `TOD_SaveSkillPointState_verified` (relative to `0x8708`) are added without replacing prior types. Raw BE64 bit order and unknown high bits are explicitly documented. The program embeds the map and displays these findings read-only.
 
@@ -239,9 +239,9 @@ Save `0x418` is now confirmed as serialized integer hero XP by the named setter 
 
 The supplied game's `packed/game/global_cached.psarc` contains plaintext `weapon.csv`, `mods.csv`, `vendor.csv` and their Lua loaders under `/data/configs/`. Selective extracts remain under ignored `artifacts/tod-assets-v02.00/`; no archive, Lua source, compiled code or game binary is tracked. The six SHA-256 fingerprints are recorded in the JSON map's `weapon_configuration.assets` section and the report tool.
 
-This particular archive has 3,297 entries, version `0x00010002`, `zlib` compression, 30-byte TOC records and 64 KiB blocks. All 3,296 filename hashes match **ASCII-uppercase full manifest paths**, including their leading slash. Filename MD5s are not payload-integrity hashes. The independent [archive inspector](../Tools/Inspect-Psarc.py) follows the field/block layout corroborated by this [primary PSARC extractor implementation](https://raw.githubusercontent.com/rscustom/rocksmith-custom-song-toolkit/master/RocksmithToolkitCLI/generalscripts/psarc-extract.rb); uppercase normalization is an observation from these ToD bytes, not assumed for every PSARC variant.
+This particular archive has 3,297 entries, version `0x00010002`, `zlib` compression, 30-byte TOC records and 64 KiB blocks. All 3,296 filename hashes match **ASCII-uppercase full manifest paths**, including their leading slash. Filename MD5s are not payload-integrity hashes. The independent [archive inspector](../../../../../Tools/Inspect-Psarc.py) follows the field/block layout corroborated by this [primary PSARC extractor implementation](https://raw.githubusercontent.com/rscustom/rocksmith-custom-song-toolkit/master/RocksmithToolkitCLI/generalscripts/psarc-extract.rb); uppercase normalization is an observation from these ToD bytes, not assumed for every PSARC variant.
 
-The [configuration report](../Tools/Inspect-TodWeaponConfigs.py) parses numeric literals without executing Lua or expressions. It reports all 28 named weapon/gadget configurations, all per-level variables, 204 modifier entries across 15 weapon groups, vendor weapon/armor records, node masks, costs and localization tags. The 204 entries include 15 `MOD_START` entries: they are not 204 purchasable upgrades. These are shipped **asset definitions**, not independently captured runtime configuration or safe editor limits.
+The [configuration report](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponConfigs.py) parses numeric literals without executing Lua or expressions. It reports all 28 named weapon/gadget configurations, all per-level variables, 204 modifier entries across 15 weapon groups, vendor weapon/armor records, node masks, costs and localization tags. The 204 entries include 15 `MOD_START` entries: they are not 204 purchasable upgrades. These are shipped **asset definitions**, not independently captured runtime configuration or safe editor limits.
 
 Loader rules established by reading the source:
 
@@ -298,9 +298,9 @@ python -B Tools/Inspect-Psarc.py "path/to/global_cached.psarc"
 python -B Tools/Inspect-Psarc.py "path/to/global_cached.psarc" `
   --name /data/configs/weapon.csv --out artifacts/tod-assets-v02.00/weapon.csv
 # Repeat explicitly for weapon.lua, mods.csv/.lua, and vendor.csv/.lua.
-python -B Tools/Inspect-TodWeaponConfigs.py artifacts/tod-assets-v02.00
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponConfigs.py artifacts/tod-assets-v02.00
 python -B Tests/TestPsarc.py --archive "path/to/global_cached.psarc" -v
-python -B Tests/TestTodWeaponConfigs.py --assets artifacts/tod-assets-v02.00 -v
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodWeaponConfigs.py --assets artifacts/tod-assets-v02.00 -v
 ```
 
 The archive tool refuses existing outputs and extraction into the original archive directory. Bounds, decompression size, malformed manifests, untrusted names and overwrite protection are fixture-tested. Reference tests verify matching extracted hashes and unchanged original archive/assets. Native IDs and vendor adjacency are now mapped below; runtime overrides and edited-copy gameplay validation remain open. No new editor fields are enabled by these findings.
@@ -348,11 +348,11 @@ The MonolithicConfig root getter is `0x94400`; pointer slot `0x88FAFC` contains 
 
 The JSON `inventory_catalog` records enum names, instruction addresses, pointer slots, getters and offsets for every row, with **264** separate catalog byte guards. Internal enum/config names need not match: `WPN_VISICOPTER` maps to `Copter`, `WPN_PIRATEGUISE` to `PirateGadget`, and `WPN_MAGCYCLE` to `MagCycle`. CuttingLaser, RoboWings, MagCycle and PirateGadget have native bindings but no rows in the six extracted configuration files; do not invent their asset defaults.
 
-The [native binding inspector](../Tools/Inspect-TodWeaponBindings.py) verifies the exact ELF size/hash before decoding bounded, observed PPC patterns. It is not a general emulator. Assembly traces independently corroborate the arguments and getter offsets. The acquisition counter at save `0x280` remains unexplained (sample 46); the new catalog does not justify replacing it with the number of owned items.
+The [native binding inspector](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponBindings.py) verifies the exact ELF size/hash before decoding bounded, observed PPC patterns. It is not a general emulator. Assembly traces independently corroborate the arguments and getter offsets. The acquisition counter at save `0x280` remains unexplained (sample 46); the new catalog does not justify replacing it with the number of owned items.
 
 ### Vendor upgrade grids and purchasing
 
-Archive entry `/built/anark/weaponvendor/built.dat` is 390,796 bytes, SHA-256 `294BA05A607BC5C4C59B60E85C57515DBBD8CDEECC9CB6BF570AE4AE937627D5`. Its `weaponUpgradeHandler` chunk spans **file** offsets `0x54F85–0x5E78A` (exclusive end), not ELF VAs. The chunk is Lua 5.0 with little-endian integers and float32 numbers, unlike the big-endian native executable. The bounded [Lua reader](../Tools/Inspect-Lua50.py) follows the official [chunk field ordering](https://www.lua.org/source/5.0/lundump.c.html) and [5.0 instruction encoding](https://www.lua.org/source/5.0/lopcodes.h.html); it never executes Lua. In particular, Lua 5.0's A field is at bit 24 and its register/constant operand boundary is 250, not the familiar Lua 5.1 layout.
+Archive entry `/built/anark/weaponvendor/built.dat` is 390,796 bytes, SHA-256 `294BA05A607BC5C4C59B60E85C57515DBBD8CDEECC9CB6BF570AE4AE937627D5`. Its `weaponUpgradeHandler` chunk spans **file** offsets `0x54F85–0x5E78A` (exclusive end), not ELF VAs. The chunk is Lua 5.0 with little-endian integers and float32 numbers, unlike the big-endian native executable. The bounded [Lua reader](../../../../../Tools/Inspect-Lua50.py) follows the official [chunk field ordering](https://www.lua.org/source/5.0/lundump.c.html) and [5.0 instruction encoding](https://www.lua.org/source/5.0/lopcodes.h.html); it never executes Lua. In particular, Lua 5.0's A field is at bit 24 and its register/constant operand boundary is 250, not the familiar Lua 5.1 layout.
 
 Static literal-table recovery from `initWeaps` yields **15 grids**, each four rows by seven columns. Every nonnegative node index matches its named CSV group, totaling 204 entries including the 15 starts. The JSON stores all grids and selected method offsets. Globals such as `WPN_COMBUSTER` remain symbolic while decoding; no game environment is executed or assumed.
 
@@ -388,12 +388,12 @@ Reproduce the new read-only reports and checks:
 # Use a new output file; never overwrite the original archive or assets.
 python -B Tools/Inspect-Psarc.py "path/to/global_cached.psarc" `
   --name /built/anark/weaponvendor/built.dat --out artifacts/tod-assets-v02.00/weapon-vendor-built.dat
-python -B Tools/Inspect-TodWeaponBindings.py "path/to/EBOOT.ELF"
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponBindings.py "path/to/EBOOT.ELF"
 python -B Tools/Inspect-Lua50.py artifacts/tod-assets-v02.00/weapon-vendor-built.dat `
   --offset 0x54F85 --vendor-layout
-python -B Tests/TestTodWeaponBindings.py --elf "path/to/EBOOT.ELF" --assets artifacts/tod-assets-v02.00 -v
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodWeaponBindings.py --elf "path/to/EBOOT.ELF" --assets artifacts/tod-assets-v02.00 -v
 python -B Tests/TestLua50.py --asset artifacts/tod-assets-v02.00/weapon-vendor-built.dat -v
-python -B Tests/TestTodElfMap.py --elf "path/to/EBOOT.ELF" -v
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodElfMap.py --elf "path/to/EBOOT.ELF" -v
 ```
 
 Tests cover malformed/bounded chunks, endian/number layouts, operand encoding, literal-grid recovery, native ID/offset links and matching CSV nodes, plus unchanged reference files. Static graph recovery is not proof that edited saves load or that these USA executable findings apply to every region/version. New UI editing remains deferred until runtime validation of disposable copies.
@@ -406,7 +406,7 @@ The project's README points to [Slim's Editor](https://github.com/RatchetModding
 
 ## Hero XP special bolts and skins
 
-The `collectibles` section records 267 original-byte guards, native script registrations, all19 level IDs and all9 skin IDs. [Inspect-TodCollectibles.py](../Tools/Inspect-TodCollectibles.py) independently reproduces it from the exact reference ELF and optionally observes a plaintext save without writing either input. Complete native function bytes and TOC-changing thunks are retained, including the collectible setter's automatic skill-point award.
+The `collectibles` section records 267 original-byte guards, native script registrations, all19 level IDs and all9 skin IDs. [Inspect-TodCollectibles.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodCollectibles.py) independently reproduces it from the exact reference ELF and optionally observes a plaintext save without writing either input. Complete native function bytes and TOC-changing thunks are retained, including the collectible setter's automatic skill-point award.
 
 | Verified chain or routine | Result |
 | --- | --- |
@@ -429,7 +429,7 @@ The original `TOD_hero_progression_restore_candidate` label is retained at `0x23
 
 ## World progress mission counters and quick select
 
-The shared `world_state` section and [Inspect-TodWorldState.py](../Tools/Inspect-TodWorldState.py) independently reproduce 19 native level rows and 205 original-byte guards from this exact ELF. Newly imported types preserve opaque bytes: `TOD_SaveLevelProgressState_verified` refines the older collectible type without replacing it; `TOD_SaveMissionCounterRecord_verified` maps only its final counter; `TOD_SaveQuickSelectStorage_verified` stores raw ID bits with signed interpretation in its comments.
+The shared `world_state` section and [Inspect-TodWorldState.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWorldState.py) independently reproduce 19 native level rows and 205 original-byte guards from this exact ELF. Newly imported types preserve opaque bytes: `TOD_SaveLevelProgressState_verified` refines the older collectible type without replacing it; `TOD_SaveMissionCounterRecord_verified` maps only its final counter; `TOD_SaveQuickSelectStorage_verified` stores raw ID bits with signed interpretation in its comments.
 
 | Named binding / native path | Proven storage or behavior |
 | --- | --- |
@@ -445,7 +445,7 @@ The shared `world_state` section and [Inspect-TodWorldState.py](../Tools/Inspect
 
 Pointers `0x888624`, `0x889AF4`, `0x89550C` and `0x89F16C` all resolve to serialized base `0x101EFB20`. World stride is derived from shifts10+3; mission stride from shifts7−2. Assembly proves the mission-counter load at `0x2D0F04`, the insertion bound at `0x1E2730`, its automatic-search count at `0x1E27F0`, and removal's 32-word loop. Thunks restore/change TOCs explicitly; decompiler output alone is not used for these displacements.
 
-The USA snapshot has all32 quick-select slots empty, all19 mission counters/unlocked/exclusion bytes zero, and only native level0 visited. This surprising observation is retained without inferring current runtime progress. See the [save-format notes](ToolsOfDestructionSaveFormat.md#confirmed-world-progress-and-quick-select-storage) for limitations and reproduction checks. No completion percentage, wheel position, mission-ID catalog or safe edit range is established.
+The USA snapshot has all32 quick-select slots empty, all19 mission counters/unlocked/exclusion bytes zero, and only native level0 visited. This surprising observation is retained without inferring current runtime progress. See the [save-format notes](../../SaveFormat.md#confirmed-world-progress-and-quick-select-storage) for limitations and reproduction checks. No completion percentage, wheel position, mission-ID catalog or safe edit range is established.
 
 ### Remaining native leads, not promoted to saved-field names
 
@@ -455,7 +455,7 @@ The USA snapshot has all32 quick-select slots empty, all19 mission counters/unlo
 
 ## Native object counters and equipment
 
-Two enum exporters (`0x28440 → 0x12990` and `0x294E90 → 0x252EB8`) agree on all23 `OBJ_` IDs and the count sentinel23. [Inspect-TodObjects.py](../Tools/Inspect-TodObjects.py) independently reproduces those IDs and the three saved arrays, with 205 exact-byte guards and named registrations. All23 native object-name strings and their accessor/thunk chains are importable; `TOD_SaveObjectCounters_verified` preserves signed-current interpretation as comments on raw BE32 words.
+Two enum exporters (`0x28440 → 0x12990` and `0x294E90 → 0x252EB8`) agree on all23 `OBJ_` IDs and the count sentinel23. [Inspect-TodObjects.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodObjects.py) independently reproduces those IDs and the three saved arrays, with 205 exact-byte guards and named registrations. All23 native object-name strings and their accessor/thunk chains are importable; `TOD_SaveObjectCounters_verified` preserves signed-current interpretation as comments on raw BE32 words.
 
 | Named API | Exact native chain |
 | --- | --- |
@@ -466,11 +466,11 @@ Two enum exporters (`0x28440 → 0x12990` and `0x294E90 → 0x252EB8`) agree on 
 
 Native methods access hero member `+0x1A68`, whose pointer linkage to serialized `0x101EFB20` is guarded at `0x23E73C/0x23E744` and TOC slot `0x897B38`. Current getter loads `+0x304+4*i` and sign-extends; high-water getter `0x23D900` loads `+0x360+4*i`. Set/add methods compare high-water as unsigned (`cmplw`), not signed, and add updates `+0x3BC+4*i` only when the signed delta is positive. The presence predicate compares current against zero, not against a positive threshold. Native arithmetic wraps 32 bits; no repaired or clamped data is implied.
 
-Full catalog, actual USA observations, reproduction commands and limitations are in the [save-format notes](ToolsOfDestructionSaveFormat.md#confirmed-object-counters-and-equipment). Timer units, arena-count usage, reset points and each item's runtime dependencies still require further tracing or controlled captures. Positive additions are not asserted to be unique pickups or lifetime acquisition totals.
+Full catalog, actual USA observations, reproduction commands and limitations are in the [save-format notes](../../SaveFormat.md#confirmed-object-counters-and-equipment). Timer units, arena-count usage, reset points and each item's runtime dependencies still require further tracing or controlled captures. Positive additions are not asserted to be unique pickups or lifetime acquisition totals.
 
 ## Active and completed mission lists
 
-The `mission_lists` section is independently reproduced by [Inspect-TodMissions.py](../Tools/Inspect-TodMissions.py). Native active address getter `0x2D0D60` resolves `save+0x10148+0x7C*level`; completed getter `0x2D0DF0` resolves `save+0x10AF8+0x7C*level`. Each list has ten12-byte entries and count at member78. Original count values are retained; analysis only bounds reads to the physical capacity. Added types `TOD_SaveMissionEntry_verified` and `TOD_SaveMissionList_verified` refine the old counter-only type without overwriting it.
+The `mission_lists` section is independently reproduced by [Inspect-TodMissions.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodMissions.py). Native active address getter `0x2D0D60` resolves `save+0x10148+0x7C*level`; completed getter `0x2D0DF0` resolves `save+0x10AF8+0x7C*level`. Each list has ten12-byte entries and count at member78. Original count values are retained; analysis only bounds reads to the physical capacity. Added types `TOD_SaveMissionEntry_verified` and `TOD_SaveMissionList_verified` refine the old counter-only type without overwriting it.
 
 | Named native chain | Evidence |
 | --- | --- |
@@ -487,7 +487,7 @@ All getter paths use `0x11D30 → 0x2D0E18`: one-based script indices become zer
 
 ### Blueprints and bonus/cheat states
 
-The named APIs independently establish the next serialized fields. [Inspect-TodBonuses.py](../Tools/Inspect-TodBonuses.py) reproduces the bundled `bonuses` section with 231 byte guards, full original ELF hash verification and bounded plaintext inspection. It reports to stdout only. [TestTodBonuses.py](../Tests/TestTodBonuses.py) tests unknown bits, unusual states, malformed inputs, exact catalog reproduction and original-input preservation; generated fixtures are not in-game captures.
+The named APIs independently establish the next serialized fields. [Inspect-TodBonuses.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonuses.py) reproduces the bundled `bonuses` section with 231 byte guards, full original ELF hash verification and bounded plaintext inspection. It reports to stdout only. [TestTodBonuses.py](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodBonuses.py) tests unknown bits, unusual states, malformed inputs, exact catalog reproduction and original-input preservation; generated fixtures are not in-game captures.
 
 | Save offset | Code-backed meaning | Evidence |
 | --- | --- | --- |
@@ -527,7 +527,7 @@ Named `enable_all_cheats` (`2BBC90 → 27A678 → 35D480`) writes **840** to sco
 
 ### Saved equipment history and compressed state blocks
 
-[Inspect-TodStateStorage.py](../Tools/Inspect-TodStateStorage.py) reproduces the shared `state_storage` section with 50 byte guards, full ELF hash verification, three historical equipment words and a bounded native-format RLE decoder. [TestTodStateStorage.py](../Tests/TestTodStateStorage.py) tests token truncation, native output boundaries, run clipping, malicious lengths, map reproduction and unchanged actual inputs. No decoded payload or game binary is embedded in the application; it computes only live read-only summaries from the session snapshot.
+[Inspect-TodStateStorage.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodStateStorage.py) reproduces the shared `state_storage` section with 50 byte guards, full ELF hash verification, three historical equipment words and a bounded native-format RLE decoder. [TestTodStateStorage.py](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodStateStorage.py) tests token truncation, native output boundaries, run clipping, malicious lengths, map reproduction and unchanged actual inputs. No decoded payload or game binary is embedded in the application; it computes only live read-only summaries from the session snapshot.
 
 #### Equipment history, not dual-wield slots
 
@@ -576,7 +576,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 ### Ghidra
 
-Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
+Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
 The live Ghidra checks cover 594 mapped annotations (the third TOC reference base is unmapped), twenty structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
@@ -586,8 +586,8 @@ For a fresh headless research project, run descriptor preparation **before** ana
 # Set these paths for your installation; the project directory must exist.
 & "$GhidraRoot/support/analyzeHeadless.bat" $ProjectDirectory TodResearch `
   -import $ElfPath -processor PowerPC:BE:64:64-32addr -cspec default `
-  -scriptPath "$RepoRoot/Tools/Ghidra" -preScript PrepareTod.java `
-  -postScript ImportTodMap.java "$RepoRoot/docs/maps/ToolsOfDestruction.BCUS98127.v02.00.json"
+  -scriptPath "$RepoRoot/Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra" -preScript PrepareTod.java `
+  -postScript ImportTodMap.java "$RepoRoot/docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json"
 ```
 
 `SurveyTod.java <output-directory> [function-VA ...]` exports string references, descriptor-based TOC-load leads, assembly and selected decompilations. Its direct TOC-load scan assumes the descriptor TOC for that instruction; confirm r2-changing thunks and restore paths in assembly before treating every lead as resolved. Local project/copy/reports are under ignored `artifacts/ghidra/BCUS98127-02.00/`; no game binary is included in the tracked research files.
@@ -596,7 +596,7 @@ For a fresh headless research project, run descriptor preparation **before** ana
 
 ```powershell
 & "$GhidraRoot/support/analyzeHeadless.bat" $ProjectDirectory TodResearch `
-  -process EBOOT.ELF -noanalysis -scriptPath "$RepoRoot/Tools/Ghidra" `
+  -process EBOOT.ELF -noanalysis -scriptPath "$RepoRoot/Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra" `
   -postScript TraceTodSave.java "$RepoRoot/artifacts/tod-weapon-trace" `
   f:0035e710 f:0035e508 f:00695bf8 f:000258c0 f:00027608 `
   f:00465ff0 f:004660a8 f:00465d00 f:00466258
@@ -604,12 +604,12 @@ For a fresh headless research project, run descriptor preparation **before** ana
 
 ### IDA
 
-Load the same ELF with its original virtual addresses as big-endian PowerPC. Choose **File → Script file**, run `Tools/IDA/import_tod_map.py`, then select the JSON. The script targets the IDA 9 [IDAPython interfaces](https://python.docs.hex-rays.com/namespaceida__typeinf.html). IDA was not available for a live import test: syntax, map validation and mocked database-safety tests passed, but runtime compatibility is not yet verified. It does not configure PS3 TOCs or correct function prototypes automatically.
+Load the same ELF with its original virtual addresses as big-endian PowerPC. Choose **File → Script file**, run `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py`, then select the JSON. The script targets the IDA 9 [IDAPython interfaces](https://python.docs.hex-rays.com/namespaceida__typeinf.html). IDA was not available for a live import test: syntax, map validation and mocked database-safety tests passed, but runtime compatibility is not yet verified. It does not configure PS3 TOCs or correct function prototypes automatically.
 
 ### Checks
 
 ```powershell
-python -B Tests/TestTodElfMap.py --elf "path/to/EBOOT.ELF" -v
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodElfMap.py --elf "path/to/EBOOT.ELF" -v
 ```
 
 Checks cover map bounds/types, duplicates, complete sample-region coverage, original ELF SHA-256/signatures, descriptor enumeration, and IDA importer preflight/preservation behavior. ELF/save originals remained read-only. Neither static analysis nor these checks substitutes for controlled in-game testing.

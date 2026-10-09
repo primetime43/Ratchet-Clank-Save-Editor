@@ -62,7 +62,9 @@ def main():
     import ida_nalt
     import ida_typeinf
 
-    default = Path(__file__).resolve().parents[2] / "docs" / "maps" / "ToolsOfDestruction.BCUS98127.v02.00.json"
+    default = next(parent for parent in Path(__file__).resolve().parents
+                   if (parent / "Ratchet And Clank Save Editor.sln").is_file())
+    default = default / "docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json"
     selected = ida_kernwin.ask_file(False, str(default), "Choose the ToD ELF address map JSON")
     if not selected:
         return

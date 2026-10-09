@@ -1,5 +1,5 @@
 // Verify a matching database after applying the shared map twice.
-// Usage: -scriptPath Tools/Ghidra -postScript TestTodMap.java <map.json>
+// Usage: -scriptPath Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra -postScript TestTodMap.java <map.json>
 // @category RatchetClank.Tests
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;

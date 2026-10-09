@@ -89,7 +89,7 @@ For example, record 1 has `00000001 47A33965 42C80000 00003FFE 01090000`: ID 1, 
 
 ### Verified snapshot and inventory dependencies
 
-The exact USA v02.00 ELF uses RAM block `0x101EFB20`, length `0x906F0`, as its saved state. Snapshot function `0x35E710` copies it byte-for-byte to the save-manager buffer at object `+0x1FD08`; restore function `0x35E508` copies the same bytes back. Both call byte-copy implementation `0x81A9A8` through thunk `0x252428`. File callback `0x695BF8` hands that buffer and length to the PS3 save API as secure `GAME.SAV` data. Thus `save offset = game-state VA − 0x101EFB20` for this snapshot layout, not for arbitrary game RAM. Details and exact instruction guards are in the [ELF map](ToolsOfDestructionElfMap.md#verified-snapshot-and-weapon-state).
+The exact USA v02.00 ELF uses RAM block `0x101EFB20`, length `0x906F0`, as its saved state. Snapshot function `0x35E710` copies it byte-for-byte to the save-manager buffer at object `+0x1FD08`; restore function `0x35E508` copies the same bytes back. Both call byte-copy implementation `0x81A9A8` through thunk `0x252428`. File callback `0x695BF8` hands that buffer and length to the PS3 save API as secure `GAME.SAV` data. Thus `save offset = game-state VA − 0x101EFB20` for this snapshot layout, not for arbitrary game RAM. Details and exact instruction guards are in the [ELF map](BCUS98127/v02.00/ElfMap.md#verified-snapshot-and-weapon-state).
 
 The named Lua getters connect the record to gameplay: ammo `0x33C80 → 0x258C0`, level `0x33A98 → 0x27608`, and progress `0x339C0 → 0x27568 → thunk 0x11940 → 0x465FF0`. The getters use the same RAM base and `0x14` stride. Ammo and level are gated by byte `+0x10` and definition flags; inactive records must not be interpreted as usable weapons solely because their numeric fields look plausible.
 
@@ -108,7 +108,7 @@ The full named ownership chain is `0x33F40 → 0x25AF0 → thunk 0x12950 → 0x2
 
 The separately named `unlock_weapon` path `0x2A4EC0 → 0x27A5B8` sets byte `0x5754 + item ID` to 1. Predicate `0x2D24C0` combines that byte with definition flags and ownership; unlocking availability is not the same as acquiring possession. The total byte-array length remains unknown. Only IDs 0–31 are interpreted by the comparison tool.
 
-The `hero_give_weapon` binding reaches `0x28B4E8`, which validates the hero and ID, acquires through `0x466B70`, delegates inventory integration, optionally sets XP/ammo and can notify another system. See the [ELF ownership and acquisition map](ToolsOfDestructionElfMap.md#ownership-unlocks-and-acquisition) for exact labels and dependencies. Script helpers are not proof that arbitrary file edits safely reproduce those runtime operations.
+The `hero_give_weapon` binding reaches `0x28B4E8`, which validates the hero and ID, acquires through `0x466B70`, delegates inventory integration, optionally sets XP/ammo and can notify another system. See the [ELF ownership and acquisition map](BCUS98127/v02.00/ElfMap.md#ownership-unlocks-and-acquisition) for exact labels and dependencies. Script helpers are not proof that arbitrary file edits safely reproduce those runtime operations.
 
 ### Currency and nearby values
 
@@ -124,7 +124,7 @@ The `hero_give_weapon` binding reaches `0x28B4E8`, which validates the hero and 
 
 ### Code-backed progression and armor
 
-These meanings were traced in the exact USA v02.00 ELF and checked against the supplied USA plaintext working copy. The shared JSON `progression` section records native functions, all 60 skill definitions, all five armor enums and 478 byte guards. [Inspect-TodProgression.py](../Tools/Inspect-TodProgression.py) independently reproduces that section from the original ELF; its optional save argument reads plaintext only and refuses other sizes or non-sequential inventory IDs.
+These meanings were traced in the exact USA v02.00 ELF and checked against the supplied USA plaintext working copy. The shared JSON `progression` section records native functions, all 60 skill definitions, all five armor enums and 478 byte guards. [Inspect-TodProgression.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodProgression.py) independently reproduces that section from the original ELF; its optional save argument reads plaintext only and refuses other sizes or non-sequential inventory IDs.
 
 | Save offset | Stored type | Code-backed meaning | USA observation |
 | --- | --- | --- | --- |
@@ -146,13 +146,13 @@ The USA value at `0x418` is 2,315,144 hero XP, now confirmed by the named setter
 Reproduce from a working-copy plaintext capture:
 
 ```powershell
-python Tools/Inspect-TodProgression.py --elf $ElfPath --save $PlaintextSavePath
-python Tests/TestTodProgression.py --elf $ElfPath --save $PlaintextSavePath
+python Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodProgression.py --elf $ElfPath --save $PlaintextSavePath
+python Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodProgression.py --elf $ElfPath --save $PlaintextSavePath
 ```
 
 ### Confirmed hero XP and collectibles
 
-The shared map's `collectibles` section is reproduced by [Inspect-TodCollectibles.py](../Tools/Inspect-TodCollectibles.py) from the hash-guarded USA ELF. It contains 19 native level IDs, nine skin IDs, static prices, per-level totals and 267 byte guards. These are static meanings checked against an actual plaintext working copy, not in-game edit/load tests. Original ELF and save files remain unchanged.
+The shared map's `collectibles` section is reproduced by [Inspect-TodCollectibles.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodCollectibles.py) from the hash-guarded USA ELF. It contains 19 native level IDs, nine skin IDs, static prices, per-level totals and 267 byte guards. These are static meanings checked against an actual plaintext working copy, not in-game edit/load tests. Original ELF and save files remain unchanged.
 
 | Save offset | Type | Meaning | USA save |
 | --- | --- | --- | --- |
@@ -191,8 +191,8 @@ Cost getter `0x1F0D60` reads the first uint32 of nine 16-byte definitions at `0x
 The editor's **Hero XP** and **Special bolts spent** summary rows, **Special bolts**, **Skins**, and bundled **Research** topics are read-only. Reproduce the research and input-preservation checks with:
 
 ```powershell
-python -B Tools/Inspect-TodCollectibles.py --elf $ElfPath --save $PlaintextSavePath
-python -B Tests/TestTodCollectibles.py --elf $ElfPath --save $PlaintextSavePath -v
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodCollectibles.py --elf $ElfPath --save $PlaintextSavePath
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodCollectibles.py --elf $ElfPath --save $PlaintextSavePath -v
 ```
 
 ### Named gameplay records
@@ -300,30 +300,30 @@ Chunks proceed through IHDR, gAMA, cHRM, iCCP, pHYs, IDAT data and IEND. The sur
 Requires PowerShell 7.2 or later. Reports are generated under ignored `artifacts/`; private source saves are not copied into the repository. The output file must not exist and must be outside the source save folder.
 
 ```powershell
-./Tools/Inspect-TodSave.ps1 `
+./Tools/PS3/ToolsOfDestruction/Inspect-TodSave.ps1 `
   -SourceFolder "C:\Users\primetime43\Downloads\Ratchet & Clank Save Editor\PS3\SAVEDATA\BCES00052_SAVE_1" `
   -OutputFile artifacts/save-mapping/BCES00052_SAVE_1-survey.json
 ```
 
 Omit `-OutputFile` to return JSON without writing anything. The report includes all SFO fields, PFD table bounds, every inventory/gameplay record, every four-byte word in the first `0x1000` game bytes, printable strings, zero spans, 4 KiB page occupancy and PNG chunks. It refuses unfamiliar/encrypted game prefixes instead of guessing or decrypting them. This initial survey is limited to the observed BCES00052/BCUS98127 ToD layout.
 
-Run the reference-specific checks with `./Tests/TestTodSaveInspector.ps1 -SourceFolder <save-folder>`. They verify the observed tables, privacy redaction, output safeguards, malformed-input rejection and unchanged source hashes. These checks do not replace controlled in-game tests of candidate fields.
+Run the reference-specific checks with `./Tests/PS3/ToolsOfDestruction/TestTodSaveInspector.ps1 -SourceFolder <save-folder>`. They verify the observed tables, privacy redaction, output safeguards, malformed-input rejection and unchanged source hashes. These checks do not replace controlled in-game tests of candidate fields.
 
 ## Compare plaintext snapshots
 
-[Compare-TodSaves.ps1](../Tools/Compare-TodSaves.ps1) compares two `GAME.SAV` files without editing them. It requires the exact `0x906F0` size and plaintext sequential record IDs, emits JSON to stdout only, and reads no SFO/PFD or account-binding data. Unknown regions are reported as byte-range/count changes without dumping their contents.
+[Compare-TodSaves.ps1](../../../Tools/PS3/ToolsOfDestruction/Compare-TodSaves.ps1) compares two `GAME.SAV` files without editing them. It requires the exact `0x906F0` size and plaintext sequential record IDs, emits JSON to stdout only, and reads no SFO/PFD or account-binding data. Unknown regions are reported as byte-range/count changes without dumping their contents.
 
 ```powershell
-./Tools/Compare-TodSaves.ps1 -BeforeFile "before/GAME.SAV" -AfterFile "after/GAME.SAV"
+./Tools/PS3/ToolsOfDestruction/Compare-TodSaves.ps1 -BeforeFile "before/GAME.SAV" -AfterFile "after/GAME.SAV"
 ```
 
 Reports include hashes, exact changed ranges, region totals, XP/ammo/level/ownership/modifier changes, added/cleared modifier-bit indices, currency deltas, unlock bytes for IDs 0–31 and acquisition-counter changes. Float changes retain raw bytes, including nonfinite values. `-MaxRanges 200` limits displayed ranges, not total changed-byte/range counts. Differing bytes show correlation, not the cause of a gameplay event; the script does not infer a valid XP/level combination or validate console acceptance.
 
-Run `./Tests/TestTodSaveComparison.ps1 -SourceFile <reference-GAME.SAV>` for 11 checks against this exact sample. Tests generate and modify temporary copies to verify decoding, bounds, masks, unknown ranges and input preservation. **These are generated fixtures, not before/after game captures.** Only one supplied save is available; runtime paired-save and edited-load validation remain outstanding.
+Run `./Tests/PS3/ToolsOfDestruction/TestTodSaveComparison.ps1 -SourceFile <reference-GAME.SAV>` for 11 checks against this exact sample. Tests generate and modify temporary copies to verify decoding, bounds, masks, unknown ranges and input preservation. **These are generated fixtures, not before/after game captures.** Only one supplied save is available; runtime paired-save and edited-load validation remain outstanding.
 
 ## Confirmed world progress and quick-select storage
 
-The exact USA v02.00 ELF independently confirms these fields. [Inspect-TodWorldState.py](../Tools/Inspect-TodWorldState.py) checks the reference hash, named Lua bindings, full native routines and TOC-changing thunks before decoding. Its 205 original-byte guards and 19-level catalog are bundled under `world_state` in the shared map. All inspector views are read-only; regional behavior and edited-load acceptance remain unverified.
+The exact USA v02.00 ELF independently confirms these fields. [Inspect-TodWorldState.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWorldState.py) checks the reference hash, named Lua bindings, full native routines and TOC-changing thunks before decoding. Its 205 original-byte guards and 19-level catalog are bundled under `world_state` in the shared map. All inspector views are read-only; regional behavior and edited-load acceptance remain unverified.
 
 | Save offset | Storage | Code-backed meaning |
 | --- | --- | --- |
@@ -342,15 +342,15 @@ Mission-counter records start at `0x10AF8`, stride `0x7C`; the getter reads memb
 Actual USA snapshot (`F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463`): all 32 quick-select words are `-1`; all 19 unlocked/exclusion bytes and mission counters are zero; only native level0 has visited byte1. These are exact observations, **not** a claim that the player has no game progress. They coexist with the mapped populated inventory and collectibles, so zero counters are not converted into “0% complete” or silently repaired. The original encrypted save is never changed.
 
 ```powershell
-python -B Tools/Inspect-TodWorldState.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/TestTodWorldState.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWorldState.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodWorldState.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
 The program exposes simple **World progress** and **Quick select** views. Technical retains exact offsets, IDs and exclusion bytes; row details explain the asymmetrical bounds, aliases and limitations. Unknown values, unusual nonzero bytes and out-of-catalog IDs are preserved.
 
 ## Confirmed object counters and equipment
 
-The three previously opaque 23-word arrays are now independently linked to named object APIs and two matching native enum registrations. They are a separate catalog from the 32 weapon IDs. [Inspect-TodObjects.py](../Tools/Inspect-TodObjects.py) reproduces the shared map's `objects` section with 205 exact-byte guards; `TOD_SaveObjectCounters_verified` maps the three arrays without claiming valid edit ranges.
+The three previously opaque 23-word arrays are now independently linked to named object APIs and two matching native enum registrations. They are a separate catalog from the 32 weapon IDs. [Inspect-TodObjects.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodObjects.py) reproduces the shared map's `objects` section with 205 exact-byte guards; `TOD_SaveObjectCounters_verified` maps the three arrays without claiming valid edit ranges.
 
 | Save storage, object ID `i=0..22` | Code-backed role |
 | --- | --- |
@@ -367,13 +367,13 @@ Actual USA snapshot: current and peak are both `[1,1,1,1,1,1,3,1,1,1,0,1,0,0,0,0
 The new **Objects & equipment** inspector shows only object and current count by default. Exact high-water/addition counters, offsets, raw current bits and limitations remain available in Technical and row details. Tests cover signed negatives, independent unsigned words, full catalog bounds, actual observations and unchanged input hashes.
 
 ```powershell
-python -B Tools/Inspect-TodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/TestTodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
 ## Confirmed active and completed mission lists
 
-[Inspect-TodMissions.py](../Tools/Inspect-TodMissions.py) independently reproduces the `mission_lists` section from exact named bindings, address arithmetic and complete native routines. Each group occupies twenty `0x7C` physical list slots; only native levels0..18 are named. Active lists begin at `0x10148`; completed lists begin at `0x10AF8`. Each list contains ten `0x0C` entries followed by a saved BE32 count at `+0x78`.
+[Inspect-TodMissions.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodMissions.py) independently reproduces the `mission_lists` section from exact named bindings, address arithmetic and complete native routines. Each group occupies twenty `0x7C` physical list slots; only native levels0..18 are named. Active lists begin at `0x10148`; completed lists begin at `0x10AF8`. Each list contains ten `0x0C` entries followed by a saved BE32 count at `+0x78`.
 
 | Entry member | Proven meaning |
 | --- | --- |
@@ -388,21 +388,21 @@ python -B Tests/TestTodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plai
 The USA snapshot has zero counts in all19 active and completed lists. Unused entries are not assigned mission names or interpreted as current missions. World progress row details show saved counts and bounded entries when present; Technical/research retains the lookup IDs, unknown flag bits, precise native indices and limitations. If a count exceeds10, inspection reads only the ten physical entries and reports the unchanged original count. No cross-list reads or silent normalization occurs.
 
 ```powershell
-python -B Tools/Inspect-TodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/TestTodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
 ## Confirmed blueprint and bonus state
 
-The exact USA ELF's named blueprint and cheat APIs establish `0x86F4` as a BE32 blueprint bitmask and `0x86F8–0x8705` as fourteen native bonus-state bytes. `0x8706–0x8707` remains unknown; `0x8708` is the shared weighted skill-point score used for bonus availability, not a count of earned bits. Full call chains, definition/state catalogs and runtime-index caveats are in the [ELF research](ToolsOfDestructionElfMap.md#blueprints-and-bonuscheat-states).
+The exact USA ELF's named blueprint and cheat APIs establish `0x86F4` as a BE32 blueprint bitmask and `0x86F8–0x8705` as fourteen native bonus-state bytes. `0x8706–0x8707` remains unknown; `0x8708` is the shared weighted skill-point score used for bonus availability, not a count of earned bits. Full call chains, definition/state catalogs and runtime-index caveats are in the [ELF research](BCUS98127/v02.00/ElfMap.md#blueprints-and-bonuscheat-states).
 
 The supplied USA plaintext has blueprint mask `0x0007DEE4`: all thirteen bits in the native grant-all mask and no additional bits. All fourteen bonus-state bytes are zero and score is 750. State zero does not prove locked. Menu indices can be remapped by a runtime mode that is not inferred from the save; shipped definition thresholds are not a current-availability verdict. The native enable-all routine writes score840 and changes only zero states to1, without awarding earned skill bits. Unknown bytes and unexpected bit/state values must remain unchanged.
 
 Reproduce without modifying either input:
 
 ```powershell
-python -B Tools/Inspect-TodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/TestTodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
 The program exposes this as simple read-only Blueprints and Bonuses & cheats views. Physical pickup/planet names and localized bonus/state labels have not been recovered; no new editable fields or gameplay-compatibility claim is introduced.
@@ -413,18 +413,18 @@ Saved BE32 words `0x42C`, `0x430`, `0x434` are last/previous/older recorded equi
 
 The twenty-one blocks at `0x114D8`, stride `0x60DC`, contain native RLE storage. Per block: `+C8` encoder accumulator, `+CC` readiness byte, `+CD` compressed payload, `+60D0` declared encoded length, and opaque prefix/tail. Two equal bytes introduce a BE16 additional-repeat count; other bytes are literals. Output is capped at `0x40000` bytes; preserve original compressed tokens, including clipped final runs. The accumulator excludes the first two zero bytes of each zero run; it is neither exact zero count nor checksum.
 
-Nineteen blocks in the USA save are ready and all decode to262144 bytes with matching accumulators; slots3/4 are not ready. Each populated final run is clipped by four bytes. Logical meanings of decoded indices/values and slot-to-planet mapping remain unknown. The [full ELF notes](ToolsOfDestructionElfMap.md#saved-equipment-history-and-compressed-state-blocks) describe proof, layouts and cross-decoder hashes. Stored state blocks and player summary show these facts read-only; no bytes are rewritten or normalized.
+Nineteen blocks in the USA save are ready and all decode to262144 bytes with matching accumulators; slots3/4 are not ready. Each populated final run is clipped by four bytes. Logical meanings of decoded indices/values and slot-to-planet mapping remain unknown. The [full ELF notes](BCUS98127/v02.00/ElfMap.md#saved-equipment-history-and-compressed-state-blocks) describe proof, layouts and cross-decoder hashes. Stored state blocks and player summary show these facts read-only; no bytes are rewritten or normalized.
 
 ```powershell
-python -B Tools/Inspect-TodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/TestTodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
 ## Runtime validation and remaining fields
 
-Executable research is recorded separately in the [Tools of Destruction ELF map](ToolsOfDestructionElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
+Executable research is recorded separately in the [Tools of Destruction ELF map](BCUS98127/v02.00/ElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
 
-Packed-asset research supplies [weapon XP/ammo tables and upgrade-node catalogs](ToolsOfDestructionElfMap.md#packed-weapon-configuration-and-native-field-bindings). The [native ID catalog](ToolsOfDestructionElfMap.md#native-inventory-id-catalog) now independently links all 32 save records to enum/config names through exports, constructors and named getters; CSV order is **not** the ID map. The read-only asset report covers 28 internal configurations and 204 entries including start nodes. All 15 [vendor upgrade grids and their UI checks](ToolsOfDestructionElfMap.md#vendor-upgrade-grids-and-purchasing) are mapped separately from the native purchasing transaction. The native ammo array has 20 slots and the modifier array 24; neither array capacity nor a 32-bit mask establishes playable levels or valid arbitrary upgrades. Asset values, node masks and calculated capacities remain research facts, not gameplay-validated edit limits.
+Packed-asset research supplies [weapon XP/ammo tables and upgrade-node catalogs](BCUS98127/v02.00/ElfMap.md#packed-weapon-configuration-and-native-field-bindings). The [native ID catalog](BCUS98127/v02.00/ElfMap.md#native-inventory-id-catalog) now independently links all 32 save records to enum/config names through exports, constructors and named getters; CSV order is **not** the ID map. The read-only asset report covers 28 internal configurations and 204 entries including start nodes. All 15 [vendor upgrade grids and their UI checks](BCUS98127/v02.00/ElfMap.md#vendor-upgrade-grids-and-purchasing) are mapped separately from the native purchasing transaction. The native ammo array has 20 slots and the modifier array 24; neither array capacity nor a 32-bit mask establishes playable levels or valid arbitrary upgrades. Asset values, node masks and calculated capacities remain research facts, not gameplay-validated edit limits.
 
 Collect paired saves with exactly one intentional change, using copies rather than the only original. Autosave time and unrelated engine state can still change, so repeated pairs are needed.
 

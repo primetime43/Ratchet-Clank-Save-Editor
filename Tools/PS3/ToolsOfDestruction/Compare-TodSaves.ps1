@@ -128,7 +128,7 @@ $counterChanges = @(
             after = $newCounter; delta = [long]$newCounter - [long]$oldCounter }
     }
 )
-$mapping = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../docs/maps/ToolsOfDestruction.BCUS98127.v02.00.json') -Raw | ConvertFrom-Json
+$mapping = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json') -Raw | ConvertFrom-Json
 $regionChanges = @(foreach ($region in $mapping.save_regions) {
     $start = [Convert]::ToInt32($region.start.Substring(2), 16)
     $end = [Convert]::ToInt32($region.end_exclusive.Substring(2), 16)

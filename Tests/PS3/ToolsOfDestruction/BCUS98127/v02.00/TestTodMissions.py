@@ -8,8 +8,9 @@ import struct
 import tempfile
 import unittest
 
-ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("missions", ROOT / "Tools/Inspect-TodMissions.py")
+ROOT = next(parent for parent in Path(__file__).resolve().parents
+            if (parent / "Ratchet And Clank Save Editor.sln").is_file())
+SPEC = importlib.util.spec_from_file_location("missions", ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodMissions.py")
 TOOL = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(TOOL)
 ELF, SAVE = None, None
@@ -21,7 +22,7 @@ class MissionChecks(unittest.TestCase):
             self.skipTest("Pass --elf for exact-build validation")
 
     def test_reproduces_bundled_map_and_boundaries(self):
-        mapping = json.loads((ROOT / "docs/maps/ToolsOfDestruction.BCUS98127.v02.00.json").read_text())
+        mapping = json.loads((ROOT / "docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json").read_text())
         report = TOOL.inspect(ELF)
         self.assertEqual(report, mapping["mission_lists"])
         self.assertEqual(report["active_base"], "0x10148")

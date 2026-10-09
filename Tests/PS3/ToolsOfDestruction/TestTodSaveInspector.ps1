@@ -4,7 +4,7 @@ param([Parameter(Mandatory)][string]$SourceFolder)
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
-$inspector = Join-Path $PSScriptRoot '../Tools/Inspect-TodSave.ps1'
+$inspector = Join-Path $PSScriptRoot '../../../Tools/PS3/ToolsOfDestruction/Inspect-TodSave.ps1'
 $sourcePath = (Resolve-Path -LiteralPath $SourceFolder).Path
 $testParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath())
 $testRoot = Join-Path $testParent ('TodSaveInspector-Tests-' + [Guid]::NewGuid().ToString('N'))

@@ -7,8 +7,9 @@ import sys
 import tempfile
 import unittest
 
-ROOT = Path(__file__).resolve().parents[1]
-DECODER = runpy.run_path(str(ROOT / "Tools/Inspect-TodWeaponBindings.py"))
+ROOT = next(parent for parent in Path(__file__).resolve().parents
+            if (parent / "Ratchet And Clank Save Editor.sln").is_file())
+DECODER = runpy.run_path(str(ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponBindings.py"))
 ELF = ASSETS = None
 
 
@@ -61,7 +62,7 @@ class BindingChecks(unittest.TestCase):
         if ELF is None or ASSETS is None:
             self.skipTest("Pass --elf and --assets to cross-check independent native/CSV catalogs")
         native = DECODER["inspect"](ELF)
-        csv = runpy.run_path(str(ROOT / "Tools/Inspect-TodWeaponConfigs.py"))["inspect"](ASSETS)
+        csv = runpy.run_path(str(ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponConfigs.py"))["inspect"](ASSETS)
         names = {c["config_name"] for c in native["constructor_calls"]}
         self.assertTrue(set(csv["weapons"]) <= names)
         self.assertEqual(names - set(csv["weapons"]), {"CuttingLaser", "RoboWings", "MagCycle", "PirateGadget"})

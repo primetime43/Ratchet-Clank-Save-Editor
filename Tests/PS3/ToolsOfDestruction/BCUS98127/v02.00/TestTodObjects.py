@@ -8,8 +8,9 @@ import struct
 import tempfile
 import unittest
 
-ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("objects", ROOT / "Tools/Inspect-TodObjects.py")
+ROOT = next(parent for parent in Path(__file__).resolve().parents
+            if (parent / "Ratchet And Clank Save Editor.sln").is_file())
+SPEC = importlib.util.spec_from_file_location("objects", ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodObjects.py")
 TOOL = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(TOOL)
 ELF, SAVE = None, None
@@ -21,7 +22,7 @@ class ObjectChecks(unittest.TestCase):
             self.skipTest("Pass --elf for exact-build validation")
 
     def test_reproduces_bundled_map(self):
-        mapping = json.loads((ROOT / "docs/maps/ToolsOfDestruction.BCUS98127.v02.00.json").read_text())
+        mapping = json.loads((ROOT / "docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json").read_text())
         self.assertEqual(TOOL.inspect(ELF), mapping["objects"])
 
     def test_catalog_and_array_boundaries(self):

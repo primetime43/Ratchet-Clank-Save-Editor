@@ -4,7 +4,7 @@ param([Parameter(Mandatory)][string]$SourceFile)
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
-$comparer = Join-Path $PSScriptRoot '../Tools/Compare-TodSaves.ps1'
+$comparer = Join-Path $PSScriptRoot '../../../Tools/PS3/ToolsOfDestruction/Compare-TodSaves.ps1'
 $sourcePath = (Resolve-Path -LiteralPath $SourceFile).Path
 $originalHash = (Get-FileHash -LiteralPath $sourcePath -Algorithm SHA256).Hash
 $bytes = [IO.File]::ReadAllBytes($sourcePath)

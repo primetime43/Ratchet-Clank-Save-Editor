@@ -7,8 +7,9 @@ import runpy
 import sys
 import unittest
 
-ROOT = Path(__file__).resolve().parents[1]
-PARSER = runpy.run_path(str(ROOT / "Tools/Inspect-TodWeaponConfigs.py"))
+ROOT = next(parent for parent in Path(__file__).resolve().parents
+            if (parent / "Ratchet And Clank Save Editor.sln").is_file())
+PARSER = runpy.run_path(str(ROOT / "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponConfigs.py"))
 ASSETS = None
 
 
@@ -52,7 +53,7 @@ class ConfigChecks(unittest.TestCase):
             self.skipTest("Pass --assets for explicitly extracted original configurations")
         before = {p.name: hashlib.sha256(p.read_bytes()).digest() for p in ASSETS.iterdir() if p.is_file()}
         report = PARSER["inspect"](ASSETS)
-        bundled = json.loads((ROOT / "docs/maps/ToolsOfDestruction.BCUS98127.v02.00.WeaponConfigs.json").read_text(encoding="utf-8"))
+        bundled = json.loads((ROOT / "docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/WeaponConfigs.json").read_text(encoding="utf-8"))
         for key in ("assets", "weapons", "armor_vendor", "weapon_count", "modifier_count"):
             self.assertEqual(bundled[key], report[key], "Bundled research drift: " + key)
         self.assertTrue(report["reference_assets_match"])
