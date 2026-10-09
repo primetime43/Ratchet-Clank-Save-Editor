@@ -26,7 +26,7 @@ class ArenaChecks(unittest.TestCase):
         self.assertEqual(report["catalog"][-1]["save_offset"], "0x5730")
         self.assertEqual(report["storage"]["count"], 23)
         self.assertEqual(report["storage"]["end_exclusive"], "0x5734")
-        self.assertEqual(report["storage"]["following_unknown"]["words"], 8)
+        self.assertEqual(report["storage"]["following_category_counts"]["words"], 8)
         self.assertIn("not proof of24", report["menu_resolver"]["warning"])
 
     def test_csv_order_is_not_native_id_order_and_blanks_stay_unknown(self):
@@ -59,7 +59,7 @@ class ArenaChecks(unittest.TestCase):
             self.assertEqual(actual["counters"][7]["signed_value"], -2147483648)
             self.assertEqual(actual["counters"][22]["signed_value"], -1)
             self.assertEqual(actual["counters"][0]["raw_hex"], "DEADBEEF")
-            self.assertEqual(actual["following_unknown_raw"], bytes(range(32)).hex().upper())
+            self.assertEqual(actual["following_category_raw"], bytes(range(32)).hex().upper())
             self.assertEqual(path.read_bytes(), data)
 
     def test_rejects_bad_assets_elf_and_nonplaintext(self):
@@ -89,7 +89,7 @@ class ArenaChecks(unittest.TestCase):
         actual = TOOL["inspect"](ELF, ASSETS, SAVE)["save_observation"]
         if actual["plaintext_sha256"] == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463":
             self.assertEqual([c["signed_value"] for c in actual["counters"]], [0] * 23)
-            self.assertEqual(actual["following_unknown_raw"], "00" * 32)
+            self.assertEqual(actual["following_category_raw"], "00" * 32)
         self.assertEqual(before, [hashlib.sha256(p.read_bytes()).digest() for p in paths])
 
 

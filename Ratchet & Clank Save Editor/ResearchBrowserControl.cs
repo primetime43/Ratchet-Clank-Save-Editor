@@ -37,6 +37,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Equipment history & stored state", TodResearch.Map.GetProperty("state_storage"), 0));
             topics.Add(JsonTopic("Settings, load destinations & runtime limits", TodResearch.Map.GetProperty("settings"), 0));
             topics.Add(JsonTopic("Arena challenges, recorded wins & reward rules", TodResearch.Map.GetProperty("arena_challenges"), 0));
+            topics.Add(JsonTopic("Reset-event categories & runtime countdown", TodResearch.Map.GetProperty("reset_categories"), 0));
             topics.Add(JsonTopic("Global event flags & native bit addressing", TodResearch.Map.GetProperty("global_flags"), 0));
             topics.Add(new("Weapons & gadgets", TodResearch.Scope, TodResearch.Inventory.Select(item =>
                 new Topic(item.GetProperty("id") + " · " + item.GetProperty("config_name"), TodResearch.WeaponDetails(item.GetProperty("id").GetInt32()), new())).ToList()));

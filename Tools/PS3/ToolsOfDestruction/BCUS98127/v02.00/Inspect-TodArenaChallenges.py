@@ -149,7 +149,7 @@ def inspect(elf_path, assets_path, save_path=None):
     report = {"confidence": "code-backed", "warning": "Exact USA v02.00 static code and shipped definitions; not gameplay-tested editing permissions or localized titles.",
         "storage": {"base": hex(base), "stride": 4, "count": count, "end_exclusive": hex(base + count * 4),
             "getter_va": "0x27a958", "initializer_va": "0x35d9a0", "semantics": "BE32 counters; direct getter sign-extends. Success increments modulo32 bits. ID0 is INVALID, not a playable challenge. No cap or repair inferred.",
-            "following_unknown": {"base": "0x5734", "words": 8, "end_exclusive": "0x5754", "meaning": "Separate initializer-cleared array; not a 24th challenge counter or proven failure counts."}},
+            "following_category_counts": {"base": "0x5734", "words": 8, "end_exclusive": "0x5754", "meaning": "Separate reset-event category counters; reset_categories guards the runtime selectors and increment path. Not a24th challenge or per-challenge failure array."}},
         "catalog": [{**e, "save_offset": hex(base + 4 * e["id"]), "shipped": records[e["enum"]]} for e in enums],
         "sentinels": sentinels, "assets": [{"name": name, "sha256": digest, "size": len(assets[name])} for name, digest in ASSETS.items()],
         "configuration": {"class": "ArenaConfig", "parent_offset": "0x1177c", "stride": "0x34", "native_indexer_va": "0xb6fa8", "properties": properties,
@@ -170,7 +170,7 @@ def inspect(elf_path, assets_path, save_path=None):
         report["save_observation"] = {"plaintext_sha256": hashlib.sha256(data).hexdigest().upper(),
             "counters": [{"id": i, "offset": hex(base + 4 * i), "signed_value": struct.unpack_from(">i", data, base + 4 * i)[0],
                           "raw_hex": data[base + 4 * i:base + 4 * i + 4].hex().upper()} for i in range(count)],
-            "following_unknown_raw": data[0x5734:0x5754].hex().upper()}
+            "following_category_raw": data[0x5734:0x5754].hex().upper()}
     return report
 
 

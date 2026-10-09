@@ -206,7 +206,8 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["arena_challenges"]["instruction_guards"]
                 + MAPPING["global_flags"]["instruction_guards"]
                 + MAPPING["gameplay_segments"]["instruction_guards"]
-                + MAPPING["world_object_flags"]["instruction_guards"]):
+                + MAPPING["world_object_flags"]["instruction_guards"]
+                + MAPPING["reset_categories"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

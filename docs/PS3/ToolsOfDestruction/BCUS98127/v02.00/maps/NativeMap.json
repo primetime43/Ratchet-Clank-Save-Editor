@@ -7560,11 +7560,11 @@
       "getter_va": "0x27a958",
       "initializer_va": "0x35d9a0",
       "semantics": "BE32 counters; direct getter sign-extends. Success increments modulo32 bits. ID0 is INVALID, not a playable challenge. No cap or repair inferred.",
-      "following_unknown": {
+      "following_category_counts": {
         "base": "0x5734",
         "words": 8,
         "end_exclusive": "0x5754",
-        "meaning": "Separate initializer-cleared array; not a 24th challenge counter or proven failure counts."
+        "meaning": "Separate reset-event category counters; reset_categories guards the runtime selectors and increment path. Not a24th challenge or per-challenge failure array."
       }
     },
     "catalog": [
@@ -21759,6 +21759,268 @@
       }
     ]
   },
+  "reset_categories": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
+    "storage": {
+      "offset": "0x5734",
+      "end_exclusive": "0x5754",
+      "count": 8,
+      "stride": "0x4",
+      "type": "u32",
+      "initializer_va": "0x35d9a0",
+      "writer_va": "0x2ce518",
+      "formula": "state +5734 +4*runtime_category; ID0 skips increment; addi/stw wraps modulo32.",
+      "bounds_warning": "Eight initialized words establish physical storage, not a native writer bounds check. Selector accepts its argument without range validation. Inspector reads only eight slots.",
+      "gate": "Increment occurs before2D1860 restart-counter906EC gate, unlike segment+8 reset-event increment. Do not infer category sums equal segment counts or deaths."
+    },
+    "runtime": {
+      "state_va": "0x101e8d70",
+      "category_offset": "0x48",
+      "countdown_offset": "0x4c",
+      "setter_va": "0x2cdc60",
+      "setter_thunk_va": "0x132d0",
+      "initial_countdown": 0.25,
+      "clear_va": "0x2ce5d0",
+      "countdown_helper_va": "0x69b810",
+      "countdown_delta_pointer_va": "0x10731da0",
+      "countdown_delta_member": "0x4",
+      "clear_rule": "Helper multiplies rate1 by runtime delta+4. If delta > countdown, stores zero and returns true; otherwise subtracts delta and returns false. Equality reaches zero without clearing category until a later call.2CE620 runs this before the restart gate. Units unverified.",
+      "not_serialized": "101E8D70 lies outside serialized101EFB20..10280210; runtime category/countdown are not save offsets."
+    },
+    "catalog": [
+      {
+        "id": 0,
+        "label": "Category 0 (name unknown)",
+        "offset": "0x5734",
+        "evidence": "Increment skipped for ID0",
+        "selection_sources": []
+      },
+      {
+        "id": 1,
+        "label": "Category 1 (name unknown)",
+        "offset": "0x5738",
+        "evidence": "Storage confirmed; selection not recovered",
+        "selection_sources": []
+      },
+      {
+        "id": 2,
+        "label": "Category 2 (name unknown)",
+        "offset": "0x573c",
+        "evidence": "Native selection confirmed",
+        "selection_sources": [
+          {
+            "function_va": "0x433b0",
+            "call_va": "0x4357c",
+            "condition": "Signed runtime state +430 <29."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "label": "Category 3 (name unknown)",
+        "offset": "0x5740",
+        "evidence": "Native selection confirmed",
+        "selection_sources": [
+          {
+            "function_va": "0x18f480",
+            "call_va": "0x18f4b4",
+            "condition": "Runtime flags +8B0: bit800 set, bit1000 clear."
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "label": "Category 4 (name unknown)",
+        "offset": "0x5744",
+        "evidence": "Native selection confirmed",
+        "selection_sources": [
+          {
+            "function_va": "0x4b9e8",
+            "call_va": "0x4bb08",
+            "condition": "Runtime state +4A4 !=2."
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "label": "Category 5 (name unknown)",
+        "offset": "0x5748",
+        "evidence": "Native selection confirmed",
+        "selection_sources": [
+          {
+            "function_va": "0x3bfa0",
+            "call_va": "0x3bfbc",
+            "condition": "Unconditional selection in this virtual callback."
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "label": "Category 6 (name unknown)",
+        "offset": "0x574c",
+        "evidence": "Native selection confirmed",
+        "selection_sources": [
+          {
+            "function_va": "0x54fb0",
+            "call_va": "0x55098",
+            "condition": "Runtime byte +764 zero and byte +762 nonzero."
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "label": "Category 7 (name unknown)",
+        "offset": "0x5750",
+        "evidence": "Native selection confirmed",
+        "selection_sources": [
+          {
+            "function_va": "0x18f480",
+            "call_va": "0x18f4b4",
+            "condition": "Runtime flags +8B0: bits800 and1000 both set."
+          }
+        ]
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x132d0",
+        "bytes": "F84100283C4200013842FFE8482BA984"
+      },
+      {
+        "va": "0x3bfa0",
+        "bytes": "F821FF717CA802A6FBA100787C7D1B78386000053BBD0024F8A100A04BFD7315E84100287BA300204BFD4589E84100287C6B1B7878630020812B000081490014808A0000F84100287C8903A6804A00044E800421E8410028E80100A0EBA100787C0803A6382100904E800020"
+      },
+      {
+        "va": "0x3bfb0",
+        "bytes": "38600005"
+      },
+      {
+        "va": "0x43408",
+        "bytes": "815F04302F8A001C409D0168"
+      },
+      {
+        "va": "0x43578",
+        "bytes": "386000024BFCFD55E8410028815F0430"
+      },
+      {
+        "va": "0x4baf4",
+        "bytes": "800804A4F92101D82F800002419E0010386000044BFC77C9E8410028"
+      },
+      {
+        "va": "0x4bb04",
+        "bytes": "38600004"
+      },
+      {
+        "va": "0x5503c",
+        "bytes": "EDA6282A893F07642C090000D1BF07544182003C3869FFFF"
+      },
+      {
+        "va": "0x55088",
+        "bytes": "88BF07622F850000419EFFD0386000064BFBE239E8410028881F076228000013"
+      },
+      {
+        "va": "0x55094",
+        "bytes": "38600006"
+      },
+      {
+        "va": "0x18f480",
+        "bytes": "F821FF817C8802A6FBE10078F88100907C7F1B78806308B054600528546904E62F8000002F090000419E001438600007419A00304BE83E1DE84100287BE300204BF2FCB960000000E8A10090EBE100787CA803A6382100804E80002060000000386000034BFFFFD0"
+      },
+      {
+        "va": "0x18f4ac",
+        "bytes": "38600007"
+      },
+      {
+        "va": "0x18f4e0",
+        "bytes": "38600003"
+      },
+      {
+        "va": "0x24ecb8",
+        "bytes": "F84100283C4200013842FF3C4844CB4C"
+      },
+      {
+        "va": "0x2cdc60",
+        "bytes": "8122F158C002F164D009004C906900484E800020"
+      },
+      {
+        "va": "0x2cdc6c",
+        "bytes": "90690048"
+      },
+      {
+        "va": "0x2ce518",
+        "bytes": "8162F1587C8802A6F821FF91F8810080800B00485403103A2F800000392357207D2907B4419E00188102F1787CA9421480E5001438C7000190C500144800330D60000000546A063E2C0A000041820014E8610080382100707C6803A64E8000208182F17C806C00004BFFF9C12C8300004186FFE080A2F16039200000C02300043D650001C18300008083000838040001C00B0FC8EDA1603A9003000891230004D1A30000E8610080382100707C6803A64E800020"
+      },
+      {
+        "va": "0x2ce534",
+        "bytes": "39235720"
+      },
+      {
+        "va": "0x2ce548",
+        "bytes": "80E50014"
+      },
+      {
+        "va": "0x2ce550",
+        "bytes": "90C50014"
+      },
+      {
+        "va": "0x2ce5d0",
+        "bytes": "F821FF817C0802A6FBE1007883E2F1588062F190389F004CC022F168F80100904BF806C9E84100285463063E2F830000419E000C38800000909F0048E8A10090EBE10078382100807CA803A64E800020"
+      },
+      {
+        "va": "0x2ce604",
+        "bytes": "38800000"
+      },
+      {
+        "va": "0x2ce608",
+        "bytes": "909F0048"
+      },
+      {
+        "va": "0x2ce620",
+        "bytes": "F821FF717C0802A6DBE10088F80100A0FBA10070FBC10078FBE100804BFFFF9548003221600000005463063E2F830000419E0028EBE100A0"
+      },
+      {
+        "va": "0x35d9fc",
+        "bytes": "38C0000839600000380000007CC903A6600000007D1F5A14396B0004790700209007020C4200FFF0"
+      },
+      {
+        "va": "0x35da14",
+        "bytes": "396B0004"
+      },
+      {
+        "va": "0x35da1c",
+        "bytes": "9007020C"
+      },
+      {
+        "va": "0x35e198",
+        "bytes": "381E55283FDD00093BE000003BA00000780300204BFFF7F56000000093FE06EC"
+      },
+      {
+        "va": "0x69b810",
+        "bytes": "C003000438600001EC210032C0040000FF810000409D0014380000007C6307B4900400004E800020EC400828386000007C6307B4D04400004E800020"
+      },
+      {
+        "va": "0x89f078",
+        "bytes": "101E8D70"
+      },
+      {
+        "va": "0x89f084",
+        "bytes": "3E800000"
+      },
+      {
+        "va": "0x89f088",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x89f098",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f0b0",
+        "bytes": "10731DA0"
+      }
+    ]
+  },
   "world_object_flags": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence, not gameplay-validated edits. Physical slots are runtime pool indices, not object UIDs, inventory IDs, collectible names or a completion percentage. No new editing controls.",
@@ -21990,6 +22252,87 @@
     ]
   },
   "annotations": [
+    {
+      "va": "0x000132D0",
+      "name": "TOD_reset_category_selection_thunk",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F84100283C420001",
+      "comment": "TOC-changing thunk88FF38 to89FF20; forwards ID to2CDC60 without bounds validation.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
+    {
+      "va": "0x002CDC60",
+      "name": "TOD_select_recent_reset_category",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "8122F158C002F164",
+      "comment": "Stores runtime category+48 and resets runtime countdown+4C to0.25; neither is saved.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
+    {
+      "va": "0x002CE5D0",
+      "name": "TOD_expire_recent_reset_category",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF817C0802A6",
+      "comment": "Clears runtime category only when countdown helper returns true; called before segment restart gate.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
+    {
+      "va": "0x0069B810",
+      "name": "TOD_countdown_strict_expiry",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "C003000438600001",
+      "comment": "Single-precision rate*delta comparison: delta>timer clears/returns1, equality subtracts to0/returns0. Units unverified.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
+    {
+      "va": "0x0035D9A0",
+      "name": "TOD_initialize_global_progress_block",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717C8802A6",
+      "comment": "Caller35E110 passes save+5528; eight32-bit words cleared at relative20C (save5734). Does not clear retained log buffer.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
+    {
+      "va": "0x0089F078",
+      "name": "TOD_TOC_reset_category_runtime_state",
+      "kind": "toc_slot",
+      "confidence": "confirmed",
+      "bytes": "101E8D70",
+      "comment": "Points to101E8D70 outside serialized snapshot; category48 and countdown4C are runtime-only.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
+    {
+      "va": "0x0089F084",
+      "name": "TOD_reset_category_countdown_initial",
+      "kind": "constant",
+      "confidence": "confirmed",
+      "bytes": "3E800000",
+      "comment": "BE float32 0.25 copied by category setter; time units unverified.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
+    {
+      "va": "0x0089F088",
+      "name": "TOD_reset_category_countdown_rate",
+      "kind": "constant",
+      "confidence": "confirmed",
+      "bytes": "3F800000",
+      "comment": "BE float32 rate1.0 passed to countdown helper.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
+    {
+      "va": "0x0089F0B0",
+      "name": "TOD_TOC_reset_countdown_delta_source",
+      "kind": "toc_slot",
+      "confidence": "confirmed",
+      "bytes": "10731DA0",
+      "comment": "Pointer10731DA0; countdown helper reads float member+4. Not a saved timer.",
+      "evidence": "reset_categories exact-build guarded initialization, selector/counter and strict-expiry paths; no in-game edit validation."
+    },
     {
       "va": "0x002F7720",
       "name": "TOD_world_object_state_clear",
@@ -30358,6 +30701,20 @@
   ],
   "structures": [
     {
+      "name": "TOD_SaveResetCategoryCounters_verified",
+      "size": "0x20",
+      "comment": "Eight initializer-cleared BE32 reset-event category counters at save5734..5754. No recovered player-facing category names or writer bounds validation; ID0 increment skipped. Read-only evidence, not edit safety.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "reset_event_category_counts",
+          "type": "u32",
+          "count": 8,
+          "comment": "state+5734+4*category increments modulo32 before segment restart-counter gate, except ID0. Native selectors recovered for2..7; ID1 role unresolved."
+        }
+      ]
+    },
+    {
       "name": "TOD_SaveWorldObjectFlags_verified",
       "size": "0x408",
       "comment": "Partial refinement of per-world408-byte record. Object bitsets are32 BE64 words each, represented as byte arrays for portable importer support. Physical index is runtime pool slot, not a named object UID. No automatic ELF-global application.",
@@ -30617,7 +30974,7 @@
     {
       "name": "TOD_SaveArenaSuccesses_verified",
       "size": "0x5C",
-      "comment": "At save56D8;23 direct-ID BE32 counters. Getter sign-extends; ID0 INVALID. Following eight-word array is separate and unknown. No automatic application or edit safety.",
+      "comment": "At save56D8;23 direct-ID BE32 counters. Getter sign-extends; ID0 INVALID. Following eight-word array contains reset-event category counts; names unresolved. No automatic application or edit safety.",
       "fields": [
         {
           "offset": "0x0",
@@ -31146,7 +31503,7 @@
       "start": "0x42C",
       "end_exclusive": "0x8764",
       "confidence": "observed",
-      "comment": "Partially mapped armor, skins, per-level special-bolt masks, skill points, five BE64 global event words5528..5550 and23 direct-ID arena win words56D8..5734. Global IDs0..291 are named; higher28 bits remain unknown. Following eight words5734..5754 are separately initialized and unknown; remaining state is not padding."
+      "comment": "Partially mapped armor, skins, per-level special-bolt masks, skill points, five BE64 global event words5528..5550 and23 direct-ID arena win words56D8..5734. Global IDs0..291 are named; higher28 bits remain unknown. Following eight words5734..5754 are separate reset-event category counters (names unresolved); remaining state is not padding."
     },
     {
       "start": "0x8764",

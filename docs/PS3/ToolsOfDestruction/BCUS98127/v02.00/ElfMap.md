@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1163 annotations, 118 imports, evidence, byte signatures and 27 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1172 annotations, 118 imports, evidence, byte signatures and 28 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -815,9 +815,57 @@ python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWorldObjectFl
 python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodWorldObjectFlags.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
+## Reset-event category counters and temporary runtime selection
+
+The formerly unknown eight-word array at **save `0x5734–0x5754` (end exclusive)** is now confirmed as a separate reset-event category counter bank. The evidence establishes storage and update mechanics, **not names for its categories or a total number of deaths**. All eight words remain zero in the supplied USA snapshot.
+
+### Storage and initialization
+
+`35E110` passes `state+5528` to initializer `35D9A0`. Its loop at `35D9FC..35DA20` clears eight words, advancing four bytes and storing at relative `20C`: `5528+20C=5734`. The bank ends exactly where the independent inventory unlock bytes begin at `5754`. `TOD_SaveResetCategoryCounters_verified` describes this 32-byte bank without modifying earlier structures or assigning a type to unrelated runtime globals.
+
+Writer `2CE518` loads a runtime category from `101E8D70+48`. It skips category 0; otherwise it performs a wrapping integer increment at `state+5734+4*category`. Crucially, this happens **before** calling the saved restart-counter predicate `2D1860`. The later per-segment reset count at `segment+8` is gated, so category counts and segment counts need not agree. No writer range check is present in this path: eight initialized words are a physical boundary, not a proven native guard against arbitrary arguments. The inspector never reads beyond those eight words.
+
+### Recovered native selectors
+
+Five native callbacks call TOC-changing thunk `132D0`, which switches `88FF38` to `89FF20` and forwards the argument to setter `2CDC60`. The table records exact native conditions, not guesses about enemy types or gameplay modes.
+
+| Category | Save offset | Native callback / selection condition |
+| --- | --- | --- |
+| 0 | `5734` | Increment explicitly skipped; no recovered selector |
+| 1 | `5738` | Initialized storage; no selection source recovered |
+| 2 | `573C` | `433B0`, call `4357C`: signed runtime state at `+430` less than 29 |
+| 3 | `5740` | `18F480`, call `18F4B4`: runtime flags `+8B0`, bit `800` set and bit `1000` clear |
+| 4 | `5744` | `4B9E8`, call `4BB08`: runtime state `+4A4` not equal to 2 |
+| 5 | `5748` | `3BFA0`, call `3BFBC`: unconditional within this callback |
+| 6 | `574C` | `54FB0`, call `55098`: runtime byte `+764` zero, byte `+762` nonzero |
+| 7 | `5750` | `18F480`, same call as category 3: bits `800` and `1000` both set |
+
+These runtime member offsets belong to the respective callback objects; they are **not offsets in GAME.SAV**. Virtual tables provide callback relationships but do not establish player-facing category names. The named `set_challenge_failure` implementation `278D48` follows a different runtime arena-state path; it does not establish a per-challenge failure interpretation for this bank.
+
+### Countdown and strict expiration boundary
+
+Setter `2CDC60` writes category `+48` and float32 countdown `+4C=0.25`, using the constant at TOC slot `89F084`. The runtime object at `101E8D70` is below the serialized `101EFB20..10280210` snapshot, so neither current category nor countdown is saved here. Time units remain unverified; **0.25 is not labeled seconds**.
+
+`2CE5D0` passes rate `1.0` (slot `89F088`), runtime delta source `10731DA0` (slot `89F0B0`) and countdown pointer to thunk `24ECB8 → 69B810`. Assembly in `69B810` multiplies the rate by delta member `+4`, then uses a strict comparison. If delta is greater than countdown, it zeros the countdown and returns true; otherwise it subtracts delta and returns false. Equality therefore reaches zero **without clearing category on that call**. Caller `2CE5D0` clears category only on true. Tick `2CE620` calls this expiration path before its restart-counter gate, so that gate does not suppress expiration.
+
+Expiration clears temporary runtime selection, **not any saved counter**. No game code is executed to produce these observations.
+
+### Actual save, read-only view and reproduction
+
+The supplied USA working plaintext contains eight zero counters and saved restart counter `906EC=3`. This is a snapshot observation, not proof that no reset/death events occurred or that every category has been exercised. Original encrypted save and ELF remain untouched.
+
+The **Reset-event counters** view keeps all eight physical slots. Default columns show category ID, exact recorded count and evidence; Technical adds offsets and raw bits. Categories retain “name unknown” labeling. Unsigned values including `FFFFFFFF` and `80000000` are preserved exactly; no repair, inferred totals or new editing controls are added. Research includes the full native catalog and provenance.
+
+`Inspect-TodResetCategories.py` independently reproduces the bundled section using exact ELF identity, derived initialization boundaries, branch targets, TOC identities and **34 byte guards**. Five native tests cover map/type reproduction, selector qualifications, runtime/save separation, unsigned extremes, adjacent unlock exclusion, malformed inputs and unchanged actual inputs. Editor checks cover detached snapshots, friendly/technical columns and minimum-window fit.
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodResetCategories.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodResetCategories.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, the separate eight words at5734, any persisted checkpoint/health dependencies, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. The5734 array now has an identified incrementing writer in2CE518, indexed by a nonzero runtime category; its category catalog and bounds are unresolved, so it is not labeled challenge failures. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, player-facing reset-category names and category1 selection, any persisted checkpoint/health dependencies, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. The5734 bank now has confirmed initialization/increment mechanics, selectors2..7 and runtime expiration; this still does not make it named challenge failures or prove in-game counter semantics. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -827,7 +875,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1162 mapped annotations (the third TOC reference base is unmapped), 27 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1171 mapped annotations (the third TOC reference base is unmapped), 28 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

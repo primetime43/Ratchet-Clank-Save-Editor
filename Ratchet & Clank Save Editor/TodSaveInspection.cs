@@ -183,12 +183,29 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     string details = "Recorded successes for a direct native ID, not a runtime menu index or completion percentage. " +
                         "The description is a shipped config comment, not a confirmed localized title. Base bolts are not the current payout: repeat wins and weapon rewards affect it.\r\n" +
                         "Counter reads are signed32; raw bits are preserved. Incrementing a counter alone does not grant currency or weapon/quick-select state.\r\n" +
-                        "Separate unknown eight-word array at 0x5734–0x5754 (not challenge counters): " + Convert.ToHexString(data.AsSpan(0x5734, 32)) + "\r\n" +
+                        "Separate reset-event category counters at 0x5734–0x5754 (not per-challenge failures; category names unknown): " + Convert.ToHexString(data.AsSpan(0x5734, 32)) + "\r\n" +
                         (mapped ? TodResearch.Pretty(entry) : "ID0 is the native INVALID sentinel, not a playable challenge.");
                     rows.Add(new(new[] { id.ToString(CultureInfo.InvariantCulture), name, label, count, bolts,
                         TodResearch.Hex(offset), $"{raw:X8}" }, details));
                 }
                 return new(new[] { "ID", "Native enum", "Config description", "Recorded wins (signed)", "Base bolts (shipped)", "Offset", "Raw bits" }, rows.AsReadOnly());
+            }
+            if (view == "Reset-event counters")
+            {
+                var map = TodResearch.Map.GetProperty("reset_categories");
+                foreach (var entry in map.GetProperty("catalog").EnumerateArray())
+                {
+                    int id = entry.GetProperty("id").GetInt32(), offset = TodResearch.Offset(entry.GetProperty("offset"));
+                    uint bits = U32(offset);
+                    string details = "Eight separately initialized BE32 counters, not arena wins or per-challenge failures. Category names and exact event cause remain unknown.\r\n" +
+                        "The native increment skips ID0 and wraps modulo32. ID1 has no recovered selection source; unusual values are preserved, not repaired.\r\n" +
+                        "Category counter increment occurs BEFORE the saved restart-counter gate. Segment counters can remain unchanged; their sum is not a death total.\r\n" +
+                        "Runtime category/countdown are outside the saved snapshot. Selection resets countdown to0.25 (units unverified); expiry clears category, not these saved counters.\r\n" +
+                        TodResearch.Pretty(entry);
+                    rows.Add(new(new[] { id.ToString(CultureInfo.InvariantCulture), bits.ToString(CultureInfo.InvariantCulture),
+                        TodResearch.Hex(offset), $"{bits:X8}", entry.GetProperty("evidence").GetString() }, details));
+                }
+                return new(new[] { "Category ID", "Recorded events (uint32)", "Offset", "Raw bits", "Evidence" }, rows.AsReadOnly());
             }
             if (view == "Game settings")
             {

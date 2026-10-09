@@ -36,6 +36,27 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Reset-event category counters retain all eight unsigned words without inferred meanings", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            uint[] values = { uint.MaxValue, 0x80000000, 2, 3, 4, 5, 6, 0x7FFFFFFF };
+            for (int id = 0; id < values.Length; id++)
+                BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x5734 + id * 4, 4), values[id]);
+            bytes[0x5754] = 0xAB;
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var raw = inspection.Table("Reset-event counters");
+            Equal(8, raw.Rows.Count); Equal(5, raw.Columns.Length);
+            Equal("4294967295", raw.Rows[0].Cells[1]); Equal("2147483648", raw.Rows[1].Cells[1]);
+            Equal("FFFFFFFF", raw.Rows[0].Cells[3]); Equal("0x5750", raw.Rows[^1].Cells[2]);
+            True(raw.Rows[0].Details.Contains("BEFORE") && raw.Rows[0].Details.Contains("not a death total"), "Counter/segment gate differences must stay visible.");
+            var friendly = InspectionPresentation.Simplify("Reset-event counters", raw);
+            Equal(8, friendly.Rows.Count); Equal(3, friendly.Columns.Length);
+            True(friendly.Rows[1].Details.Contains("selection remains unresolved"), "Do not invent category names.");
+            True(bytes.SequenceEqual(before), "Counter inspection must not mutate the source.");
+            Array.Clear(bytes);
+            Equal("4294967295", inspection.Table("Reset-event counters").Rows[0].Cells[1]);
+        });
         Check("Per-world object bitsets preserve BE64 ordering, distinct bands and all physical slots", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -217,7 +238,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1163, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1172, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -645,7 +666,7 @@ internal static partial class Program
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
             tabs.SelectedIndex = 2;
             foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
-                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 8), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 8), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
+                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 8), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 8), ("Reset-event counters", 3, 5), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
                 views.SelectedItem = expected.Item1;
                 Equal(expected.Item2, grid.Columns.Count);
@@ -835,7 +856,7 @@ internal static partial class Program
             form.ClientSize = new Size(900, 620);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-minimum-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "World object flags", "Gameplay segments", "Global event flags", "Arena challenges", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "World object flags", "Gameplay segments", "Global event flags", "Arena challenges", "Reset-event counters", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));

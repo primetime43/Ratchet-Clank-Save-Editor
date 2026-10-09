@@ -52,6 +52,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             views.Items.Insert(views.Items.IndexOf("Save layout"), "Stored state blocks");
             views.Items.Insert(views.Items.IndexOf("Player summary") + 1, "Game settings");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Arena challenges");
+            views.Items.Insert(views.Items.IndexOf("Arena challenges") + 1, "Reset-event counters");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Global event flags");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Gameplay segments");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "World object flags");
