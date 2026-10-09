@@ -371,7 +371,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             // 
             // MenuStrip
             // 
-            this.MenuStrip.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MenuStrip.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
@@ -437,22 +437,22 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(499, 248);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(1120, 740);
             this.Controls.Add(this.TabControl);
             this.Controls.Add(this.MenuStrip);
             this.MainMenuStrip = this.MenuStrip;
-            var status = new System.Windows.Forms.StatusStrip { SizingGrip = false };
+            var status = new System.Windows.Forms.StatusStrip { SizingGrip = true, Font = new System.Drawing.Font("Segoe UI", 11F) };
             StatusLabel = new System.Windows.Forms.ToolStripStatusLabel("Open a save folder to begin")
                 { Spring = true, TextAlign = System.Drawing.ContentAlignment.MiddleLeft };
             status.Items.Add(StatusLabel);
             this.Controls.Add(status);
-            this.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(515, 287);
+            this.MinimumSize = new System.Drawing.Size(900, 620);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ratchet & Clank Save Editor";

@@ -609,18 +609,18 @@ internal static partial class Program
             var weaponFilter = Descendants(form).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");
             weaponFilter.SelectedItem = "Combuster";
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-reference.png"));
-            form.ClientSize = new Size(499, 248);
-            Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-compact-reference.png"));
+            form.ClientSize = new Size(900, 620);
+            Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-minimum-reference.png"));
             form.ClientSize = new Size(1900, 970);
             foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Quick select", "Player summary", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));
-                form.ClientSize = new Size(499, 248);
-                Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-compact-reference.png"));
+                form.ClientSize = new Size(900, 620);
+                Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-minimum-reference.png"));
                 var friendlyGrid = Descendants(form).OfType<DataGridView>().Single(c => c.Name == "InspectionGrid");
                 True(friendlyGrid.Columns.Cast<DataGridViewColumn>().Sum(column => column.Width) <= friendlyGrid.ClientSize.Width,
-                    "Friendly views should fit the compact window: " + view);
+                    "Friendly views should fit the minimum window: " + view);
                 form.ClientSize = new Size(1900, 970);
             }
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Reference inspection must not dirty the save.");

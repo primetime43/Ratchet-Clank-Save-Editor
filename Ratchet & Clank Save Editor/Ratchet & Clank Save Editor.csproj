@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>primetime43_Ratchet_Clank_Save_Editor</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>Ratchet.ico</ApplicationIcon>
   </PropertyGroup>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Forms;
@@ -12,12 +13,18 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private sealed record Topic(string Name, string Body, List<Topic> Children);
         private readonly List<Topic> topics = new();
         private readonly TreeView tree = new() { Name = "ResearchTopics", Dock = DockStyle.Fill, HideSelection = false };
-        private readonly TextBox text = new() { Name = "ResearchDetails", Dock = DockStyle.Fill, ReadOnly = true, Multiline = true, WordWrap = false, ScrollBars = ScrollBars.Both, MaxLength = 0 };
+        private readonly TextBox text = new() { Name = "ResearchDetails", Font = new Font("Consolas", 11F), Dock = DockStyle.Fill, ReadOnly = true, Multiline = true, WordWrap = true, ScrollBars = ScrollBars.Both, MaxLength = 0 };
         private readonly TextBox search = new() { Name = "ResearchSearch", Dock = DockStyle.Top, PlaceholderText = "Search findings, names, or addresses…" };
 
         public ResearchBrowserControl()
         {
             Dock = DockStyle.Fill;
+            AutoScaleDimensions = new SizeF(96, 96);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Font = new Font("Segoe UI", 11F);
+            Padding = new Padding(10);
+            tree.ItemHeight = Font.Height + 10;
+            tree.FontChanged += (_, _) => tree.ItemHeight = tree.Font.Height + (10 * tree.DeviceDpi / 96);
             topics.Add(new("Overview", TodResearch.Scope + $"\r\n\r\n32 native inventory IDs; 28 shipped configuration definitions; 204 nodes including 15 starts; 15 grids; 60 skill points; 5 armor IDs; {TodResearch.Map.GetProperty("annotations").GetArrayLength()} ELF annotations and 118 imports.\r\n\r\nSelect a topic or search for a name/address. All content is embedded and read-only; original game files and private saves are not bundled. File offsets, save offsets and ELF virtual addresses must not be interchanged.\r\n\r\nResize the window for more reading space. Ctrl+C copies selected text.", new()));
             topics.Add(JsonTopic("Progression & armor", TodResearch.Map.GetProperty("progression"), 0));
             topics.Add(JsonTopic("Hero XP, collectibles & skins", TodResearch.Map.GetProperty("collectibles"), 0));
@@ -32,15 +39,19 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Shipped weapon / vendor definitions", TodResearch.Configs, 0));
             topics.Add(Document("Executable research notes", TodResearch.ElfNotes));
             topics.Add(Document("Save format / container notes", TodResearch.SaveNotes));
-            var split = new SplitContainer { Dock = DockStyle.Fill, Name = "ResearchSplit", FixedPanel = FixedPanel.Panel1, Panel1MinSize = 90, Panel2MinSize = 100, Size = new System.Drawing.Size(480, 150), SplitterDistance = 155 };
+            var split = new SplitContainer { Dock = DockStyle.Fill, Name = "ResearchSplit", FixedPanel = FixedPanel.Panel1, Size = new Size(1050, 620), SplitterDistance = 320, SplitterWidth = 6, Panel1MinSize = 230, Panel2MinSize = 250 };
             split.Panel1.Controls.Add(tree);
             split.Panel2.Controls.Add(text);
-            var searchBar = new TableLayoutPanel { Dock = DockStyle.Top, Height = 28, ColumnCount = 2 };
-            searchBar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 58));
+            var searchBar = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 3, Padding = new Padding(0, 0, 0, 10) };
+            searchBar.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             searchBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            searchBar.Controls.Add(new Label { Text = "Search:", Dock = DockStyle.Fill, TextAlign = System.Drawing.ContentAlignment.MiddleLeft }, 0, 0);
+            searchBar.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            searchBar.Controls.Add(new Label { Text = "Search:", AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 3, 12, 3), TextAlign = ContentAlignment.MiddleLeft }, 0, 0);
             search.Dock = DockStyle.Fill;
             searchBar.Controls.Add(search, 1, 0);
+            var wrap = new CheckBox { Name = "ResearchWrapText", Text = "Wrap text", AutoSize = true, Checked = true, Margin = new Padding(12, 5, 0, 3) };
+            wrap.CheckedChanged += (_, _) => text.WordWrap = wrap.Checked;
+            searchBar.Controls.Add(wrap, 2, 0);
             Controls.Add(split);
             Controls.Add(searchBar);
             tree.AfterSelect += (_, args) => text.Text = ((Topic)args.Node.Tag).Body.Replace("\r\n", "\n").Replace("\n", "\r\n");

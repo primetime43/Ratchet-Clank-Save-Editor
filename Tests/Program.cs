@@ -222,7 +222,7 @@ internal static partial class Program
                 Same(original, Snapshot(folder));
             });
             ResearchChecks(root);
-            Check("Compact UI loads, switches games and renders at higher scale", () => UiChecks(root));
+            Check("Readable UI loads, resizes, switches games and renders at higher scale", () => UiChecks(root));
             if (args.Length == 2 && args[0] == "--samples") SampleChecks(root, Path.GetFullPath(args[1]));
             if (args.Length == 2 && args[0] == "--tod-save") ReferenceResearchChecks(root, Path.GetFullPath(args[1]));
             Console.WriteLine($"All {passed} regression checks passed.");
@@ -484,7 +484,9 @@ internal static partial class Program
         var busy = typeof(MainForm).GetMethod("SetBusy", BindingFlags.Instance | BindingFlags.NonPublic);
         var tabs = Field<TabControl>(form, "TabControl");
         True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Save must be disabled before opening.");
-        True(form.ClientSize.Width < 600 && form.ClientSize.Height < 300, "The default window should remain compact.");
+        True(form.ClientSize.Width >= 1000 && form.ClientSize.Height >= 700, "The default window should provide readable inspection space.");
+        True(form.Font.Name == "Segoe UI" && form.Font.SizeInPoints >= 11, "Use a readable UI font.");
+        Equal(AutoScaleMode.Dpi, form.AutoScaleMode);
         form.StartPosition = FormStartPosition.Manual;
         form.Location = new Point(-20000, -20000);
         form.ShowInTaskbar = false;
@@ -495,7 +497,7 @@ internal static partial class Program
             "The original save tabs should stay disabled before opening; reference research must remain accessible.");
         True(tabs.TabPages[0].Text == "Game Save Information" && tabs.TabPages[1].Text == "Game Save Editing",
             "Keep the original tab order and names.");
-        Capture(form, Path.Combine(artifacts, "ui-compact-empty.png"));
+        Capture(form, Path.Combine(artifacts, "ui-readable-empty.png"));
         foreach (string region in new[] { "BLES00301", "NPUA80643", "NPEA00386", "NPEA00387", "NPUA80646",
             "BCUS98127", "BCUS98124", "BCUS98175", "BCES01594", "NPUA80908" })
         {
@@ -554,7 +556,7 @@ internal static partial class Program
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Reverting an edit should disable save.");
             Equal(loadedTitle, form.Text);
         }
-        foreach (var size in new[] { new Size(499, 248) })
+        foreach (var size in new[] { new Size(900, 620), new Size(1120, 740), new Size(1600, 900) })
         {
             form.ClientSize = size;
             form.PerformLayout();
@@ -565,7 +567,7 @@ internal static partial class Program
                 form.PerformLayout();
                 using var image = new Bitmap(form.Width, form.Height);
                 form.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size));
-                image.Save(Path.Combine(artifacts, $"ui-compact-{i}.png"));
+                image.Save(Path.Combine(artifacts, $"ui-readable-{size.Width}-{i}.png"));
                 foreach (var control in Descendants(tabs.SelectedTab).Where(c => c.Visible && c.Parent is not NumericUpDown && c is TextBox or NumericUpDown or Button or ComboBox))
                 {
                     True(control.Width >= 50 && control.Height >= 20, $"Clipped control: {control.Name} / {control.Text}");
@@ -574,12 +576,13 @@ internal static partial class Program
             }
         }
         tabs.SelectedIndex = 1;
-        form.ClientSize = new Size(499, 248);
+        form.ClientSize = new Size(1120, 740);
         Field<NumericUpDown>(form, "MoneyNumericUpDown").Value = int.MaxValue;
         Field<NumericUpDown>(form, "CasinoChipsNumericUpDown").Value = int.MaxValue;
-        Capture(form, Path.Combine(artifacts, "ui-compact-edited.png"));
+        Capture(form, Path.Combine(artifacts, "ui-readable-edited.png"));
         form.Scale(new SizeF(1.5f, 1.5f));
-        Capture(form, Path.Combine(artifacts, "ui-compact-scaled.png"));
+        Capture(form, Path.Combine(artifacts, "ui-readable-scaled.png"));
+        CheckDpiLayouts(root, artifacts);
         (sessionField.GetValue(form) as SaveSession)?.Dispose();
         sessionField.SetValue(form, null);
     }
@@ -590,6 +593,81 @@ internal static partial class Program
         using var image = new Bitmap(form.Width, form.Height);
         form.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size));
         image.Save(path);
+    }
+
+    private static void CheckDpiLayouts(string root, string artifacts)
+    {
+        // Exercise the same WM_DPICHANGED path as a monitor transition without
+        // changing the user's Windows display settings.
+        foreach (int dpi in new[] { 144, 192 })
+        {
+            using var form = new MainForm
+            {
+                StartPosition = FormStartPosition.Manual, Location = new Point(-20000, -20000),
+                ShowInTaskbar = false
+            };
+            form.Show();
+            string folder = Fixture(root, "BCUS98127");
+            File.WriteAllBytes(Path.Combine(folder, "GAME.SAV"), ResearchFixture());
+            var session = SaveSession.Open(folder, new FakeTools(), decrypted: true, backupRoot: Path.Combine(root, "backups"));
+            typeof(MainForm).GetField("session", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(form, session);
+            typeof(MainForm).GetMethod("ShowSession", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(form, null);
+            typeof(MainForm).GetMethod("SetBusy", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(form, new object[] { false });
+            var tabs = Field<TabControl>(form, "TabControl");
+            tabs.TabPages[0].Enabled = tabs.TabPages[1].Enabled = true;
+            for (int i = 0; i < tabs.TabCount; i++) tabs.SelectedIndex = i;
+            var children = Descendants(form).ToArray();
+            foreach (var child in children) _ = child.Handle;
+            int initialDpi = form.DeviceDpi;
+            float initialFont = form.Font.SizeInPoints;
+            var bounds = new[] { -20000, -20000, -20000 + form.Width * dpi / initialDpi, -20000 + form.Height * dpi / initialDpi };
+            IntPtr rectangle = System.Runtime.InteropServices.Marshal.AllocHGlobal(16);
+            try
+            {
+                System.Runtime.InteropServices.Marshal.Copy(bounds, 0, rectangle, 4);
+                // PerMonitorV2 also sends before/after-parent notifications to
+                // child windows. WinForms accepts their test DPI in wParam:
+                // https://github.com/dotnet/winforms/blob/main/src/System.Windows.Forms/System/Windows/Forms/Control.cs
+                foreach (var child in children.Reverse()) SendDpiNotification(child, 0x02E2, dpi);
+                var message = Message.Create(form.Handle, 0x02E0, new IntPtr(dpi | (dpi << 16)), rectangle);
+                typeof(Form).GetMethod("WndProc", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(form, new object[] { message });
+                foreach (var child in children) SendDpiNotification(child, 0x02E3, dpi);
+                form.PerformLayout();
+                Equal(dpi, form.DeviceDpi);
+                True(Math.Abs(form.Font.SizeInPoints - initialFont * dpi / initialDpi) < 0.2f,
+                    "DPI transitions should scale text as well as the window.");
+                for (int i = 0; i < tabs.TabCount; i++)
+                {
+                    tabs.SelectedIndex = i;
+                    Capture(form, Path.Combine(artifacts, $"ui-dpi-{dpi}-{i}.png"));
+                    foreach (var control in Descendants(tabs.SelectedTab).Where(c => c.Visible && c.Parent is not NumericUpDown && c is TextBox or NumericUpDown or Button or ComboBox))
+                    {
+                        True(control.Font.SizeInPoints >= 11 * dpi / 96f - 0.2f,
+                            $"Text did not scale: {control.Name} at {dpi} DPI.");
+                        True(control.Parent.ClientRectangle.Contains(control.Bounds),
+                            $"Control exceeds its layout at {dpi} DPI: {control.Name}.");
+                        if (control is Button)
+                            True(control.Height >= TextRenderer.MeasureText(control.Text, control.Font).Height + control.Padding.Vertical,
+                                $"Button text clipped at {dpi} DPI: {control.Name}.");
+                    }
+                    foreach (var grid in Descendants(tabs.SelectedTab).OfType<DataGridView>().Where(c => c.Visible))
+                    {
+                        Equal(32, grid.Rows.Count);
+                        True(grid.Rows.Cast<DataGridViewRow>().All(row => row.Height >= grid.Font.Height + grid.DefaultCellStyle.Padding.Vertical),
+                            $"Table text clipped at {dpi} DPI.");
+                    }
+                }
+            }
+            finally { System.Runtime.InteropServices.Marshal.FreeHGlobal(rectangle); }
+        }
+    }
+
+    private static void SendDpiNotification(Control control, int messageId, int dpi)
+    {
+        var message = Message.Create(control.Handle, messageId, new IntPtr(dpi), IntPtr.Zero);
+        typeof(Control).GetMethod("WndProc", BindingFlags.Instance | BindingFlags.NonPublic)
+            .Invoke(control, new object[] { message });
     }
 
     private static IEnumerable<Control> Descendants(Control parent)

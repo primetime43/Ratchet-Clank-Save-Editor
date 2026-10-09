@@ -27,7 +27,7 @@ dotnet publish "Ratchet & Clank Save Editor/Ratchet & Clank Save Editor.csproj" 
 
 **Save inspector** reads a detached plaintext session snapshot, excluding unsaved currency edits. For the observed BCUS98127/BCES00052 ToD layout it shows all weapon/gadget records, stored zero-based levels, XP/ammo and raw bits, modifier masks, ownership and separate unlock bytes, opaque record bytes, counters, candidate nearby fields, gameplay names/tails, save regions, prefix words and bounded hex pages. **Upgrade nodes** pairs saved bits with shipped types/values/costs and grid neighbors; it does not declare nodes safe or eligible to purchase. Double-click a weapon for its full reference definition on the Research tab. Unexpected values are shown without clamping or repair. Other games, different sizes and mismatched inventory IDs are not decoded using this mapping; existing currency editing remains available.
 
-**Files & headers** inspects working-copy file sizes/hashes, SFO fields, PFD tables and PNG chunks for any loaded game. Ownership/binary metadata and PFD keys/signatures are redacted. Header parsing does not verify cryptographic integrity or PNG CRCs. Resize the window for more room; the original compact layout remains the default. Browse the static research for field confidence, native addresses, asset defaults and remaining runtime/cross-region limits.
+**Files & headers** inspects working-copy file sizes/hashes, SFO fields, PFD tables and PNG chunks for any loaded game. Ownership/binary metadata and PFD keys/signatures are redacted. Header parsing does not verify cryptographic integrity or PNG CRCs. The default window is 1120 × 740 with larger text, padded tables and resizable reading panes. Layouts resize with the window and follow Windows per-monitor DPI scaling. Browse the static research for field confidence, native addresses, asset defaults and remaining runtime/cross-region limits.
 
 ## Edit a save
 
@@ -62,7 +62,7 @@ Opening an unsupported, incomplete, or truncated save reports an error. If anoth
 
 Quest for Booty also recognizes BCES00301. Tools of Destruction also recognizes the digital NPEA00452 and NPUA80965 releases. Disc trilogy collections are identified using the individual game's save-directory ID, not the enclosing collection disc ID.
 
-This covers the ten native PS3 games, **currency editing**, and the explicitly listed regions, not every save field or PS2 Classics/PSP/Vita formats. Unknown regions remain rejected rather than guessed. The window retains the original compact layout; only All 4 One shows an additional character selector. QForce/Full Frontal Assault uses a named floating-point record and caps edits at 16,777,216 to prevent integer precision loss. Saves without that record, such as some hub saves, cannot be edited.
+This covers the ten native PS3 games, **currency editing**, and the explicitly listed regions, not every save field or PS2 Classics/PSP/Vita formats. Unknown regions remain rejected rather than guessed. The window keeps the original simple tabs with a larger, responsive layout; only All 4 One shows an additional character selector. QForce/Full Frontal Assault uses a named floating-point record and caps edits at 16,777,216 to prevent integer precision loss. Saves without that record, such as some hub saves, cannot be edited.
 
 The HD remasters use big-endian player blocks. The edited block's checksum is marked with the PS3 disabled-checksum sentinel (`FFFFFFFF`), following the established PS3 editing workflow; unedited planet blocks and unused reserved space remain unchanged. This is not the PS2 checksum algorithm.
 
@@ -74,7 +74,7 @@ Encrypted PFD v3/v4 transforms preserve all four original `PARAM.SFO` hashes, in
 dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release
 ```
 
-This dependency-free runner checks every listed region, binary reads, relocated metadata, remaster player blocks, independent character edits, named float records, backups, repeated saves, failed encryption, rollback, external changes and the compact UI. It also uses the **actual bundled encryption tool** with synthetic PFD v3 and v4 fixtures for all ten games, checks original metadata-binding preservation, and rejects tampered ciphertext and invalid databases. Rendered UI previews are saved in `artifacts/`.
+This dependency-free runner checks every listed region, binary reads, relocated metadata, remaster player blocks, independent character edits, named float records, backups, repeated saves, failed encryption, rollback, external changes and the resizable, DPI-aware UI. It also uses the **actual bundled encryption tool** with synthetic PFD v3 and v4 fixtures for all ten games, checks original metadata-binding preservation, and rejects tampered ciphertext and invalid databases. Rendered UI previews are saved in `artifacts/`.
 
 Research checks cover embedded definitions, detached snapshots, big-endian fields, unusual raw values, layout rejection, header bounds/redaction, game switching, searching and weapon-reference navigation. To also load an existing plaintext ToD save read-only (without altering the source), pass `-- --tod-save "path/to/save-folder"` to the runner. Test backups and generated fixtures use a temporary directory.
 

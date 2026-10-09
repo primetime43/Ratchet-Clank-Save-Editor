@@ -8,8 +8,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 {
     public sealed class SaveInspectorControl : UserControl
     {
-        private readonly ComboBox views = new() { Name = "InspectionView", DropDownStyle = ComboBoxStyle.DropDownList, Width = 195 };
-        private readonly ComboBox upgradeWeapon = new() { Name = "UpgradeWeaponFilter", DropDownStyle = ComboBoxStyle.DropDownList, Width = 160, Visible = false };
+        private readonly ComboBox views = new() { Name = "InspectionView", DropDownStyle = ComboBoxStyle.DropDownList, Width = 270 };
+        private readonly ComboBox upgradeWeapon = new() { Name = "UpgradeWeaponFilter", DropDownStyle = ComboBoxStyle.DropDownList, Width = 200, Visible = false };
         private bool updatingWeaponFilter;
         private readonly CheckBox technical = new() { Name = "InspectionTechnical", Text = "Technical", AutoSize = true };
         private readonly NumericUpDown hexOffset = new() { Name = "HexOffset", Hexadecimal = true, Width = 100, Visible = false };
@@ -20,8 +20,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             MultiSelect = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect, RowHeadersVisible = false,
             BackgroundColor = SystemColors.Window, BorderStyle = BorderStyle.FixedSingle
         };
-        private readonly TextBox details = new() { Name = "InspectionDetails", Dock = DockStyle.Bottom, Height = 52, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical };
-        private readonly TextBox hex = new() { Name = "HexBytes", Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, WordWrap = false, ScrollBars = ScrollBars.Both, Visible = false };
+        private readonly TextBox details = new() { Name = "InspectionDetails", Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical };
+        private readonly TextBox hex = new() { Name = "HexBytes", Font = new Font("Consolas", 11F), Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, WordWrap = false, ScrollBars = ScrollBars.Both, Visible = false };
         private readonly ToolTip tip = new();
         private TodSaveInspection snapshot;
         private InspectionTable containers;
@@ -31,16 +31,40 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public SaveInspectorControl()
         {
             Dock = DockStyle.Fill;
-            var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 29, WrapContents = false };
+            AutoScaleDimensions = new SizeF(96, 96);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Font = new Font("Segoe UI", 11F);
+            Padding = new Padding(10);
+            var toolbar = new FlowLayoutPanel
+            {
+                Name = "InspectionToolbar", Dock = DockStyle.Top, AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink, WrapContents = true,
+                Padding = new Padding(0, 0, 0, 8)
+            };
+            grid.DefaultCellStyle.Padding = new Padding(6, 5, 6, 5);
+            grid.ColumnHeadersDefaultCellStyle.Padding = new Padding(6, 6, 6, 6);
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid.GridColor = SystemColors.ControlLight;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(247, 249, 252);
+            grid.RowTemplate.MinimumHeight = 32;
+            technical.Margin = new Padding(10, 7, 3, 3);
             views.Items.AddRange(new object[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Objects & equipment", "World progress", "Quick select", "Player summary", "Saved locations", "Save layout", "Prefix words (technical)", "Files & metadata", "Hex bytes (technical)" });
             views.Items.Insert(views.Items.IndexOf("Save layout"), "Stored state blocks");
             toolbar.Controls.Add(views);
             toolbar.Controls.Add(upgradeWeapon);
             toolbar.Controls.Add(hexOffset);
             toolbar.Controls.Add(technical);
-            Controls.Add(grid);
-            Controls.Add(hex);
-            Controls.Add(details);
+            var split = new SplitContainer
+            {
+                Name = "InspectionSplit", Dock = DockStyle.Fill, Orientation = Orientation.Horizontal,
+                FixedPanel = FixedPanel.Panel2, Size = new Size(1000, 600),
+                SplitterWidth = 6, SplitterDistance = 444, Panel1MinSize = 120, Panel2MinSize = 90
+            };
+            split.Panel1.Controls.Add(grid);
+            split.Panel1.Controls.Add(hex);
+            split.Panel2.Padding = new Padding(0, 6, 0, 0);
+            split.Panel2.Controls.Add(details);
+            Controls.Add(split);
             Controls.Add(toolbar);
             tip.SetToolTip(views, "Read-only views of the current plaintext session baseline. Resize the window for more space.");
             tip.SetToolTip(hexOffset, "GAME.SAV file offset in hexadecimal; 256 bytes are displayed.");

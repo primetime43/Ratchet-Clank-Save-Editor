@@ -23,8 +23,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             };
             TabControl.TabPages.Add(inspectionTab);
             TabControl.TabPages.Add(researchTab);
-            // Keep the original compact size and controls, with room to enlarge
-            // read-only grids and research notes when the user wants it.
+            // All tabs share the readable, resizable main-window layout.
             FormBorderStyle = FormBorderStyle.Sizable;
             MaximizeBox = true;
         }

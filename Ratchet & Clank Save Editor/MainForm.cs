@@ -25,8 +25,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         public MainForm()
         {
+            // Finish building all tabs before the first DPI/layout pass.
+            SuspendLayout();
             InitializeComponent();
+            InitializeReadableLayout();
             InitializeResearchViews();
+            ResumeLayout(true);
             SetBusy(false);
             UpdateTitle();
         }
