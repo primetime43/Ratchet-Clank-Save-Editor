@@ -114,11 +114,63 @@ class MapChecks(unittest.TestCase):
         self.assertEqual(fields["mod_ammo_attribute_id"], 9)
         self.assertEqual(int(fields["vendor_offset"], 0), 0x6A8)
         self.assertEqual(int(fields["num_mods_offset"], 0), 0x6A4)
+        self.assertEqual(fields["mods_array_capacity"], 24)
+        self.assertEqual(int(fields["mods_offset"], 0), 0x464)
+        self.assertEqual(int(fields["mod_stride"], 0), 0x18)
+        self.assertEqual(int(fields["mod_cost_offset"], 0), 0xC)
         annotations = {entry["va"]: entry for entry in MAPPING["annotations"]}
         for key, value in fields.items():
             if key.endswith("_va"):
                 self.assertEqual(annotations[value]["confidence"], "confirmed", key)
         self.assertIn("CSV order", configuration["warning"])
+
+    def test_inventory_catalog_and_upgrade_grid_evidence(self):
+        configuration = MAPPING["weapon_configuration"]
+        catalog = configuration["inventory_catalog"]
+        self.assertEqual([item["id"] for item in catalog], list(range(32)))
+        self.assertEqual(len({item["config_name"] for item in catalog}), 32)
+        guards = {int(g["va"], 0): bytes.fromhex(g["bytes"])
+                  for g in configuration["catalog_instruction_guards"]}
+        annotations = {int(a["va"], 0): a for a in MAPPING["annotations"]}
+        root = int(configuration["config_root"]["va"], 0)
+        for item in catalog:
+            self.assertEqual(int(item["save_record_offset"], 0), item["id"] * 0x14)
+            self.assertEqual(int(item["config_va"], 0), root + int(item["parent_config_offset"], 0))
+            self.assertEqual(int.from_bytes(guards[int(item["id_load_va"], 0)], "big"), 0x38800000 | item["id"])
+            self.assertEqual(struct.unpack(">f", guards[int(item["enum_export"]["value_slot_va"], 0)])[0], item["id"])
+            pointer = annotations[int(item["config_pointer_slot_va"], 0)]
+            self.assertEqual(int(pointer["bytes"], 16), int(item["config_va"], 0))
+            self.assertEqual(annotations[int(item["enum_export"]["name_va"], 0)]["bytes"], (item["enum"].encode("ascii") + b"\0").hex().upper())
+            self.assertEqual(annotations[int(item["config_getter_va"], 0)]["confidence"], "confirmed")
+        vendor = configuration["vendor_upgrade_layout"]
+        self.assertEqual(vendor["number_bytes"], 4)
+        self.assertEqual(len(vendor["grids"]), 15)
+        total = 0
+        for enum, grid in vendor["grids"].items():
+            self.assertIn(enum, {item["enum"] for item in catalog})
+            rows = grid["rows"]
+            self.assertEqual(len(rows), 4)
+            self.assertTrue(all(len(row) == 7 for row in rows))
+            indices = [node for row in rows for node in row if node >= 0]
+            self.assertEqual(sorted(indices), list(range(len(indices))))
+            total += len(indices)
+        self.assertEqual(total, 204)
+
+    def test_reference_catalog_matches_independent_decoder(self):
+        if ELF_PATH is None:
+            self.skipTest("Pass --elf to reproduce the native catalog")
+        import runpy
+        report = runpy.run_path(str(ROOT / "Tools/Inspect-TodWeaponBindings.py"))["inspect"](ELF_PATH)
+        by_id = {item["id"]: item for item in report["constructor_calls"]}
+        for item in MAPPING["weapon_configuration"]["inventory_catalog"]:
+            decoded = by_id[item["id"]]
+            for key in ("enum", "config_name"):
+                self.assertEqual(item[key], decoded[key])
+            for key in ("constructor_va", "id_load_va", "config_load_va", "config_pointer_slot_va", "config_va", "save_record_offset"):
+                self.assertEqual(int(item[key], 0), int(decoded[key], 0))
+            self.assertEqual(int(item["constructor_call_va"], 0), int(decoded["call_va"], 0))
+            self.assertEqual(int(item["config_getter_va"], 0), int(decoded["config_property"]["getter_va"], 0))
+            self.assertEqual(int(item["parent_config_offset"], 0), decoded["config_property"]["parent_offset"])
 
     def test_reject_bad_schema_duplicates_and_overlap(self):
         invalid = copy.deepcopy(MAPPING)
@@ -138,7 +190,9 @@ class MapChecks(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest().upper(), MAPPING["binary"]["sha256"])
         self.assertEqual(len(raw), MAPPING["binary"]["size"])
         self.assertEqual(raw[:6], b"\x7fELF\x02\x02")
-        for entry in MAPPING["annotations"] + MAPPING["serialization"]["instruction_guards"] + MAPPING["weapon_configuration"]["instruction_guards"]:
+        for entry in (MAPPING["annotations"] + MAPPING["serialization"]["instruction_guards"]
+                + MAPPING["weapon_configuration"]["instruction_guards"]
+                + MAPPING["weapon_configuration"]["catalog_instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])
@@ -230,6 +284,28 @@ class MockIdaChecks(unittest.TestCase):
         self.assertEqual(self.names[address], "my_research_label")
         self.assertTrue(self.comments[address].startswith("My existing research"))
         self.assertEqual(first_comments, self.comments)
+
+    def test_revised_notes_preserve_history_and_custom_comments(self):
+        entry = MAPPING["annotations"][0]
+        address = int(entry["va"], 0)
+        marker = f"[ToD map: {entry['name']};"
+        old_note = marker + " candidate]\nEarlier research\nEvidence: earlier bytes"
+        self.comments[address] = "My custom prefix\n\n" + old_note + "\nMy custom suffix"
+        self.run_import()
+        updated = self.comments[address]
+        self.assertEqual(updated.count(marker), 1)
+        self.assertIn("[Previous ToD map:", updated)
+        self.assertIn("Earlier research\nEvidence: earlier bytes", updated)
+        self.assertTrue(updated.startswith("My custom prefix"))
+        self.assertIn("\nMy custom suffix", updated)
+        self.run_import()
+        self.assertEqual(self.comments[address], updated)
+        self.comments[address] = old_note + "\n\n" + updated
+        self.run_import()
+        self.assertEqual(self.comments[address].count(marker), 1)
+        repaired = self.comments[address]
+        self.run_import()
+        self.assertEqual(self.comments[address], repaired)
 
 
 if __name__ == "__main__":

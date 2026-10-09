@@ -5,6 +5,7 @@
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import com.google.gson.*;
 import ghidra.app.script.GhidraScript;
 import ghidra.program.model.address.Address;
@@ -85,7 +86,14 @@ public class ImportTodMap extends GhidraScript {
             String note = "[ToD map: " + name + "; " + entry.get("confidence").getAsString() + "]\n" +
                 entry.get("comment").getAsString() + "\nEvidence: " + entry.get("evidence").getAsString();
             String old = getPlateComment(address);
-            if (old == null || !old.contains(note)) setPlateComment(address, old == null ? note : old + "\n\n" + note);
+            String markerPattern = "(?m)^\\[ToD map: " + Pattern.quote(name) + ";";
+            if (old == null || !old.contains(note) || Pattern.compile(markerPattern).matcher(old).results().count() > 1) {
+                // Preserve older findings and custom prose, only retiring our
+                // own marker so there is one current note after an update.
+                if (old != null) old = old.replaceAll(markerPattern,
+                    "[Previous ToD map: " + name + ";");
+                setPlateComment(address, old == null ? note : old + "\n\n" + note);
+            }
             // Do not apply save-file structures to ELF memory without verified serialization mapping.
             count++;
         }

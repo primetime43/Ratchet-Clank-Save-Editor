@@ -4,6 +4,7 @@ Annotates only the matching, unre-based ELF database. Does not patch input bytes
 create guessed functions, replace user names, or apply save types to ELF globals.
 """
 import json
+import re
 from pathlib import Path
 
 
@@ -106,7 +107,12 @@ def main():
         note = (f"[ToD map: {entry['name']}; {entry['confidence']}]\n"
                 f"{entry['comment']}\nEvidence: {entry['evidence']}")
         old = ida_bytes.get_cmt(address, True) or ""
-        if note not in old:
+        marker_pattern = r"(?m)^\[ToD map: " + re.escape(entry["name"]) + r";"
+        if note not in old or len(re.findall(marker_pattern, old)) > 1:
+            # Retain older research verbatim except its owned marker. Do not
+            # infer where a user's appended comments end or delete any text.
+            old = re.sub(marker_pattern,
+                         "[Previous ToD map: " + entry["name"] + ";", old)
             if not ida_bytes.set_cmt(address, old + ("\n\n" if old else "") + note, True):
                 raise RuntimeError(f"Could not add comment at {address:#x}")
         applied += 1

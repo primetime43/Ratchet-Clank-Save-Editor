@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 238 annotations, 118 imports, evidence, byte signatures and six structure definitions.
+- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 337 annotations, 118 imports, evidence, byte signatures and six structure definitions.
 - [Ghidra importer](../Tools/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../Tools/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](ToolsOfDestructionSaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -180,7 +180,7 @@ Ammo, level and progress paths gate access with byte `+0x10` and item-definition
 
 XP setter `0x4660A8` writes float `+0x04`, recomputes stored level from weapon-data thresholds and cap helper `0x465F08`, and updates ammo on level increase. Helper `0x465E78` explicitly pairs stored level 5 with its XP threshold. Changing the byte alone can therefore leave inconsistent XP/level state. The default decompiler sometimes drops floating-point returns or represents float loads as integer casts; the raw `lfs/stfs/fsubs/fdivs` instructions establish the types.
 
-Modifier helper `0x465D00` ORs a selected bit into record `+0x0C` and refills ammo if maximum changes. Calculation `0x466258` walks weapon-data entries at `+0x464`, stride `0x18`, count at `+0x6A4`; enabled bits select entries matching an attribute ID. Kind zero adds a float, other kinds accumulate a multiplier. Maximum ammo chooses attribute 9 and a base value at weapon-data `+0x280 + 4*level`. The packed assets now provide node indices, label tags, costs and XP/ammo tables, and native bindings confirm the field names below. **Prerequisites, save-ID/name linkage, safe masks and gameplay-validated bounds remain unresolved.** This helper alone does not describe a complete upgrade purchase.
+Modifier helper `0x465D00` ORs a selected bit into record `+0x0C` and refills ammo if maximum changes. Calculation `0x466258` walks weapon-data entries at `+0x464`, stride `0x18`, count at `+0x6A4`; enabled bits select entries matching an attribute ID. Kind zero adds a float, other kinds accumulate a multiplier. Maximum ammo chooses attribute 9 and a base value at weapon-data `+0x280 + 4*level`. The packed assets provide node indices, label tags, costs and XP/ammo tables. Native bindings now link all 32 inventory IDs to named configurations, and vendor bytecode supplies upgrade grids and UI checks below. **Runtime overrides, safe edited-save masks and gameplay-validated bounds remain unresolved.** This modifier helper alone does not describe a complete upgrade purchase.
 
 The JSON `serialization` section records the state/copy chain, field offsets and exact instruction guards. The new `TOD_SaveInventoryRecord_verified` type supersedes candidate field names without overwriting an existing analyst's `TOD_SaveInventoryRecord_observed` type. Both remain available because importers preserve existing types. The remaining gameplay/health/armor structures are not verified. No editor fields were enabled by this research, and the USA ELF/European sample match is not a cross-region load test.
 
@@ -224,6 +224,8 @@ The ELF independently binds several names to the previously traced native offset
 | --- | --- | --- |
 | `MaxAmmo[index]` | Get `0xB8840`, set `0xB8728` | Weapon config `+0x280 + index*4`, float32; index check allows **0–19** |
 | `NumMods` | Get `0xB4870`, set `0xA73A0` | Weapon config `+0x6A4`, word |
+| `Mods[index]` | Get `0xB7B30`, set `0xB79E0` | Weapon config `+0x464 + index*0x18`; index check allows **0–23** |
+| Modifier cost | Native `0x2D1E80` | Modifier entry `+0x0C`, word; equivalent config `+0x470 + index*0x18` |
 | `Vendor` | Get `0x99B20` | Subobject at weapon config `+0x6A8` |
 | `Vendor.BasePrice` | Get `0xB4BB0` | Vendor `+0`, hence weapon config `+0x6A8` |
 | `Vendor.AmmoPrice` | Get `0xB4AE0` | Vendor `+4`, hence weapon config `+0x6AC` |
@@ -233,7 +235,7 @@ The ELF independently binds several names to the previously traced native offset
 
 The maximum-ammo array has **20 native slots**, but the supplied CSV defines ten levels for each of the 15 upgradeable weapons. Capacity does not establish 20 playable levels. The registration also exports `MOD_AMMO = 9`: float constant `9.0` at `0x88B334` is passed with the `MOD_AMMO` string, matching attribute 9 used by `0x466500`. Price selector `0x2D2058` chooses `AmmoPrice` for definition flag 2, otherwise `BasePrice`; the promotion path uses `MegaPrice`.
 
-The table below summarizes the assets using **internal configuration names**, not confirmed save IDs or player-visible weapon names. “Ammo +mods” is the arithmetic result of enabling every listed `MOD_AMMO` node; it does not claim that every mask is attainable or accepted. All listed ammo modifiers in these assets are absolute additions.
+The table below summarizes the assets using **internal configuration names**, not player-visible localized weapon names. Their native ID links are listed in the next section. “Ammo +mods” is the arithmetic result of enabling every listed `MOD_AMMO` node; it does not claim that every mask is attainable or accepted. All listed ammo modifiers in these assets are absolute additions.
 
 | Config name | Base ammo | Ammo +mods | Nodes incl. start | XP for level 5 | XP for level 10 |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -253,7 +255,7 @@ The table below summarizes the assets using **internal configuration names**, no
 | MagNet | 12 | 16 | 16 | 16,104 | 72,760 |
 | Ryno | 300 / 750 at indices 5–9 | 450 / 900 | 15 | 80,520 | 242,040 |
 
-Combuster's full XP threshold array is `[0, 1000, 2200, 3640, 5368, 5500, 20000, 37400, 58280, 83336]`. Its node 12 is `MOD_DURATION`, absolute `4`, cost `300`, with localization tags identifying the special burn-patch upgrade. Its complete CSV node catalog spans 0–13, whereas the reference save's modifier word `0x3FFE` enables bits 1–13. That is compatible with this catalog **if** record 1's name linkage is established; it is not an independent proof of that ID mapping or of prerequisites.
+Combuster's full XP threshold array is `[0, 1000, 2200, 3640, 5368, 5500, 20000, 37400, 58280, 83336]`. Its node 12 is `MOD_DURATION`, absolute `4`, cost `300`, with localization tags identifying the special burn-patch upgrade. Its complete CSV node catalog spans 0–13; the reference save's record 1 modifier word `0x3FFE` enables bits 1–13. The ID link is independently confirmed by native constructors and enum exports, not inferred from this mask. The vendor script treats node 0 as the start without requiring ownership bit 0.
 
 Other configurations are Wrench, Groovitron, MiniLeech, ConfusionGas, Zurkon, MaxiLeech, Copter, Morph, Slinkonator, SwingShot, Inflatopod, Gelanator and Decryptor. The first group has only index-0 values; the last four have two populated XP columns but only one populated ammo column. Do not invent missing gadget levels/ammo values. CSV order differs between weapon and vendor tables and must not be used to label the 32 save records.
 
@@ -270,7 +272,100 @@ python -B Tests/TestPsarc.py --archive "path/to/global_cached.psarc" -v
 python -B Tests/TestTodWeaponConfigs.py --assets artifacts/tod-assets-v02.00 -v
 ```
 
-The archive tool refuses existing outputs and extraction into the original archive directory. Bounds, decompression size, malformed manifests, untrusted names and overwrite protection are fixture-tested. Reference tests verify matching extracted hashes and unchanged original archive/assets. Remaining work: link every configuration to its inventory ID, establish node adjacency/prerequisites and runtime overrides, and validate edited copies in-game. No new editor fields are enabled by these findings.
+The archive tool refuses existing outputs and extraction into the original archive directory. Bounds, decompression size, malformed manifests, untrusted names and overwrite protection are fixture-tested. Reference tests verify matching extracted hashes and unchanged original archive/assets. Native IDs and vendor adjacency are now mapped below; runtime overrides and edited-copy gameplay validation remain open. No new editor fields are enabled by these findings.
+
+### Native inventory ID catalog
+
+All **32** IDs are now linked through three independent native evidence paths: numeric Lua `WPN_*` exports in registration `0x80848`, constructor arguments to common registration `0x466798` (or cross-TOC thunk `0x11210`), and named configuration getters from property table `0x88ED20`. Constructors pass ID in `r4` and the configuration pointer in `r5`; the common constructor stores them at definition `+0` and `+0x48`. CSV row order is not used.
+
+The MonolithicConfig root getter is `0x94400`; pointer slot `0x88FAFC` contains runtime address `0x101B9EE8`. Named weapon subobjects are `0x6D4` bytes apart in a different order from inventory IDs. For example, Combuster getter `0x971E0` returns root `+0x1CFC = 0x101BBBE4`; constructor `0x470378` passes that pointer with ID 1. These are **runtime configuration addresses**, not save offsets or extracted asset bytes.
+
+| ID | Native config name | Save record offset |
+| ---: | --- | --- |
+| 0 | Wrench | `0x000` |
+| 1 | Combuster | `0x014` |
+| 2 | Grenade | `0x028` |
+| 3 | Ravager | `0x03C` |
+| 4 | Tornado | `0x050` |
+| 5 | BuzzBlade | `0x064` |
+| 6 | Predator | `0x078` |
+| 7 | AlphaNova | `0x08C` |
+| 8 | FlameThrower | `0x0A0` |
+| 9 | GoopMine | `0x0B4` |
+| 10 | Reaper | `0x0C8` |
+| 11 | Rocket | `0x0DC` |
+| 12 | RoboHive | `0x0F0` |
+| 13 | MagNet | `0x104` |
+| 14 | EnergyClaws | `0x118` |
+| 15 | Ryno | `0x12C` |
+| 16 | Zurkon | `0x140` |
+| 17 | ConfusionGas | `0x154` |
+| 18 | Slinkonator | `0x168` |
+| 19 | Groovitron | `0x17C` |
+| 20 | MiniLeech | `0x190` |
+| 21 | MaxiLeech | `0x1A4` |
+| 22 | Morph | `0x1B8` |
+| 23 | Copter | `0x1CC` |
+| 24 | Inflatopod | `0x1E0` |
+| 25 | SwingShot | `0x1F4` |
+| 26 | CuttingLaser | `0x208` |
+| 27 | Gelanator | `0x21C` |
+| 28 | RoboWings | `0x230` |
+| 29 | MagCycle | `0x244` |
+| 30 | PirateGadget | `0x258` |
+| 31 | Decryptor | `0x26C` |
+
+The JSON `inventory_catalog` records enum names, instruction addresses, pointer slots, getters and offsets for every row, with **264** separate catalog byte guards. Internal enum/config names need not match: `WPN_VISICOPTER` maps to `Copter`, `WPN_PIRATEGUISE` to `PirateGadget`, and `WPN_MAGCYCLE` to `MagCycle`. CuttingLaser, RoboWings, MagCycle and PirateGadget have native bindings but no rows in the six extracted configuration files; do not invent their asset defaults.
+
+The [native binding inspector](../Tools/Inspect-TodWeaponBindings.py) verifies the exact ELF size/hash before decoding bounded, observed PPC patterns. It is not a general emulator. Assembly traces independently corroborate the arguments and getter offsets. The acquisition counter at save `0x280` remains unexplained (sample 46); the new catalog does not justify replacing it with the number of owned items.
+
+### Vendor upgrade grids and purchasing
+
+Archive entry `/built/anark/weaponvendor/built.dat` is 390,796 bytes, SHA-256 `294BA05A607BC5C4C59B60E85C57515DBBD8CDEECC9CB6BF570AE4AE937627D5`. Its `weaponUpgradeHandler` chunk spans **file** offsets `0x54F85–0x5E78A` (exclusive end), not ELF VAs. The chunk is Lua 5.0 with little-endian integers and float32 numbers, unlike the big-endian native executable. The bounded [Lua reader](../Tools/Inspect-Lua50.py) follows the official [chunk field ordering](https://www.lua.org/source/5.0/lundump.c.html) and [5.0 instruction encoding](https://www.lua.org/source/5.0/lopcodes.h.html); it never executes Lua. In particular, Lua 5.0's A field is at bit 24 and its register/constant operand boundary is 250, not the familiar Lua 5.1 layout.
+
+Static literal-table recovery from `initWeaps` yields **15 grids**, each four rows by seven columns. Every nonnegative node index matches its named CSV group, totaling 204 entries including the 15 starts. The JSON stores all grids and selected method offsets. Globals such as `WPN_COMBUSTER` remain symbolic while decoding; no game environment is executed or assumed.
+
+| Script method | Bytecode file offset | Observed behavior |
+| --- | --- | --- |
+| `initWeaps` | `0x5C6E1` | Builds weapon, grid and special-node tables |
+| `canBePurchased` | `0x56A8A` | Normal node: any orthogonal neighbor purchased; special node: returns true directly |
+| `beenPurchased` | `0x56CFC` | Missing cell: false; node 0: true without checking bit 0; otherwise calls `is_mod_owned` |
+| `specialCheck` | `0x56ECE` | Missing/nonpositive cell: true; positive cell: must be owned |
+| `is_valid_movement` | `0x56781` | Special-node selection requires all four neighbor `specialCheck` results |
+| `onSelect` | `0x5A7F8` | Checks native `is_mod_available` and `canBePurchased`, excludes node 0, then calls `purchase_mod` |
+
+Special-node icon handling (`showIcon`/`copyIcon`) also checks all four neighbors. Thus special selection/icon gating, the `canBePurchased` predicate and the native purchase transaction are **different checks**. Do not describe the native function as enforcing the entire prerequisite graph.
+
+Combuster grid (rows/columns are one-based in the script):
+
+```text
+-1 -1  4 11  3 -1 -2
+ 0  2  7 -1 13 -1 -2
+-2 -1  8 -1 12  5 -1
+-2 -1  6  9  1 10 -1
+```
+
+Its special node 12 is at row 3, column 5; adjacent positive nodes are **1, 5 and 13**, all required by special navigation/icon checks. Node 2 neighbors start node 0, so it is the first ordinary node eligible without any purchased bits. Negative marker semantics are not fully identified. Ryno's special marker is `-3`, not a positive purchasable node.
+
+Native transaction `0x2D2878` requires a hero, nonzero record ownership at `+0x10`, and sufficient raritanium at inventory `+0x420`. It gets cost through `0x2D1E80`, enables the bit via `0x465D00`, and deducts the cost via `0x24F748`. This leaf does not enforce grid adjacency or an already-owned-bit check. The cost getter returns zero for missing definitions/configurations or indices outside `NumMods`; that does **not** establish an out-of-range node as safe to purchase.
+
+The `Mods` getter/setter allow **24 entries**, stride `0x18`, base `+0x464`; getter compare at `0xB7BD8` allows indices 0–23. This also agrees with `(0x6A4 - 0x464) / 0x18 = 24`. A 32-bit saved mask does not establish 32 native modifier slots. Only cost at entry `+0x0C` is newly named here; other entry member offsets must be confirmed individually before expanding structure definitions.
+
+Reproduce the new read-only reports and checks:
+
+```powershell
+# Use a new output file; never overwrite the original archive or assets.
+python -B Tools/Inspect-Psarc.py "path/to/global_cached.psarc" `
+  --name /built/anark/weaponvendor/built.dat --out artifacts/tod-assets-v02.00/weapon-vendor-built.dat
+python -B Tools/Inspect-TodWeaponBindings.py "path/to/EBOOT.ELF"
+python -B Tools/Inspect-Lua50.py artifacts/tod-assets-v02.00/weapon-vendor-built.dat `
+  --offset 0x54F85 --vendor-layout
+python -B Tests/TestTodWeaponBindings.py --elf "path/to/EBOOT.ELF" --assets artifacts/tod-assets-v02.00 -v
+python -B Tests/TestLua50.py --asset artifacts/tod-assets-v02.00/weapon-vendor-built.dat -v
+python -B Tests/TestTodElfMap.py --elf "path/to/EBOOT.ELF" -v
+```
+
+Tests cover malformed/bounded chunks, endian/number layouts, operand encoding, literal-grid recovery, native ID/offset links and matching CSV nodes, plus unchanged reference files. Static graph recovery is not proof that edited saves load or that these USA executable findings apply to every region/version. New UI editing remains deferred until runtime validation of disposable copies.
 
 ### External editor references
 
@@ -284,7 +379,7 @@ The project's README points to [Slim's Editor](https://github.com/RatchetModding
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover mapped annotations, six structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, 28 serialization instruction guards and ownership/acquisition relationships. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 336 mapped annotations (the third TOC reference base is unmapped), six structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog instruction guards and ownership/acquisition relationships. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

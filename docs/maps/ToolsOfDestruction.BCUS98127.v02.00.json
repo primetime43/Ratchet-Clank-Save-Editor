@@ -212,6 +212,2480 @@
     "report_tool": "Tools/Inspect-TodWeaponConfigs.py",
     "asset_weapon_count": 28,
     "asset_modifier_count_including_start_nodes": 204,
+    "native_binding_report_tool": "Tools/Inspect-TodWeaponBindings.py",
+    "config_root": {
+      "va": "0x101B9EE8",
+      "pointer_slot_va": "0x0088FAFC",
+      "getter_va": "0x00094400"
+    },
+    "inventory_catalog": [
+      {
+        "id": 0,
+        "enum": "WPN_WRENCH",
+        "config_name": "Wrench",
+        "save_record_offset": "0x00000000",
+        "constructor_va": "0x00483030",
+        "constructor_call_va": "0x00483148",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x004830D4",
+        "config_load_va": "0x004830B8",
+        "config_pointer_slot_va": "0x008A6718",
+        "config_va": "0x101BAE3C",
+        "config_getter_va": "0x00097340",
+        "parent_config_offset": "0x00000F54",
+        "enum_export": {
+          "call_va": "0x00080AB8",
+          "name_va": "0x100000F8",
+          "name_slot_va": "0x0088B2EC",
+          "name_load_va": "0x00080AB0",
+          "value_slot_va": "0x0088FAF4",
+          "value_load_va": "0x00080AB4"
+        }
+      },
+      {
+        "id": 1,
+        "enum": "WPN_COMBUSTER",
+        "config_name": "Combuster",
+        "save_record_offset": "0x00000014",
+        "constructor_va": "0x00470378",
+        "constructor_call_va": "0x0047047C",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x004703D4",
+        "config_load_va": "0x004703FC",
+        "config_pointer_slot_va": "0x008A60C0",
+        "config_va": "0x101BBBE4",
+        "config_getter_va": "0x000971E0",
+        "parent_config_offset": "0x00001CFC",
+        "enum_export": {
+          "call_va": "0x00080AD0",
+          "name_va": "0x10000108",
+          "name_slot_va": "0x0088B2F0",
+          "name_load_va": "0x00080AC8",
+          "value_slot_va": "0x0088B2F4",
+          "value_load_va": "0x00080AC0"
+        }
+      },
+      {
+        "id": 2,
+        "enum": "WPN_GRENADE",
+        "config_name": "Grenade",
+        "save_record_offset": "0x00000028",
+        "constructor_va": "0x00474398",
+        "constructor_call_va": "0x004744BC",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x0047446C",
+        "config_load_va": "0x00474410",
+        "config_pointer_slot_va": "0x008A620C",
+        "config_va": "0x101BD060",
+        "config_getter_va": "0x00096FD0",
+        "parent_config_offset": "0x00003178",
+        "enum_export": {
+          "call_va": "0x00080AE8",
+          "name_va": "0x10000118",
+          "name_slot_va": "0x0088B2F8",
+          "name_load_va": "0x00080AE0",
+          "value_slot_va": "0x0088B2FC",
+          "value_load_va": "0x00080AD8"
+        }
+      },
+      {
+        "id": 3,
+        "enum": "WPN_RAVAGER",
+        "config_name": "Ravager",
+        "save_record_offset": "0x0000003C",
+        "constructor_va": "0x0047AB40",
+        "constructor_call_va": "0x0047AC4C",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x0047ABF0",
+        "config_load_va": "0x0047ABA0",
+        "config_pointer_slot_va": "0x008A6464",
+        "config_va": "0x101BF284",
+        "config_getter_va": "0x00096C60",
+        "parent_config_offset": "0x0000539C",
+        "enum_export": {
+          "call_va": "0x00080B00",
+          "name_va": "0x10000128",
+          "name_slot_va": "0x0088B300",
+          "name_load_va": "0x00080AF8",
+          "value_slot_va": "0x0088B304",
+          "value_load_va": "0x00080AF0"
+        }
+      },
+      {
+        "id": 4,
+        "enum": "WPN_TORNADO",
+        "config_name": "Tornado",
+        "save_record_offset": "0x00000050",
+        "constructor_va": "0x00481FF8",
+        "constructor_call_va": "0x00482114",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x004820C8",
+        "config_load_va": "0x00482064",
+        "config_pointer_slot_va": "0x008A66A0",
+        "config_va": "0x101C14A8",
+        "config_getter_va": "0x000968F0",
+        "parent_config_offset": "0x000075C0",
+        "enum_export": {
+          "call_va": "0x00080B18",
+          "name_va": "0x10000138",
+          "name_slot_va": "0x0088B308",
+          "name_load_va": "0x00080B10",
+          "value_slot_va": "0x0088B30C",
+          "value_load_va": "0x00080B08"
+        }
+      },
+      {
+        "id": 5,
+        "enum": "WPN_BUZZ_BLADES",
+        "config_name": "BuzzBlade",
+        "save_record_offset": "0x00000064",
+        "constructor_va": "0x0046F2C8",
+        "constructor_call_va": "0x0046F3D0",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x0046F324",
+        "config_load_va": "0x0046F34C",
+        "config_pointer_slot_va": "0x008A605C",
+        "config_va": "0x101BB510",
+        "config_getter_va": "0x00097290",
+        "parent_config_offset": "0x00001628",
+        "enum_export": {
+          "call_va": "0x00080B30",
+          "name_va": "0x10000148",
+          "name_slot_va": "0x0088B310",
+          "name_load_va": "0x00080B28",
+          "value_slot_va": "0x0088B314",
+          "value_load_va": "0x00080B20"
+        }
+      },
+      {
+        "id": 6,
+        "enum": "WPN_PREDATOR",
+        "config_name": "Predator",
+        "save_record_offset": "0x00000078",
+        "constructor_va": "0x00478580",
+        "constructor_call_va": "0x004786A0",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00478654",
+        "config_load_va": "0x004785EC",
+        "config_pointer_slot_va": "0x008A63C4",
+        "config_va": "0x101BEBB0",
+        "config_getter_va": "0x00096D10",
+        "parent_config_offset": "0x00004CC8",
+        "enum_export": {
+          "call_va": "0x00080B48",
+          "name_va": "0x10000158",
+          "name_slot_va": "0x0088B318",
+          "name_load_va": "0x00080B40",
+          "value_slot_va": "0x0088B31C",
+          "value_load_va": "0x00080B38"
+        }
+      },
+      {
+        "id": 7,
+        "enum": "WPN_ALPHA_NOVA",
+        "config_name": "AlphaNova",
+        "save_record_offset": "0x0000008C",
+        "constructor_va": "0x00467B40",
+        "constructor_call_va": "0x00467C50",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00467BF8",
+        "config_load_va": "0x00467BAC",
+        "config_pointer_slot_va": "0x008A5F3C",
+        "config_va": "0x101BE4DC",
+        "config_getter_va": "0x00096DC0",
+        "parent_config_offset": "0x000045F4",
+        "enum_export": {
+          "call_va": "0x00080B60",
+          "name_va": "0x10000168",
+          "name_slot_va": "0x0088B320",
+          "name_load_va": "0x00080B58",
+          "value_slot_va": "0x0088B324",
+          "value_load_va": "0x00080B50"
+        }
+      },
+      {
+        "id": 8,
+        "enum": "WPN_FLAMETHROWER",
+        "config_name": "FlameThrower",
+        "save_record_offset": "0x000000A0",
+        "constructor_va": "0x004724A0",
+        "constructor_call_va": "0x004725B8",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x0047255C",
+        "config_load_va": "0x00472518",
+        "config_pointer_slot_va": "0x008A6168",
+        "config_va": "0x101BC98C",
+        "config_getter_va": "0x00097080",
+        "parent_config_offset": "0x00002AA4",
+        "enum_export": {
+          "call_va": "0x00080B78",
+          "name_va": "0x10000178",
+          "name_slot_va": "0x0088B328",
+          "name_load_va": "0x00080B70",
+          "value_slot_va": "0x0088B32C",
+          "value_load_va": "0x00080B68"
+        }
+      },
+      {
+        "id": 9,
+        "enum": "WPN_GOOP_MINES",
+        "config_name": "GoopMine",
+        "save_record_offset": "0x000000B4",
+        "constructor_va": "0x00473D48",
+        "constructor_call_va": "0x00473E50",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00473D98",
+        "config_load_va": "0x00473DC0",
+        "config_pointer_slot_va": "0x008A61D0",
+        "config_va": "0x101BDE08",
+        "config_getter_va": "0x00096E70",
+        "parent_config_offset": "0x00003F20",
+        "enum_export": {
+          "call_va": "0x00080B90",
+          "name_va": "0x10000190",
+          "name_slot_va": "0x0088B330",
+          "name_load_va": "0x00080B88",
+          "value_slot_va": "0x0088B334",
+          "value_load_va": "0x00080B80"
+        }
+      },
+      {
+        "id": 10,
+        "enum": "WPN_REAPER",
+        "config_name": "Reaper",
+        "save_record_offset": "0x000000C8",
+        "constructor_va": "0x0047CD08",
+        "constructor_call_va": "0x0047CE0C",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x0047CD64",
+        "config_load_va": "0x0047CD8C",
+        "config_pointer_slot_va": "0x008A64DC",
+        "config_va": "0x101BF958",
+        "config_getter_va": "0x00096BB0",
+        "parent_config_offset": "0x00005A70",
+        "enum_export": {
+          "call_va": "0x00080BA8",
+          "name_va": "0x100001A0",
+          "name_slot_va": "0x0088B338",
+          "name_load_va": "0x00080BA0",
+          "value_slot_va": "0x0088B33C",
+          "value_load_va": "0x00080B98"
+        }
+      },
+      {
+        "id": 11,
+        "enum": "WPN_ROCKET_LAUNCHER",
+        "config_name": "Rocket",
+        "save_record_offset": "0x000000DC",
+        "constructor_va": "0x0047E6D8",
+        "constructor_call_va": "0x0047E7DC",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x0047E730",
+        "config_load_va": "0x0047E760",
+        "config_pointer_slot_va": "0x008A6570",
+        "config_va": "0x101C0700",
+        "config_getter_va": "0x00096A50",
+        "parent_config_offset": "0x00006818",
+        "enum_export": {
+          "call_va": "0x00080BC0",
+          "name_va": "0x100001B0",
+          "name_slot_va": "0x0088B340",
+          "name_load_va": "0x00080BB8",
+          "value_slot_va": "0x0088B344",
+          "value_load_va": "0x00080BB0"
+        }
+      },
+      {
+        "id": 12,
+        "enum": "WPN_ROBO_HIVE",
+        "config_name": "RoboHive",
+        "save_record_offset": "0x000000F0",
+        "constructor_va": "0x0047DD58",
+        "constructor_call_va": "0x0047DE60",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x0047DDB4",
+        "config_load_va": "0x0047DDDC",
+        "config_pointer_slot_va": "0x008A6530",
+        "config_va": "0x101C002C",
+        "config_getter_va": "0x00096B00",
+        "parent_config_offset": "0x00006144",
+        "enum_export": {
+          "call_va": "0x00080BD8",
+          "name_va": "0x100001C8",
+          "name_slot_va": "0x0088B348",
+          "name_load_va": "0x00080BD0",
+          "value_slot_va": "0x0088B34C",
+          "value_load_va": "0x00080BC8"
+        }
+      },
+      {
+        "id": 13,
+        "enum": "WPN_MAG_NET",
+        "config_name": "MagNet",
+        "save_record_offset": "0x00000104",
+        "constructor_va": "0x00475A30",
+        "constructor_call_va": "0x00475B30",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00475A80",
+        "config_load_va": "0x00475AA8",
+        "config_pointer_slot_va": "0x008A629C",
+        "config_va": "0x101BD734",
+        "config_getter_va": "0x00096F20",
+        "parent_config_offset": "0x0000384C",
+        "enum_export": {
+          "call_va": "0x00080BF0",
+          "name_va": "0x100001D8",
+          "name_slot_va": "0x0088B350",
+          "name_load_va": "0x00080BE8",
+          "value_slot_va": "0x0088B354",
+          "value_load_va": "0x00080BE0"
+        }
+      },
+      {
+        "id": 14,
+        "enum": "WPN_ENERGY_CLAWS",
+        "config_name": "EnergyClaws",
+        "save_record_offset": "0x00000118",
+        "constructor_va": "0x00471050",
+        "constructor_call_va": "0x00471164",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00471110",
+        "config_load_va": "0x004710BC",
+        "config_pointer_slot_va": "0x008A6130",
+        "config_va": "0x101BC2B8",
+        "config_getter_va": "0x00097130",
+        "parent_config_offset": "0x000023D0",
+        "enum_export": {
+          "call_va": "0x00080C08",
+          "name_va": "0x100001E8",
+          "name_slot_va": "0x0088B358",
+          "name_load_va": "0x00080C00",
+          "value_slot_va": "0x0088B35C",
+          "value_load_va": "0x00080BF8"
+        }
+      },
+      {
+        "id": 15,
+        "enum": "WPN_RYNO",
+        "config_name": "Ryno",
+        "save_record_offset": "0x0000012C",
+        "constructor_va": "0x0047EEF8",
+        "constructor_call_va": "0x0047F014",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x0047EFB8",
+        "config_load_va": "0x0047EF70",
+        "config_pointer_slot_va": "0x008A65A0",
+        "config_va": "0x101C0DD4",
+        "config_getter_va": "0x000969A0",
+        "parent_config_offset": "0x00006EEC",
+        "enum_export": {
+          "call_va": "0x00080C20",
+          "name_va": "0x10000200",
+          "name_slot_va": "0x0088B360",
+          "name_load_va": "0x00080C18",
+          "value_slot_va": "0x0088B364",
+          "value_load_va": "0x00080C10"
+        }
+      },
+      {
+        "id": 16,
+        "enum": "WPN_ZURKON",
+        "config_name": "Zurkon",
+        "save_record_offset": "0x00000140",
+        "constructor_va": "0x00487A28",
+        "constructor_call_va": "0x00487B30",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00487A90",
+        "config_load_va": "0x00487AB8",
+        "config_pointer_slot_va": "0x008A67D4",
+        "config_va": "0x101C1B7C",
+        "config_getter_va": "0x00096840",
+        "parent_config_offset": "0x00007C94",
+        "enum_export": {
+          "call_va": "0x00080C38",
+          "name_va": "0x10000210",
+          "name_slot_va": "0x0088B368",
+          "name_load_va": "0x00080C30",
+          "value_slot_va": "0x0088B36C",
+          "value_load_va": "0x00080C28"
+        }
+      },
+      {
+        "id": 17,
+        "enum": "WPN_CONFUSION_GAS",
+        "config_name": "ConfusionGas",
+        "save_record_offset": "0x00000154",
+        "constructor_va": "0x00470970",
+        "constructor_call_va": "0x00470A6C",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x004709CC",
+        "config_load_va": "0x004709F4",
+        "config_pointer_slot_va": "0x008A60EC",
+        "config_va": "0x101C2250",
+        "config_getter_va": "0x00096780",
+        "parent_config_offset": "0x00008368",
+        "enum_export": {
+          "call_va": "0x00080C4C",
+          "name_va": "0x10000220",
+          "name_slot_va": "0x0088B370",
+          "name_load_va": "0x00080C44",
+          "value_slot_va": "0x0088B374",
+          "value_load_va": "0x00080C48"
+        }
+      },
+      {
+        "id": 18,
+        "enum": "WPN_SLINKONATOR",
+        "config_name": "Slinkonator",
+        "save_record_offset": "0x00000168",
+        "constructor_va": "0x00481848",
+        "constructor_call_va": "0x00481954",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x004818B8",
+        "config_load_va": "0x004818E8",
+        "config_pointer_slot_va": "0x008A6648",
+        "config_va": "0x101C2924",
+        "config_getter_va": "0x000966C0",
+        "parent_config_offset": "0x00008A3C",
+        "enum_export": {
+          "call_va": "0x00080C60",
+          "name_va": "0x10000238",
+          "name_slot_va": "0x0088B378",
+          "name_load_va": "0x00080C58",
+          "value_slot_va": "0x0088B37C",
+          "value_load_va": "0x00080C5C"
+        }
+      },
+      {
+        "id": 19,
+        "enum": "WPN_GROOVITRON",
+        "config_name": "Groovitron",
+        "save_record_offset": "0x0000017C",
+        "constructor_va": "0x00475358",
+        "constructor_call_va": "0x00475470",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00475408",
+        "config_load_va": "0x004753D8",
+        "config_pointer_slot_va": "0x008A625C",
+        "config_va": "0x101C2FF8",
+        "config_getter_va": "0x00096600",
+        "parent_config_offset": "0x00009110",
+        "enum_export": {
+          "call_va": "0x00080C74",
+          "name_va": "0x10000248",
+          "name_slot_va": "0x0088B380",
+          "name_load_va": "0x00080C6C",
+          "value_slot_va": "0x0088B384",
+          "value_load_va": "0x00080C70"
+        }
+      },
+      {
+        "id": 20,
+        "enum": "WPN_MINI_LEECH",
+        "config_name": "MiniLeech",
+        "save_record_offset": "0x00000190",
+        "constructor_va": "0x00476BF8",
+        "constructor_call_va": "0x00476D18",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00476CB8",
+        "config_load_va": "0x00476C78",
+        "config_pointer_slot_va": "0x008A631C",
+        "config_va": "0x101C36CC",
+        "config_getter_va": "0x00096540",
+        "parent_config_offset": "0x000097E4",
+        "enum_export": {
+          "call_va": "0x00080C88",
+          "name_va": "0x10000258",
+          "name_slot_va": "0x0088B388",
+          "name_load_va": "0x00080C80",
+          "value_slot_va": "0x0088B38C",
+          "value_load_va": "0x00080C84"
+        }
+      },
+      {
+        "id": 21,
+        "enum": "WPN_MAXI_LEECH",
+        "config_name": "MaxiLeech",
+        "save_record_offset": "0x000001A4",
+        "constructor_va": "0x00475ED8",
+        "constructor_call_va": "0x00475FF8",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00475F98",
+        "config_load_va": "0x00475F58",
+        "config_pointer_slot_va": "0x008A62CC",
+        "config_va": "0x101C3DA0",
+        "config_getter_va": "0x00096480",
+        "parent_config_offset": "0x00009EB8",
+        "enum_export": {
+          "call_va": "0x00080C9C",
+          "name_va": "0x10000268",
+          "name_slot_va": "0x0088B390",
+          "name_load_va": "0x00080C94",
+          "value_slot_va": "0x0088B394",
+          "value_load_va": "0x00080C98"
+        }
+      },
+      {
+        "id": 22,
+        "enum": "WPN_MORPH_BOMB",
+        "config_name": "Morph",
+        "save_record_offset": "0x000001B8",
+        "constructor_va": "0x00477918",
+        "constructor_call_va": "0x00477A20",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x00477980",
+        "config_load_va": "0x004779A8",
+        "config_pointer_slot_va": "0x008A6368",
+        "config_va": "0x101C4474",
+        "config_getter_va": "0x000963C0",
+        "parent_config_offset": "0x0000A58C",
+        "enum_export": {
+          "call_va": "0x00080CB4",
+          "name_va": "0x10000278",
+          "name_slot_va": "0x0088B398",
+          "name_load_va": "0x00080CAC",
+          "value_slot_va": "0x0088B39C",
+          "value_load_va": "0x00080CA4"
+        }
+      },
+      {
+        "id": 23,
+        "enum": "WPN_VISICOPTER",
+        "config_name": "Copter",
+        "save_record_offset": "0x000001CC",
+        "constructor_va": "0x004826E0",
+        "constructor_call_va": "0x00482804",
+        "constructor_target_va": "0x00466798",
+        "id_load_va": "0x004827A4",
+        "config_load_va": "0x00482760",
+        "config_pointer_slot_va": "0x008A66CC",
+        "config_va": "0x101C4B48",
+        "config_getter_va": "0x00096300",
+        "parent_config_offset": "0x0000AC60",
+        "enum_export": {
+          "call_va": "0x00080CCC",
+          "name_va": "0x10000288",
+          "name_slot_va": "0x0088B3A0",
+          "name_load_va": "0x00080CC4",
+          "value_slot_va": "0x0088B3A4",
+          "value_load_va": "0x00080CBC"
+        }
+      },
+      {
+        "id": 24,
+        "enum": "WPN_INFLATOPOD",
+        "config_name": "Inflatopod",
+        "save_record_offset": "0x000001E0",
+        "constructor_va": "0x001D2798",
+        "constructor_call_va": "0x001D2898",
+        "constructor_target_va": "0x00011210",
+        "id_load_va": "0x001D2800",
+        "config_load_va": "0x001D2828",
+        "config_pointer_slot_va": "0x00894FC8",
+        "config_va": "0x101C58F0",
+        "config_getter_va": "0x00096180",
+        "parent_config_offset": "0x0000BA08",
+        "enum_export": {
+          "call_va": "0x00080CE0",
+          "name_va": "0x10000298",
+          "name_slot_va": "0x0088B3A8",
+          "name_load_va": "0x00080CD8",
+          "value_slot_va": "0x0088B3AC",
+          "value_load_va": "0x00080CDC"
+        }
+      },
+      {
+        "id": 25,
+        "enum": "WPN_SWINGSHOT",
+        "config_name": "SwingShot",
+        "save_record_offset": "0x000001F4",
+        "constructor_va": "0x001D70A0",
+        "constructor_call_va": "0x001D71AC",
+        "constructor_target_va": "0x00011210",
+        "id_load_va": "0x001D7144",
+        "config_load_va": "0x001D7118",
+        "config_pointer_slot_va": "0x00895144",
+        "config_va": "0x101C5FC4",
+        "config_getter_va": "0x000960C0",
+        "parent_config_offset": "0x0000C0DC",
+        "enum_export": {
+          "call_va": "0x00080CF4",
+          "name_va": "0x100002A8",
+          "name_slot_va": "0x0088B3B0",
+          "name_load_va": "0x00080CEC",
+          "value_slot_va": "0x0088B3B4",
+          "value_load_va": "0x00080CF0"
+        }
+      },
+      {
+        "id": 26,
+        "enum": "WPN_CUTTING_LASER",
+        "config_name": "CuttingLaser",
+        "save_record_offset": "0x00000208",
+        "constructor_va": "0x001D0EA8",
+        "constructor_call_va": "0x001D0FB4",
+        "constructor_target_va": "0x00011210",
+        "id_load_va": "0x001D0F4C",
+        "config_load_va": "0x001D0F20",
+        "config_pointer_slot_va": "0x00894F20",
+        "config_va": "0x101C6698",
+        "config_getter_va": "0x00096000",
+        "parent_config_offset": "0x0000C7B0",
+        "enum_export": {
+          "call_va": "0x00080D08",
+          "name_va": "0x100002B8",
+          "name_slot_va": "0x0088B3B8",
+          "name_load_va": "0x00080D00",
+          "value_slot_va": "0x0088B3BC",
+          "value_load_va": "0x00080D04"
+        }
+      },
+      {
+        "id": 27,
+        "enum": "WPN_GELANATOR",
+        "config_name": "Gelanator",
+        "save_record_offset": "0x0000021C",
+        "constructor_va": "0x001D1E00",
+        "constructor_call_va": "0x001D1F14",
+        "constructor_target_va": "0x00011210",
+        "id_load_va": "0x001D1EB4",
+        "config_load_va": "0x001D1E78",
+        "config_pointer_slot_va": "0x00894F74",
+        "config_va": "0x101C521C",
+        "config_getter_va": "0x00096240",
+        "parent_config_offset": "0x0000B334",
+        "enum_export": {
+          "call_va": "0x00080D1C",
+          "name_va": "0x100002D0",
+          "name_slot_va": "0x0088B3C0",
+          "name_load_va": "0x00080D14",
+          "value_slot_va": "0x0088B3C4",
+          "value_load_va": "0x00080D18"
+        }
+      },
+      {
+        "id": 28,
+        "enum": "WPN_ROBOWINGS",
+        "config_name": "RoboWings",
+        "save_record_offset": "0x00000230",
+        "constructor_va": "0x001D6AC8",
+        "constructor_call_va": "0x001D6BD4",
+        "constructor_target_va": "0x00011210",
+        "id_load_va": "0x001D6B6C",
+        "config_load_va": "0x001D6B40",
+        "config_pointer_slot_va": "0x00895110",
+        "config_va": "0x101C6D6C",
+        "config_getter_va": "0x00095F40",
+        "parent_config_offset": "0x0000CE84",
+        "enum_export": {
+          "call_va": "0x00080D30",
+          "name_va": "0x100002E0",
+          "name_slot_va": "0x0088B3C8",
+          "name_load_va": "0x00080D28",
+          "value_slot_va": "0x0088B3CC",
+          "value_load_va": "0x00080D2C"
+        }
+      },
+      {
+        "id": 29,
+        "enum": "WPN_MAGCYCLE",
+        "config_name": "MagCycle",
+        "save_record_offset": "0x00000244",
+        "constructor_va": "0x001D3118",
+        "constructor_call_va": "0x001D3224",
+        "constructor_target_va": "0x00011210",
+        "id_load_va": "0x001D31BC",
+        "config_load_va": "0x001D3190",
+        "config_pointer_slot_va": "0x00895004",
+        "config_va": "0x101C7440",
+        "config_getter_va": "0x00095E80",
+        "parent_config_offset": "0x0000D558",
+        "enum_export": {
+          "call_va": "0x00080D44",
+          "name_va": "0x100002F0",
+          "name_slot_va": "0x0088B3D0",
+          "name_load_va": "0x00080D3C",
+          "value_slot_va": "0x0088B3D4",
+          "value_load_va": "0x00080D40"
+        }
+      },
+      {
+        "id": 30,
+        "enum": "WPN_PIRATEGUISE",
+        "config_name": "PirateGadget",
+        "save_record_offset": "0x00000258",
+        "constructor_va": "0x001D36F0",
+        "constructor_call_va": "0x001D37F4",
+        "constructor_target_va": "0x00011210",
+        "id_load_va": "0x001D3784",
+        "config_load_va": "0x001D3768",
+        "config_pointer_slot_va": "0x00895030",
+        "config_va": "0x101C7B14",
+        "config_getter_va": "0x00095DC0",
+        "parent_config_offset": "0x0000DC2C",
+        "enum_export": {
+          "call_va": "0x00080D58",
+          "name_va": "0x10000300",
+          "name_slot_va": "0x0088B3D8",
+          "name_load_va": "0x00080D50",
+          "value_slot_va": "0x0088B3DC",
+          "value_load_va": "0x00080D54"
+        }
+      },
+      {
+        "id": 31,
+        "enum": "WPN_DECRYPTOR",
+        "config_name": "Decryptor",
+        "save_record_offset": "0x0000026C",
+        "constructor_va": "0x001D1C60",
+        "constructor_call_va": "0x001D1D48",
+        "constructor_target_va": "0x00011210",
+        "id_load_va": "0x001D1CBC",
+        "config_load_va": "0x001D1CE4",
+        "config_pointer_slot_va": "0x00894F60",
+        "config_va": "0x101C81E8",
+        "config_getter_va": "0x00095D00",
+        "parent_config_offset": "0x0000E300",
+        "enum_export": {
+          "call_va": "0x00080D6C",
+          "name_va": "0x10000310",
+          "name_slot_va": "0x0088B3E0",
+          "name_load_va": "0x00080D64",
+          "value_slot_va": "0x0088B3E4",
+          "value_load_va": "0x00080D68"
+        }
+      }
+    ],
+    "catalog_instruction_guards": [
+      {
+        "va": "0x001D0F4C",
+        "bytes": "3880001A"
+      },
+      {
+        "va": "0x001D0F20",
+        "bytes": "80A24FE8"
+      },
+      {
+        "va": "0x001D0FB4",
+        "bytes": "4BE4025D"
+      },
+      {
+        "va": "0x001D1CBC",
+        "bytes": "3880001F"
+      },
+      {
+        "va": "0x001D1CE4",
+        "bytes": "80A25028"
+      },
+      {
+        "va": "0x001D1D48",
+        "bytes": "4BE3F4C9"
+      },
+      {
+        "va": "0x001D1EB4",
+        "bytes": "3880001B"
+      },
+      {
+        "va": "0x001D1E78",
+        "bytes": "80A2503C"
+      },
+      {
+        "va": "0x001D1F14",
+        "bytes": "4BE3F2FD"
+      },
+      {
+        "va": "0x001D2800",
+        "bytes": "38800018"
+      },
+      {
+        "va": "0x001D2828",
+        "bytes": "80A25090"
+      },
+      {
+        "va": "0x001D2898",
+        "bytes": "4BE3E979"
+      },
+      {
+        "va": "0x001D31BC",
+        "bytes": "3880001D"
+      },
+      {
+        "va": "0x001D3190",
+        "bytes": "80A250CC"
+      },
+      {
+        "va": "0x001D3224",
+        "bytes": "4BE3DFED"
+      },
+      {
+        "va": "0x001D3784",
+        "bytes": "3880001E"
+      },
+      {
+        "va": "0x001D3768",
+        "bytes": "80A250F8"
+      },
+      {
+        "va": "0x001D37F4",
+        "bytes": "4BE3DA1D"
+      },
+      {
+        "va": "0x001D6B6C",
+        "bytes": "3880001C"
+      },
+      {
+        "va": "0x001D6B40",
+        "bytes": "80A251D8"
+      },
+      {
+        "va": "0x001D6BD4",
+        "bytes": "4BE3A63D"
+      },
+      {
+        "va": "0x001D7144",
+        "bytes": "38800019"
+      },
+      {
+        "va": "0x001D7118",
+        "bytes": "80A2520C"
+      },
+      {
+        "va": "0x001D71AC",
+        "bytes": "4BE3A065"
+      },
+      {
+        "va": "0x00467BF8",
+        "bytes": "38800007"
+      },
+      {
+        "va": "0x00467BAC",
+        "bytes": "80A2601C"
+      },
+      {
+        "va": "0x00467C50",
+        "bytes": "4BFFEB49"
+      },
+      {
+        "va": "0x0046F324",
+        "bytes": "38800005"
+      },
+      {
+        "va": "0x0046F34C",
+        "bytes": "80A2613C"
+      },
+      {
+        "va": "0x0046F3D0",
+        "bytes": "4BFF73C9"
+      },
+      {
+        "va": "0x004703D4",
+        "bytes": "38800001"
+      },
+      {
+        "va": "0x004703FC",
+        "bytes": "80A261A0"
+      },
+      {
+        "va": "0x0047047C",
+        "bytes": "4BFF631D"
+      },
+      {
+        "va": "0x004709CC",
+        "bytes": "38800011"
+      },
+      {
+        "va": "0x004709F4",
+        "bytes": "80A261CC"
+      },
+      {
+        "va": "0x00470A6C",
+        "bytes": "4BFF5D2D"
+      },
+      {
+        "va": "0x00471110",
+        "bytes": "3880000E"
+      },
+      {
+        "va": "0x004710BC",
+        "bytes": "80A26210"
+      },
+      {
+        "va": "0x00471164",
+        "bytes": "4BFF5635"
+      },
+      {
+        "va": "0x0047255C",
+        "bytes": "38800008"
+      },
+      {
+        "va": "0x00472518",
+        "bytes": "80A26248"
+      },
+      {
+        "va": "0x004725B8",
+        "bytes": "4BFF41E1"
+      },
+      {
+        "va": "0x00473D98",
+        "bytes": "38800009"
+      },
+      {
+        "va": "0x00473DC0",
+        "bytes": "80A262B0"
+      },
+      {
+        "va": "0x00473E50",
+        "bytes": "4BFF2949"
+      },
+      {
+        "va": "0x0047446C",
+        "bytes": "38800002"
+      },
+      {
+        "va": "0x00474410",
+        "bytes": "80A262EC"
+      },
+      {
+        "va": "0x004744BC",
+        "bytes": "4BFF22DD"
+      },
+      {
+        "va": "0x00475408",
+        "bytes": "38800013"
+      },
+      {
+        "va": "0x004753D8",
+        "bytes": "80A2633C"
+      },
+      {
+        "va": "0x00475470",
+        "bytes": "4BFF1329"
+      },
+      {
+        "va": "0x00475A80",
+        "bytes": "3880000D"
+      },
+      {
+        "va": "0x00475AA8",
+        "bytes": "80A2637C"
+      },
+      {
+        "va": "0x00475B30",
+        "bytes": "4BFF0C69"
+      },
+      {
+        "va": "0x00475F98",
+        "bytes": "38800015"
+      },
+      {
+        "va": "0x00475F58",
+        "bytes": "80A263AC"
+      },
+      {
+        "va": "0x00475FF8",
+        "bytes": "4BFF07A1"
+      },
+      {
+        "va": "0x00476CB8",
+        "bytes": "38800014"
+      },
+      {
+        "va": "0x00476C78",
+        "bytes": "80A263FC"
+      },
+      {
+        "va": "0x00476D18",
+        "bytes": "4BFEFA81"
+      },
+      {
+        "va": "0x00477980",
+        "bytes": "38800016"
+      },
+      {
+        "va": "0x004779A8",
+        "bytes": "80A26448"
+      },
+      {
+        "va": "0x00477A20",
+        "bytes": "4BFEED79"
+      },
+      {
+        "va": "0x00478654",
+        "bytes": "38800006"
+      },
+      {
+        "va": "0x004785EC",
+        "bytes": "80A264A4"
+      },
+      {
+        "va": "0x004786A0",
+        "bytes": "4BFEE0F9"
+      },
+      {
+        "va": "0x0047ABF0",
+        "bytes": "38800003"
+      },
+      {
+        "va": "0x0047ABA0",
+        "bytes": "80A26544"
+      },
+      {
+        "va": "0x0047AC4C",
+        "bytes": "4BFEBB4D"
+      },
+      {
+        "va": "0x0047CD64",
+        "bytes": "3880000A"
+      },
+      {
+        "va": "0x0047CD8C",
+        "bytes": "80A265BC"
+      },
+      {
+        "va": "0x0047CE0C",
+        "bytes": "4BFE998D"
+      },
+      {
+        "va": "0x0047DDB4",
+        "bytes": "3880000C"
+      },
+      {
+        "va": "0x0047DDDC",
+        "bytes": "80A26610"
+      },
+      {
+        "va": "0x0047DE60",
+        "bytes": "4BFE8939"
+      },
+      {
+        "va": "0x0047E730",
+        "bytes": "3880000B"
+      },
+      {
+        "va": "0x0047E760",
+        "bytes": "80A26650"
+      },
+      {
+        "va": "0x0047E7DC",
+        "bytes": "4BFE7FBD"
+      },
+      {
+        "va": "0x0047EFB8",
+        "bytes": "3880000F"
+      },
+      {
+        "va": "0x0047EF70",
+        "bytes": "80A26680"
+      },
+      {
+        "va": "0x0047F014",
+        "bytes": "4BFE7785"
+      },
+      {
+        "va": "0x004818B8",
+        "bytes": "38800012"
+      },
+      {
+        "va": "0x004818E8",
+        "bytes": "80A26728"
+      },
+      {
+        "va": "0x00481954",
+        "bytes": "4BFE4E45"
+      },
+      {
+        "va": "0x004820C8",
+        "bytes": "38800004"
+      },
+      {
+        "va": "0x00482064",
+        "bytes": "80A26780"
+      },
+      {
+        "va": "0x00482114",
+        "bytes": "4BFE4685"
+      },
+      {
+        "va": "0x004827A4",
+        "bytes": "38800017"
+      },
+      {
+        "va": "0x00482760",
+        "bytes": "80A267AC"
+      },
+      {
+        "va": "0x00482804",
+        "bytes": "4BFE3F95"
+      },
+      {
+        "va": "0x004830D4",
+        "bytes": "38800000"
+      },
+      {
+        "va": "0x004830B8",
+        "bytes": "80A267F8"
+      },
+      {
+        "va": "0x00483148",
+        "bytes": "4BFE3651"
+      },
+      {
+        "va": "0x00487A90",
+        "bytes": "38800010"
+      },
+      {
+        "va": "0x00487AB8",
+        "bytes": "80A268B4"
+      },
+      {
+        "va": "0x00487B30",
+        "bytes": "4BFDEC69"
+      },
+      {
+        "va": "0x0009737C",
+        "bytes": "38DE0F5480A2B3A87FE3FB7878C400204BF79145E8410028"
+      },
+      {
+        "va": "0x000972CC",
+        "bytes": "38DE162880A2B3A87FE3FB7878C400204BF791F5E8410028"
+      },
+      {
+        "va": "0x0009721C",
+        "bytes": "38DE1CFC80A2B3A87FE3FB7878C400204BF792A5E8410028"
+      },
+      {
+        "va": "0x0009716C",
+        "bytes": "38DE23D080A2B3A87FE3FB7878C400204BF79355E8410028"
+      },
+      {
+        "va": "0x000970BC",
+        "bytes": "38DE2AA480A2B3A87FE3FB7878C400204BF79405E8410028"
+      },
+      {
+        "va": "0x0009700C",
+        "bytes": "38DE317880A2B3A87FE3FB7878C400204BF794B5E8410028"
+      },
+      {
+        "va": "0x00096F5C",
+        "bytes": "38DE384C80A2B3A87FE3FB7878C400204BF79565E8410028"
+      },
+      {
+        "va": "0x00096EAC",
+        "bytes": "38DE3F2080A2B3A87FE3FB7878C400204BF79615E8410028"
+      },
+      {
+        "va": "0x00096DFC",
+        "bytes": "38DE45F480A2B3A87FE3FB7878C400204BF796C5E8410028"
+      },
+      {
+        "va": "0x00096D4C",
+        "bytes": "38DE4CC880A2B3A87FE3FB7878C400204BF79775E8410028"
+      },
+      {
+        "va": "0x00096C9C",
+        "bytes": "38DE539C80A2B3A87FE3FB7878C400204BF79825E8410028"
+      },
+      {
+        "va": "0x00096BEC",
+        "bytes": "38DE5A7080A2B3A87FE3FB7878C400204BF798D5E8410028"
+      },
+      {
+        "va": "0x00096B3C",
+        "bytes": "38DE614480A2B3A87FE3FB7878C400204BF79985E8410028"
+      },
+      {
+        "va": "0x00096A8C",
+        "bytes": "38DE681880A2B3A87FE3FB7878C400204BF79A35E8410028"
+      },
+      {
+        "va": "0x000969DC",
+        "bytes": "38DE6EEC80A2B3A87FE3FB7878C400204BF79AE5E8410028"
+      },
+      {
+        "va": "0x0009692C",
+        "bytes": "38DE75C080A2B3A87FE3FB7878C400204BF79B95E8410028"
+      },
+      {
+        "va": "0x0009687C",
+        "bytes": "38DE7C9480A2B3A87FE3FB7878C400204BF79C45E8410028"
+      },
+      {
+        "va": "0x000967BC",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7836878C400204BF79D01"
+      },
+      {
+        "va": "0x000966FC",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C78A3C78C400204BF79DC1"
+      },
+      {
+        "va": "0x0009663C",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7911078C400204BF79E81"
+      },
+      {
+        "va": "0x0009657C",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C797E478C400204BF79F41"
+      },
+      {
+        "va": "0x000964BC",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C79EB878C400204BF7A001"
+      },
+      {
+        "va": "0x000963FC",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7A58C78C400204BF7A0C1"
+      },
+      {
+        "va": "0x0009633C",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7AC6078C400204BF7A181"
+      },
+      {
+        "va": "0x0009627C",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7B33478C400204BF7A241"
+      },
+      {
+        "va": "0x000961BC",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7BA0878C400204BF7A301"
+      },
+      {
+        "va": "0x000960FC",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7C0DC78C400204BF7A3C1"
+      },
+      {
+        "va": "0x0009603C",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7C7B078C400204BF7A481"
+      },
+      {
+        "va": "0x00095F7C",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7CE8478C400204BF7A541"
+      },
+      {
+        "va": "0x00095EBC",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7D55878C400204BF7A601"
+      },
+      {
+        "va": "0x00095DFC",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7DC2C78C400204BF7A6C1"
+      },
+      {
+        "va": "0x00095D3C",
+        "bytes": "3CFE000180A2B3A87FE3FB7838C7E30078C400204BF7A781"
+      },
+      {
+        "va": "0x0088B2E8",
+        "bytes": "BF800000"
+      },
+      {
+        "va": "0x00080A9C",
+        "bytes": "8082B3AC"
+      },
+      {
+        "va": "0x00080AA0",
+        "bytes": "C022B3B0"
+      },
+      {
+        "va": "0x00080AA4",
+        "bytes": "4BF91EED"
+      },
+      {
+        "va": "0x0088FAF4",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x00080AB0",
+        "bytes": "8082B3B4"
+      },
+      {
+        "va": "0x00080AB4",
+        "bytes": "C022FBBC"
+      },
+      {
+        "va": "0x00080AB8",
+        "bytes": "4BF91ED9"
+      },
+      {
+        "va": "0x0088B2F4",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x00080AC8",
+        "bytes": "8082B3B8"
+      },
+      {
+        "va": "0x00080AC0",
+        "bytes": "C222B3BC"
+      },
+      {
+        "va": "0x00080AD0",
+        "bytes": "4BF91EC1"
+      },
+      {
+        "va": "0x0088B2FC",
+        "bytes": "40000000"
+      },
+      {
+        "va": "0x00080AE0",
+        "bytes": "8082B3C0"
+      },
+      {
+        "va": "0x00080AD8",
+        "bytes": "C202B3C4"
+      },
+      {
+        "va": "0x00080AE8",
+        "bytes": "4BF91EA9"
+      },
+      {
+        "va": "0x0088B304",
+        "bytes": "40400000"
+      },
+      {
+        "va": "0x00080AF8",
+        "bytes": "8082B3C8"
+      },
+      {
+        "va": "0x00080AF0",
+        "bytes": "C262B3CC"
+      },
+      {
+        "va": "0x00080B00",
+        "bytes": "4BF91E91"
+      },
+      {
+        "va": "0x0088B30C",
+        "bytes": "40800000"
+      },
+      {
+        "va": "0x00080B10",
+        "bytes": "8082B3D0"
+      },
+      {
+        "va": "0x00080B08",
+        "bytes": "C242B3D4"
+      },
+      {
+        "va": "0x00080B18",
+        "bytes": "4BF91E79"
+      },
+      {
+        "va": "0x0088B314",
+        "bytes": "40A00000"
+      },
+      {
+        "va": "0x00080B28",
+        "bytes": "8082B3D8"
+      },
+      {
+        "va": "0x00080B20",
+        "bytes": "C2A2B3DC"
+      },
+      {
+        "va": "0x00080B30",
+        "bytes": "4BF91E61"
+      },
+      {
+        "va": "0x0088B31C",
+        "bytes": "40C00000"
+      },
+      {
+        "va": "0x00080B40",
+        "bytes": "8082B3E0"
+      },
+      {
+        "va": "0x00080B38",
+        "bytes": "C282B3E4"
+      },
+      {
+        "va": "0x00080B48",
+        "bytes": "4BF91E49"
+      },
+      {
+        "va": "0x0088B324",
+        "bytes": "40E00000"
+      },
+      {
+        "va": "0x00080B58",
+        "bytes": "8082B3E8"
+      },
+      {
+        "va": "0x00080B50",
+        "bytes": "C2E2B3EC"
+      },
+      {
+        "va": "0x00080B60",
+        "bytes": "4BF91E31"
+      },
+      {
+        "va": "0x0088B32C",
+        "bytes": "41000000"
+      },
+      {
+        "va": "0x00080B70",
+        "bytes": "8082B3F0"
+      },
+      {
+        "va": "0x00080B68",
+        "bytes": "C2C2B3F4"
+      },
+      {
+        "va": "0x00080B78",
+        "bytes": "4BF91E19"
+      },
+      {
+        "va": "0x0088B334",
+        "bytes": "41100000"
+      },
+      {
+        "va": "0x00080B88",
+        "bytes": "8082B3F8"
+      },
+      {
+        "va": "0x00080B80",
+        "bytes": "C322B3FC"
+      },
+      {
+        "va": "0x00080B90",
+        "bytes": "4BF91E01"
+      },
+      {
+        "va": "0x0088B33C",
+        "bytes": "41200000"
+      },
+      {
+        "va": "0x00080BA0",
+        "bytes": "8082B400"
+      },
+      {
+        "va": "0x00080B98",
+        "bytes": "C302B404"
+      },
+      {
+        "va": "0x00080BA8",
+        "bytes": "4BF91DE9"
+      },
+      {
+        "va": "0x0088B344",
+        "bytes": "41300000"
+      },
+      {
+        "va": "0x00080BB8",
+        "bytes": "8082B408"
+      },
+      {
+        "va": "0x00080BB0",
+        "bytes": "C362B40C"
+      },
+      {
+        "va": "0x00080BC0",
+        "bytes": "4BF91DD1"
+      },
+      {
+        "va": "0x0088B34C",
+        "bytes": "41400000"
+      },
+      {
+        "va": "0x00080BD0",
+        "bytes": "8082B410"
+      },
+      {
+        "va": "0x00080BC8",
+        "bytes": "C342B414"
+      },
+      {
+        "va": "0x00080BD8",
+        "bytes": "4BF91DB9"
+      },
+      {
+        "va": "0x0088B354",
+        "bytes": "41500000"
+      },
+      {
+        "va": "0x00080BE8",
+        "bytes": "8082B418"
+      },
+      {
+        "va": "0x00080BE0",
+        "bytes": "C3A2B41C"
+      },
+      {
+        "va": "0x00080BF0",
+        "bytes": "4BF91DA1"
+      },
+      {
+        "va": "0x0088B35C",
+        "bytes": "41600000"
+      },
+      {
+        "va": "0x00080C00",
+        "bytes": "8082B420"
+      },
+      {
+        "va": "0x00080BF8",
+        "bytes": "C382B424"
+      },
+      {
+        "va": "0x00080C08",
+        "bytes": "4BF91D89"
+      },
+      {
+        "va": "0x0088B364",
+        "bytes": "41700000"
+      },
+      {
+        "va": "0x00080C18",
+        "bytes": "8082B428"
+      },
+      {
+        "va": "0x00080C10",
+        "bytes": "C3E2B42C"
+      },
+      {
+        "va": "0x00080C20",
+        "bytes": "4BF91D71"
+      },
+      {
+        "va": "0x0088B36C",
+        "bytes": "41800000"
+      },
+      {
+        "va": "0x00080C30",
+        "bytes": "8082B430"
+      },
+      {
+        "va": "0x00080C28",
+        "bytes": "C3C2B434"
+      },
+      {
+        "va": "0x00080C38",
+        "bytes": "4BF91D59"
+      },
+      {
+        "va": "0x0088B374",
+        "bytes": "41880000"
+      },
+      {
+        "va": "0x00080C44",
+        "bytes": "8082B438"
+      },
+      {
+        "va": "0x00080C48",
+        "bytes": "C022B43C"
+      },
+      {
+        "va": "0x00080C4C",
+        "bytes": "4BF91D45"
+      },
+      {
+        "va": "0x0088B37C",
+        "bytes": "41900000"
+      },
+      {
+        "va": "0x00080C58",
+        "bytes": "8082B440"
+      },
+      {
+        "va": "0x00080C5C",
+        "bytes": "C022B444"
+      },
+      {
+        "va": "0x00080C60",
+        "bytes": "4BF91D31"
+      },
+      {
+        "va": "0x0088B384",
+        "bytes": "41980000"
+      },
+      {
+        "va": "0x00080C6C",
+        "bytes": "8082B448"
+      },
+      {
+        "va": "0x00080C70",
+        "bytes": "C022B44C"
+      },
+      {
+        "va": "0x00080C74",
+        "bytes": "4BF91D1D"
+      },
+      {
+        "va": "0x0088B38C",
+        "bytes": "41A00000"
+      },
+      {
+        "va": "0x00080C80",
+        "bytes": "8082B450"
+      },
+      {
+        "va": "0x00080C84",
+        "bytes": "C022B454"
+      },
+      {
+        "va": "0x00080C88",
+        "bytes": "4BF91D09"
+      },
+      {
+        "va": "0x0088B394",
+        "bytes": "41A80000"
+      },
+      {
+        "va": "0x00080C94",
+        "bytes": "8082B458"
+      },
+      {
+        "va": "0x00080C98",
+        "bytes": "C022B45C"
+      },
+      {
+        "va": "0x00080C9C",
+        "bytes": "4BF91CF5"
+      },
+      {
+        "va": "0x0088B39C",
+        "bytes": "41B00000"
+      },
+      {
+        "va": "0x00080CAC",
+        "bytes": "8082B460"
+      },
+      {
+        "va": "0x00080CA4",
+        "bytes": "C1E2B464"
+      },
+      {
+        "va": "0x00080CB4",
+        "bytes": "4BF91CDD"
+      },
+      {
+        "va": "0x0088B3A4",
+        "bytes": "41B80000"
+      },
+      {
+        "va": "0x00080CC4",
+        "bytes": "8082B468"
+      },
+      {
+        "va": "0x00080CBC",
+        "bytes": "C1C2B46C"
+      },
+      {
+        "va": "0x00080CCC",
+        "bytes": "4BF91CC5"
+      },
+      {
+        "va": "0x0088B3AC",
+        "bytes": "41C00000"
+      },
+      {
+        "va": "0x00080CD8",
+        "bytes": "8082B470"
+      },
+      {
+        "va": "0x00080CDC",
+        "bytes": "C022B474"
+      },
+      {
+        "va": "0x00080CE0",
+        "bytes": "4BF91CB1"
+      },
+      {
+        "va": "0x0088B3B4",
+        "bytes": "41C80000"
+      },
+      {
+        "va": "0x00080CEC",
+        "bytes": "8082B478"
+      },
+      {
+        "va": "0x00080CF0",
+        "bytes": "C022B47C"
+      },
+      {
+        "va": "0x00080CF4",
+        "bytes": "4BF91C9D"
+      },
+      {
+        "va": "0x0088B3BC",
+        "bytes": "41D00000"
+      },
+      {
+        "va": "0x00080D00",
+        "bytes": "8082B480"
+      },
+      {
+        "va": "0x00080D04",
+        "bytes": "C022B484"
+      },
+      {
+        "va": "0x00080D08",
+        "bytes": "4BF91C89"
+      },
+      {
+        "va": "0x0088B3C4",
+        "bytes": "41D80000"
+      },
+      {
+        "va": "0x00080D14",
+        "bytes": "8082B488"
+      },
+      {
+        "va": "0x00080D18",
+        "bytes": "C022B48C"
+      },
+      {
+        "va": "0x00080D1C",
+        "bytes": "4BF91C75"
+      },
+      {
+        "va": "0x0088B3CC",
+        "bytes": "41E00000"
+      },
+      {
+        "va": "0x00080D28",
+        "bytes": "8082B490"
+      },
+      {
+        "va": "0x00080D2C",
+        "bytes": "C022B494"
+      },
+      {
+        "va": "0x00080D30",
+        "bytes": "4BF91C61"
+      },
+      {
+        "va": "0x0088B3D4",
+        "bytes": "41E80000"
+      },
+      {
+        "va": "0x00080D3C",
+        "bytes": "8082B498"
+      },
+      {
+        "va": "0x00080D40",
+        "bytes": "C022B49C"
+      },
+      {
+        "va": "0x00080D44",
+        "bytes": "4BF91C4D"
+      },
+      {
+        "va": "0x0088B3DC",
+        "bytes": "41F00000"
+      },
+      {
+        "va": "0x00080D50",
+        "bytes": "8082B4A0"
+      },
+      {
+        "va": "0x00080D54",
+        "bytes": "C022B4A4"
+      },
+      {
+        "va": "0x00080D58",
+        "bytes": "4BF91C39"
+      },
+      {
+        "va": "0x0088B3E4",
+        "bytes": "41F80000"
+      },
+      {
+        "va": "0x00080D64",
+        "bytes": "8082B4A8"
+      },
+      {
+        "va": "0x00080D68",
+        "bytes": "C022B4AC"
+      },
+      {
+        "va": "0x00080D6C",
+        "bytes": "4BF91C25"
+      },
+      {
+        "va": "0x0088B3EC",
+        "bytes": "42000000"
+      },
+      {
+        "va": "0x00080D78",
+        "bytes": "8082B4B0"
+      },
+      {
+        "va": "0x00080D7C",
+        "bytes": "C022B4B4"
+      },
+      {
+        "va": "0x00080D80",
+        "bytes": "4BF91C11"
+      }
+    ],
+    "vendor_upgrade_layout": {
+      "asset": "/built/anark/weaponvendor/built.dat",
+      "sha256": "294BA05A607BC5C4C59B60E85C57515DBBD8CDEECC9CB6BF570AE4AE937627D5",
+      "size": 390796,
+      "decoder_tool": "Tools/Inspect-Lua50.py",
+      "chunk_file_offset": "0x54f85",
+      "chunk_end_exclusive": "0x5E78A",
+      "lua_version": "5.0",
+      "byte_order": "little",
+      "number_bytes": 4,
+      "methods": {
+        "is_valid_movement": {
+          "prototype_file_offset": "0x565b5",
+          "code_file_offset": "0x56781",
+          "line_defined": 115,
+          "instruction_count": 72
+        },
+        "canBePurchased": {
+          "prototype_file_offset": "0x568a1",
+          "code_file_offset": "0x56a8a",
+          "line_defined": 141,
+          "instruction_count": 79
+        },
+        "beenPurchased": {
+          "prototype_file_offset": "0x56bc6",
+          "code_file_offset": "0x56cfc",
+          "line_defined": 161,
+          "instruction_count": 41
+        },
+        "specialCheck": {
+          "prototype_file_offset": "0x56da0",
+          "code_file_offset": "0x56ece",
+          "line_defined": 183,
+          "instruction_count": 39
+        },
+        "onSelect": {
+          "prototype_file_offset": "0x5a310",
+          "code_file_offset": "0x5a7f8",
+          "line_defined": 482,
+          "instruction_count": 142
+        },
+        "initWeaps": {
+          "prototype_file_offset": "0x5aa30",
+          "code_file_offset": "0x5c6e1",
+          "line_defined": 524,
+          "instruction_count": 1270
+        }
+      },
+      "grids": {
+        "WPN_COMBUSTER": {
+          "rows": [
+            [
+              -1,
+              -1,
+              4,
+              11,
+              3,
+              -1,
+              -2
+            ],
+            [
+              0,
+              2,
+              7,
+              -1,
+              13,
+              -1,
+              -2
+            ],
+            [
+              -2,
+              -1,
+              8,
+              -1,
+              12,
+              5,
+              -1
+            ],
+            [
+              -2,
+              -1,
+              6,
+              9,
+              1,
+              10,
+              -1
+            ]
+          ],
+          "special_node": 12
+        },
+        "WPN_GRENADE": {
+          "rows": [
+            [
+              -1,
+              1,
+              2,
+              -1,
+              3,
+              -1,
+              -2
+            ],
+            [
+              -1,
+              4,
+              5,
+              -1,
+              6,
+              -1,
+              -2
+            ],
+            [
+              -2,
+              -1,
+              0,
+              7,
+              8,
+              -1,
+              -1
+            ],
+            [
+              -2,
+              9,
+              10,
+              -1,
+              -1,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": 1
+        },
+        "WPN_FLAMETHROWER": {
+          "rows": [
+            [
+              -1,
+              13,
+              -1,
+              14,
+              -1,
+              -1,
+              -2
+            ],
+            [
+              -1,
+              10,
+              -1,
+              11,
+              -1,
+              12,
+              -2
+            ],
+            [
+              -2,
+              6,
+              -1,
+              7,
+              -1,
+              8,
+              9
+            ],
+            [
+              -2,
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "special_node": 9
+        },
+        "WPN_RAVAGER": {
+          "rows": [
+            [
+              -1,
+              -1,
+              -1,
+              1,
+              2,
+              3,
+              -2
+            ],
+            [
+              -1,
+              0,
+              4,
+              5,
+              -1,
+              6,
+              -2
+            ],
+            [
+              -2,
+              7,
+              -1,
+              8,
+              9,
+              10,
+              -1
+            ],
+            [
+              -2,
+              11,
+              12,
+              13,
+              -1,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": 11
+        },
+        "WPN_TORNADO": {
+          "rows": [
+            [
+              -1,
+              0,
+              1,
+              -1,
+              2,
+              -1,
+              -2
+            ],
+            [
+              -1,
+              3,
+              4,
+              5,
+              6,
+              -1,
+              -2
+            ],
+            [
+              -2,
+              -1,
+              7,
+              -1,
+              8,
+              -1,
+              -1
+            ],
+            [
+              -2,
+              -1,
+              9,
+              10,
+              11,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": 8
+        },
+        "WPN_BUZZ_BLADES": {
+          "rows": [
+            [
+              -1,
+              1,
+              -1,
+              2,
+              3,
+              -1,
+              -2
+            ],
+            [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              -2
+            ],
+            [
+              -2,
+              10,
+              -1,
+              11,
+              -1,
+              -1,
+              -1
+            ],
+            [
+              -2,
+              12,
+              0,
+              13,
+              -1,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": 6
+        },
+        "WPN_PREDATOR": {
+          "rows": [
+            [
+              -1,
+              -1,
+              1,
+              2,
+              3,
+              4,
+              -2
+            ],
+            [
+              -1,
+              5,
+              6,
+              7,
+              8,
+              9,
+              -2
+            ],
+            [
+              -2,
+              -1,
+              10,
+              0,
+              11,
+              12,
+              -1
+            ],
+            [
+              -2,
+              -1,
+              13,
+              14,
+              15,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": 8
+        },
+        "WPN_ALPHA_NOVA": {
+          "rows": [
+            [
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1,
+              -2
+            ],
+            [
+              -1,
+              2,
+              0,
+              3,
+              4,
+              -1,
+              -2
+            ],
+            [
+              -2,
+              -1,
+              5,
+              -1,
+              6,
+              -1,
+              -1
+            ],
+            [
+              -2,
+              7,
+              8,
+              9,
+              10,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": 10
+        },
+        "WPN_GOOP_MINES": {
+          "rows": [
+            [
+              -1,
+              -1,
+              -1,
+              -1,
+              -1,
+              1,
+              -2
+            ],
+            [
+              -1,
+              -1,
+              2,
+              3,
+              4,
+              5,
+              -2
+            ],
+            [
+              -2,
+              7,
+              0,
+              -1,
+              -1,
+              8,
+              -1
+            ],
+            [
+              -2,
+              6,
+              9,
+              10,
+              11,
+              12,
+              -1
+            ]
+          ],
+          "special_node": 8
+        },
+        "WPN_REAPER": {
+          "rows": [
+            [
+              -1,
+              -1,
+              -1,
+              1,
+              2,
+              3,
+              -2
+            ],
+            [
+              -1,
+              -1,
+              4,
+              5,
+              6,
+              7,
+              -2
+            ],
+            [
+              -2,
+              0,
+              8,
+              9,
+              10,
+              11,
+              -1
+            ],
+            [
+              -2,
+              -1,
+              -1,
+              -1,
+              12,
+              13,
+              -1
+            ]
+          ],
+          "special_node": 13
+        },
+        "WPN_ROCKET_LAUNCHER": {
+          "rows": [
+            [
+              -1,
+              -1,
+              1,
+              2,
+              3,
+              -1,
+              -2
+            ],
+            [
+              -1,
+              -1,
+              4,
+              5,
+              6,
+              -1,
+              -2
+            ],
+            [
+              -2,
+              -1,
+              7,
+              8,
+              9,
+              -1,
+              -1
+            ],
+            [
+              -2,
+              -1,
+              10,
+              0,
+              11,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": 5
+        },
+        "WPN_ROBO_HIVE": {
+          "rows": [
+            [
+              -1,
+              1,
+              -1,
+              2,
+              -1,
+              3,
+              -2
+            ],
+            [
+              -1,
+              5,
+              6,
+              7,
+              8,
+              0,
+              -2
+            ],
+            [
+              -2,
+              4,
+              11,
+              -1,
+              -1,
+              12,
+              -1
+            ],
+            [
+              -2,
+              9,
+              10,
+              -1,
+              13,
+              14,
+              -1
+            ]
+          ],
+          "special_node": 9
+        },
+        "WPN_MAG_NET": {
+          "rows": [
+            [
+              1,
+              2,
+              3,
+              4,
+              -1,
+              -1,
+              -2
+            ],
+            [
+              5,
+              9,
+              -1,
+              6,
+              7,
+              8,
+              -2
+            ],
+            [
+              -2,
+              10,
+              11,
+              0,
+              -1,
+              12,
+              -1
+            ],
+            [
+              -2,
+              -1,
+              -1,
+              13,
+              14,
+              15,
+              -1
+            ]
+          ],
+          "special_node": 1
+        },
+        "WPN_ENERGY_CLAWS": {
+          "rows": [
+            [
+              -1,
+              -1,
+              1,
+              0,
+              2,
+              -1,
+              -2
+            ],
+            [
+              -1,
+              3,
+              4,
+              -1,
+              5,
+              -1,
+              -2
+            ],
+            [
+              -2,
+              -1,
+              6,
+              7,
+              8,
+              9,
+              -1
+            ],
+            [
+              -2,
+              -1,
+              10,
+              -1,
+              11,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": 7
+        },
+        "WPN_RYNO": {
+          "rows": [
+            [
+              1,
+              2,
+              3,
+              -1,
+              4,
+              5,
+              -2
+            ],
+            [
+              6,
+              -1,
+              0,
+              7,
+              8,
+              -1,
+              -2
+            ],
+            [
+              -2,
+              10,
+              11,
+              -1,
+              12,
+              13,
+              -1
+            ],
+            [
+              -2,
+              14,
+              9,
+              -1,
+              -1,
+              -1,
+              -1
+            ]
+          ],
+          "special_node": -3
+        }
+      },
+      "rules": {
+        "ordinary": "canBePurchased checks nonnegative/non-special cell and any orthogonal neighbor reported purchased; beenPurchased treats node 0 as purchased without mask bit 0.",
+        "special": "is_valid_movement and icon methods require every adjacent positive node to pass specialCheck; canBePurchased itself returns true for the special node. Ryno special marker is -3 (no positive special node).",
+        "native_purchase": "0x2D2878 requires a hero, ownership and sufficient raritanium; enables bit through 0x465D00 and deducts cost through 0x24F748. This leaf does not enforce grid adjacency."
+      },
+      "warning": "Bytecode offsets are vendor built.dat FILE offsets, never ELF VAs. Literal grids and statically interpreted rules are not game-load validation; negative markers remain unspecified."
+    },
     "assets": [
       {"name": "/data/configs/weapon.csv", "sha256": "2E9D75D6509F35E75B27626D1D777F4D5414FCBAA1AC553D36AE9D9F4A728F7A"},
       {"name": "/data/configs/weapon.lua", "sha256": "DECDC62DF183E47640E8B05D137E2A3C1F3C6929C55A81CB9C60BDB7694F0F85"},
@@ -229,6 +2703,14 @@
       "num_mods_getter_va": "0x000B4870",
       "num_mods_setter_va": "0x000A73A0",
       "num_mods_offset": "0x6A4",
+      "mods_getter_va": "0x000B7B30",
+      "mods_setter_va": "0x000B79E0",
+      "mods_offset": "0x464",
+      "mods_array_capacity": 24,
+      "mod_stride": "0x18",
+      "mod_cost_offset": "0xC",
+      "mod_cost_getter_va": "0x002D1E80",
+      "mod_purchase_va": "0x002D2878",
       "vendor_getter_va": "0x00099B20",
       "vendor_offset": "0x6A8",
       "vendor_base_price_getter_va": "0x000B4BB0",
@@ -259,9 +2741,900 @@
       {"va": "0x0088B414", "bytes": "100003B8"},
       {"va": "0x100003B8", "bytes": "4D4F445F414D4D4F00"}
     ],
-    "warning": "These are shipped asset definitions and native bindings, not gameplay-validated edit bounds. CSV order is not a save-record ID map. Blank cells remain unspecified; adjacency/prerequisites, runtime overrides and cross-region acceptance are unresolved. Twenty native slots do not imply twenty playable weapon levels."
+    "warning": "These are shipped asset definitions and native bindings, not gameplay-validated edit bounds. CSV order is not a save-record ID map; inventory_catalog instead links native enum exports, constructors and named config getters. Vendor script grids and UI checks are mapped separately from native purchasing. Blank cells, negative grid markers, runtime overrides and cross-region acceptance remain unresolved. Twenty native ammo slots do not imply twenty playable weapon levels; the modifier array has 24 slots, not the mask's 32 bits."
   },
   "annotations": [
+    {
+      "va": "0x100002B8",
+      "name": "TOD_WPN_CUTTING_LASER_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F43555454494E475F4C4153455200",
+      "comment": "Native Lua constant WPN_CUTTING_LASER = 26; save record offset 0x208. Constructor independently binds config.CuttingLaser. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080D08, value at 0x0088B3BC; constructor 0x001D0EA8 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x00894F20",
+      "name": "TOD_config_CuttingLaser_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C6698",
+      "comment": "Pointer to runtime config.CuttingLaser at 0x101C6698. Passed as r5 by constructor for ID 26 (WPN_CUTTING_LASER). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x001D0F20, ID load 0x001D0F4C, call 0x001D0FB4; parent config 0x101b9ee8 plus 0xC7B0."
+    },
+    {
+      "va": "0x00096000",
+      "name": "TOD_Lua_config_CuttingLaser_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.CuttingLaser subobject getter; parent config +0xC7B0. Matches constructor config pointer for ID 26 (WPN_CUTTING_LASER). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE64 and constructor pointer 0x00894F20. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000310",
+      "name": "TOD_WPN_DECRYPTOR_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F444543525950544F5200",
+      "comment": "Native Lua constant WPN_DECRYPTOR = 31; save record offset 0x26C. Constructor independently binds config.Decryptor. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080D6C, value at 0x0088B3E4; constructor 0x001D1C60 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x00894F60",
+      "name": "TOD_config_Decryptor_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C81E8",
+      "comment": "Pointer to runtime config.Decryptor at 0x101C81E8. Passed as r5 by constructor for ID 31 (WPN_DECRYPTOR). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x001D1CE4, ID load 0x001D1CBC, call 0x001D1D48; parent config 0x101b9ee8 plus 0xE300."
+    },
+    {
+      "va": "0x00095D00",
+      "name": "TOD_Lua_config_Decryptor_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Decryptor subobject getter; parent config +0xE300. Matches constructor config pointer for ID 31 (WPN_DECRYPTOR). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE94 and constructor pointer 0x00894F60. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100002D0",
+      "name": "TOD_WPN_GELANATOR_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F47454C414E41544F5200",
+      "comment": "Native Lua constant WPN_GELANATOR = 27; save record offset 0x21C. Constructor independently binds config.Gelanator. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080D1C, value at 0x0088B3C4; constructor 0x001D1E00 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x00894F74",
+      "name": "TOD_config_Gelanator_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C521C",
+      "comment": "Pointer to runtime config.Gelanator at 0x101C521C. Passed as r5 by constructor for ID 27 (WPN_GELANATOR). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x001D1E78, ID load 0x001D1EB4, call 0x001D1F14; parent config 0x101b9ee8 plus 0xB334."
+    },
+    {
+      "va": "0x00096240",
+      "name": "TOD_Lua_config_Gelanator_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Gelanator subobject getter; parent config +0xB334. Matches constructor config pointer for ID 27 (WPN_GELANATOR). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE40 and constructor pointer 0x00894F74. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000298",
+      "name": "TOD_WPN_INFLATOPOD_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F494E464C41544F504F4400",
+      "comment": "Native Lua constant WPN_INFLATOPOD = 24; save record offset 0x1E0. Constructor independently binds config.Inflatopod. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080CE0, value at 0x0088B3AC; constructor 0x001D2798 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x00894FC8",
+      "name": "TOD_config_Inflatopod_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C58F0",
+      "comment": "Pointer to runtime config.Inflatopod at 0x101C58F0. Passed as r5 by constructor for ID 24 (WPN_INFLATOPOD). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x001D2828, ID load 0x001D2800, call 0x001D2898; parent config 0x101b9ee8 plus 0xBA08."
+    },
+    {
+      "va": "0x00096180",
+      "name": "TOD_Lua_config_Inflatopod_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Inflatopod subobject getter; parent config +0xBA08. Matches constructor config pointer for ID 24 (WPN_INFLATOPOD). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE4C and constructor pointer 0x00894FC8. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100002F0",
+      "name": "TOD_WPN_MAGCYCLE_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F4D41474359434C4500",
+      "comment": "Native Lua constant WPN_MAGCYCLE = 29; save record offset 0x244. Constructor independently binds config.MagCycle. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080D44, value at 0x0088B3D4; constructor 0x001D3118 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x00895004",
+      "name": "TOD_config_MagCycle_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C7440",
+      "comment": "Pointer to runtime config.MagCycle at 0x101C7440. Passed as r5 by constructor for ID 29 (WPN_MAGCYCLE). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x001D3190, ID load 0x001D31BC, call 0x001D3224; parent config 0x101b9ee8 plus 0xD558."
+    },
+    {
+      "va": "0x00095E80",
+      "name": "TOD_Lua_config_MagCycle_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.MagCycle subobject getter; parent config +0xD558. Matches constructor config pointer for ID 29 (WPN_MAGCYCLE). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE7C and constructor pointer 0x00895004. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000300",
+      "name": "TOD_WPN_PIRATEGUISE_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F504952415445475549534500",
+      "comment": "Native Lua constant WPN_PIRATEGUISE = 30; save record offset 0x258. Constructor independently binds config.PirateGadget. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080D58, value at 0x0088B3DC; constructor 0x001D36F0 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x00895030",
+      "name": "TOD_config_PirateGadget_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C7B14",
+      "comment": "Pointer to runtime config.PirateGadget at 0x101C7B14. Passed as r5 by constructor for ID 30 (WPN_PIRATEGUISE). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x001D3768, ID load 0x001D3784, call 0x001D37F4; parent config 0x101b9ee8 plus 0xDC2C."
+    },
+    {
+      "va": "0x00095DC0",
+      "name": "TOD_Lua_config_PirateGadget_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.PirateGadget subobject getter; parent config +0xDC2C. Matches constructor config pointer for ID 30 (WPN_PIRATEGUISE). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE88 and constructor pointer 0x00895030. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100002E0",
+      "name": "TOD_WPN_ROBOWINGS_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F524F424F57494E475300",
+      "comment": "Native Lua constant WPN_ROBOWINGS = 28; save record offset 0x230. Constructor independently binds config.RoboWings. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080D30, value at 0x0088B3CC; constructor 0x001D6AC8 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x00895110",
+      "name": "TOD_config_RoboWings_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C6D6C",
+      "comment": "Pointer to runtime config.RoboWings at 0x101C6D6C. Passed as r5 by constructor for ID 28 (WPN_ROBOWINGS). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x001D6B40, ID load 0x001D6B6C, call 0x001D6BD4; parent config 0x101b9ee8 plus 0xCE84."
+    },
+    {
+      "va": "0x00095F40",
+      "name": "TOD_Lua_config_RoboWings_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.RoboWings subobject getter; parent config +0xCE84. Matches constructor config pointer for ID 28 (WPN_ROBOWINGS). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE70 and constructor pointer 0x00895110. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100002A8",
+      "name": "TOD_WPN_SWINGSHOT_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F5357494E4753484F5400",
+      "comment": "Native Lua constant WPN_SWINGSHOT = 25; save record offset 0x1F4. Constructor independently binds config.SwingShot. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080CF4, value at 0x0088B3B4; constructor 0x001D70A0 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x00895144",
+      "name": "TOD_config_SwingShot_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C5FC4",
+      "comment": "Pointer to runtime config.SwingShot at 0x101C5FC4. Passed as r5 by constructor for ID 25 (WPN_SWINGSHOT). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x001D7118, ID load 0x001D7144, call 0x001D71AC; parent config 0x101b9ee8 plus 0xC0DC."
+    },
+    {
+      "va": "0x000960C0",
+      "name": "TOD_Lua_config_SwingShot_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.SwingShot subobject getter; parent config +0xC0DC. Matches constructor config pointer for ID 25 (WPN_SWINGSHOT). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE58 and constructor pointer 0x00895144. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000168",
+      "name": "TOD_WPN_ALPHA_NOVA_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F414C5048415F4E4F564100",
+      "comment": "Native Lua constant WPN_ALPHA_NOVA = 7; save record offset 0x8C. Constructor independently binds config.AlphaNova. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080B60, value at 0x0088B324; constructor 0x00467B40 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A5F3C",
+      "name": "TOD_config_AlphaNova_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BE4DC",
+      "comment": "Pointer to runtime config.AlphaNova at 0x101BE4DC. Passed as r5 by constructor for ID 7 (WPN_ALPHA_NOVA). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00467BAC, ID load 0x00467BF8, call 0x00467C50; parent config 0x101b9ee8 plus 0x45F4."
+    },
+    {
+      "va": "0x00096DC0",
+      "name": "TOD_Lua_config_AlphaNova_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.AlphaNova subobject getter; parent config +0x45F4. Matches constructor config pointer for ID 7 (WPN_ALPHA_NOVA). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED80 and constructor pointer 0x008A5F3C. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000148",
+      "name": "TOD_WPN_BUZZ_BLADES_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F42555A5A5F424C4144455300",
+      "comment": "Native Lua constant WPN_BUZZ_BLADES = 5; save record offset 0x64. Constructor independently binds config.BuzzBlade. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080B30, value at 0x0088B314; constructor 0x0046F2C8 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A605C",
+      "name": "TOD_config_BuzzBlade_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BB510",
+      "comment": "Pointer to runtime config.BuzzBlade at 0x101BB510. Passed as r5 by constructor for ID 5 (WPN_BUZZ_BLADES). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x0046F34C, ID load 0x0046F324, call 0x0046F3D0; parent config 0x101b9ee8 plus 0x1628."
+    },
+    {
+      "va": "0x00097290",
+      "name": "TOD_Lua_config_BuzzBlade_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.BuzzBlade subobject getter; parent config +0x1628. Matches constructor config pointer for ID 5 (WPN_BUZZ_BLADES). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED2C and constructor pointer 0x008A605C. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000108",
+      "name": "TOD_WPN_COMBUSTER_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F434F4D42555354455200",
+      "comment": "Native Lua constant WPN_COMBUSTER = 1; save record offset 0x14. Constructor independently binds config.Combuster. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080AD0, value at 0x0088B2F4; constructor 0x00470378 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A60C0",
+      "name": "TOD_config_Combuster_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BBBE4",
+      "comment": "Pointer to runtime config.Combuster at 0x101BBBE4. Passed as r5 by constructor for ID 1 (WPN_COMBUSTER). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x004703FC, ID load 0x004703D4, call 0x0047047C; parent config 0x101b9ee8 plus 0x1CFC."
+    },
+    {
+      "va": "0x10000220",
+      "name": "TOD_WPN_CONFUSION_GAS_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F434F4E465553494F4E5F47415300",
+      "comment": "Native Lua constant WPN_CONFUSION_GAS = 17; save record offset 0x154. Constructor independently binds config.ConfusionGas. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080C4C, value at 0x0088B374; constructor 0x00470970 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A60EC",
+      "name": "TOD_config_ConfusionGas_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C2250",
+      "comment": "Pointer to runtime config.ConfusionGas at 0x101C2250. Passed as r5 by constructor for ID 17 (WPN_CONFUSION_GAS). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x004709F4, ID load 0x004709CC, call 0x00470A6C; parent config 0x101b9ee8 plus 0x8368."
+    },
+    {
+      "va": "0x00096780",
+      "name": "TOD_Lua_config_ConfusionGas_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.ConfusionGas subobject getter; parent config +0x8368. Matches constructor config pointer for ID 17 (WPN_CONFUSION_GAS). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EDEC and constructor pointer 0x008A60EC. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100001E8",
+      "name": "TOD_WPN_ENERGY_CLAWS_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F454E455247595F434C41575300",
+      "comment": "Native Lua constant WPN_ENERGY_CLAWS = 14; save record offset 0x118. Constructor independently binds config.EnergyClaws. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080C08, value at 0x0088B35C; constructor 0x00471050 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A6130",
+      "name": "TOD_config_EnergyClaws_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BC2B8",
+      "comment": "Pointer to runtime config.EnergyClaws at 0x101BC2B8. Passed as r5 by constructor for ID 14 (WPN_ENERGY_CLAWS). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x004710BC, ID load 0x00471110, call 0x00471164; parent config 0x101b9ee8 plus 0x23D0."
+    },
+    {
+      "va": "0x00097130",
+      "name": "TOD_Lua_config_EnergyClaws_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.EnergyClaws subobject getter; parent config +0x23D0. Matches constructor config pointer for ID 14 (WPN_ENERGY_CLAWS). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED44 and constructor pointer 0x008A6130. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000178",
+      "name": "TOD_WPN_FLAMETHROWER_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F464C414D455448524F57455200",
+      "comment": "Native Lua constant WPN_FLAMETHROWER = 8; save record offset 0xA0. Constructor independently binds config.FlameThrower. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080B78, value at 0x0088B32C; constructor 0x004724A0 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A6168",
+      "name": "TOD_config_FlameThrower_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BC98C",
+      "comment": "Pointer to runtime config.FlameThrower at 0x101BC98C. Passed as r5 by constructor for ID 8 (WPN_FLAMETHROWER). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00472518, ID load 0x0047255C, call 0x004725B8; parent config 0x101b9ee8 plus 0x2AA4."
+    },
+    {
+      "va": "0x00097080",
+      "name": "TOD_Lua_config_FlameThrower_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.FlameThrower subobject getter; parent config +0x2AA4. Matches constructor config pointer for ID 8 (WPN_FLAMETHROWER). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED50 and constructor pointer 0x008A6168. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000190",
+      "name": "TOD_WPN_GOOP_MINES_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F474F4F505F4D494E455300",
+      "comment": "Native Lua constant WPN_GOOP_MINES = 9; save record offset 0xB4. Constructor independently binds config.GoopMine. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080B90, value at 0x0088B334; constructor 0x00473D48 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A61D0",
+      "name": "TOD_config_GoopMine_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BDE08",
+      "comment": "Pointer to runtime config.GoopMine at 0x101BDE08. Passed as r5 by constructor for ID 9 (WPN_GOOP_MINES). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00473DC0, ID load 0x00473D98, call 0x00473E50; parent config 0x101b9ee8 plus 0x3F20."
+    },
+    {
+      "va": "0x00096E70",
+      "name": "TOD_Lua_config_GoopMine_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.GoopMine subobject getter; parent config +0x3F20. Matches constructor config pointer for ID 9 (WPN_GOOP_MINES). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED74 and constructor pointer 0x008A61D0. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000118",
+      "name": "TOD_WPN_GRENADE_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F4752454E41444500",
+      "comment": "Native Lua constant WPN_GRENADE = 2; save record offset 0x28. Constructor independently binds config.Grenade. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080AE8, value at 0x0088B2FC; constructor 0x00474398 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A620C",
+      "name": "TOD_config_Grenade_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BD060",
+      "comment": "Pointer to runtime config.Grenade at 0x101BD060. Passed as r5 by constructor for ID 2 (WPN_GRENADE). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00474410, ID load 0x0047446C, call 0x004744BC; parent config 0x101b9ee8 plus 0x3178."
+    },
+    {
+      "va": "0x10000248",
+      "name": "TOD_WPN_GROOVITRON_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F47524F4F564954524F4E00",
+      "comment": "Native Lua constant WPN_GROOVITRON = 19; save record offset 0x17C. Constructor independently binds config.Groovitron. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080C74, value at 0x0088B384; constructor 0x00475358 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A625C",
+      "name": "TOD_config_Groovitron_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C2FF8",
+      "comment": "Pointer to runtime config.Groovitron at 0x101C2FF8. Passed as r5 by constructor for ID 19 (WPN_GROOVITRON). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x004753D8, ID load 0x00475408, call 0x00475470; parent config 0x101b9ee8 plus 0x9110."
+    },
+    {
+      "va": "0x00096600",
+      "name": "TOD_Lua_config_Groovitron_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Groovitron subobject getter; parent config +0x9110. Matches constructor config pointer for ID 19 (WPN_GROOVITRON). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE04 and constructor pointer 0x008A625C. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100001D8",
+      "name": "TOD_WPN_MAG_NET_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F4D41475F4E455400",
+      "comment": "Native Lua constant WPN_MAG_NET = 13; save record offset 0x104. Constructor independently binds config.MagNet. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080BF0, value at 0x0088B354; constructor 0x00475A30 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A629C",
+      "name": "TOD_config_MagNet_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BD734",
+      "comment": "Pointer to runtime config.MagNet at 0x101BD734. Passed as r5 by constructor for ID 13 (WPN_MAG_NET). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00475AA8, ID load 0x00475A80, call 0x00475B30; parent config 0x101b9ee8 plus 0x384C."
+    },
+    {
+      "va": "0x00096F20",
+      "name": "TOD_Lua_config_MagNet_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.MagNet subobject getter; parent config +0x384C. Matches constructor config pointer for ID 13 (WPN_MAG_NET). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED68 and constructor pointer 0x008A629C. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000268",
+      "name": "TOD_WPN_MAXI_LEECH_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F4D4158495F4C4545434800",
+      "comment": "Native Lua constant WPN_MAXI_LEECH = 21; save record offset 0x1A4. Constructor independently binds config.MaxiLeech. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080C9C, value at 0x0088B394; constructor 0x00475ED8 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A62CC",
+      "name": "TOD_config_MaxiLeech_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C3DA0",
+      "comment": "Pointer to runtime config.MaxiLeech at 0x101C3DA0. Passed as r5 by constructor for ID 21 (WPN_MAXI_LEECH). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00475F58, ID load 0x00475F98, call 0x00475FF8; parent config 0x101b9ee8 plus 0x9EB8."
+    },
+    {
+      "va": "0x00096480",
+      "name": "TOD_Lua_config_MaxiLeech_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.MaxiLeech subobject getter; parent config +0x9EB8. Matches constructor config pointer for ID 21 (WPN_MAXI_LEECH). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE1C and constructor pointer 0x008A62CC. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000258",
+      "name": "TOD_WPN_MINI_LEECH_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F4D494E495F4C4545434800",
+      "comment": "Native Lua constant WPN_MINI_LEECH = 20; save record offset 0x190. Constructor independently binds config.MiniLeech. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080C88, value at 0x0088B38C; constructor 0x00476BF8 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A631C",
+      "name": "TOD_config_MiniLeech_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C36CC",
+      "comment": "Pointer to runtime config.MiniLeech at 0x101C36CC. Passed as r5 by constructor for ID 20 (WPN_MINI_LEECH). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00476C78, ID load 0x00476CB8, call 0x00476D18; parent config 0x101b9ee8 plus 0x97E4."
+    },
+    {
+      "va": "0x00096540",
+      "name": "TOD_Lua_config_MiniLeech_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.MiniLeech subobject getter; parent config +0x97E4. Matches constructor config pointer for ID 20 (WPN_MINI_LEECH). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE10 and constructor pointer 0x008A631C. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000278",
+      "name": "TOD_WPN_MORPH_BOMB_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F4D4F5250485F424F4D4200",
+      "comment": "Native Lua constant WPN_MORPH_BOMB = 22; save record offset 0x1B8. Constructor independently binds config.Morph. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080CB4, value at 0x0088B39C; constructor 0x00477918 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A6368",
+      "name": "TOD_config_Morph_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C4474",
+      "comment": "Pointer to runtime config.Morph at 0x101C4474. Passed as r5 by constructor for ID 22 (WPN_MORPH_BOMB). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x004779A8, ID load 0x00477980, call 0x00477A20; parent config 0x101b9ee8 plus 0xA58C."
+    },
+    {
+      "va": "0x000963C0",
+      "name": "TOD_Lua_config_Morph_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Morph subobject getter; parent config +0xA58C. Matches constructor config pointer for ID 22 (WPN_MORPH_BOMB). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE28 and constructor pointer 0x008A6368. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000158",
+      "name": "TOD_WPN_PREDATOR_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F5052454441544F5200",
+      "comment": "Native Lua constant WPN_PREDATOR = 6; save record offset 0x78. Constructor independently binds config.Predator. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080B48, value at 0x0088B31C; constructor 0x00478580 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A63C4",
+      "name": "TOD_config_Predator_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BEBB0",
+      "comment": "Pointer to runtime config.Predator at 0x101BEBB0. Passed as r5 by constructor for ID 6 (WPN_PREDATOR). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x004785EC, ID load 0x00478654, call 0x004786A0; parent config 0x101b9ee8 plus 0x4CC8."
+    },
+    {
+      "va": "0x00096D10",
+      "name": "TOD_Lua_config_Predator_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Predator subobject getter; parent config +0x4CC8. Matches constructor config pointer for ID 6 (WPN_PREDATOR). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED8C and constructor pointer 0x008A63C4. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000128",
+      "name": "TOD_WPN_RAVAGER_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F5241564147455200",
+      "comment": "Native Lua constant WPN_RAVAGER = 3; save record offset 0x3C. Constructor independently binds config.Ravager. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080B00, value at 0x0088B304; constructor 0x0047AB40 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A6464",
+      "name": "TOD_config_Ravager_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BF284",
+      "comment": "Pointer to runtime config.Ravager at 0x101BF284. Passed as r5 by constructor for ID 3 (WPN_RAVAGER). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x0047ABA0, ID load 0x0047ABF0, call 0x0047AC4C; parent config 0x101b9ee8 plus 0x539C."
+    },
+    {
+      "va": "0x00096C60",
+      "name": "TOD_Lua_config_Ravager_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Ravager subobject getter; parent config +0x539C. Matches constructor config pointer for ID 3 (WPN_RAVAGER). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED98 and constructor pointer 0x008A6464. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100001A0",
+      "name": "TOD_WPN_REAPER_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F52454150455200",
+      "comment": "Native Lua constant WPN_REAPER = 10; save record offset 0xC8. Constructor independently binds config.Reaper. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080BA8, value at 0x0088B33C; constructor 0x0047CD08 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A64DC",
+      "name": "TOD_config_Reaper_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BF958",
+      "comment": "Pointer to runtime config.Reaper at 0x101BF958. Passed as r5 by constructor for ID 10 (WPN_REAPER). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x0047CD8C, ID load 0x0047CD64, call 0x0047CE0C; parent config 0x101b9ee8 plus 0x5A70."
+    },
+    {
+      "va": "0x00096BB0",
+      "name": "TOD_Lua_config_Reaper_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Reaper subobject getter; parent config +0x5A70. Matches constructor config pointer for ID 10 (WPN_REAPER). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EDA4 and constructor pointer 0x008A64DC. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100001C8",
+      "name": "TOD_WPN_ROBO_HIVE_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F524F424F5F4849564500",
+      "comment": "Native Lua constant WPN_ROBO_HIVE = 12; save record offset 0xF0. Constructor independently binds config.RoboHive. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080BD8, value at 0x0088B34C; constructor 0x0047DD58 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A6530",
+      "name": "TOD_config_RoboHive_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C002C",
+      "comment": "Pointer to runtime config.RoboHive at 0x101C002C. Passed as r5 by constructor for ID 12 (WPN_ROBO_HIVE). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x0047DDDC, ID load 0x0047DDB4, call 0x0047DE60; parent config 0x101b9ee8 plus 0x6144."
+    },
+    {
+      "va": "0x00096B00",
+      "name": "TOD_Lua_config_RoboHive_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.RoboHive subobject getter; parent config +0x6144. Matches constructor config pointer for ID 12 (WPN_ROBO_HIVE). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EDB0 and constructor pointer 0x008A6530. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100001B0",
+      "name": "TOD_WPN_ROCKET_LAUNCHER_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F524F434B45545F4C41554E4348455200",
+      "comment": "Native Lua constant WPN_ROCKET_LAUNCHER = 11; save record offset 0xDC. Constructor independently binds config.Rocket. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080BC0, value at 0x0088B344; constructor 0x0047E6D8 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A6570",
+      "name": "TOD_config_Rocket_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C0700",
+      "comment": "Pointer to runtime config.Rocket at 0x101C0700. Passed as r5 by constructor for ID 11 (WPN_ROCKET_LAUNCHER). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x0047E760, ID load 0x0047E730, call 0x0047E7DC; parent config 0x101b9ee8 plus 0x6818."
+    },
+    {
+      "va": "0x00096A50",
+      "name": "TOD_Lua_config_Rocket_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Rocket subobject getter; parent config +0x6818. Matches constructor config pointer for ID 11 (WPN_ROCKET_LAUNCHER). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EDBC and constructor pointer 0x008A6570. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000200",
+      "name": "TOD_WPN_RYNO_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F52594E4F00",
+      "comment": "Native Lua constant WPN_RYNO = 15; save record offset 0x12C. Constructor independently binds config.Ryno. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080C20, value at 0x0088B364; constructor 0x0047EEF8 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A65A0",
+      "name": "TOD_config_Ryno_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C0DD4",
+      "comment": "Pointer to runtime config.Ryno at 0x101C0DD4. Passed as r5 by constructor for ID 15 (WPN_RYNO). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x0047EF70, ID load 0x0047EFB8, call 0x0047F014; parent config 0x101b9ee8 plus 0x6EEC."
+    },
+    {
+      "va": "0x000969A0",
+      "name": "TOD_Lua_config_Ryno_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Ryno subobject getter; parent config +0x6EEC. Matches constructor config pointer for ID 15 (WPN_RYNO). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EDC8 and constructor pointer 0x008A65A0. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000238",
+      "name": "TOD_WPN_SLINKONATOR_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F534C494E4B4F4E41544F5200",
+      "comment": "Native Lua constant WPN_SLINKONATOR = 18; save record offset 0x168. Constructor independently binds config.Slinkonator. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080C60, value at 0x0088B37C; constructor 0x00481848 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A6648",
+      "name": "TOD_config_Slinkonator_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C2924",
+      "comment": "Pointer to runtime config.Slinkonator at 0x101C2924. Passed as r5 by constructor for ID 18 (WPN_SLINKONATOR). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x004818E8, ID load 0x004818B8, call 0x00481954; parent config 0x101b9ee8 plus 0x8A3C."
+    },
+    {
+      "va": "0x000966C0",
+      "name": "TOD_Lua_config_Slinkonator_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Slinkonator subobject getter; parent config +0x8A3C. Matches constructor config pointer for ID 18 (WPN_SLINKONATOR). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EDF8 and constructor pointer 0x008A6648. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000138",
+      "name": "TOD_WPN_TORNADO_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F544F524E41444F00",
+      "comment": "Native Lua constant WPN_TORNADO = 4; save record offset 0x50. Constructor independently binds config.Tornado. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080B18, value at 0x0088B30C; constructor 0x00481FF8 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A66A0",
+      "name": "TOD_config_Tornado_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C14A8",
+      "comment": "Pointer to runtime config.Tornado at 0x101C14A8. Passed as r5 by constructor for ID 4 (WPN_TORNADO). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00482064, ID load 0x004820C8, call 0x00482114; parent config 0x101b9ee8 plus 0x75C0."
+    },
+    {
+      "va": "0x000968F0",
+      "name": "TOD_Lua_config_Tornado_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Tornado subobject getter; parent config +0x75C0. Matches constructor config pointer for ID 4 (WPN_TORNADO). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EDD4 and constructor pointer 0x008A66A0. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000288",
+      "name": "TOD_WPN_VISICOPTER_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F56495349434F5054455200",
+      "comment": "Native Lua constant WPN_VISICOPTER = 23; save record offset 0x1CC. Constructor independently binds config.Copter. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080CCC, value at 0x0088B3A4; constructor 0x004826E0 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A66CC",
+      "name": "TOD_config_Copter_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C4B48",
+      "comment": "Pointer to runtime config.Copter at 0x101C4B48. Passed as r5 by constructor for ID 23 (WPN_VISICOPTER). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00482760, ID load 0x004827A4, call 0x00482804; parent config 0x101b9ee8 plus 0xAC60."
+    },
+    {
+      "va": "0x00096300",
+      "name": "TOD_Lua_config_Copter_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Copter subobject getter; parent config +0xAC60. Matches constructor config pointer for ID 23 (WPN_VISICOPTER). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EE34 and constructor pointer 0x008A66CC. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x100000F8",
+      "name": "TOD_WPN_WRENCH_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F5752454E434800",
+      "comment": "Native Lua constant WPN_WRENCH = 0; save record offset 0x0. Constructor independently binds config.Wrench. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080AB8, value at 0x0088FAF4; constructor 0x00483030 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A6718",
+      "name": "TOD_config_Wrench_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101BAE3C",
+      "comment": "Pointer to runtime config.Wrench at 0x101BAE3C. Passed as r5 by constructor for ID 0 (WPN_WRENCH). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x004830B8, ID load 0x004830D4, call 0x00483148; parent config 0x101b9ee8 plus 0xF54."
+    },
+    {
+      "va": "0x00097340",
+      "name": "TOD_Lua_config_Wrench_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Wrench subobject getter; parent config +0xF54. Matches constructor config pointer for ID 0 (WPN_WRENCH). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088ED20 and constructor pointer 0x008A6718. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x10000210",
+      "name": "TOD_WPN_ZURKON_enum_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "57504E5F5A55524B4F4E00",
+      "comment": "Native Lua constant WPN_ZURKON = 16; save record offset 0x140. Constructor independently binds config.Zurkon. Not a player-visible localized weapon name.",
+      "evidence": "Export call 0x00080C38, value at 0x0088B36C; constructor 0x00487A28 argument guards in weapon_configuration.inventory_catalog."
+    },
+    {
+      "va": "0x008A67D4",
+      "name": "TOD_config_Zurkon_constructor_pointer",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101C1B7C",
+      "comment": "Pointer to runtime config.Zurkon at 0x101C1B7C. Passed as r5 by constructor for ID 16 (WPN_ZURKON). Target is runtime/uninitialized data, not an asset byte payload or save offset.",
+      "evidence": "r5 load 0x00487AB8, ID load 0x00487A90, call 0x00487B30; parent config 0x101b9ee8 plus 0x7C94."
+    },
+    {
+      "va": "0x00096840",
+      "name": "TOD_Lua_config_Zurkon_subobject_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named config.Zurkon subobject getter; parent config +0x7C94. Matches constructor config pointer for ID 16 (WPN_ZURKON). Runtime offset, not a save offset.",
+      "evidence": "Native property registration triplet 0x0088EDE0 and constructor pointer 0x008A67D4. Getter offset instruction bytes retained in catalog guards."
+    },
+    {
+      "va": "0x00094400",
+      "name": "TOD_Lua_MonolithicConfig_root_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF917C8802A6",
+      "comment": "Returns native MonolithicConfig userdata at 0x101B9EE8 using pointer slot 0x88FAFC; root for the 32 named weapon config subobjects.",
+      "evidence": "Root userdata binding and file-backed pointer slot, paired with config getters and constructors."
+    },
+    {
+      "va": "0x002D2878",
+      "name": "TOD_purchase_mod_native",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C0802A6",
+      "comment": "Hero inventory transaction: obtains cost from 0x2D1E80, checks raritanium +0x420 and record ownership +0x10, enables the selected bit through 0x465D00, and deducts cost via 0x24F748. No grid adjacency/already-owned-bit check in this leaf; script UI performs separate checks.",
+      "evidence": "Wrapper 0x26400 -> thunk 0x12A20 -> 0x2D2878; raw calls 0x2D2934 and 0x2D2948."
+    },
+    {
+      "va": "0x002D1E80",
+      "name": "TOD_get_mod_cost_native",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF817C0802A6",
+      "comment": "Returns zero for missing definition/config or node index outside NumMods. Reads word config +0x470 + node*0x18, equivalently modifier entry +0x0C. An out-of-range node producing zero price is not proven safe to purchase.",
+      "evidence": "Definition config +0x48 and NumMods +0x6A4; called by purchase transaction 0x2D2878."
+    },
+    {
+      "va": "0x000B7B30",
+      "name": "TOD_Lua_config_Mods_getter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF517C8802A6",
+      "comment": "Named Mods[index] getter. Unsigned index checked against 0x17 (24 slots), entry pointer config +0x464 + index*0x18. Physical capacity does not establish 24 purchasable nodes for every weapon.",
+      "evidence": "Native name/getter descriptor slot 0x88E8A0; index check 0xB7BD8 and address calculation 0xB7C04."
+    },
+    {
+      "va": "0x000B79E0",
+      "name": "TOD_Lua_config_Mods_setter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF517C8802A6",
+      "comment": "Named Mods[index] setter, 24-slot check, copies six four-byte words into config +0x464 + index*0x18. Mod entry size 0x18; runtime configuration, not saved modifier mask.",
+      "evidence": "Native name/setter descriptor slot 0x88E8A0 and raw six-word stores."
+    },
     {
       "va": "0x002D2D38",
       "name": "TOD_purchase_weapon_native",
@@ -346,13 +3719,13 @@
     {
       "va": "0x000971E0", "name": "TOD_Lua_config_Combuster_subobject_getter",
       "kind": "function", "confidence": "confirmed", "bytes": "38A000007C0802A6",
-      "comment": "Named config.Combuster getter returns parent config +0x1CFC. This is a runtime configuration offset, NOT a save offset or independently proven inventory ID.",
+      "comment": "Named config.Combuster getter returns parent config +0x1CFC. Constructor 0x470378 passes this runtime config pointer with native ID 1 (WPN_COMBUSTER). Parent config offsets and save record offsets are distinct.",
       "evidence": "Registration 0x89F4C -> name slot 0x88ED38 -> descriptor 0x85D360; addi at 0x9721C."
     },
     {
       "va": "0x00096FD0", "name": "TOD_Lua_config_Grenade_subobject_getter",
       "kind": "function", "confidence": "confirmed", "bytes": "38A000007C0802A6",
-      "comment": "Named config.Grenade getter returns parent config +0x3178. Runtime config pointer linkage remains separate from save-record ID enumeration.",
+      "comment": "Named config.Grenade getter returns parent config +0x3178. Constructor 0x474398 passes this runtime config pointer with native ID 2 (WPN_GRENADE), independently corroborating the enum export. This parent offset is not a save offset.",
       "evidence": "Registration 0x89F94 -> name slot 0x88ED5C -> descriptor 0x85D348; raw/decompiled subobject accessor."
     },
     {
