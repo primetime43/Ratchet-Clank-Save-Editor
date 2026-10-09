@@ -36,12 +36,54 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Saved settings preserve raw flags, nonfinite floats, unknown bytes and detached input", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114A8, 4), 0x80000000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114C4, 4), 0x7FC12345);
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(0x114C8, 4), 0.9f);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114C0, 4), 0xDEADBEEF);
+            bytes[0x114D0] = 255;
+            bytes[0x114D6] = 0xAB; bytes[0x114D7] = 0xCD;
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var raw = inspection.Table("Game settings");
+            Equal(17, raw.Rows.Count);
+            Equal(5, raw.Columns.Length);
+            Equal("On", raw.Rows.Single(r => r.Cells[2] == "0x114A8").Cells[1]);
+            Equal("7FC12345", raw.Rows.Single(r => r.Cells[2] == "0x114C4").Cells[4]);
+            Equal("90%", raw.Rows.Single(r => r.Cells[2] == "0x114C8").Cells[1]);
+            Equal("FF", raw.Rows.Single(r => r.Cells[2] == "0x114D0").Cells[4]);
+            Equal("ABCD", raw.Rows.Single(r => r.Cells[2] == "0x114D6").Cells[4]);
+            var friendly = InspectionPresentation.Simplify("Game settings", raw);
+            Equal(15, friendly.Rows.Count);
+            Equal(2, friendly.Columns.Length);
+            True(friendly.Rows.Any(r => r.Details.Contains("7FC12345")), "Nonfinite float bits must remain in row details.");
+            True(bytes.SequenceEqual(before), "Viewing settings must not modify input bytes.");
+            Array.Clear(bytes);
+            True(inspection.Table("Game settings").Rows.Select(r => string.Join("|", r.Cells)).SequenceEqual(raw.Rows.Select(r => string.Join("|", r.Cells))), "Settings snapshot must be detached.");
+        });
+        Check("Load destination and next-level summary use a catalog without guessing the current planet", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8740, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906E8, 4), 10);
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var summary = InspectionPresentation.Simplify("Counters & nearby fields", inspection.Table("Counters & nearby fields"));
+            Equal("Unmapped ID 4294967295", summary.Rows.Single(r => r.Cells[0] == "Next-level selection").Cells[1]);
+            Equal("Sargasso", summary.Rows.Single(r => r.Cells[0] == "Saved load destination").Cells[1]);
+            True(!summary.Rows.Any(r => r.Cells[0].Contains("Current planet")), "Load destination is not necessarily the current planet.");
+            var settings = TodResearch.Map.GetProperty("settings");
+            Equal("0x10330610", settings.GetProperty("runtime_only").GetProperty("checkpoint_va").GetString());
+            True(settings.GetProperty("runtime_only").GetProperty("warning").GetString().Contains("no saved health offset"), "Runtime health must not be presented as a saved field.");
+        });
         Check("All research is bundled: IDs, configurations, grids, annotations and notes", () =>
         {
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(595, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(778, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
             Equal(13, TodResearch.Map.GetProperty("bonuses").GetProperty("blueprints").GetProperty("all_grant_ids").GetArrayLength());
             Equal(14, TodResearch.Map.GetProperty("bonuses").GetProperty("cheats").GetProperty("catalog").GetArrayLength());
@@ -478,7 +520,7 @@ internal static partial class Program
                 Equal(expected.Item2, grid.Columns.Count);
             }
             views.SelectedItem = "Player summary";
-            Equal(12, grid.Rows.Count);
+            Equal(14, grid.Rows.Count);
             True(!grid.Rows.Cast<DataGridViewRow>().Any(row => row.Cells[0].Value.ToString().Contains("Unknown")), "Unknown and candidate fields belong in Technical, not the player summary.");
             views.SelectedItem = "Upgrade nodes";
             var weaponFilter = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");
@@ -612,7 +654,7 @@ internal static partial class Program
             form.ClientSize = new Size(900, 620);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-minimum-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Quick select", "Player summary", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));

@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 595 annotations, 118 imports, evidence, byte signatures and twenty structure definitions.
+- [Shared address map](maps/NativeMap.json): 778 annotations, 118 imports, evidence, byte signatures and 21 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -566,9 +566,58 @@ Independent Python and C# decoders agree on the actual output hashes, including 
 
 The native **pre-snapshot synchronization chain** is `35E710 → 250758 → 24EAC8 → 24DAB8 → 12670 → 35C5B8`. `24DAB8` only invokes encoding when runtime member `+20` is nonnull; it passes runtime `+24` as source and loaded-object member `+10` as block slot. This identifies a synchronization step before the bulk save copy, not every synchronization dependency. `TOD_SaveRleBlock_verified` and the read-only Stored state blocks view retain opaque prefix/tails, raw readiness, sizes, hashes, value histograms and clipping details. No new editing controls are introduced.
 
+### Saved settings and load destinations
+
+[Inspect-TodSettings.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSettings.py) independently reproduces the `settings` section from named Lua registrations, guarded native getters/setters and the settings initializer. It checks the full ELF hash first, resolves TOC pointers and derives save offsets from the actual load instructions. The section adds 270 byte guards and the portable `TOD_SaveSettings_verified` structure; [TestTodSettings.py](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodSettings.py) covers map reproduction, initializer defaults, actual save observations, unusual flags, nonfinite floats, unknown IDs/bytes and unchanged inputs.
+
+The options block is **`0x114A8–0x114D8`, size `0x30`**: immediately after the twenty completed mission lists and immediately before the 21 RLE blocks. Fifteen fields are named by native APIs, not inferred from neighboring values:
+
+| Save offset | Storage | Meaning | Getter / setter VA |
+| --- | --- | --- | --- |
+| `114A8` | BE32, nonzero | Camera X inverted | `26CA8 / 26C98` |
+| `114AC` | BE32, nonzero | Camera Y inverted | `26C70 / 26C60` |
+| `114B0` | BE float32 | Camera speed, units not asserted | `26C50 / 276A8` |
+| `114B4` | BE32, nonzero | Look X inverted | `26C28 / 26C18` |
+| `114B8` | BE32, nonzero | Look Y inverted | `26BF0 / 26BE0` |
+| `114BC` | BE32 | Current control-scheme index | `27220 / 271B0` |
+| `114C0` | BE32 | **Unknown**, initializer writes 1 | No named semantic link |
+| `114C4` | BE float32 | Voice volume | `26E00 / 276D0` |
+| `114C8` | BE float32 | Sound-effects volume | `26BB0 / 24E90` |
+| `114CC` | BE float32 | Music volume | `26E10 / 27718` |
+| `114D0` | Byte | Help text enabled | `26DF0 / 26DB8` |
+| `114D1` | Byte | Subtitles enabled | `26DA8 / 26D98` |
+| `114D2` | Byte | Quick select pauses | `26D88 / 26D78` |
+| `114D3` | Byte | Sixaxis controls enabled | `26BC0 / 26BD0` |
+| `114D4` | Byte | Rumble enabled | `26D68 / 26D18` |
+| `114D5` | Byte | Surround enabled | `26D08 / 26CD0` |
+| `114D6–114D7` | Two bytes | **Unknown**, not proven padding | Preserve |
+
+Word-boolean getters explicitly compare with zero. Byte getters return the raw byte and their named Lua wrappers expose a boolean result. Inspector display uses nonzero but preserves atypical raw bytes/words. Float setters use `fsel` against TOC constants `0.0f` and `1.0f`; these bounds describe ordinary finite setter inputs, not a demonstrated safe edit range or NaN normalization rule. The inspector retains all raw float bits.
+
+Initializer `35EE40`, called on the settings subobject by `35D9A0`, writes inversions and scheme index 0, camera speed 1.0, all audio volumes `3F666666` (float32 approximately 0.9), help/pause/sixaxis/rumble/surround 1, subtitles 0, and unnamed word `114C0` = 1. It does not explicitly initialize `114D6/114D7`. **Actual USA save differs:** help text is 0 and subtitles 1; volumes remain `3F666666`. These are observations, not inferred defaults. The app converts volume fractions to percentages for readability without changing bytes or asserting measured loudness.
+
+Two additional assembly-backed consumers show unnamed word `114C0` is used: `20F3F0` resolves state through slot `89679C`, sets runtime flag `+24` when the word is zero, and selects modes `0F/10`; `2108D8` does the same through slot `896858` and runtime flag `+3F`. The option and mode names remain unresolved. This is a confirmed use relationship, not grounds to rename the word. Byte getter wrappers normalize nonzero to a Lua boolean through `106A0 -> 6A8EE0 -> 668770`; inspection preserves the original saved bytes.
+
+Audio apply `7FC98` sends saved effects/voice/music values to buses **1/6/12**. Restore `35E508 → 251CC8 → 5ADEF0` applies the same saved values. This establishes audio settings rather than a health/ammo interpretation. Do not invent extra option fields: `is_rumble_connected → 24C90` returns constant 1; `get_button_layout → 24C98` returns constant 0; `set_button_layout → 24CA0` is a no-op. In particular, these APIs do not identify unnamed word `114C0` as button layout. `get_num_control_schemes → 24C48` returns 2, but the setter also distinguishes index 2; this is not sufficient to assign names or an accepted saved-value range.
+
+Two independent level-selection words are now confirmed:
+
+- **`0x906E8`, saved load destination:** named `set_save_level` wrapper `2C8D38` calls `27BAD0`, which stores at saved-state base + `90000 + 6E8`. Getter `2D1490` reads the same word. Restore `35E508` passes it to level-change routine `2D16A0`; that routine also updates it during transitions. This is not necessarily the current runtime planet or the SFO subtitle.
+- **`0x8740`, next-level selection:** named `set_next_level` wrapper `2C8C80` calls `27A818`, which stores at saved-state base + `10000 - 78C0`. Named `get_next_level` wrapper `39938` calls getter `36AF0`. It is **not** the tail word `906E4`.
+
+Table `10062F7C` contains nineteen native level-name pointers; `2D0880` indexes it and inverse lookup `2D08D8` compares nineteen entries. The decoded catalog preserves internal names, not guessed localized planet titles. Actual USA saved load ID is **0 (`metropolis`)**; next-level raw ID is **`FFFFFFFF`**, retained as unmapped rather than assigning an unproved sentinel meaning. A current-level script API instead resolves a separate runtime string. The read-only Player summary displays the two saved words with these limitations.
+
+### Runtime checkpoints and health: no saved offsets inferred
+
+Named checkpoint bindings lead to a separate runtime object at **`0x10330610`**, through TOC pointer slots `898FB0 / 8A1928`. Relative to saved-state base `101EFB20` this is `140AF0`, outside the serialized interval `[101EFB20, 10280210)`. It cannot be assigned a save offset by subtracting the state base.
+
+`checkpoint → 27B258` and `checkpoint_volume → 27B128` reach capture routine `35CF40`. It copies/normalizes three orientation rows at runtime `+00/+10/+20`, copies sixteen position bytes to `+30`, stores saved-load getter `2D1490` at `+40`, and marks byte `+EF` valid. `has_valid_checkpoint → 27B108` tests `+EF`; predicate `27B218` also compares flag byte `+ED`. `is_current_checkpoint → 2788E8` compares positions against a resolved runtime volume. Other members and validity/reset behavior are not fully mapped. These findings belong in the runtime research, **not** as editable saved position fields.
+
+Named `hero_get_health` wrapper `2B93F0` calls `289358`, resolves an object via `276D48`, validates class `B9` via `24F208`, then requests **float attribute ID `6C`** through `251F98` and reads the returned attribute's `+4` float. This confirms a runtime health accessor; no link to a dedicated serialized health word has been proven. Saved hero XP `418` is independently mapped and is not relabeled as health.
+
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes world-record subrecords/bitmaps, equipment callback/reset dependencies, challenge definition/index resolution, checkpoint/position/runtime-health linkage, scenario tails, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. RLE grammar and equipment history are now established above; that does not make the twenty-one block slots fully understood planet or mission state. Tail `0x906E4/0x906E8` remains unresolved, and the final restart word's exact gameplay terminology remains a candidate.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes world-record subrecords/bitmaps, equipment callback/reset dependencies, challenge definition/index resolution, any persisted checkpoint/health dependencies, scenario tails, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -578,7 +627,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 594 mapped annotations (the third TOC reference base is unmapped), twenty structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 777 mapped annotations (the third TOC reference base is unmapped), 21 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

@@ -134,12 +134,47 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x458, "Equipped armor ID", "code-backed", "Native IDs 0..4; ownership and unlock availability are separate."),
                     (0x480, "Selected skin ID", "code-backed", "Native IDs 0..8. Select 26FC0 requires ownership; purchase 27AA0 also writes this ID."),
                     (0x8708, "Weighted skill-point total", "code-backed", "Not completion count. Native setter adds the shipped definition value for a newly earned bit."),
+                    (0x8740, "Next-level selection", "code-backed", "Named set_next_level/get_next_level store/read this word. Not necessarily the current planet; unknown IDs are retained."),
+                    (0x906E8, "Saved load destination", "code-backed", "Named set_save_level stores this word. Restore passes it to the level-change routine; not necessarily the current runtime planet or SFO subtitle."),
                     (0x906EC, "Restart/playthrough counter", "candidate", "Nonzero predicate gates multiplier and final armor availability; exact gameplay naming remains candidate.") })
                 {
                     uint value = U32(field.Item1);
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 }, field.Item4));
                 }
                 return new(new[] { "Offset", "Field", "uint32 BE", "float32 BE", "Raw bits", "Confidence" }, rows.AsReadOnly());
+            }
+            if (view == "Game settings")
+            {
+                var block = TodResearch.Map.GetProperty("settings").GetProperty("block");
+                foreach (var field in block.GetProperty("fields").EnumerateArray())
+                {
+                    string name = field.GetProperty("name").GetString(), type = field.GetProperty("type").GetString();
+                    int offset = TodResearch.Offset(field.GetProperty("offset"));
+                    int width = type == "bool8" ? 1 : 4;
+                    uint bits = width == 1 ? data[offset] : U32(offset);
+                    string value;
+                    if (type.StartsWith("bool", StringComparison.Ordinal)) value = bits != 0 ? "On" : "Off";
+                    else if (type == "f32")
+                    {
+                        float number = BitConverter.Int32BitsToSingle(unchecked((int)bits));
+                        value = float.IsFinite(number) ? number.ToString("0.###", CultureInfo.InvariantCulture) : "Invalid value (raw preserved)";
+                        if (name.EndsWith("_volume", StringComparison.Ordinal) && float.IsFinite(number) && number >= 0 && number <= 1)
+                            value = (number * 100).ToString("0.#", CultureInfo.InvariantCulture) + "%";
+                    }
+                    else value = "Index " + bits.ToString(CultureInfo.InvariantCulture);
+                    string raw = Convert.ToHexString(data.AsSpan(offset, width));
+                    string details = $"Save offset {TodResearch.Hex(offset)}; {type}; raw {raw}.\r\n" +
+                        $"Named APIs: {field.GetProperty("get_api").GetString()} / {field.GetProperty("set_api").GetString()}.\r\n" +
+                        $"Native getter {field.GetProperty("getter_va").GetString()}, setter {field.GetProperty("setter_va").GetString()}.\r\n" +
+                        (type == "f32" ? $"Exact float32: {Number(bits)}. " : $"Raw integer: {bits}. ") +
+                        "Boolean getters test nonzero. Float setters clamp ordinary finite inputs to0..1; no safe edit range is asserted. Control-scheme names are not recovered.\r\n" + Message;
+                    rows.Add(new(new[] { InspectionPresentation.Label(name), value, TodResearch.Hex(offset), type, raw }, details));
+                }
+                rows.Add(new(new[] { "Unknown settings word", U32(0x114C0).ToString(CultureInfo.InvariantCulture), "0x114C0", "unmapped u32", Convert.ToHexString(data.AsSpan(0x114C0, 4)) },
+                    "Initializer writes1. Consumers20F3F0/2108D8 compare with zero and select runtime modes0F/10; the option and mode names remain unresolved. get_button_layout returns constant0 and set_button_layout is a no-op; this is not a confirmed button-layout word."));
+                rows.Add(new(new[] { "Unknown settings tail", Convert.ToHexString(data.AsSpan(0x114D6, 2)), "0x114D6", "unmapped bytes", Convert.ToHexString(data.AsSpan(0x114D6, 2)) },
+                    "Two preserved bytes. Not proven padding; not normalized or interpreted."));
+                return new(new[] { "Setting", "Value", "Offset", "Storage", "Raw bytes" }, rows.AsReadOnly());
             }
             if (view == "Stored state blocks")
             {

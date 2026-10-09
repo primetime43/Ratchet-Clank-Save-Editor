@@ -5869,7 +5869,3333 @@
     }
   ]
 },
+  "settings": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 code and read-only plaintext observations; no runtime acceptance or new editing permissions.",
+    "block": {
+      "base": "0x114a8",
+      "size": "0x30",
+      "initializer_va": "0x35ee40",
+      "fields": [
+        {
+          "name": "camera_x_inverted",
+          "offset": "0x114a8",
+          "type": "bool32",
+          "getter_va": "0x26ca8",
+          "setter_va": "0x26c98",
+          "get_api": "is_x_inverted",
+          "set_api": "set_x_inverted"
+        },
+        {
+          "name": "camera_y_inverted",
+          "offset": "0x114ac",
+          "type": "bool32",
+          "getter_va": "0x26c70",
+          "setter_va": "0x26c60",
+          "get_api": "is_y_inverted",
+          "set_api": "set_y_inverted"
+        },
+        {
+          "name": "camera_speed",
+          "offset": "0x114b0",
+          "type": "f32",
+          "getter_va": "0x26c50",
+          "setter_va": "0x276a8",
+          "get_api": "get_camera_speed",
+          "set_api": "set_camera_speed"
+        },
+        {
+          "name": "look_x_inverted",
+          "offset": "0x114b4",
+          "type": "bool32",
+          "getter_va": "0x26c28",
+          "setter_va": "0x26c18",
+          "get_api": "is_look_x_inverted",
+          "set_api": "set_look_x_inverted"
+        },
+        {
+          "name": "look_y_inverted",
+          "offset": "0x114b8",
+          "type": "bool32",
+          "getter_va": "0x26bf0",
+          "setter_va": "0x26be0",
+          "get_api": "is_look_y_inverted",
+          "set_api": "set_look_y_inverted"
+        },
+        {
+          "name": "control_scheme_index",
+          "offset": "0x114bc",
+          "type": "u32",
+          "getter_va": "0x27220",
+          "setter_va": "0x271b0",
+          "get_api": "get_cur_control_scheme",
+          "set_api": "set_control_scheme"
+        },
+        {
+          "name": "voice_volume",
+          "offset": "0x114c4",
+          "type": "f32",
+          "getter_va": "0x26e00",
+          "setter_va": "0x276d0",
+          "get_api": "get_voice_vol",
+          "set_api": "set_voice_vol"
+        },
+        {
+          "name": "sound_effects_volume",
+          "offset": "0x114c8",
+          "type": "f32",
+          "getter_va": "0x26bb0",
+          "setter_va": "0x24e90",
+          "get_api": "get_sound_vol",
+          "set_api": "set_sound_vol"
+        },
+        {
+          "name": "music_volume",
+          "offset": "0x114cc",
+          "type": "f32",
+          "getter_va": "0x26e10",
+          "setter_va": "0x27718",
+          "get_api": "get_music_vol",
+          "set_api": "set_music_vol"
+        },
+        {
+          "name": "help_text_enabled",
+          "offset": "0x114d0",
+          "type": "bool8",
+          "getter_va": "0x26df0",
+          "setter_va": "0x26db8",
+          "get_api": "is_help_text_on",
+          "set_api": "set_help_text_on"
+        },
+        {
+          "name": "subtitles_enabled",
+          "offset": "0x114d1",
+          "type": "bool8",
+          "getter_va": "0x26da8",
+          "setter_va": "0x26d98",
+          "get_api": "is_subtitles_on",
+          "set_api": "set_subtitles_on"
+        },
+        {
+          "name": "quick_select_pauses",
+          "offset": "0x114d2",
+          "type": "bool8",
+          "getter_va": "0x26d88",
+          "setter_va": "0x26d78",
+          "get_api": "is_quick_select_pause_on",
+          "set_api": "set_quick_select_pause_on"
+        },
+        {
+          "name": "sixaxis_enabled",
+          "offset": "0x114d3",
+          "type": "bool8",
+          "getter_va": "0x26bc0",
+          "setter_va": "0x26bd0",
+          "get_api": "get_six_axis_controls",
+          "set_api": "set_six_axis_controls"
+        },
+        {
+          "name": "rumble_enabled",
+          "offset": "0x114d4",
+          "type": "bool8",
+          "getter_va": "0x26d68",
+          "setter_va": "0x26d18",
+          "get_api": "is_rumble_on",
+          "set_api": "set_rumble_on"
+        },
+        {
+          "name": "surround_enabled",
+          "offset": "0x114d5",
+          "type": "bool8",
+          "getter_va": "0x26d08",
+          "setter_va": "0x26cd0",
+          "get_api": "get_surround_on",
+          "set_api": "set_surround_on"
+        }
+      ],
+      "default_bytes": {
+        "0x114b0": "3F800000",
+        "0x114d5": "01",
+        "0x114cc": "3F666666",
+        "0x114d1": "00",
+        "0x114a8": "00000000",
+        "0x114ac": "00000000",
+        "0x114bc": "00000000",
+        "0x114b4": "00000000",
+        "0x114b8": "00000000",
+        "0x114c0": "00000001",
+        "0x114c4": "3F666666",
+        "0x114c8": "3F666666",
+        "0x114d0": "01",
+        "0x114d2": "01",
+        "0x114d3": "01",
+        "0x114d4": "01"
+      },
+      "unknown_word_offset": "0x114c0",
+      "unknown_tail_offset": "0x114d6",
+      "unknown_word_consumers": [
+        {
+          "native_va": "0x20f3f0",
+          "state_pointer_slot_va": "0x89679c",
+          "runtime_flag_offset": "0x24"
+        },
+        {
+          "native_va": "0x2108d8",
+          "state_pointer_slot_va": "0x896858",
+          "runtime_flag_offset": "0x3f"
+        }
+      ],
+      "unknown_word_usage": "Both consumers set their runtime flag when saved114C0 is zero and use it to choose between runtime modes0x0F/0x10. This proves the word is used, not what the modes or option are called; do not infer a named control setting.",
+      "lua_boolean_conversion": "Byte getter wrappers call106A0 -> 6A8EE0 -> 668770; the leaf writes normalized0/1 to a Lua stack value by comparing its input with zero. Saved raw flags are not normalized by inspection.",
+      "semantics": "Boolean word getters test nonzero; byte getters preserve the byte and named wrappers expose boolean results. Float setters clamp ordinary finite inputs to0..1; getters preserve raw floats. Control scheme is an index, not an asserted valid edit range. Unknown word114C0 defaults to1; bytes114D6/114D7 are not proven padding.",
+      "stub_apis": "is_rumble_connected returns1; get_button_layout returns0; set_button_layout is a no-op. These do not establish extra saved flags or a button-layout field."
+    },
+    "level_selection": {
+      "saved_load_offset": "0x906e8",
+      "next_level_offset": "0x8740",
+      "saved_load_getter_va": "0x2d1490",
+      "saved_load_setter_va": "0x27bad0",
+      "next_getter_va": "0x36af0",
+      "next_setter_va": "0x27a818",
+      "catalog": [
+        {
+          "id": 0,
+          "internal_name": "metropolis",
+          "name_va": "0x10019a78"
+        },
+        {
+          "id": 1,
+          "internal_name": "cobalia",
+          "name_va": "0x10019a88"
+        },
+        {
+          "id": 2,
+          "internal_name": "stratus city",
+          "name_va": "0x100061e0"
+        },
+        {
+          "id": 3,
+          "internal_name": "fastoon",
+          "name_va": "0x10006238"
+        },
+        {
+          "id": 4,
+          "internal_name": "space combat i",
+          "name_va": "0x10019a90"
+        },
+        {
+          "id": 5,
+          "internal_name": "imperial fight fest",
+          "name_va": "0x10019aa0"
+        },
+        {
+          "id": 6,
+          "internal_name": "apogee space station",
+          "name_va": "0x10019ab8"
+        },
+        {
+          "id": 7,
+          "internal_name": "pirate base",
+          "name_va": "0x10019ad0"
+        },
+        {
+          "id": 8,
+          "internal_name": "space combat ii",
+          "name_va": "0x10019ae0"
+        },
+        {
+          "id": 9,
+          "internal_name": "rykan v",
+          "name_va": "0x10019af0"
+        },
+        {
+          "id": 10,
+          "internal_name": "sargasso",
+          "name_va": "0x10019af8"
+        },
+        {
+          "id": 11,
+          "internal_name": "iris",
+          "name_va": "0x10019b08"
+        },
+        {
+          "id": 12,
+          "internal_name": "zordoom prison",
+          "name_va": "0x10019b10"
+        },
+        {
+          "id": 13,
+          "internal_name": "space combat iii",
+          "name_va": "0x10019b20"
+        },
+        {
+          "id": 14,
+          "internal_name": "kerchu city",
+          "name_va": "0x10019b38"
+        },
+        {
+          "id": 15,
+          "internal_name": "slags_fleet",
+          "name_va": "0x10019b48"
+        },
+        {
+          "id": 16,
+          "internal_name": "cragmite ruins",
+          "name_va": "0x10019b58"
+        },
+        {
+          "id": 17,
+          "internal_name": "meridian city",
+          "name_va": "0x10019b68"
+        },
+        {
+          "id": 18,
+          "internal_name": "fastoon_return",
+          "name_va": "0x10019b78"
+        }
+      ],
+      "warning": "Saved load destination and next-level selection are not necessarily the current runtime planet or SFO subtitle.906E4 remains unresolved. Named runtime current-level API reads a separate runtime string. Unknown IDs are retained."
+    },
+    "runtime_only": {
+      "checkpoint_va": "0x10330610",
+      "checkpoint_writer_va": "0x35cf40",
+      "checkpoint_valid_byte": "0xef",
+      "checkpoint_saved_level_offset": "0x40",
+      "warning": "Checkpoint struct lies outside the906F0 serialized state interval. Position vectors and valid flags are runtime evidence, not mapped save offsets. hero_get_health follows a runtime object float attribute lookup for ID0x6C; no saved health offset is confirmed."
+    },
+    "named_bindings": [
+      {
+        "name": "get_num_control_schemes",
+        "name_va": "0x10003758",
+        "registration_slot_va": "0x889634",
+        "wrapper_va": "0x2dd60",
+        "native_va": "0x24c48"
+      },
+      {
+        "name": "get_cur_control_scheme",
+        "name_va": "0x10003770",
+        "registration_slot_va": "0x88963c",
+        "wrapper_va": "0x2dc80",
+        "native_va": "0x27220"
+      },
+      {
+        "name": "set_control_scheme",
+        "name_va": "0x10003788",
+        "registration_slot_va": "0x889644",
+        "wrapper_va": "0x2dbc0",
+        "native_va": "0x271b0"
+      },
+      {
+        "name": "get_control_scheme_name",
+        "name_va": "0x100037a0",
+        "registration_slot_va": "0x88964c",
+        "wrapper_va": "0x2dae8",
+        "native_va": "0x28010"
+      },
+      {
+        "name": "get_sound_vol",
+        "name_va": "0x10003878",
+        "registration_slot_va": "0x8896a4",
+        "wrapper_va": "0x2d088",
+        "native_va": "0x26bb0"
+      },
+      {
+        "name": "set_sound_vol",
+        "name_va": "0x10003888",
+        "registration_slot_va": "0x8896ac",
+        "wrapper_va": "0x2cfe0",
+        "native_va": "0x24e90"
+      },
+      {
+        "name": "get_music_vol",
+        "name_va": "0x10003898",
+        "registration_slot_va": "0x8896b4",
+        "wrapper_va": "0x2cf38",
+        "native_va": "0x26e10"
+      },
+      {
+        "name": "set_music_vol",
+        "name_va": "0x100038a8",
+        "registration_slot_va": "0x8896bc",
+        "wrapper_va": "0x2ce90",
+        "native_va": "0x27718"
+      },
+      {
+        "name": "get_voice_vol",
+        "name_va": "0x100038b8",
+        "registration_slot_va": "0x8896c4",
+        "wrapper_va": "0x2cde8",
+        "native_va": "0x26e00"
+      },
+      {
+        "name": "set_voice_vol",
+        "name_va": "0x100038c8",
+        "registration_slot_va": "0x8896cc",
+        "wrapper_va": "0x2cd40",
+        "native_va": "0x276d0"
+      },
+      {
+        "name": "is_help_text_on",
+        "name_va": "0x100038d8",
+        "registration_slot_va": "0x8896d4",
+        "wrapper_va": "0x2cc98",
+        "native_va": "0x26df0"
+      },
+      {
+        "name": "set_help_text_on",
+        "name_va": "0x100038e8",
+        "registration_slot_va": "0x8896dc",
+        "wrapper_va": "0x2cbe0",
+        "native_va": "0x26db8"
+      },
+      {
+        "name": "is_subtitles_on",
+        "name_va": "0x10003900",
+        "registration_slot_va": "0x8896e4",
+        "wrapper_va": "0x2cb38",
+        "native_va": "0x26da8"
+      },
+      {
+        "name": "set_subtitles_on",
+        "name_va": "0x10003910",
+        "registration_slot_va": "0x8896ec",
+        "wrapper_va": "0x2ca80",
+        "native_va": "0x26d98"
+      },
+      {
+        "name": "is_quick_select_pause_on",
+        "name_va": "0x10003928",
+        "registration_slot_va": "0x8896f4",
+        "wrapper_va": "0x2c9d8",
+        "native_va": "0x26d88"
+      },
+      {
+        "name": "set_quick_select_pause_on",
+        "name_va": "0x10003948",
+        "registration_slot_va": "0x8896fc",
+        "wrapper_va": "0x2c920",
+        "native_va": "0x26d78"
+      },
+      {
+        "name": "is_rumble_on",
+        "name_va": "0x10003968",
+        "registration_slot_va": "0x889704",
+        "wrapper_va": "0x2c878",
+        "native_va": "0x26d68"
+      },
+      {
+        "name": "set_rumble_on",
+        "name_va": "0x10003978",
+        "registration_slot_va": "0x88970c",
+        "wrapper_va": "0x2c7c0",
+        "native_va": "0x26d18"
+      },
+      {
+        "name": "is_rumble_connected",
+        "name_va": "0x10003988",
+        "registration_slot_va": "0x889714",
+        "wrapper_va": "0x2c718",
+        "native_va": "0x24c90"
+      },
+      {
+        "name": "get_surround_on",
+        "name_va": "0x100039a0",
+        "registration_slot_va": "0x88971c",
+        "wrapper_va": "0x2c670",
+        "native_va": "0x26d08"
+      },
+      {
+        "name": "set_surround_on",
+        "name_va": "0x100039b0",
+        "registration_slot_va": "0x889724",
+        "wrapper_va": "0x2c5b8",
+        "native_va": "0x26cd0"
+      },
+      {
+        "name": "get_button_layout",
+        "name_va": "0x100039c0",
+        "registration_slot_va": "0x88972c",
+        "wrapper_va": "0x2c4d8",
+        "native_va": "0x24c98"
+      },
+      {
+        "name": "set_button_layout",
+        "name_va": "0x100039d8",
+        "registration_slot_va": "0x889734",
+        "wrapper_va": "0x2c418",
+        "native_va": "0x24ca0"
+      },
+      {
+        "name": "is_x_inverted",
+        "name_va": "0x100039f0",
+        "registration_slot_va": "0x88973c",
+        "wrapper_va": "0x2c370",
+        "native_va": "0x26ca8"
+      },
+      {
+        "name": "set_x_inverted",
+        "name_va": "0x10003a00",
+        "registration_slot_va": "0x889744",
+        "wrapper_va": "0x2c2b8",
+        "native_va": "0x26c98"
+      },
+      {
+        "name": "is_y_inverted",
+        "name_va": "0x10003a10",
+        "registration_slot_va": "0x88974c",
+        "wrapper_va": "0x2c210",
+        "native_va": "0x26c70"
+      },
+      {
+        "name": "set_y_inverted",
+        "name_va": "0x10003a20",
+        "registration_slot_va": "0x889754",
+        "wrapper_va": "0x2c158",
+        "native_va": "0x26c60"
+      },
+      {
+        "name": "get_camera_speed",
+        "name_va": "0x10003a30",
+        "registration_slot_va": "0x88975c",
+        "wrapper_va": "0x2c0b0",
+        "native_va": "0x26c50"
+      },
+      {
+        "name": "set_camera_speed",
+        "name_va": "0x10003a48",
+        "registration_slot_va": "0x889764",
+        "wrapper_va": "0x2c008",
+        "native_va": "0x276a8"
+      },
+      {
+        "name": "is_look_x_inverted",
+        "name_va": "0x10003a60",
+        "registration_slot_va": "0x88976c",
+        "wrapper_va": "0x2bf60",
+        "native_va": "0x26c28"
+      },
+      {
+        "name": "set_look_x_inverted",
+        "name_va": "0x10003a78",
+        "registration_slot_va": "0x889774",
+        "wrapper_va": "0x2bea8",
+        "native_va": "0x26c18"
+      },
+      {
+        "name": "is_look_y_inverted",
+        "name_va": "0x10003a90",
+        "registration_slot_va": "0x88977c",
+        "wrapper_va": "0x2be00",
+        "native_va": "0x26bf0"
+      },
+      {
+        "name": "set_look_y_inverted",
+        "name_va": "0x10003aa8",
+        "registration_slot_va": "0x889784",
+        "wrapper_va": "0x2bd48",
+        "native_va": "0x26be0"
+      },
+      {
+        "name": "set_six_axis_controls",
+        "name_va": "0x10003ac0",
+        "registration_slot_va": "0x88978c",
+        "wrapper_va": "0x2bc90",
+        "native_va": "0x26bd0"
+      },
+      {
+        "name": "get_six_axis_controls",
+        "name_va": "0x10003ad8",
+        "registration_slot_va": "0x889794",
+        "wrapper_va": "0x2bbe8",
+        "native_va": "0x26bc0"
+      },
+      {
+        "name": "get_next_level",
+        "name_va": "0x10005c98",
+        "registration_slot_va": "0x889ca8",
+        "wrapper_va": "0x39938",
+        "native_va": "0x36af0"
+      },
+      {
+        "name": "set_save_level",
+        "name_va": "0x1001f5d8",
+        "registration_slot_va": "0x89d940",
+        "wrapper_va": "0x2c8d38",
+        "native_va": "0x27bad0"
+      },
+      {
+        "name": "set_next_level",
+        "name_va": "0x1001f5e8",
+        "registration_slot_va": "0x89d948",
+        "wrapper_va": "0x2c8c80",
+        "native_va": "0x27a818"
+      },
+      {
+        "name": "checkpoint",
+        "name_va": "0x1001f668",
+        "registration_slot_va": "0x89d980",
+        "wrapper_va": "0x2c8720",
+        "native_va": "0x27b258"
+      },
+      {
+        "name": "checkpoint_volume",
+        "name_va": "0x1001a080",
+        "registration_slot_va": "0x89d988",
+        "wrapper_va": "0x2c85f8",
+        "native_va": "0x27b128"
+      },
+      {
+        "name": "has_valid_checkpoint",
+        "name_va": "0x1001f678",
+        "registration_slot_va": "0x89d990",
+        "wrapper_va": "0x2c8550",
+        "native_va": "0x27b108"
+      },
+      {
+        "name": "is_current_checkpoint",
+        "name_va": "0x1001f690",
+        "registration_slot_va": "0x89d998",
+        "wrapper_va": "0x2c8390",
+        "native_va": "0x2788e8"
+      },
+      {
+        "name": "hero_get_health",
+        "name_va": "0x1001b280",
+        "registration_slot_va": "0x89df7c",
+        "wrapper_va": "0x2b93f0",
+        "native_va": "0x289358"
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x106a0",
+        "bytes": "F84100283C4200023842FF2448698834"
+      },
+      {
+        "va": "0x24c48",
+        "bytes": "386000024E800020"
+      },
+      {
+        "va": "0x24c90",
+        "bytes": "386000014E800020"
+      },
+      {
+        "va": "0x24c98",
+        "bytes": "386000004E800020"
+      },
+      {
+        "va": "0x24ca0",
+        "bytes": "4E80002060000000"
+      },
+      {
+        "va": "0x24e90",
+        "bytes": "806286EC7C8802A6F821FF913D230001C1828724F8810080C162870CFC416028FC02606EFC205828FDA102EED1A914C84805ADD960000000E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x26bb0",
+        "bytes": "806286EC3D230001C02914C84E800020"
+      },
+      {
+        "va": "0x26bc0",
+        "bytes": "806286EC3D230001886914D34E800020"
+      },
+      {
+        "va": "0x26bd0",
+        "bytes": "808286EC3D240001986914D34E800020"
+      },
+      {
+        "va": "0x26be0",
+        "bytes": "808286EC3D240001906914B84E800020"
+      },
+      {
+        "va": "0x26bf0",
+        "bytes": "808286EC386000003D240001800914B82F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x26c18",
+        "bytes": "808286EC3D240001906914B44E800020"
+      },
+      {
+        "va": "0x26c28",
+        "bytes": "808286EC386000003D240001800914B42F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x26c50",
+        "bytes": "806286EC3D230001C02914B04E800020"
+      },
+      {
+        "va": "0x26c60",
+        "bytes": "808286EC3D240001906914AC4E800020"
+      },
+      {
+        "va": "0x26c70",
+        "bytes": "808286EC386000003D240001800914AC2F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x26c98",
+        "bytes": "808286EC3D240001906914A84E800020"
+      },
+      {
+        "va": "0x26ca8",
+        "bytes": "808286EC386000003D240001800914A82F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x26cd0",
+        "bytes": "80A286EC7C641B78F821FF917CC802A63D250001F8C10080988914D54BFE96E5E8410028E8010080382100707C0803A64E80002060000000"
+      },
+      {
+        "va": "0x26d08",
+        "bytes": "806286EC3D230001886914D54E800020"
+      },
+      {
+        "va": "0x26d18",
+        "bytes": "808286EC2FA30000F821FF917C0802A63D240001F8010080986914D4419E001C4BFEB2E9E8410028E8610080382100707C6803A64E8000204BFEAED1E8410028E8610080382100707C6803A64E800020"
+      },
+      {
+        "va": "0x26d68",
+        "bytes": "806286EC3D230001886914D44E800020"
+      },
+      {
+        "va": "0x26d78",
+        "bytes": "808286EC3D240001986914D24E800020"
+      },
+      {
+        "va": "0x26d88",
+        "bytes": "806286EC3D230001886914D24E800020"
+      },
+      {
+        "va": "0x26d98",
+        "bytes": "808286EC3D240001986914D14E800020"
+      },
+      {
+        "va": "0x26da8",
+        "bytes": "806286EC3D230001886914D14E800020"
+      },
+      {
+        "va": "0x26db8",
+        "bytes": "808286EC2FA30000F821FF917C0802A63D240001F8010080986914D0409E000C481B9A6960000000E8610080382100707C6803A64E800020"
+      },
+      {
+        "va": "0x26df0",
+        "bytes": "806286EC3D230001886914D04E800020"
+      },
+      {
+        "va": "0x26e00",
+        "bytes": "806286EC3D230001C02914C44E800020"
+      },
+      {
+        "va": "0x26e10",
+        "bytes": "806286EC3D230001C02914CC4E800020"
+      },
+      {
+        "va": "0x271b0",
+        "bytes": "7C6B1B78806286ECF821FF917C8802A63D2300012F8B0001F8810080386000012F0B0002916914BC419E000C38600000419A00204BFEB6CDE8410028E8A10080382100707CA803A64E80002060000000386000024BFEB6ADE8410028E8A10080382100707CA803A64E80002060000000"
+      },
+      {
+        "va": "0x27220",
+        "bytes": "808286EC3D240001806914BC7C6307B44E80002060000000"
+      },
+      {
+        "va": "0x276a8",
+        "bytes": "806286ECC18287243D230001C162870CFC416028FC02606EFC205828FDA102EED1A914B04E800020"
+      },
+      {
+        "va": "0x276d0",
+        "bytes": "806286EC7C8802A6F821FF913D230001C1828724F8810080C162870CFC416028FC02606EFC205828FDA102EED1A914C44805859960000000E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x27718",
+        "bytes": "806286EC7C8802A6F821FF913D230001C1828724F8810080C162870CFC416028FC02606EFC205828FDA102EED1A914CC4805855160000000E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x28010",
+        "bytes": "2F8300007C0802A6F821FF71FBE10088FB810070FBA10078FBC10080F80100A07C7F1B78419E00342C030001418200FCE94100A080628758EB8100707D4803A678630020EBA10078EBC10080EBE10088382100904E80002083C2872C887E00002C8300004186009C83A287307BBF0020388003187FE3FB784BFEB719E841002888BE00002F0500007C7D1B78419A004C7FE3FB787BA4002038A000004BFEA875E84100282C8300004186FF8878690020E94100A0EB810070EBA100787D4803A6EBC10080EBE100883821009080690008786300204E8000207FE3FB784BFEBB15E841002838C000018062873498DE00004BFEBD11E84100284BFFFF986000000083A287307BA300204BFEBAE9E84100283880000180628734989E00004BFEBCE5E84100284BFFFF488382872C88FC00002F870000419E005883A287307BBE0020388003177FC3F3784BFEB649E8410028891C00002C0800007C7D1B784182000C7FC3F3784BFFFF307FC3F3784BFEBA85E8410028806287349BFC00004BFEBC85E84100287FC3F3784BFFFF0C83A287307BA300204BFEBA5DE8410028806287349BFC00004BFEBC5DE84100284BFFFF90"
+      },
+      {
+        "va": "0x2bbe8",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE6C71E84100282F8300007FA5EB787FE3FB78419E003C4BFFAF9960000000786406207FE3FB784BFE4A69E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808298C44BFE561DE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2bc90",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE6295E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298C87FC5F3784BFE559DE8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE6B79E8410028388000012C03000038A000007FE3FB784182FFB84BFE516DE84100287C66FE707CC51A787C65305078630FE24BFFAE95600000004BFFFFA8"
+      },
+      {
+        "va": "0x2bd48",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE61DDE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298CC7FC5F3784BFE54E5E8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE6AC1E8410028388000012C03000038A000007FE3FB784182FFB84BFE50B5E84100287C66FE707CC51A787C65305078630FE24BFFADED600000004BFFFFA8"
+      },
+      {
+        "va": "0x2be00",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE6A59E84100282F8300007FA5EB787FE3FB78419E003C4BFFADB160000000786406207FE3FB784BFE4851E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808298D04BFE5405E8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2bea8",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE607DE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298D47FC5F3784BFE5385E8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE6961E8410028388000012C03000038A000007FE3FB784182FFB84BFE4F55E84100287C66FE707CC51A787C65305078630FE24BFFACC5600000004BFFFFA8"
+      },
+      {
+        "va": "0x2bf60",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE68F9E84100282F8300007FA5EB787FE3FB78419E003C4BFFAC8960000000786406207FE3FB784BFE46F1E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808298D84BFE52A5E8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2c008",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE6FBDE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298DC7FC5F3784BFE5225E8410028E8A100A038600000EBC10080EBE100887CA803A6382100904E8000204BFE6801E841002838800001C02298A42C0300007FE3FB784182FFB84BFE6FE5E84100284BFFB605600000004BFFFFB8"
+      },
+      {
+        "va": "0x2c0b0",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE67A9E84100282F8300007FA5EB787FE3FB78419E003C4BFFAB61600000007FE3FB784BFE80B5E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E80002060000000808298E04BFE5155E8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2c158",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE5DCDE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298E47FC5F3784BFE50D5E8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE66B1E8410028388000012C03000038A000007FE3FB784182FFB84BFE4CA5E84100287C66FE707CC51A787C65305078630FE24BFFAA5D600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c210",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE6649E84100282F8300007FA5EB787FE3FB78419E003C4BFFAA2160000000786406207FE3FB784BFE4441E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808298E84BFE4FF5E8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2c2b8",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE5C6DE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298EC7FC5F3784BFE4F75E8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE6551E8410028388000012C03000038A000007FE3FB784182FFB84BFE4B45E84100287C66FE707CC51A787C65305078630FE24BFFA935600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c370",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE64E9E84100282F8300007FA5EB787FE3FB78419E003C4BFFA8F960000000786406207FE3FB784BFE42E1E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808298F04BFE4E95E8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2c418",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BFE6BADE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298F47FC5F3784BFE4E15E8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BFE63F1E841002838800001C02298A42C0300007FE3FB784182FFB84BFE6BD5E841002839210080FC20081E7C204FAE806100807C6307B44BFF87D9600000004BFFFFA460000000"
+      },
+      {
+        "va": "0x2c4d8",
+        "bytes": "F821FF517C8802A638010070FBA10098781D0020F88100C07FA5EB7838800001FBE100A87C7F1B784BFE6381E84100282F8300007FA5EB787FE3FB78419E006C4BFF8781600000007C6007B47FE3FB787C07AE76780605603927000138A607FF282900027CAB0378796B05244180006CF9610080C8210080FC000E9CFC2000184BFE7C59E8410028E90100C0EBA1009838600001EBE100A87D0803A6382100B07C6307B44E800020808298F84BFE4CFDE8410028E90100C0EBA1009838600000EBE100A87D0803A6382100B07C6307B44E800020600000007C0B03784BFFFF94"
+      },
+      {
+        "va": "0x2c5b8",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE596DE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298FC7FC5F3784BFE4C75E8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE6251E8410028388000012C03000038A000007FE3FB784182FFB84BFE4845E84100287C66FE707CC51A787C65305078630FE24BFFA66D600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c670",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE61E9E84100282F8300007FA5EB787FE3FB78419E003C4BFFA65960000000786406207FE3FB784BFE3FE1E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808299004BFE4B95E8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2c718",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE6141E84100282F8300007FA5EB787FE3FB78419E003C4BFF853960000000786406207FE3FB784BFE3F39E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808299044BFE4AEDE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2c7c0",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE5765E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299087FC5F3784BFE4A6DE8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE6049E8410028388000012C03000038A000007FE3FB784182FFB84BFE463DE84100287C66FE707CC51A787C65305078630FE24BFFA4AD600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c878",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE5FE1E84100282F8300007FA5EB787FE3FB78419E003C4BFFA4B160000000786406207FE3FB784BFE3DD9E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E8000208082990C4BFE498DE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2c920",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE5605E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299107FC5F3784BFE490DE8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE5EE9E8410028388000012C03000038A000007FE3FB784182FFB84BFE44DDE84100287C66FE707CC51A787C65305078630FE24BFFA3AD600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c9d8",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE5E81E84100282F8300007FA5EB787FE3FB78419E003C4BFFA37160000000786406207FE3FB784BFE3C79E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808299144BFE482DE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2ca80",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE54A5E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299187FC5F3784BFE47ADE8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE5D89E8410028388000012C03000038A000007FE3FB784182FFB84BFE437DE84100287C66FE707CC51A787C65305078630FE24BFFA26D600000004BFFFFA8"
+      },
+      {
+        "va": "0x2cb38",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE5D21E84100282F8300007FA5EB787FE3FB78419E003C4BFFA23160000000786406207FE3FB784BFE3B19E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E8000208082991C4BFE46CDE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2cbe0",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE5345E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299207FC5F3784BFE464DE8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE5C29E8410028388000012C03000038A000007FE3FB784182FFB84BFE421DE84100287C66FE707CC51A787C65305078630FE24BFFA12D600000004BFFFFA8"
+      },
+      {
+        "va": "0x2cc98",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE5BC1E84100282F8300007FA5EB787FE3FB78419E003C4BFFA11960000000786406207FE3FB784BFE39B9E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020808299244BFE456DE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2cd40",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE6285E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299287FC5F3784BFE44EDE8410028E8A100A038600000EBC10080EBE100887CA803A6382100904E8000204BFE5AC9E841002838800001C02298A42C0300007FE3FB784182FFB84BFE62ADE84100284BFFA8F5600000004BFFFFB8"
+      },
+      {
+        "va": "0x2cde8",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE5A71E84100282F8300007FA5EB787FE3FB78419E003C4BFF9FD9600000007FE3FB784BFE737DE8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020600000008082992C4BFE441DE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2ce90",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE6135E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299307FC5F3784BFE439DE8410028E8A100A038600000EBC10080EBE100887CA803A6382100904E8000204BFE5979E841002838800001C02298A42C0300007FE3FB784182FFB84BFE615DE84100284BFFA7ED600000004BFFFFB8"
+      },
+      {
+        "va": "0x2cf38",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE5921E84100282F8300007FA5EB787FE3FB78419E003C4BFF9E99600000007FE3FB784BFE722DE8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E80002060000000808299344BFE42CDE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2cfe0",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE5FE5E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299387FC5F3784BFE424DE8410028E8A100A038600000EBC10080EBE100887CA803A6382100904E8000204BFE5829E841002838800001C02298A42C0300007FE3FB784182FFB84BFE600DE84100284BFF7E15600000004BFFFFB8"
+      },
+      {
+        "va": "0x2d088",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BFE57D1E84100282F8300007FA5EB787FE3FB78419E003C4BFF9AE9600000007FE3FB784BFE70DDE8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E800020600000008082993C4BFE417DE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2dae8",
+        "bytes": "F821FF617C8802A638010070FBE10098781F0020F88100B038A00000388000017FE6FB78FBC100907C7E1B784BFE54DDE84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F378808299687FE5FB784BFE3745E841002838600000E8A100B07C6307B4EBC10090EBE100987CA803A6382100A04E800020600000004BFE4D19E841002838800001C02298A42C0300007FC3F3784182FFB04BFE54FDE841002839210080FC20081E7C204FAE806100807C6307B44BFFA47160000000786400207FC3F3784BFE6391E8410028386000014BFFFF8C"
+      },
+      {
+        "va": "0x2dbc0",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BFE5405E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082996C7FC5F3784BFE366DE8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BFE4C49E841002838800001C02298A42C0300007FE3FB784182FFB84BFE542DE841002839210080FC20081E7C204FAE806100807C6307B44BFF9541600000004BFFFFA460000000"
+      },
+      {
+        "va": "0x2dc80",
+        "bytes": "F821FF517C8802A638010070FBA10098781D0020F88100C07FA5EB7838800001FBE100A87C7F1B784BFE4BD9E84100282F8300007FA5EB787FE3FB78419E006C4BFF9561600000007C6007B47FE3FB787C07AE76780605603927000138A607FF282900027CAB0378796B05244180006CF9610080C8210080FC000E9CFC2000184BFE64B1E8410028E90100C0EBA1009838600001EBE100A87D0803A6382100B07C6307B44E800020808299704BFE3555E8410028E90100C0EBA1009838600000EBE100A87D0803A6382100B07C6307B44E800020600000007C0B03784BFFFF94"
+      },
+      {
+        "va": "0x2dd60",
+        "bytes": "F821FF517C8802A638010070FBA10098781D0020F88100C07FA5EB7838800001FBE100A87C7F1B784BFE4AF9E84100282F8300007FA5EB787FE3FB78419E006C4BFF6EA9600000007C6007B47FE3FB787C07AE76780605603927000138A607FF282900027CAB0378796B05244180006CF9610080C8210080FC000E9CFC2000184BFE63D1E8410028E90100C0EBA1009838600001EBE100A87D0803A6382100B07C6307B44E800020808299744BFE3475E8410028E90100C0EBA1009838600000EBE100A87D0803A6382100B07C6307B44E800020600000007C0B03784BFFFF94"
+      },
+      {
+        "va": "0x36af0",
+        "bytes": "80629BBC3D230001806987404E800020"
+      },
+      {
+        "va": "0x39938",
+        "bytes": "F821FF517C8802A638010070FBA10098781D0020F88100C07FA5EB7838800001FBE100A87C7F1B784BFD8F21E84100282F8300007FA5EB787FE3FB78419E004C4BFFD17960000000786500207FE3FB78F8A10080C8210080FC000E9CFC2000184BFDA819E8410028E8C100C0EBA1009838600001EBE100A87CC803A6382100B07C6307B44E80002080829EB44BFD78BDE8410028E8C100C0EBA1009838600000EBE100A87CC803A6382100B07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x7fc98",
+        "bytes": "8082B2EC7C6802A6F821FF71FBA100783FA40001F86100A038600001C03D14C84BF917E9E841002838600006C03D14C44BF917D9E84100283860000CC03D14CC4BF917C9E8410028E80100A0EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x20f3f0",
+        "bytes": "F821FF717C8802A6FBA1007883A2686438000000FBE100883D7D0001FBC10080F88100A0980300247C7F1B7881430014812B14C02F890000409E000C38600001987F0024393F0018810268683BCA1120C182686C79260020C16268707BCA0020C00268743980000038E0000138A000019186000098E60008C1A800B4D1A60004D00A005890AA0054D18A005CD16A0060807F00044BE0193DE84100282C030000408200C0807F00144BE04029E8410028809F0014380414C47C7E1B78780300204BE01E51E84100282C8305C94186005C7BDE00207FC3F3784BE00F59E84100282F03000F419A00447FC3F3784BE00F45E84100282F830010419E0030887F00242C030000418200847FC3F378C02268803880000F38A0000038E000004BE04845E841002860000000E91D552861060040F8DD552880BF00143BE000009BE51DF1EBA100A0EBC100807FA803A6EBE10088EBA10078382100904E80002060000000817F0004C02268847D635B78C0426878C062687C814B0054808A00404BE01CC5E84100284BFFFF207FC3F378C02268803880001038A0000038E000004BE047C5E84100284BFFFF84"
+      },
+      {
+        "va": "0x20f3fc",
+        "bytes": "83A26864"
+      },
+      {
+        "va": "0x20f408",
+        "bytes": "3D7D0001"
+      },
+      {
+        "va": "0x20f420",
+        "bytes": "812B14C0"
+      },
+      {
+        "va": "0x20f430",
+        "bytes": "987F0024"
+      },
+      {
+        "va": "0x2108d8",
+        "bytes": "F821FF817CA802A68082692038000000FBE100787C7F1B783D240001FBC10070F8A1009038630018981F003F816914C0786A0020390000002F8B00007BE30020409E000C38C0000198DF003F818268E83BC00000911F002C911F002839000001C0226924D03F003493CA0000990A0008C00C00B4D00A000488FF003F2C07000041820098807F00144BE02B61E8410028787E00207FC3F3784BDFFAB1E84100282C83000F7FC3F3784186004C4BDFFA9DE84100282F030010419A003C895F003F7FC3F3783880000F2F8A000038A0000038E00000409E00147FC3F3783880001038A0000038E00000C02269284BE0338DE8410028817F001439200000992B1DF1EBE10090EBC100707FE803A6EBE10078382100804E8000204BFFF3A14BFFFF68"
+      },
+      {
+        "va": "0x2108e0",
+        "bytes": "80826920"
+      },
+      {
+        "va": "0x2108f0",
+        "bytes": "3D240001"
+      },
+      {
+        "va": "0x210904",
+        "bytes": "816914C0"
+      },
+      {
+        "va": "0x210920",
+        "bytes": "98DF003F"
+      },
+      {
+        "va": "0x2788e8",
+        "bytes": "F821FF817C8802A6FBE1007883E2909039200000F8810090906100B0386100B0881F00EF2F800000409E0020E8C100907D2307B4EBE10078382100807CC803A64E800020600000004BFFE4B9C0DF003438A30030C0BF0030C09F00383800000078A30020C1229094C0E30004EC663828C1430000EC455028C0030008EC240028ED6300F2EDA258BAED81687AFC0C48004C401382418200247C090378E8C100907D2307B4EBE10078382100807CC803A64E80002060000000380000017C0903784BFFFFDC60000000"
+      },
+      {
+        "va": "0x27a818",
+        "bytes": "808290303D240001906987404E800020"
+      },
+      {
+        "va": "0x27b108",
+        "bytes": "8122909038600000880900EF2F800000419E0008386000017C6307B44E800020"
+      },
+      {
+        "va": "0x27b128",
+        "bytes": "812290E87CA802A6F821FF81FBE10078F8A10090906100B0800900007C9F23787F830040409C00AC386100B04BFFBC95816290907C641B78386300307869002088EB00EF2C07000041820058C0EB0034C1090004EC674028C0AB0030C0C90000EC453028C08B0038C1490008EC245028C1629168ED8300F2EDA260BAEC01687AFC80580041850020E8610090EBE10078382100807C6803A64E8000206000000038640030786300207BE606207884002038A0FFFF480E1D6560000000E8610090EBE100787C6803A6382100804E80002080C29080808290EC80A29164806600044BFD47D1E84100284BFFFF4060000000"
+      },
+      {
+        "va": "0x27b218",
+        "bytes": "816290907C691B783940000038600000880B00EF2F800000419E0018888B00ED7C8307747C034800418200107D4353787C6307B44E800020394000014BFFFFF0"
+      },
+      {
+        "va": "0x27b258",
+        "bytes": "F821FF817C0802A6FBE10078F80100907C7F1B784BFD39DDE84100282F830000419E00A081629090808300143864003088AB00EF786900202C05000041820054C0EB0034C1090004EC674028C0AB0030C0C90000EC453028C08B0038C1490008EC245028C1629094ED8300F2EDA260BAEC01687AFC8058004185001CE8610090EBE10078382100807C6803A64E80002038640030786300207FE507747884002038C00001480E1C4560000000E8610090EBE100787C6803A6382100804E80002081229090986900EFE8610090EBE10078382100807C6803A64E80002060000000"
+      },
+      {
+        "va": "0x27bad0",
+        "bytes": "808290303D240009906906E84E800020"
+      },
+      {
+        "va": "0x289358",
+        "bytes": "F821FF817C0802A6FBC100703BC100B0FBE100787BDF0020906100B07FE3FB78F80100904BFED9CD2FA30000419E009C7FE3FB784BFED9BD388000B980A300402C05000078A30020418200604BFC5E65E84100285463063E2C8300004186004C7FC3F3784BFED98D3880006C806300404BFC8BD1E8410028C02290542F03000078690020419A0008C0290004E8810090EBC10070EBE100787C8803A6382100804E8000206000000080C2908080A29490808292C4806600044BFC65C9E84100284BFFFFA0600000008122908080A2949080829280806900044BFC65A9E84100284BFFFF5060000000"
+      },
+      {
+        "va": "0x2b93f0",
+        "bytes": "F821FF617C0802A6FBC100903BC1007080A29740FBA100887BDD00203880000138C000007FA7EB78FBE10098F80100B07C7F1B784BF96F15E84100282F8300007FA5EB78388000027FE3FB78409E003C7FE3FB788082ED907FC5F3784BF97FBDE841002838600000E88100B07C6307B4EBA10088EBC100907C8803A6EBE10098382100A04E8000204BF99771E84100282C0300004182FFBC3880000138A000007FE3FB784BF98435E84100282C8300007869002041860024806900004BFCFEAD600000007FE3FB784BF99281E8410028386000014BFFFF947FE3FB788082E94438A000004BF97F35E8410028386000004BFFFF7860000000"
+      },
+      {
+        "va": "0x2c8390",
+        "bytes": "F821FF617C0802A6FBC100903BC1007080A29744FBA100887BDD00203880000138C000007FA7EB78FBE10098F80100B07C7F1B784BF87F75E84100282F8300007FA5EB78388000027FE3FB78409E003C7FE3FB788082F04C7FC5F3784BF8901DE841002838600000E88100B07C6307B4EBA10088EBC100907C8803A6EBE10098382100A04E8000204BF8A7D1E84100282C0300004182FFBC38A00000388000017FE3FB784BF89495E84100282C8300007869002041860028806900004BFB049D60000000786406207FE3FB784BF87FDDE8410028386000014BFFFF907FE3FB788082EA3438A000004BF88F91E8410028386000004BFFFF74"
+      },
+      {
+        "va": "0x2c8550",
+        "bytes": "F821FF617C8802A638010070FBA10088781D0020F88100B07FA5EB7838800001FBE100987C7F1B784BF8A671E84100282F8300007FA5EB787FE3FB78419E003C4BFB2B7960000000786406207FE3FB784BF87E99E8410028E8A100B0EBA1008838600001EBE100987CA803A6382100A07C6307B44E8000208082F0504BF88E3DE8410028E8A100B0EBA1008838600000EBE100987CA803A6382100A07C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2c85f8",
+        "bytes": "F821FF617C0802A6FBC100903BC1007080A29744FBA100887BDD002038C00000388000017FA7EB78FBE10098F80100B07C7F1B784BF87D0DE84100282F8300007FA6EB783880000238A000017FE3FB78409E00387FE3FB788082F0547FC5F3784BF88DB1E8410028E90100B038600000EBA10088EBC100907D0803A6EBE10098382100A04E8000204BF891D9E84100287FA5EB782C030000388000037FE3FB784182FFB44BF8A54DE84100282C8300004186FFA43880000138A000007FE3FB784BF89211E8410028388000027C671B7838A000012F0700007FE3FB7878FD0020419A003083BD00004BF88139E84100287C66FE707CC51A787FA3EB787C85305078840FE24BFB2A2D600000004BFFFF5C7FE3FB788082EA3438A000004BF88CF5E84100284BFFFF44"
+      },
+      {
+        "va": "0x2c8720",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00001388000017FC6F378FBE100987C7F1B784BF8A55DE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082F0587FC5F3784BF88C95E8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BF8A451E8410028388000012C0300007FE3FB784182FFBCC02297504BF894C5E841002839210080FC20081E7C204FAE806100807C6307B44BFB2A89600000004BFFFFA460000000"
+      },
+      {
+        "va": "0x2c8c80",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BF89FFDE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082F0747FC5F3784BF88735E8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BF89EF1E841002838800001C022E9102C0300007FE3FB784182FFB84BF88F65E8410028FC200E5ED8210080E8610080786300204BFB1AED600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c8d38",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BF89F45E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082F0787FC5F3784BF8867DE8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BF89E39E841002838800001C022E9102C0300007FE3FB784182FFB84BF88EADE8410028FC200E5ED8210080E8610080786300204BFB2CED600000004BFFFFA8"
+      },
+      {
+        "va": "0x2d0880",
+        "bytes": "5460103A8122F2347C0307B47C69182E4E80002060000000"
+      },
+      {
+        "va": "0x2d08d8",
+        "bytes": "F821FF717C0802A6FB810070FBC10080FBE1008883C2F2347C7C1B783BE00000FBA10078F80100A04800000C60000000419A00547BC900207F83E3787FFDFB783BFF00013BDE0004808900004BF7F7D5E84100282F3F00132F830000409EFFD4E88100A07BA30020EB810070EBA100787C8803A6EBC10080EBE10088382100904E8000203BA00000E88100A0EB8100707BA30020EBC10080EBA100787C8803A6EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x2d1490",
+        "bytes": "8062F2683D230009806906E84E800020"
+      },
+      {
+        "va": "0x2d16a0",
+        "bytes": "2F8400007C0802A6F821FF71FBA10078FBC10080FBE10088F80100A07C7E1B787CBD2B787C7F1B78409E00188082F2683D240009806906E87C03F0004182005C480BCD61600000005465063E7BE300202C8500004086008C8142F2787BE300202F1D0000810A00002F880004419E004C4BFFF1716000000078630020481B9D756000000083A2F2683D9D000993EC06E8480BCCB160000000EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E80002060000000409AFFB88162F27C93CB0000EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E8000204BFFF1016000000078630020481B9D056000000080E2F2683CC7000993C606E8480BCCB160000000EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E80002060000000"
+      },
+      {
+        "va": "0x35cf40",
+        "bytes": "F821FF217D2802A6FBE100B883E21A083984002039640010DB8100C0391F0010DBA100C838FF0020DBC100D0F92100F0FB010080FB210088FB410090FB610098FB8100A0FBA100A8FBC100B0DBE100D83B0100707C0020CE7CBC2B787DA060CE7B1D00207C2058CE7CDB33787C00F9CE7FBAEB787C2041CE3B20FFFF7DA039CEC3FF0004C3DF0014EC7F07F2C3BF0024ED3E07B2ED7D0772C0FF0000C0DF0020C39F0010C0421A0CC03F0018C0BF0008C09F0028C1021A1CED8719FAC1421A10EC1C4F3AEDA659BAED85617AED21007AED64693AFC60602CFC00582CEC020024FD6B5028FD8C5028FD495028EC840032EFBD0032EDA21824FC60482CFC8B412EED270372ECA50372EC621824FCEC126EFCAC416ED0BF0008D09F0028D0FF0000EF9C00F2EFDE00F2EFFF0372EDA60032FD8C47EEFCCB136ED19F0004EC0100F2D0DF0020FC2A402EFC4A172ED03F0018D05F0010FD6B476EFD4A47AED17F0024D15F0014E8830000E9430008F89F0030F95F00384BF743DD600000003800000139200000907F00407FA3EB78981F00EF913F00D09B9F00ED9B7F00EE4BEF296DE84100287F43D3784BEF4451E8410028547E063E2F9E0000419E00D87F43D3783BA000204BEF5115E841002883821A147FA903A680821A087C7E1B787863002080C3002483A3002068CA000357A7103A7D45FE70392700407CBB52787D2C07B47D7B28507D4CFA1457A838307D60FE7038E800507CC600387D07221490CA00081F7D04847CBBE214394500086000000079440020791C0020394A001439080004C1040000D11C00004200FFE82F860004419E00B8388004164BEF2071E84100285463063E2F030000409A007C7B0300204BEF23F9E84100287F43D3784BEF437DE8410028547E063E2F9E0000409EFF3083221A1838800004807900004BEF3DCDE8410028EB0100F0EB2100887F0803A6EB410090EB010080EB610098EB8100A0EBA100A8EBC100B0EBE100B8CB8100C0CBA100C8CBC100D0CBE100D8382100E04E8000203B7E14B07B6300204BEF20EDE8410028786300204BEF4A81E8410028907F004C4BFFFF6881231C3838C00000933F00D42C09000098DF00EC913F00D0933F00D8933F00DC933F00E0933F00E4933F00E84182FF20389E1BF888BF00EC7D3C4B7883621A04788B00202C8500003BA00000810B000080C805F0418600983945FFFF38000000794900207F67DB78398900017D8903A648000020600000007D6943782F890000419E0008394000017D4053784240002C78EC0020540B063E38E700043940000039000000800C00007F003000409AFFCC390000014BFFFFC45547063E2C0700004182002C3BBD0001388400047C9CE8404085FE7C788B002088BF00EC2C850000810B000080C805F04086FF7054A9103A899F00EC394900D0396C00017D4807B4997F00EC7CA8FA1490C500044BFFFFB8"
+      },
+      {
+        "va": "0x35d9a0",
+        "bytes": "F821FF717C8802A63800000039200017FBE10088396000007D2903A67C7F1B7839400000FB810070FBA10078F88100A0F8030020F8030000F8030008F8030010F8030018600000007CBF5A14396B000478A30020914301B04200FFF038C0000839600000380000007CC903A6600000007D1F5A14396B0004790700209007020C4200FFF03940002039600000380000007D4903A6600000007F8BFA14396B00017B8C0020980C022C4200FFF038BF02543880000078A3002038A00C003BA000004BEF4ED9E8410028387F0E563880FFFF38A01000786300204BEF4EC1E8410028393F1E563880FFFF7923002038A002804BEF4EA9E8410028397F20D63880FFFF7963002038A010004BEF4E91E841002838000028396000007C0903A639400000B3BF0E54600000007CDF5A14396B000478C40020914430D84200FFF038E0001439600000390000007CE903A6915F31787D9F5A14396B0004798A0020910A317C4200FFF03B80000E39600000380000007F8903A6911F31CC7FBF5A14396B00017BA80020980831D04200FFF0392000003860000738000000396000007C6903A639400000901F31E0F93F31F0F93F31E87C9F5A14396B000178850020994532114200FFF0393F321CC0021A247BE50020792800203D8500013F9F00013BA00000387CAC20394000003800FFFF3880000038A009B078630020901F3218FBBF31F893BF320093A8001493A80018D008001C914800049148000093ACAC1C4BEF4D7DE841002838FCB5D03880000078E3002038A009B04BEF4D65E841002838DCBF8078C300204800125D600000003960000093BF320C997F3210EBE100A0EB8100707FE803A6EBA10078EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x35e508",
+        "bytes": "3CC3000280621A643CA000097CE802A63886FD0860A506F078840020F821FF71F8E100A0FB810070FBA100784BEF3EF5E841002883821A64386000013FBC00013F9C0009C03D14C84BEF3779E84100283860000CC03D14CC4BEF3769E841002838600006C03D14C44BEF3759E8410028807C06E83880000138A000004BF7311D60000000E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x35ee40",
+        "bytes": "38000000C1A21A8439200001C0021A80D00300089923002DD1A30024980300299003000090030004900300149003000C9003001091230018D1A3001CD1A30020992300289923002A9923002B9923002C4E80002060000000"
+      },
+      {
+        "va": "0x5adef0",
+        "bytes": "8122827C2B03003F3940000080890014548003DE2F800000419E00244199002080E2826C394000011CA300B080C700007C653214786B0020D02B0000794307E04E80002060000000"
+      },
+      {
+        "va": "0x668770",
+        "bytes": "812300082F84000039600001380000009169000090090004419E0008916900048083000839240008912300084E800020"
+      },
+      {
+        "va": "0x6a8ee0",
+        "bytes": "F821FF917CA802A6F8A100804BFBF88560000000E8010080382100707C0803A64E80002060000000"
+      },
+      {
+        "va": "0x85a498",
+        "bytes": "0002BBE80088FF38"
+      },
+      {
+        "va": "0x85a4a0",
+        "bytes": "0002BC900088FF38"
+      },
+      {
+        "va": "0x85a4a8",
+        "bytes": "0002BD480088FF38"
+      },
+      {
+        "va": "0x85a4b0",
+        "bytes": "0002BE000088FF38"
+      },
+      {
+        "va": "0x85a4b8",
+        "bytes": "0002BEA80088FF38"
+      },
+      {
+        "va": "0x85a4c0",
+        "bytes": "0002BF600088FF38"
+      },
+      {
+        "va": "0x85a4c8",
+        "bytes": "0002C0080088FF38"
+      },
+      {
+        "va": "0x85a4d0",
+        "bytes": "0002C0B00088FF38"
+      },
+      {
+        "va": "0x85a4d8",
+        "bytes": "0002C1580088FF38"
+      },
+      {
+        "va": "0x85a4e0",
+        "bytes": "0002C2100088FF38"
+      },
+      {
+        "va": "0x85a4e8",
+        "bytes": "0002C2B80088FF38"
+      },
+      {
+        "va": "0x85a4f0",
+        "bytes": "0002C3700088FF38"
+      },
+      {
+        "va": "0x85a4f8",
+        "bytes": "0002C4180088FF38"
+      },
+      {
+        "va": "0x85a500",
+        "bytes": "0002C4D80088FF38"
+      },
+      {
+        "va": "0x85a508",
+        "bytes": "0002C5B80088FF38"
+      },
+      {
+        "va": "0x85a510",
+        "bytes": "0002C6700088FF38"
+      },
+      {
+        "va": "0x85a518",
+        "bytes": "0002C7180088FF38"
+      },
+      {
+        "va": "0x85a520",
+        "bytes": "0002C7C00088FF38"
+      },
+      {
+        "va": "0x85a528",
+        "bytes": "0002C8780088FF38"
+      },
+      {
+        "va": "0x85a530",
+        "bytes": "0002C9200088FF38"
+      },
+      {
+        "va": "0x85a538",
+        "bytes": "0002C9D80088FF38"
+      },
+      {
+        "va": "0x85a540",
+        "bytes": "0002CA800088FF38"
+      },
+      {
+        "va": "0x85a548",
+        "bytes": "0002CB380088FF38"
+      },
+      {
+        "va": "0x85a550",
+        "bytes": "0002CBE00088FF38"
+      },
+      {
+        "va": "0x85a558",
+        "bytes": "0002CC980088FF38"
+      },
+      {
+        "va": "0x85a560",
+        "bytes": "0002CD400088FF38"
+      },
+      {
+        "va": "0x85a568",
+        "bytes": "0002CDE80088FF38"
+      },
+      {
+        "va": "0x85a570",
+        "bytes": "0002CE900088FF38"
+      },
+      {
+        "va": "0x85a578",
+        "bytes": "0002CF380088FF38"
+      },
+      {
+        "va": "0x85a580",
+        "bytes": "0002CFE00088FF38"
+      },
+      {
+        "va": "0x85a588",
+        "bytes": "0002D0880088FF38"
+      },
+      {
+        "va": "0x85a5e0",
+        "bytes": "0002DAE80088FF38"
+      },
+      {
+        "va": "0x85a5e8",
+        "bytes": "0002DBC00088FF38"
+      },
+      {
+        "va": "0x85a5f0",
+        "bytes": "0002DC800088FF38"
+      },
+      {
+        "va": "0x85a5f8",
+        "bytes": "0002DD600088FF38"
+      },
+      {
+        "va": "0x85ac78",
+        "bytes": "000399380088FF38"
+      },
+      {
+        "va": "0x86bdc8",
+        "bytes": "002B93F00089FF20"
+      },
+      {
+        "va": "0x86c438",
+        "bytes": "002C83900089FF20"
+      },
+      {
+        "va": "0x86c448",
+        "bytes": "002C85500089FF20"
+      },
+      {
+        "va": "0x86c450",
+        "bytes": "002C85F80089FF20"
+      },
+      {
+        "va": "0x86c458",
+        "bytes": "002C87200089FF20"
+      },
+      {
+        "va": "0x86c490",
+        "bytes": "002C8C800089FF20"
+      },
+      {
+        "va": "0x86c498",
+        "bytes": "002C8D380089FF20"
+      },
+      {
+        "va": "0x888624",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x888644",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x88865c",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x889634",
+        "bytes": "100037580085A5F8"
+      },
+      {
+        "va": "0x88963c",
+        "bytes": "100037700085A5F0"
+      },
+      {
+        "va": "0x889644",
+        "bytes": "100037880085A5E8"
+      },
+      {
+        "va": "0x88964c",
+        "bytes": "100037A00085A5E0"
+      },
+      {
+        "va": "0x8896a4",
+        "bytes": "100038780085A588"
+      },
+      {
+        "va": "0x8896ac",
+        "bytes": "100038880085A580"
+      },
+      {
+        "va": "0x8896b4",
+        "bytes": "100038980085A578"
+      },
+      {
+        "va": "0x8896bc",
+        "bytes": "100038A80085A570"
+      },
+      {
+        "va": "0x8896c4",
+        "bytes": "100038B80085A568"
+      },
+      {
+        "va": "0x8896cc",
+        "bytes": "100038C80085A560"
+      },
+      {
+        "va": "0x8896d4",
+        "bytes": "100038D80085A558"
+      },
+      {
+        "va": "0x8896dc",
+        "bytes": "100038E80085A550"
+      },
+      {
+        "va": "0x8896e4",
+        "bytes": "100039000085A548"
+      },
+      {
+        "va": "0x8896ec",
+        "bytes": "100039100085A540"
+      },
+      {
+        "va": "0x8896f4",
+        "bytes": "100039280085A538"
+      },
+      {
+        "va": "0x8896fc",
+        "bytes": "100039480085A530"
+      },
+      {
+        "va": "0x889704",
+        "bytes": "100039680085A528"
+      },
+      {
+        "va": "0x88970c",
+        "bytes": "100039780085A520"
+      },
+      {
+        "va": "0x889714",
+        "bytes": "100039880085A518"
+      },
+      {
+        "va": "0x88971c",
+        "bytes": "100039A00085A510"
+      },
+      {
+        "va": "0x889724",
+        "bytes": "100039B00085A508"
+      },
+      {
+        "va": "0x88972c",
+        "bytes": "100039C00085A500"
+      },
+      {
+        "va": "0x889734",
+        "bytes": "100039D80085A4F8"
+      },
+      {
+        "va": "0x88973c",
+        "bytes": "100039F00085A4F0"
+      },
+      {
+        "va": "0x889744",
+        "bytes": "10003A000085A4E8"
+      },
+      {
+        "va": "0x88974c",
+        "bytes": "10003A100085A4E0"
+      },
+      {
+        "va": "0x889754",
+        "bytes": "10003A200085A4D8"
+      },
+      {
+        "va": "0x88975c",
+        "bytes": "10003A300085A4D0"
+      },
+      {
+        "va": "0x889764",
+        "bytes": "10003A480085A4C8"
+      },
+      {
+        "va": "0x88976c",
+        "bytes": "10003A600085A4C0"
+      },
+      {
+        "va": "0x889774",
+        "bytes": "10003A780085A4B8"
+      },
+      {
+        "va": "0x88977c",
+        "bytes": "10003A900085A4B0"
+      },
+      {
+        "va": "0x889784",
+        "bytes": "10003AA80085A4A8"
+      },
+      {
+        "va": "0x88978c",
+        "bytes": "10003AC00085A4A0"
+      },
+      {
+        "va": "0x889794",
+        "bytes": "10003AD80085A498"
+      },
+      {
+        "va": "0x889af4",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x889ca8",
+        "bytes": "10005C980085AC78"
+      },
+      {
+        "va": "0x89679c",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x896858",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x898fb0",
+        "bytes": "10330610"
+      },
+      {
+        "va": "0x89d940",
+        "bytes": "1001F5D80086C498"
+      },
+      {
+        "va": "0x89d948",
+        "bytes": "1001F5E80086C490"
+      },
+      {
+        "va": "0x89d980",
+        "bytes": "1001F6680086C458"
+      },
+      {
+        "va": "0x89d988",
+        "bytes": "1001A0800086C450"
+      },
+      {
+        "va": "0x89d990",
+        "bytes": "1001F6780086C448"
+      },
+      {
+        "va": "0x89d998",
+        "bytes": "1001F6900086C438"
+      },
+      {
+        "va": "0x89df7c",
+        "bytes": "1001B2800086BDC8"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a1928",
+        "bytes": "10330610"
+      },
+      {
+        "va": "0x8a19a0",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x8a19a4",
+        "bytes": "3F666666"
+      },
+      {
+        "va": "0x10003758",
+        "bytes": "6765745F6E756D5F636F6E74726F6C5F736368656D657300"
+      },
+      {
+        "va": "0x10003770",
+        "bytes": "6765745F6375725F636F6E74726F6C5F736368656D6500"
+      },
+      {
+        "va": "0x10003788",
+        "bytes": "7365745F636F6E74726F6C5F736368656D6500"
+      },
+      {
+        "va": "0x100037a0",
+        "bytes": "6765745F636F6E74726F6C5F736368656D655F6E616D6500"
+      },
+      {
+        "va": "0x10003878",
+        "bytes": "6765745F736F756E645F766F6C00"
+      },
+      {
+        "va": "0x10003888",
+        "bytes": "7365745F736F756E645F766F6C00"
+      },
+      {
+        "va": "0x10003898",
+        "bytes": "6765745F6D757369635F766F6C00"
+      },
+      {
+        "va": "0x100038a8",
+        "bytes": "7365745F6D757369635F766F6C00"
+      },
+      {
+        "va": "0x100038b8",
+        "bytes": "6765745F766F6963655F766F6C00"
+      },
+      {
+        "va": "0x100038c8",
+        "bytes": "7365745F766F6963655F766F6C00"
+      },
+      {
+        "va": "0x100038d8",
+        "bytes": "69735F68656C705F746578745F6F6E00"
+      },
+      {
+        "va": "0x100038e8",
+        "bytes": "7365745F68656C705F746578745F6F6E00"
+      },
+      {
+        "va": "0x10003900",
+        "bytes": "69735F7375627469746C65735F6F6E00"
+      },
+      {
+        "va": "0x10003910",
+        "bytes": "7365745F7375627469746C65735F6F6E00"
+      },
+      {
+        "va": "0x10003928",
+        "bytes": "69735F717569636B5F73656C6563745F70617573655F6F6E00"
+      },
+      {
+        "va": "0x10003948",
+        "bytes": "7365745F717569636B5F73656C6563745F70617573655F6F6E00"
+      },
+      {
+        "va": "0x10003968",
+        "bytes": "69735F72756D626C655F6F6E00"
+      },
+      {
+        "va": "0x10003978",
+        "bytes": "7365745F72756D626C655F6F6E00"
+      },
+      {
+        "va": "0x10003988",
+        "bytes": "69735F72756D626C655F636F6E6E656374656400"
+      },
+      {
+        "va": "0x100039a0",
+        "bytes": "6765745F737572726F756E645F6F6E00"
+      },
+      {
+        "va": "0x100039b0",
+        "bytes": "7365745F737572726F756E645F6F6E00"
+      },
+      {
+        "va": "0x100039c0",
+        "bytes": "6765745F627574746F6E5F6C61796F757400"
+      },
+      {
+        "va": "0x100039d8",
+        "bytes": "7365745F627574746F6E5F6C61796F757400"
+      },
+      {
+        "va": "0x100039f0",
+        "bytes": "69735F785F696E76657274656400"
+      },
+      {
+        "va": "0x10003a00",
+        "bytes": "7365745F785F696E76657274656400"
+      },
+      {
+        "va": "0x10003a10",
+        "bytes": "69735F795F696E76657274656400"
+      },
+      {
+        "va": "0x10003a20",
+        "bytes": "7365745F795F696E76657274656400"
+      },
+      {
+        "va": "0x10003a30",
+        "bytes": "6765745F63616D6572615F737065656400"
+      },
+      {
+        "va": "0x10003a48",
+        "bytes": "7365745F63616D6572615F737065656400"
+      },
+      {
+        "va": "0x10003a60",
+        "bytes": "69735F6C6F6F6B5F785F696E76657274656400"
+      },
+      {
+        "va": "0x10003a78",
+        "bytes": "7365745F6C6F6F6B5F785F696E76657274656400"
+      },
+      {
+        "va": "0x10003a90",
+        "bytes": "69735F6C6F6F6B5F795F696E76657274656400"
+      },
+      {
+        "va": "0x10003aa8",
+        "bytes": "7365745F6C6F6F6B5F795F696E76657274656400"
+      },
+      {
+        "va": "0x10003ac0",
+        "bytes": "7365745F7369785F617869735F636F6E74726F6C7300"
+      },
+      {
+        "va": "0x10003ad8",
+        "bytes": "6765745F7369785F617869735F636F6E74726F6C7300"
+      },
+      {
+        "va": "0x10005c98",
+        "bytes": "6765745F6E6578745F6C6576656C00"
+      },
+      {
+        "va": "0x100061e0",
+        "bytes": "73747261747573206369747900"
+      },
+      {
+        "va": "0x10006238",
+        "bytes": "666173746F6F6E00"
+      },
+      {
+        "va": "0x10019a78",
+        "bytes": "6D6574726F706F6C697300"
+      },
+      {
+        "va": "0x10019a88",
+        "bytes": "636F62616C696100"
+      },
+      {
+        "va": "0x10019a90",
+        "bytes": "737061636520636F6D626174206900"
+      },
+      {
+        "va": "0x10019aa0",
+        "bytes": "696D70657269616C206669676874206665737400"
+      },
+      {
+        "va": "0x10019ab8",
+        "bytes": "61706F6765652073706163652073746174696F6E00"
+      },
+      {
+        "va": "0x10019ad0",
+        "bytes": "706972617465206261736500"
+      },
+      {
+        "va": "0x10019ae0",
+        "bytes": "737061636520636F6D62617420696900"
+      },
+      {
+        "va": "0x10019af0",
+        "bytes": "72796B616E207600"
+      },
+      {
+        "va": "0x10019af8",
+        "bytes": "736172676173736F00"
+      },
+      {
+        "va": "0x10019b08",
+        "bytes": "6972697300"
+      },
+      {
+        "va": "0x10019b10",
+        "bytes": "7A6F72646F6F6D20707269736F6E00"
+      },
+      {
+        "va": "0x10019b20",
+        "bytes": "737061636520636F6D6261742069696900"
+      },
+      {
+        "va": "0x10019b38",
+        "bytes": "6B6572636875206369747900"
+      },
+      {
+        "va": "0x10019b48",
+        "bytes": "736C6167735F666C65657400"
+      },
+      {
+        "va": "0x10019b58",
+        "bytes": "637261676D697465207275696E7300"
+      },
+      {
+        "va": "0x10019b68",
+        "bytes": "6D6572696469616E206369747900"
+      },
+      {
+        "va": "0x10019b78",
+        "bytes": "666173746F6F6E5F72657475726E00"
+      },
+      {
+        "va": "0x1001a080",
+        "bytes": "636865636B706F696E745F766F6C756D6500"
+      },
+      {
+        "va": "0x1001b280",
+        "bytes": "6865726F5F6765745F6865616C746800"
+      },
+      {
+        "va": "0x1001f5d8",
+        "bytes": "7365745F736176655F6C6576656C00"
+      },
+      {
+        "va": "0x1001f5e8",
+        "bytes": "7365745F6E6578745F6C6576656C00"
+      },
+      {
+        "va": "0x1001f668",
+        "bytes": "636865636B706F696E7400"
+      },
+      {
+        "va": "0x1001f678",
+        "bytes": "6861735F76616C69645F636865636B706F696E7400"
+      },
+      {
+        "va": "0x1001f690",
+        "bytes": "69735F63757272656E745F636865636B706F696E7400"
+      },
+      {
+        "va": "0x10062f7c",
+        "bytes": "10019A7810019A88100061E01000623810019A9010019AA010019AB810019AD010019AE010019AF010019AF810019B0810019B1010019B2010019B3810019B4810019B5810019B6810019B78"
+      }
+    ]
+  },
   "annotations": [
+    {
+      "va": "0x0020F3F0",
+      "name": "TOD_unnamed_option_114C0_consumer_a",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF71",
+      "comment": "Reads saved114C0, sets runtime flag+24 when zero, and selects runtime modes0F/10. Option/mode names unresolved; no editing meaning inferred.",
+      "evidence": "Exact state-pointer slot and addis/lwz/flag-store instructions; settings.block.unknown_word_consumers and byte guards."
+    },
+    {
+      "va": "0x002108D8",
+      "name": "TOD_unnamed_option_114C0_consumer_b",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF81",
+      "comment": "Reads saved114C0, sets runtime flag+3F when zero, and selects runtime modes0F/10. Option/mode names unresolved; no editing meaning inferred.",
+      "evidence": "Exact state-pointer slot and addis/lwz/flag-store instructions; settings.block.unknown_word_consumers and byte guards."
+    },
+    {
+      "va": "0x0002DD60",
+      "name": "TOD_Lua_get_num_control_schemes",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_num_control_schemes. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF51"
+    },
+    {
+      "va": "0x00889634",
+      "name": "TOD_binding_get_num_control_schemes",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_num_control_schemes.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100037580085A5F8"
+    },
+    {
+      "va": "0x10003758",
+      "name": "TOD_name_get_num_control_schemes",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_num_control_schemes.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F6E756D5F636F6E74726F6C5F736368656D657300"
+    },
+    {
+      "va": "0x00024C48",
+      "name": "TOD_native_get_num_control_schemes",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_num_control_schemes. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "38600002"
+    },
+    {
+      "va": "0x0002DC80",
+      "name": "TOD_Lua_get_cur_control_scheme",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_cur_control_scheme. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF51"
+    },
+    {
+      "va": "0x0088963C",
+      "name": "TOD_binding_get_cur_control_scheme",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_cur_control_scheme.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100037700085A5F0"
+    },
+    {
+      "va": "0x10003770",
+      "name": "TOD_name_get_cur_control_scheme",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_cur_control_scheme.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F6375725F636F6E74726F6C5F736368656D6500"
+    },
+    {
+      "va": "0x00027220",
+      "name": "TOD_native_get_cur_control_scheme",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_cur_control_scheme. Saved setting/load offset or runtime-only semantics are documented in settings. Field control_scheme_index at save 0x114bc, type u32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002DBC0",
+      "name": "TOD_Lua_set_control_scheme",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_control_scheme. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x00889644",
+      "name": "TOD_binding_set_control_scheme",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_control_scheme.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100037880085A5E8"
+    },
+    {
+      "va": "0x10003788",
+      "name": "TOD_name_set_control_scheme",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_control_scheme.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F636F6E74726F6C5F736368656D6500"
+    },
+    {
+      "va": "0x000271B0",
+      "name": "TOD_native_set_control_scheme",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_control_scheme. Saved setting/load offset or runtime-only semantics are documented in settings. Field control_scheme_index at save 0x114bc, type u32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7C6B1B78"
+    },
+    {
+      "va": "0x0002DAE8",
+      "name": "TOD_Lua_get_control_scheme_name",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_control_scheme_name. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0088964C",
+      "name": "TOD_binding_get_control_scheme_name",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_control_scheme_name.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100037A00085A5E0"
+    },
+    {
+      "va": "0x100037A0",
+      "name": "TOD_name_get_control_scheme_name",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_control_scheme_name.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F636F6E74726F6C5F736368656D655F6E616D6500"
+    },
+    {
+      "va": "0x00028010",
+      "name": "TOD_native_get_control_scheme_name",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_control_scheme_name. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "2F830000"
+    },
+    {
+      "va": "0x0002D088",
+      "name": "TOD_Lua_get_sound_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_sound_vol. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x008896A4",
+      "name": "TOD_binding_get_sound_vol",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_sound_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100038780085A588"
+    },
+    {
+      "va": "0x10003878",
+      "name": "TOD_name_get_sound_vol",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_sound_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F736F756E645F766F6C00"
+    },
+    {
+      "va": "0x00026BB0",
+      "name": "TOD_native_get_sound_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_sound_vol. Saved setting/load offset or runtime-only semantics are documented in settings. Field sound_effects_volume at save 0x114c8, type f32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002CFE0",
+      "name": "TOD_Lua_set_sound_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_sound_vol. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x008896AC",
+      "name": "TOD_binding_set_sound_vol",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_sound_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100038880085A580"
+    },
+    {
+      "va": "0x10003888",
+      "name": "TOD_name_set_sound_vol",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_sound_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F736F756E645F766F6C00"
+    },
+    {
+      "va": "0x00024E90",
+      "name": "TOD_native_set_sound_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_sound_vol. Saved setting/load offset or runtime-only semantics are documented in settings. Field sound_effects_volume at save 0x114c8, type f32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002CF38",
+      "name": "TOD_Lua_get_music_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_music_vol. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x008896B4",
+      "name": "TOD_binding_get_music_vol",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_music_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100038980085A578"
+    },
+    {
+      "va": "0x10003898",
+      "name": "TOD_name_get_music_vol",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_music_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F6D757369635F766F6C00"
+    },
+    {
+      "va": "0x00026E10",
+      "name": "TOD_native_get_music_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_music_vol. Saved setting/load offset or runtime-only semantics are documented in settings. Field music_volume at save 0x114cc, type f32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002CE90",
+      "name": "TOD_Lua_set_music_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_music_vol. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x008896BC",
+      "name": "TOD_binding_set_music_vol",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_music_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100038A80085A570"
+    },
+    {
+      "va": "0x100038A8",
+      "name": "TOD_name_set_music_vol",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_music_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F6D757369635F766F6C00"
+    },
+    {
+      "va": "0x00027718",
+      "name": "TOD_native_set_music_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_music_vol. Saved setting/load offset or runtime-only semantics are documented in settings. Field music_volume at save 0x114cc, type f32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002CDE8",
+      "name": "TOD_Lua_get_voice_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_voice_vol. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x008896C4",
+      "name": "TOD_binding_get_voice_vol",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_voice_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100038B80085A568"
+    },
+    {
+      "va": "0x100038B8",
+      "name": "TOD_name_get_voice_vol",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_voice_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F766F6963655F766F6C00"
+    },
+    {
+      "va": "0x00026E00",
+      "name": "TOD_native_get_voice_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_voice_vol. Saved setting/load offset or runtime-only semantics are documented in settings. Field voice_volume at save 0x114c4, type f32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002CD40",
+      "name": "TOD_Lua_set_voice_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_voice_vol. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x008896CC",
+      "name": "TOD_binding_set_voice_vol",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_voice_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100038C80085A560"
+    },
+    {
+      "va": "0x100038C8",
+      "name": "TOD_name_set_voice_vol",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_voice_vol.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F766F6963655F766F6C00"
+    },
+    {
+      "va": "0x000276D0",
+      "name": "TOD_native_set_voice_vol",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_voice_vol. Saved setting/load offset or runtime-only semantics are documented in settings. Field voice_volume at save 0x114c4, type f32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002CC98",
+      "name": "TOD_Lua_is_help_text_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_help_text_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x008896D4",
+      "name": "TOD_binding_is_help_text_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_help_text_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100038D80085A558"
+    },
+    {
+      "va": "0x100038D8",
+      "name": "TOD_name_is_help_text_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_help_text_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F68656C705F746578745F6F6E00"
+    },
+    {
+      "va": "0x00026DF0",
+      "name": "TOD_native_is_help_text_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_help_text_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field help_text_enabled at save 0x114d0, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002CBE0",
+      "name": "TOD_Lua_set_help_text_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_help_text_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x008896DC",
+      "name": "TOD_binding_set_help_text_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_help_text_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100038E80085A550"
+    },
+    {
+      "va": "0x100038E8",
+      "name": "TOD_name_set_help_text_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_help_text_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F68656C705F746578745F6F6E00"
+    },
+    {
+      "va": "0x00026DB8",
+      "name": "TOD_native_set_help_text_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_help_text_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field help_text_enabled at save 0x114d0, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002CB38",
+      "name": "TOD_Lua_is_subtitles_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_subtitles_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x008896E4",
+      "name": "TOD_binding_is_subtitles_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_subtitles_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039000085A548"
+    },
+    {
+      "va": "0x10003900",
+      "name": "TOD_name_is_subtitles_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_subtitles_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F7375627469746C65735F6F6E00"
+    },
+    {
+      "va": "0x00026DA8",
+      "name": "TOD_native_is_subtitles_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_subtitles_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field subtitles_enabled at save 0x114d1, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002CA80",
+      "name": "TOD_Lua_set_subtitles_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_subtitles_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x008896EC",
+      "name": "TOD_binding_set_subtitles_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_subtitles_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039100085A540"
+    },
+    {
+      "va": "0x10003910",
+      "name": "TOD_name_set_subtitles_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_subtitles_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F7375627469746C65735F6F6E00"
+    },
+    {
+      "va": "0x00026D98",
+      "name": "TOD_native_set_subtitles_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_subtitles_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field subtitles_enabled at save 0x114d1, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002C9D8",
+      "name": "TOD_Lua_is_quick_select_pause_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_quick_select_pause_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x008896F4",
+      "name": "TOD_binding_is_quick_select_pause_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_quick_select_pause_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039280085A538"
+    },
+    {
+      "va": "0x10003928",
+      "name": "TOD_name_is_quick_select_pause_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_quick_select_pause_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F717569636B5F73656C6563745F70617573655F6F6E00"
+    },
+    {
+      "va": "0x00026D88",
+      "name": "TOD_native_is_quick_select_pause_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_quick_select_pause_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field quick_select_pauses at save 0x114d2, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002C920",
+      "name": "TOD_Lua_set_quick_select_pause_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_quick_select_pause_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x008896FC",
+      "name": "TOD_binding_set_quick_select_pause_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_quick_select_pause_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039480085A530"
+    },
+    {
+      "va": "0x10003948",
+      "name": "TOD_name_set_quick_select_pause_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_quick_select_pause_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F717569636B5F73656C6563745F70617573655F6F6E00"
+    },
+    {
+      "va": "0x00026D78",
+      "name": "TOD_native_set_quick_select_pause_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_quick_select_pause_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field quick_select_pauses at save 0x114d2, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002C878",
+      "name": "TOD_Lua_is_rumble_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_rumble_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x00889704",
+      "name": "TOD_binding_is_rumble_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_rumble_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039680085A528"
+    },
+    {
+      "va": "0x10003968",
+      "name": "TOD_name_is_rumble_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_rumble_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F72756D626C655F6F6E00"
+    },
+    {
+      "va": "0x00026D68",
+      "name": "TOD_native_is_rumble_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_rumble_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field rumble_enabled at save 0x114d4, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002C7C0",
+      "name": "TOD_Lua_set_rumble_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_rumble_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x0088970C",
+      "name": "TOD_binding_set_rumble_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_rumble_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039780085A520"
+    },
+    {
+      "va": "0x10003978",
+      "name": "TOD_name_set_rumble_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_rumble_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F72756D626C655F6F6E00"
+    },
+    {
+      "va": "0x00026D18",
+      "name": "TOD_native_set_rumble_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_rumble_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field rumble_enabled at save 0x114d4, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002C718",
+      "name": "TOD_Lua_is_rumble_connected",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_rumble_connected. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x00889714",
+      "name": "TOD_binding_is_rumble_connected",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_rumble_connected.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039880085A518"
+    },
+    {
+      "va": "0x10003988",
+      "name": "TOD_name_is_rumble_connected",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_rumble_connected.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F72756D626C655F636F6E6E656374656400"
+    },
+    {
+      "va": "0x00024C90",
+      "name": "TOD_native_is_rumble_connected",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_rumble_connected. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "38600001"
+    },
+    {
+      "va": "0x0002C670",
+      "name": "TOD_Lua_get_surround_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_surround_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0088971C",
+      "name": "TOD_binding_get_surround_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_surround_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039A00085A510"
+    },
+    {
+      "va": "0x100039A0",
+      "name": "TOD_name_get_surround_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_surround_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F737572726F756E645F6F6E00"
+    },
+    {
+      "va": "0x00026D08",
+      "name": "TOD_native_get_surround_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_surround_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field surround_enabled at save 0x114d5, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002C5B8",
+      "name": "TOD_Lua_set_surround_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_surround_on. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x00889724",
+      "name": "TOD_binding_set_surround_on",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_surround_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039B00085A508"
+    },
+    {
+      "va": "0x100039B0",
+      "name": "TOD_name_set_surround_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_surround_on.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F737572726F756E645F6F6E00"
+    },
+    {
+      "va": "0x00026CD0",
+      "name": "TOD_native_set_surround_on",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_surround_on. Saved setting/load offset or runtime-only semantics are documented in settings. Field surround_enabled at save 0x114d5, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "80A286EC"
+    },
+    {
+      "va": "0x0002C4D8",
+      "name": "TOD_Lua_get_button_layout",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_button_layout. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF51"
+    },
+    {
+      "va": "0x0088972C",
+      "name": "TOD_binding_get_button_layout",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_button_layout.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039C00085A500"
+    },
+    {
+      "va": "0x100039C0",
+      "name": "TOD_name_get_button_layout",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_button_layout.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F627574746F6E5F6C61796F757400"
+    },
+    {
+      "va": "0x00024C98",
+      "name": "TOD_native_get_button_layout",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_button_layout. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "38600000"
+    },
+    {
+      "va": "0x0002C418",
+      "name": "TOD_Lua_set_button_layout",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_button_layout. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x00889734",
+      "name": "TOD_binding_set_button_layout",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_button_layout.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039D80085A4F8"
+    },
+    {
+      "va": "0x100039D8",
+      "name": "TOD_name_set_button_layout",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_button_layout.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F627574746F6E5F6C61796F757400"
+    },
+    {
+      "va": "0x00024CA0",
+      "name": "TOD_native_set_button_layout",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_button_layout. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "4E800020"
+    },
+    {
+      "va": "0x0002C370",
+      "name": "TOD_Lua_is_x_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_x_inverted. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0088973C",
+      "name": "TOD_binding_is_x_inverted",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_x_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "100039F00085A4F0"
+    },
+    {
+      "va": "0x100039F0",
+      "name": "TOD_name_is_x_inverted",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_x_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F785F696E76657274656400"
+    },
+    {
+      "va": "0x00026CA8",
+      "name": "TOD_native_is_x_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_x_inverted. Saved setting/load offset or runtime-only semantics are documented in settings. Field camera_x_inverted at save 0x114a8, type bool32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002C2B8",
+      "name": "TOD_Lua_set_x_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_x_inverted. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x00889744",
+      "name": "TOD_binding_set_x_inverted",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_x_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003A000085A4E8"
+    },
+    {
+      "va": "0x10003A00",
+      "name": "TOD_name_set_x_inverted",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_x_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F785F696E76657274656400"
+    },
+    {
+      "va": "0x00026C98",
+      "name": "TOD_native_set_x_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_x_inverted. Saved setting/load offset or runtime-only semantics are documented in settings. Field camera_x_inverted at save 0x114a8, type bool32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002C210",
+      "name": "TOD_Lua_is_y_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_y_inverted. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0088974C",
+      "name": "TOD_binding_is_y_inverted",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_y_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003A100085A4E0"
+    },
+    {
+      "va": "0x10003A10",
+      "name": "TOD_name_is_y_inverted",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_y_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F795F696E76657274656400"
+    },
+    {
+      "va": "0x00026C70",
+      "name": "TOD_native_is_y_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_y_inverted. Saved setting/load offset or runtime-only semantics are documented in settings. Field camera_y_inverted at save 0x114ac, type bool32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002C158",
+      "name": "TOD_Lua_set_y_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_y_inverted. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x00889754",
+      "name": "TOD_binding_set_y_inverted",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_y_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003A200085A4D8"
+    },
+    {
+      "va": "0x10003A20",
+      "name": "TOD_name_set_y_inverted",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_y_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F795F696E76657274656400"
+    },
+    {
+      "va": "0x00026C60",
+      "name": "TOD_native_set_y_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_y_inverted. Saved setting/load offset or runtime-only semantics are documented in settings. Field camera_y_inverted at save 0x114ac, type bool32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002C0B0",
+      "name": "TOD_Lua_get_camera_speed",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_camera_speed. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0088975C",
+      "name": "TOD_binding_get_camera_speed",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_camera_speed.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003A300085A4D0"
+    },
+    {
+      "va": "0x10003A30",
+      "name": "TOD_name_get_camera_speed",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_camera_speed.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F63616D6572615F737065656400"
+    },
+    {
+      "va": "0x00026C50",
+      "name": "TOD_native_get_camera_speed",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_camera_speed. Saved setting/load offset or runtime-only semantics are documented in settings. Field camera_speed at save 0x114b0, type f32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002C008",
+      "name": "TOD_Lua_set_camera_speed",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_camera_speed. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x00889764",
+      "name": "TOD_binding_set_camera_speed",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_camera_speed.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003A480085A4C8"
+    },
+    {
+      "va": "0x10003A48",
+      "name": "TOD_name_set_camera_speed",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_camera_speed.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F63616D6572615F737065656400"
+    },
+    {
+      "va": "0x000276A8",
+      "name": "TOD_native_set_camera_speed",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_camera_speed. Saved setting/load offset or runtime-only semantics are documented in settings. Field camera_speed at save 0x114b0, type f32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x0002BF60",
+      "name": "TOD_Lua_is_look_x_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_look_x_inverted. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0088976C",
+      "name": "TOD_binding_is_look_x_inverted",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_look_x_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003A600085A4C0"
+    },
+    {
+      "va": "0x10003A60",
+      "name": "TOD_name_is_look_x_inverted",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_look_x_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F6C6F6F6B5F785F696E76657274656400"
+    },
+    {
+      "va": "0x00026C28",
+      "name": "TOD_native_is_look_x_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_look_x_inverted. Saved setting/load offset or runtime-only semantics are documented in settings. Field look_x_inverted at save 0x114b4, type bool32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002BEA8",
+      "name": "TOD_Lua_set_look_x_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_look_x_inverted. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x00889774",
+      "name": "TOD_binding_set_look_x_inverted",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_look_x_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003A780085A4B8"
+    },
+    {
+      "va": "0x10003A78",
+      "name": "TOD_name_set_look_x_inverted",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_look_x_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F6C6F6F6B5F785F696E76657274656400"
+    },
+    {
+      "va": "0x00026C18",
+      "name": "TOD_native_set_look_x_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_look_x_inverted. Saved setting/load offset or runtime-only semantics are documented in settings. Field look_x_inverted at save 0x114b4, type bool32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002BE00",
+      "name": "TOD_Lua_is_look_y_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_look_y_inverted. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0088977C",
+      "name": "TOD_binding_is_look_y_inverted",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_look_y_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003A900085A4B0"
+    },
+    {
+      "va": "0x10003A90",
+      "name": "TOD_name_is_look_y_inverted",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_look_y_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F6C6F6F6B5F795F696E76657274656400"
+    },
+    {
+      "va": "0x00026BF0",
+      "name": "TOD_native_is_look_y_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_look_y_inverted. Saved setting/load offset or runtime-only semantics are documented in settings. Field look_y_inverted at save 0x114b8, type bool32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002BD48",
+      "name": "TOD_Lua_set_look_y_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_look_y_inverted. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x00889784",
+      "name": "TOD_binding_set_look_y_inverted",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_look_y_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003AA80085A4A8"
+    },
+    {
+      "va": "0x10003AA8",
+      "name": "TOD_name_set_look_y_inverted",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_look_y_inverted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F6C6F6F6B5F795F696E76657274656400"
+    },
+    {
+      "va": "0x00026BE0",
+      "name": "TOD_native_set_look_y_inverted",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_look_y_inverted. Saved setting/load offset or runtime-only semantics are documented in settings. Field look_y_inverted at save 0x114b8, type bool32; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002BC90",
+      "name": "TOD_Lua_set_six_axis_controls",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_six_axis_controls. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF71"
+    },
+    {
+      "va": "0x0088978C",
+      "name": "TOD_binding_set_six_axis_controls",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_six_axis_controls.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003AC00085A4A0"
+    },
+    {
+      "va": "0x10003AC0",
+      "name": "TOD_name_set_six_axis_controls",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_six_axis_controls.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F7369785F617869735F636F6E74726F6C7300"
+    },
+    {
+      "va": "0x00026BD0",
+      "name": "TOD_native_set_six_axis_controls",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_six_axis_controls. Saved setting/load offset or runtime-only semantics are documented in settings. Field sixaxis_enabled at save 0x114d3, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "808286EC"
+    },
+    {
+      "va": "0x0002BBE8",
+      "name": "TOD_Lua_get_six_axis_controls",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_six_axis_controls. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x00889794",
+      "name": "TOD_binding_get_six_axis_controls",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_six_axis_controls.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10003AD80085A498"
+    },
+    {
+      "va": "0x10003AD8",
+      "name": "TOD_name_get_six_axis_controls",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_six_axis_controls.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F7369785F617869735F636F6E74726F6C7300"
+    },
+    {
+      "va": "0x00026BC0",
+      "name": "TOD_native_get_six_axis_controls",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_six_axis_controls. Saved setting/load offset or runtime-only semantics are documented in settings. Field sixaxis_enabled at save 0x114d3, type bool8; read-only mapping, no accepted edit range asserted.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "806286EC"
+    },
+    {
+      "va": "0x00039938",
+      "name": "TOD_Lua_get_next_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for get_next_level. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF51"
+    },
+    {
+      "va": "0x00889CA8",
+      "name": "TOD_binding_get_next_level",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for get_next_level.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10005C980085AC78"
+    },
+    {
+      "va": "0x10005C98",
+      "name": "TOD_name_get_next_level",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: get_next_level.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6765745F6E6578745F6C6576656C00"
+    },
+    {
+      "va": "0x00036AF0",
+      "name": "TOD_native_get_next_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named get_next_level. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "80629BBC"
+    },
+    {
+      "va": "0x002C8D38",
+      "name": "TOD_Lua_set_save_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_save_level. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0089D940",
+      "name": "TOD_binding_set_save_level",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_save_level.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "1001F5D80086C498"
+    },
+    {
+      "va": "0x1001F5D8",
+      "name": "TOD_name_set_save_level",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_save_level.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F736176655F6C6576656C00"
+    },
+    {
+      "va": "0x0027BAD0",
+      "name": "TOD_native_set_save_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_save_level. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "80829030"
+    },
+    {
+      "va": "0x002C8C80",
+      "name": "TOD_Lua_set_next_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for set_next_level. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0089D948",
+      "name": "TOD_binding_set_next_level",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for set_next_level.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "1001F5E80086C490"
+    },
+    {
+      "va": "0x1001F5E8",
+      "name": "TOD_name_set_next_level",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: set_next_level.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "7365745F6E6578745F6C6576656C00"
+    },
+    {
+      "va": "0x0027A818",
+      "name": "TOD_native_set_next_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named set_next_level. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "80829030"
+    },
+    {
+      "va": "0x002C8720",
+      "name": "TOD_Lua_checkpoint",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for checkpoint. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0089D980",
+      "name": "TOD_binding_checkpoint",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for checkpoint.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "1001F6680086C458"
+    },
+    {
+      "va": "0x1001F668",
+      "name": "TOD_name_checkpoint",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: checkpoint.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "636865636B706F696E7400"
+    },
+    {
+      "va": "0x0027B258",
+      "name": "TOD_native_checkpoint",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named checkpoint. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF81"
+    },
+    {
+      "va": "0x002C85F8",
+      "name": "TOD_Lua_checkpoint_volume",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for checkpoint_volume. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0089D988",
+      "name": "TOD_binding_checkpoint_volume",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for checkpoint_volume.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "1001A0800086C450"
+    },
+    {
+      "va": "0x1001A080",
+      "name": "TOD_name_checkpoint_volume",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: checkpoint_volume.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "636865636B706F696E745F766F6C756D6500"
+    },
+    {
+      "va": "0x0027B128",
+      "name": "TOD_native_checkpoint_volume",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named checkpoint_volume. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "812290E8"
+    },
+    {
+      "va": "0x002C8550",
+      "name": "TOD_Lua_has_valid_checkpoint",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for has_valid_checkpoint. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0089D990",
+      "name": "TOD_binding_has_valid_checkpoint",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for has_valid_checkpoint.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "1001F6780086C448"
+    },
+    {
+      "va": "0x1001F678",
+      "name": "TOD_name_has_valid_checkpoint",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: has_valid_checkpoint.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6861735F76616C69645F636865636B706F696E7400"
+    },
+    {
+      "va": "0x0027B108",
+      "name": "TOD_native_has_valid_checkpoint",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named has_valid_checkpoint. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "81229090"
+    },
+    {
+      "va": "0x002C8390",
+      "name": "TOD_Lua_is_current_checkpoint",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for is_current_checkpoint. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0089D998",
+      "name": "TOD_binding_is_current_checkpoint",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for is_current_checkpoint.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "1001F6900086C438"
+    },
+    {
+      "va": "0x1001F690",
+      "name": "TOD_name_is_current_checkpoint",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: is_current_checkpoint.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "69735F63757272656E745F636865636B706F696E7400"
+    },
+    {
+      "va": "0x002788E8",
+      "name": "TOD_native_is_current_checkpoint",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named is_current_checkpoint. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF81"
+    },
+    {
+      "va": "0x002B93F0",
+      "name": "TOD_Lua_hero_get_health",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Named Lua wrapper for hero_get_health. See settings.named_bindings and guarded native call.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF61"
+    },
+    {
+      "va": "0x0089DF7C",
+      "name": "TOD_binding_hero_get_health",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Name/descriptor pair for hero_get_health.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "1001B2800086BDC8"
+    },
+    {
+      "va": "0x1001B280",
+      "name": "TOD_name_hero_get_health",
+      "kind": "string",
+      "confidence": "confirmed",
+      "comment": "Exact Lua API name: hero_get_health.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "6865726F5F6765745F6865616C746800"
+    },
+    {
+      "va": "0x00289358",
+      "name": "TOD_native_hero_get_health",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Native callee of named hero_get_health. Saved setting/load offset or runtime-only semantics are documented in settings.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF81"
+    },
+    {
+      "va": "0x0035EE40",
+      "name": "TOD_saved_settings_initialize",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Initializes options block at save114A8; defaults0/1 and0.9f. Does not establish tail bytes114D6/114D7 as padding.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "38000000"
+    },
+    {
+      "va": "0x002D1490",
+      "name": "TOD_saved_load_level_get",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Reads save906E8. Saved load destination, not guaranteed current runtime planet.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "8062F268"
+    },
+    {
+      "va": "0x0035CF40",
+      "name": "TOD_runtime_checkpoint_capture",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Captures runtime checkpoint vectors, load-level word+40 and validity byte+EF at10330610. Outside serialized state; no saved checkpoint-position field inferred.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "F821FF21"
+    },
+    {
+      "va": "0x0027B218",
+      "name": "TOD_runtime_checkpoint_flag_predicate",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Tests runtime checkpoint valid byte+EF and flag byte+ED.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "81629090"
+    },
+    {
+      "va": "0x10330610",
+      "name": "TOD_runtime_checkpoint_state",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Runtime checkpoint object, outside state101EFB20..10280210. No save offset assigned.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state."
+    },
+    {
+      "va": "0x00898FB0",
+      "name": "TOD_checkpoint_state_TOC1",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "TOC slot pointing to runtime checkpoint10330610.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10330610"
+    },
+    {
+      "va": "0x008A1928",
+      "name": "TOD_checkpoint_state_TOC1_alt",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Alternate slot pointing to runtime checkpoint10330610.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10330610"
+    },
+    {
+      "va": "0x10062F7C",
+      "name": "TOD_load_level_name_table",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Nineteen string pointers used by load-level lookup2D0880 and inverse lookup2D08D8.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "10019A7810019A88100061E01000623810019A9010019AA010019AB810019AD010019AE010019AF010019AF810019B0810019B1010019B2010019B3810019B4810019B5810019B6810019B78"
+    },
+    {
+      "va": "0x0007FC98",
+      "name": "TOD_apply_saved_audio_volumes",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Applies sound, voice and music saved volumes through buses1,6,12. Runtime apply, not file writing.",
+      "evidence": "Inspect-TodSettings.py: exact USA v02.00 hash, named binding/callee or direct assembly addressing; runtime-only data is outside serialized state.",
+      "bytes": "8082B2EC"
+    },
     {"va":"0x001F5570","name":"TOD_equipped_item_history_update","kind":"function","confidence":"confirmed","bytes":"7C6B1B787CC802A6","comment":"Shifts saved430 to434,42C to430; records11810/466EC0 at42C via inventory188 ->hero1A68 ->save.","evidence":"state_storage instruction guards and Inspect-TodStateStorage.py; native assembly establishes storage/linkage, not safe edits."},
     {"va":"0x001F5DB8","name":"TOD_equipment_owner_initialize","kind":"function","confidence":"confirmed","bytes":"F821FF617D8802A6","comment":"Stores hero argument into runtime inventory member188, linking history updater to hero saved state.","evidence":"state_storage instruction guards and Inspect-TodStateStorage.py; native assembly establishes storage/linkage, not safe edits."},
     {"va":"0x0026CE30","name":"TOD_equipped_history_menu_consumer","kind":"function","confidence":"confirmed","bytes":"F821FF817C8802A6","comment":"Consults allthree saved history words with fallback logic; not dual-wield slots.","evidence":"state_storage instruction guards and Inspect-TodStateStorage.py; native assembly establishes storage/linkage, not safe edits."},
@@ -9126,6 +12452,116 @@
     }
   ],
   "structures": [
+    {
+      "name": "TOD_SaveSettings_verified",
+      "size": "0x30",
+      "comment": "Saved options at114A8..114D7, exact USA code-backed mapping; read-only, not applied to ELF globals.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "camera_x_inverted",
+          "type": "u32",
+          "comment": "is_x_inverted / set_x_inverted; save0x114a8. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x4",
+          "name": "camera_y_inverted",
+          "type": "u32",
+          "comment": "is_y_inverted / set_y_inverted; save0x114ac. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x8",
+          "name": "camera_speed",
+          "type": "f32",
+          "comment": "get_camera_speed / set_camera_speed; save0x114b0. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0xc",
+          "name": "look_x_inverted",
+          "type": "u32",
+          "comment": "is_look_x_inverted / set_look_x_inverted; save0x114b4. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x10",
+          "name": "look_y_inverted",
+          "type": "u32",
+          "comment": "is_look_y_inverted / set_look_y_inverted; save0x114b8. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x14",
+          "name": "control_scheme_index",
+          "type": "u32",
+          "comment": "get_cur_control_scheme / set_control_scheme; save0x114bc. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x18",
+          "name": "unknown_word_18",
+          "type": "u32",
+          "comment": "Save114C0; initializer writes1. Meaning unresolved; not button layout."
+        },
+        {
+          "offset": "0x1c",
+          "name": "voice_volume",
+          "type": "f32",
+          "comment": "get_voice_vol / set_voice_vol; save0x114c4. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x20",
+          "name": "sound_effects_volume",
+          "type": "f32",
+          "comment": "get_sound_vol / set_sound_vol; save0x114c8. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x24",
+          "name": "music_volume",
+          "type": "f32",
+          "comment": "get_music_vol / set_music_vol; save0x114cc. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x28",
+          "name": "help_text_enabled",
+          "type": "u8",
+          "comment": "is_help_text_on / set_help_text_on; save0x114d0. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x29",
+          "name": "subtitles_enabled",
+          "type": "u8",
+          "comment": "is_subtitles_on / set_subtitles_on; save0x114d1. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x2a",
+          "name": "quick_select_pauses",
+          "type": "u8",
+          "comment": "is_quick_select_pause_on / set_quick_select_pause_on; save0x114d2. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x2b",
+          "name": "sixaxis_enabled",
+          "type": "u8",
+          "comment": "get_six_axis_controls / set_six_axis_controls; save0x114d3. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x2c",
+          "name": "rumble_enabled",
+          "type": "u8",
+          "comment": "is_rumble_on / set_rumble_on; save0x114d4. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x2d",
+          "name": "surround_enabled",
+          "type": "u8",
+          "comment": "get_surround_on / set_surround_on; save0x114d5. Nonzero flags are preserved; finite setter bounds are not an accepted edit range."
+        },
+        {
+          "offset": "0x2e",
+          "name": "unknown_tail_2e_2f",
+          "type": "u8",
+          "count": 2,
+          "comment": "Save114D6/114D7, not proven padding. Preserve."
+        }
+      ]
+    },
     {"name":"TOD_SaveEquipmentHistory_verified","size":"0xC","comment":"Save42C..437: three historical signed item IDs, not primary/secondary weapon slots.","fields":[{"offset":"0x0","name":"last_recorded_equipped_id","type":"u32","comment":"Raw signed item ID from native getter; current runtime state may differ."},{"offset":"0x4","name":"previous_recorded_equipped_id","type":"u32","comment":"Previous word0, not a guaranteed distinct usable item."},{"offset":"0x8","name":"older_recorded_equipped_id","type":"u32","comment":"Previous word4; allthree initializedFFFFFFFF."}]},
     {"name":"TOD_SaveRleBlock_verified","size":"0x60DC","comment":"21 physical saved slots at114D8; RLE storage decoded, logical byte meanings not established.","fields":[{"offset":"0x0","name":"opaque_prefix","type":"u8","comment":"Prefix semantics remain unknown.","count":200},{"offset":"0xC8","name":"encoder_accumulator","type":"u32","comment":"Zero literals+additional zero-run count, excludes firsttwo run bytes; not a checksum or exact zero count."},{"offset":"0xCC","name":"encoded_ready","type":"u8","comment":"Encoder writes1, initializer0; not visit or completion flag."},{"offset":"0xCD","name":"rle_storage","type":"u8","comment":"Physical6003 bytes until encoded length; native writer cap5FFF. Preserve unused storage.","count":24579},{"offset":"0x60D0","name":"encoded_size","type":"u32","comment":"Declared encoded bytes; bounded safe decoder refuses beyond native cap."},{"offset":"0x60D4","name":"opaque_tail","type":"u8","comment":"Eight opaque bytes; initializer explicitly clears firstseven only.","count":8}]},
     {"name":"TOD_BonusDefinition_verified","size":"0x30","comment":"Native cheat definition,14 entries at10026384; IDs are not localized strings.","fields":[{"offset":"0x0","name":"title_lookup_id","type":"u32","comment":"Runtime title lookup ID."},{"offset":"0x4","name":"description_lookup_id","type":"u32","comment":"Runtime description lookup ID."},{"offset":"0x8","name":"score_requirement","type":"u32","comment":"Unsigned threshold after mode/index adjustment."},{"offset":"0xC","name":"state_count","type":"u32","comment":"Populated state-name count, not setter-wide1..8 bound."},{"offset":"0x10","name":"state_name_lookup_ids","type":"u32","comment":"Eight physical slots; retain trailing zeros.","count":8}]},
@@ -9495,7 +12931,7 @@
       "start": "0x97D8",
       "end_exclusive": "0x906F0",
       "confidence": "observed",
-      "comment": "Mixed mission/world state; 21 RLE blocks at114D8 stride60DC are structurally decoded by state_storage. Logical values, prefixes and tail fields remain partly opaque; not padding."
+      "comment": "Mixed mission/world state; fifteen named options at114A8..114D7 are mapped by settings, then21 RLE blocks at114D8 stride60DC decoded structurally by state_storage. Saved load destination906E8 is confirmed;906E4, logical RLE values, prefixes and other tails remain partly opaque, not padding."
     }
   ],
   "library_imports": [

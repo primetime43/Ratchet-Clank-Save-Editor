@@ -29,7 +29,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Counters & nearby fields" => 6, "Gameplay records" => 4,
                 "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
                 "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9,
-                "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 8, _ => 0
+                "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 8,
+                "Game settings" => 5, _ => 0
             };
             if (expected == 0 || source.Columns.Length != expected) return source;
 
@@ -47,6 +48,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Quick select" => new[] { "Stored slot", "Item" },
                 "Objects & equipment" => new[] { "Object", "Count" },
                 "Counters & nearby fields" => new[] { "Information", "Value" },
+                "Game settings" => new[] { "Setting", "Value" },
                 "Gameplay records" => new[] { "Location", "Saved record" },
                 "Save regions" => new[] { "Section", "Size", "Understanding" },
                 _ => new[] { "File", "Information", "Value" }
@@ -65,6 +67,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Blueprints" => "Shows native all-grant IDs plus any unexpected set bits. Pickup/planet names are not confirmed; Technical retains all32 bits.",
                     "Bonuses & cheats" => "Physical saved states and shipped score requirements; not current menu availability or confirmed on/off labels. Runtime mode can remap menu indices.",
                     "Stored state blocks" => "Bounded native-format RLE inspection, not a planet/completion map. Select a row for decoded hash, byte histogram, clipping and header evidence.",
+                    "Game settings" => "Saved options, read-only. Percentages are display conversions of volume floats, not measured audio loudness. Technical retains unknown fields and exact raw bytes.",
                     "World progress" => "Saved flags/counters only, not a completion percentage or current travel eligibility. Labels are formatted native identifiers.",
                     "Quick select" => "Stored indices, not a proven wheel order. Automatic insertion searches only the first24 of32 slots.",
                     "Objects & equipment" => "Native object counters, not weapon IDs. Select a row for its high-water count and positive-addition counter; timer/arena units are unverified.",
@@ -84,7 +87,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private static bool Include(string view, string[] c)
         {
             if (view == "Counters & nearby fields")
-                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x458 or 0x480 or 0x8708;
+                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x458 or 0x480 or 0x8708 or 0x8740 or 0x906E8;
+            if (view == "Game settings") return !c[3].StartsWith("unmapped", StringComparison.Ordinal);
             if (view == "Blueprints") return c[1] == "Yes" || c[2] == "Yes";
             if (view != "Files & headers") return true;
             return c[2] is "Length" or "Dimensions" or "Inspection unavailable" ||
@@ -107,6 +111,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Quick select" => new[] { c[0], c[2] },
             "Objects & equipment" => new[] { Label(c[1], "OBJ_"), c[2] },
             "Counters & nearby fields" => Summary(c),
+            "Game settings" => new[] { c[0], c[1] },
             "Gameplay records" => new[] { Label(c[1]), Label(c[2], "gameplay_") },
             "Save regions" => Region(c),
             _ => new[] { c[0], MetadataLabel(c[2]), c[2] == "Length" ? c[3].Split(" (0x", StringSplitOptions.None)[0] : c[3] }
@@ -143,6 +148,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 value = item < 32 ? TodResearch.Inventory[(int)item].GetProperty("config_name").GetString() : item == uint.MaxValue ? "Unspecified (-1)" : "Unknown item ID " + unchecked((int)item);
             if (Offset(c[0]) == 0x480 && uint.TryParse(value, out uint skin) && skin < 9)
                 value = skin == 0 ? "Default" : Label(TodResearch.Map.GetProperty("collectibles").GetProperty("skins").GetProperty("catalog")[(int)skin].GetProperty("enum").GetString(), "SKIN_");
+            if (Offset(c[0]) is 0x8740 or 0x906E8 && uint.TryParse(value, out uint level))
+            {
+                var catalog = TodResearch.Map.GetProperty("settings").GetProperty("level_selection").GetProperty("catalog");
+                value = level < catalog.GetArrayLength() ? Label(catalog[(int)level].GetProperty("internal_name").GetString()) : "Unmapped ID " + value;
+            }
             return new[] { name, value };
         }
 
@@ -174,7 +184,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Version" => "Header version", _ => field
         };
 
-        private static string Label(string identifier, string prefix = "")
+        internal static string Label(string identifier, string prefix = "")
         {
             string value = identifier.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) ? identifier[prefix.Length..] : identifier;
             return string.Join(" ", value.Split('_', StringSplitOptions.RemoveEmptyEntries).Select(word =>

@@ -201,7 +201,8 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["objects"]["instruction_guards"]
                 + MAPPING["mission_lists"]["instruction_guards"]
                 + MAPPING["bonuses"]["instruction_guards"]
-                + MAPPING["state_storage"]["instruction_guards"]):
+                + MAPPING["state_storage"]["instruction_guards"]
+                + MAPPING["settings"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

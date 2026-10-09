@@ -43,7 +43,14 @@ These ranges cover the entire sample, including unknown areas. The whole-buffer 
 | `0x00428–0x0042C` | 4 | Bolt multiplier; EU 8.0, USA 1.0 | Code-backed getter and update |
 | `0x0042C–0x08764` | `0x8338` | Armor, skins, per-level collectible records, skill points and other state | Partially mapped; preserve unknown portions |
 | `0x08764–0x097D8` | `0x1074` | 27 named gameplay records, stride `0x9C` | Observed |
-| `0x097D8–0x906F0` | `0x86F18` | Large sparse regions and further binary state | Unknown; not proven padding |
+| `0x097D8–0x10148` | `0x6970` | Further world/binary state | Partly opaque; not proven padding |
+| `0x10148–0x10AF8` | `0x9B0` | Twenty active mission lists, stride `0x7C` | Code-backed structure |
+| `0x10AF8–0x114A8` | `0x9B0` | Twenty completed mission lists, stride `0x7C` | Code-backed structure |
+| `0x114A8–0x114D8` | `0x30` | Fifteen named options, one unknown word, two unknown bytes | Code-backed settings APIs |
+| `0x114D8–0x906E4` | `0x7F20C` | 21 native RLE blocks, stride `0x60DC` | Encoding/storage confirmed, logical payload meanings unknown |
+| `0x906E4–0x906E8` | 4 | Unresolved tail word | Unknown |
+| `0x906E8–0x906EC` | 4 | Saved load-level ID | Code-backed, not necessarily current runtime planet |
+| `0x906EC–0x906F0` | 4 | Restart/playthrough-related word | Exact gameplay terminology remains candidate |
 
 The documented currency offsets are implemented in `SaveProfile.cs`. The multiplier at `0x428` is now established by the supplied executable's saved-state pointer, getter and update path; see the progression map below. **RAM addresses are not automatically save offsets**: the executable snapshot linkage establishes the conversion only for the identified saved-state block in the supplied build.
 
@@ -420,6 +427,21 @@ python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodStateStorage.
 python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
+## Saved options and load selections
+
+The exact USA code identifies the **48-byte options block at `0x114A8–0x114D8`**. Its fifteen named fields are listed with native getter/setter addresses in the [settings evidence table](BCUS98127/v02.00/ElfMap.md#saved-settings-and-load-destinations): camera/look inversion words, camera-speed float, control-scheme index, voice/effects/music floats, and help/subtitle/quick-select/Sixaxis/rumble/surround bytes. [Inspect-TodSettings.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSettings.py) derives their offsets from native load instructions and named bindings rather than searching the save for plausible values.
+
+USA observations: camera speed1.0; all inversions and scheme index0; all three volumes `3F666666` (approximately0.9, shown as90%); help text0; subtitles, quick-select pause, Sixaxis, rumble and surround1. Native initializer defaults differ for help text (1) and subtitles (0). Unnamed BE32 word `114C0` is1 and bytes `114D6/114D7` are`0000`, but their meanings remain unknown. The bytes are not normalized or treated as padding. Stub button-layout/rumble-connected APIs do not identify additional saved settings.
+
+Saved load destination is **BE32 at `0x906E8`**; next-level selection is **BE32 at `0x8740`**, not tail word `906E4`. Nineteen native load-name strings form the catalog. The USA snapshot has saved-load ID0 (`metropolis`) and next-level ID`FFFFFFFF`, retained as unmapped without assigning a sentinel meaning. Neither field is necessarily the current runtime planet or the SFO subtitle. The app exposes both in read-only Player summary and options in read-only Game settings; Technical mode retains exact and unknown data.
+
+Runtime checkpoint object `10330610` lies outside the serialized block. Captured position/orientation and valid byte`+EF` are **not** assigned guessed save offsets. Named runtime health accessor resolves object float attribute`6C`; no dedicated saved health field is proven. See the [checkpoint and health findings](BCUS98127/v02.00/ElfMap.md#runtime-checkpoints-and-health-no-saved-offsets-inferred).
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSettings.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodSettings.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
 ## Runtime validation and remaining fields
 
 Executable research is recorded separately in the [Tools of Destruction ELF map](BCUS98127/v02.00/ElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
@@ -440,6 +462,7 @@ Collect paired saves with exactly one intentional change, using copies rather th
 | Earn one skill point | `0x8708`, `0x8710–0x8718` | Verify weighted score, bit order and automatic HARDCORE award |
 | Change health | Unmapped state; `0x418` is confirmed XP | Locate current/max health without conflating them with progression XP |
 | Complete one scenario | `0x8764–0x97D8` and later state | Distinguish statistics from actual progression |
-| Move, save, reload | Unmapped state | Locate checkpoint, planet ID and position fields |
+| Change only one option | `0x114A8–0x114D8` | Verify persisted options and reset/restore timing; retain unknown word/tail |
+| Move, save, reload | `0x906E8`, `0x8740` and unmapped persisted state | Verify load-selection updates; find any persisted checkpoint/position linkage separately from runtime object |
 
 Do not expose speculative fields in the editor until their meaning, bounds, dependencies and in-game load behavior are verified. No internal game checksum algorithm has been established for this sample.

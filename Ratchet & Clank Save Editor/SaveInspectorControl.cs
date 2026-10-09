@@ -50,6 +50,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             technical.Margin = new Padding(10, 7, 3, 3);
             views.Items.AddRange(new object[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Objects & equipment", "World progress", "Quick select", "Player summary", "Saved locations", "Save layout", "Prefix words (technical)", "Files & metadata", "Hex bytes (technical)" });
             views.Items.Insert(views.Items.IndexOf("Save layout"), "Stored state blocks");
+            views.Items.Insert(views.Items.IndexOf("Player summary") + 1, "Game settings");
             toolbar.Controls.Add(views);
             toolbar.Controls.Add(upgradeWeapon);
             toolbar.Controls.Add(hexOffset);
