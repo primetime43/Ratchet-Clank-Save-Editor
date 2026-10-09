@@ -79,6 +79,111 @@
     "sha256": "BEB457F9F5C750C46F2AD27E9DEFB15090785311696EAE7D5178904205DD949C",
     "warning": "European sample versus USA executable. Matching observed layout does not establish cross-region save acceptance. Save offsets below are NOT ELF VAs."
   },
+  "serialization": {
+    "confidence": "confirmed",
+    "runtime_state_va": "0x101EFB20",
+    "size": "0x906F0",
+    "manager_buffer_offset": "0x1FD08",
+    "snapshot_va": "0x0035E710",
+    "restore_va": "0x0035E508",
+    "copy_va": "0x0081A9A8",
+    "file_callback_va": "0x00695BF8",
+    "inventory": {
+      "offset": "0x0",
+      "stride": "0x14",
+      "sample_count": 32,
+      "verified_type": "TOD_SaveInventoryRecord_verified",
+      "xp_offset": "0x4",
+      "ammo_offset": "0x8",
+      "modifier_mask_offset": "0xC",
+      "eligibility_offset": "0x10",
+      "stored_level_offset": "0x11"
+    },
+    "limitations": [
+      "Exact USA executable only; EU sample has matching observed layout, not validated cross-region acceptance.",
+      "Secure-file transport and PFD integrity remain separate. No complete internal checksum or validation scheme has been established.",
+      "Weapon caps, XP thresholds and upgrade entries come from runtime definition data; node names, costs and prerequisites remain unknown.",
+      "Static field meaning is not sufficient to authorize editable UI controls; paired saves and load tests remain required."
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x0035E72C",
+        "bytes": "80821A64"
+      },
+      {
+        "va": "0x0035E73C",
+        "bytes": "60A506F0"
+      },
+      {
+        "va": "0x0035E744",
+        "bytes": "4BEF3CE5"
+      },
+      {
+        "va": "0x0035E50C",
+        "bytes": "80621A64"
+      },
+      {
+        "va": "0x0035E51C",
+        "bytes": "60A506F0"
+      },
+      {
+        "va": "0x0035E534",
+        "bytes": "4BEF3EF5"
+      },
+      {
+        "va": "0x00025964",
+        "bytes": "C17D0008"
+      },
+      {
+        "va": "0x00027688",
+        "bytes": "897D0011"
+      },
+      {
+        "va": "0x00027690",
+        "bytes": "386B0001"
+      },
+      {
+        "va": "0x00466074",
+        "bytes": "C03F0004"
+      },
+      {
+        "va": "0x004660F8",
+        "bytes": "D3FF0004"
+      },
+      {
+        "va": "0x0046615C",
+        "bytes": "98DF0011"
+      },
+      {
+        "va": "0x00465D4C",
+        "bytes": "913F000C"
+      },
+      {
+        "va": "0x00465D60",
+        "bytes": "D03F0008"
+      },
+      {
+        "va": "0x00466510",
+        "bytes": "38A00009"
+      },
+      {
+        "va": "0x00695D94",
+        "bytes": "90BE001C"
+      },
+      {
+        "va": "0x00695D98",
+        "bytes": "915E002C"
+      },
+      {
+        "va": "0x00695DB4",
+        "bytes": "90DE0028"
+      },
+      {
+        "va": "0x00695DB8",
+        "bytes": "90DE0024"
+      }
+    ]
+  },
   "annotations": [
     {
       "va": "0x00859408",
@@ -1716,6 +1821,221 @@
       "evidence": "PS3 import descriptor at 0x0083C5CC; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
     },
     {
+      "va": "0x0035E710",
+      "name": "TOD_snapshot_game_state",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF71",
+      "comment": "Copies 0x906F0 bytes from RAM 0x101EFB20 to manager+0x1FD08 after synchronization helper 0x250758. Byte-preserving copy via thunk 0x252428 to 0x81A9A8; no per-field transform in this copy.",
+      "evidence": "35E72C loads slot 8A1984=101EFB20; 35E734/35E73C construct 906F0; 35E744 calls copy."
+    },
+    {
+      "va": "0x0035E508",
+      "name": "TOD_restore_game_state",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "3CC30002",
+      "comment": "Copies 0x906F0 bytes from manager+0x1FD08 to RAM 0x101EFB20, then applies three saved float settings and state at save offset 0x906E8. This does not establish all load-validation behavior.",
+      "evidence": "35E50C loads slot 8A1984; 35E510/35E51C length; 35E534 copy call."
+    },
+    {
+      "va": "0x0081A9A8",
+      "name": "TOD_copy_bytes",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2BA50007",
+      "comment": "Inspected byte-copy implementation: destination r3, source r4, byte count r5. Research label, not a recovered original symbol.",
+      "evidence": "Raw instructions and decompilation; save/load callers use 0x906F0."
+    },
+    {
+      "va": "0x00695BF8",
+      "name": "TOD_save_file_callback",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF41",
+      "comment": "CellSaveData file callback. State 5 requests WRITE=1, SECUREFILE=0, filename manager+70 (GAME.SAV), fileBuf manager+D8, fileSize/fileBufSize manager+DC, secureFileId copied from manager+60. fileOffset is not assigned here; RPCS3 zeroes FileSet before callbacks. States 3/4 handle PIC1/ICON0; state 6 reports done.",
+      "evidence": "Descriptor 87EC68=695BF8/8AFE5C; callback slot 8AA484; GAME stage 695D78-695DD4. Field layout: RPCS3 cellSaveData.h."
+    },
+    {
+      "va": "0x000258C0",
+      "name": "TOD_get_weapon_ammo",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF71",
+      "comment": "ID-indexed 0x14-byte record at RAM 101EFB20; reads float32 +08 and integerizes the result. Record +10 and item-definition flags gate eligibility; do not bypass gate or infer ownership from this alone.",
+      "evidence": "Lua get_weapon_ammo wrapper 33C80 calls this. lfs at 25964 = C17D0008; TOC0 slot 888624=101EFB20."
+    },
+    {
+      "va": "0x00027608",
+      "name": "TOD_get_weapon_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF71",
+      "comment": "Returns eligible record byte +11 plus one; returns zero on ineligible path. Same 0x14 stride and state base. Stored level is zero-based, not a four-byte packed integer.",
+      "evidence": "Lua get_weapon_level wrapper 33A98; lbz at 27688 = 897D0011; addi at 27690 = 386B0001."
+    },
+    {
+      "va": "0x00027568",
+      "name": "TOD_get_weapon_progress",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF71",
+      "comment": "Gates eligibility then calls cross-TOC thunk 11940 ->465FF0 with the record pointer. Links named script progress to XP float +04 and level byte +11.",
+      "evidence": "Named Lua wrapper 339C0 (error pointer slot 889A34 ->10005598); call to 11940 at 275E8."
+    },
+    {
+      "va": "0x000339C0",
+      "name": "TOD_lua_get_weapon_progress",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF61",
+      "comment": "Named Lua get_weapon_progress wrapper; validates arguments, calls native 27568 and pushes the numeric result. Floating-return signatures in the default decompiler can be misleading.",
+      "evidence": "Error load 33A0C via TOC0 slot 889A34 ->10005598; native call inspected in assembly."
+    },
+    {
+      "va": "0x00027760",
+      "name": "TOD_get_weapon_max_ammo",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF71",
+      "comment": "Uses record byte +11 and word +0C with the item definition through thunk 10CB0 ->466500. Maximum ammo is not a single universal constant.",
+      "evidence": "Lua get_weapon_max_ammo wrapper 33BA8; native assembly and 466500."
+    },
+    {
+      "va": "0x00465FF0",
+      "name": "TOD_weapon_xp_progress",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF61",
+      "comment": "Computes (record XP - threshold[level]) / (threshold[min(level+1,cap)] - threshold[level]); thresholds come from weapon-data +230, cap helper 465F08. When thresholds equal, returns loaded fallback constant. Do not assume progress is clamped.",
+      "evidence": "466074 lfs f1,4(r31) = C03F0004; 466078-466080 subtract/divide; level byte read at 466020. Raw instructions take precedence over decompiler casts."
+    },
+    {
+      "va": "0x004660A8",
+      "name": "TOD_set_weapon_xp_recalculate_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF61",
+      "comment": "Stores float XP at record+04, recalculates byte +11 using weapon-data thresholds +234 and cap helper 465F08. Level-up path recalculates/refills ammo and may notify another system. Direct save edits must keep XP and level consistent.",
+      "evidence": "4660F8 = D3FF0004; level reset 46610C =989F0011; threshold loop 466118-466164; level-up calls 463DE0 and 465E18."
+    },
+    {
+      "va": "0x00465D00",
+      "name": "TOD_enable_weapon_modifier_bit",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF61",
+      "comment": "ORs a word-shifted bit into record+0C. Compares old/new maximum ammo through 463DE0 and writes new maximum to +08 if changed. This is not a complete purchase transaction: cost/prerequisites are not established.",
+      "evidence": "465D38 lwz +0C; 465D40 slw; 465D4C stw +0C; 465D60 stfs +08."
+    },
+    {
+      "va": "0x00466258",
+      "name": "TOD_apply_weapon_attribute_modifiers",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "81630048",
+      "comment": "For each enabled bit i in the supplied mask, tests upgrade entry i at weapon-data+464, stride18 (hex), against attribute ID. Kind zero adds the entry float; nonzero accumulates a multiplier, then scales the result. Node labels, cost and prerequisites remain unmapped.",
+      "evidence": "Reads entry count at weapon-data+6A4; loops with bit shifts and 0x18-byte increments. Max-ammo caller 466500 selects attribute ID9."
+    },
+    {
+      "va": "0x00466500",
+      "name": "TOD_weapon_max_ammo_from_definition",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "7C6B1B78",
+      "comment": "Reads base max-ammo float at weapon-data+280+4*storedLevel and tail-calls modifier helper 466258 with attribute ID9 and record mask.",
+      "evidence": "466510 li r5,9; 466518 loads item-definition+48; 466520 lfsx; 466524 branch."
+    },
+    {
+      "va": "0x00465C98",
+      "name": "TOD_initialize_weapon_record",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "39200000",
+      "comment": "Sets record ID, zeroes XP/ammo/modifier mask and bytes +10/+11. Does not write +12/+13; their meanings remain unknown.",
+      "evidence": "Raw stores in initializer; do not infer final bytes are padding."
+    },
+    {
+      "va": "0x00465E78",
+      "name": "TOD_promote_weapon_to_stored_level_five",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF81",
+      "comment": "When weapon-data limit permits, sets level byte to5 and XP to weapon-data threshold +244, then updates ammo. Evidence that XP and level must agree.",
+      "evidence": "465E78 function assembly/decompilation; not a universal max-level setter."
+    },
+    {
+      "va": "0x00465F08",
+      "name": "TOD_weapon_level_cap",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF81",
+      "comment": "Derives a per-weapon stored-level cap from item-definition flags, weapon-data +460 and whether current stored level exceeds4. Not proof every item accepts levels0..9.",
+      "evidence": "Called by XP setter and progress routine; weapon definition is runtime asset data."
+    },
+    {
+      "va": "0x002D1C00",
+      "name": "TOD_get_bolts_from_saved_state",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "8122F298",
+      "comment": "Reads uint32 at saved-state base+41C. Slot 89F1B8 contains101EFB20; independent executable confirmation of the existing save offset.",
+      "evidence": "Lua get_hero_bolts wrapper34C50 ->269D0 ->thunk13F20 ->2D1C00."
+    },
+    {
+      "va": "0x00888624",
+      "name": "TOD_state_base_TOC0",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101EFB20",
+      "comment": "TOC0 88FF38-7914; ammo, level and progress getters share this base.",
+      "evidence": "Reference ELF pointer bytes, descriptor TOCs and raw instruction chain."
+    },
+    {
+      "va": "0x008A1984",
+      "name": "TOD_state_base_TOC1",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101EFB20",
+      "comment": "TOC1 89FF20+1A64; save snapshot/load restore copy the same base.",
+      "evidence": "Reference ELF pointer bytes, descriptor TOCs and raw instruction chain."
+    },
+    {
+      "va": "0x0089F1B8",
+      "name": "TOD_currency_state_base_slot",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101EFB20",
+      "comment": "TOC1 89FF20-D68; bolts getter uses this base+41C.",
+      "evidence": "Reference ELF pointer bytes, descriptor TOCs and raw instruction chain."
+    },
+    {
+      "va": "0x0087EC68",
+      "name": "TOD_save_file_callback_descriptor",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "00695BF8008AFE5C",
+      "comment": "PS3 code/TOC descriptor for confirmed secure-save file callback.",
+      "evidence": "Reference ELF pointer bytes, descriptor TOCs and raw instruction chain."
+    },
+    {
+      "va": "0x008AA484",
+      "name": "TOD_save_file_callback_slot",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "0087EC68",
+      "comment": "TOC2 8AFE5C-59D8; file callback descriptor passed to save SDK.",
+      "evidence": "Reference ELF pointer bytes, descriptor TOCs and raw instruction chain."
+    },
+    {
+      "va": "0x101EFB20",
+      "name": "TOD_serialized_game_state",
+      "kind": "data",
+      "confidence": "confirmed",
+      "comment": "Runtime/BSS contiguous game-state block, 0x906F0 bytes. Save snapshot copies to manager+1FD08; restore copies back. Inventory records begin here, stride0x14. No initialized ELF bytes exist at this address. Do not confuse with RPCS3 host addresses.",
+      "evidence": "TOC slots888624/8A1984/89F1B8 point here; copy routines35E710/35E508 and named gameplay getters agree."
+    },
+    {
       "va": "0x0083A4EC",
       "name": "TOD_import_cellSync_cellSyncLFQueueGetDirection",
       "kind": "import_stub",
@@ -1726,6 +2046,56 @@
     }
   ],
   "structures": [
+    {
+      "name": "TOD_SaveInventoryRecord_verified",
+      "size": "0x14",
+      "comment": "USA v02.00 code-backed inventory layout at RAM101EFB20 and snapshot-relative offset0, stride0x14. EU sample matches, not proof of region acceptance or safe writes. Supersedes candidate names in legacy observed type without overwriting custom types.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "item_id",
+          "type": "u32",
+          "comment": "Used for item/weapon definition lookup; sample records0..31."
+        },
+        {
+          "offset": "0x4",
+          "name": "weapon_xp",
+          "type": "f32",
+          "comment": "465FF0 progress numerator and4660A8 threshold-based level setter."
+        },
+        {
+          "offset": "0x8",
+          "name": "ammo",
+          "type": "f32",
+          "comment": "258C0 reads it; max depends on level and modifiers; script getter integerizes."
+        },
+        {
+          "offset": "0xC",
+          "name": "modifier_mask",
+          "type": "u32",
+          "comment": "Bits select weapon-data upgrade entries; node labels/prerequisites unknown."
+        },
+        {
+          "offset": "0x10",
+          "name": "eligibility_state",
+          "type": "u8",
+          "comment": "Used alongside definition flags; not independently proven ownership."
+        },
+        {
+          "offset": "0x11",
+          "name": "stored_level",
+          "type": "u8",
+          "comment": "Zero-based; script getter adds one when eligible. Cap and XP are weapon dependent."
+        },
+        {
+          "offset": "0x12",
+          "name": "unknown_12_13",
+          "type": "u8",
+          "count": 2,
+          "comment": "Not written by465C98; preserve, not proven padding."
+        }
+      ]
+    },
     {
       "name": "TOD_PS3_FunctionDescriptor",
       "size": "0x8",
@@ -1748,7 +2118,7 @@
     {
       "name": "TOD_SaveInventoryRecord_observed",
       "size": "0x14",
-      "comment": "Observed European save layout, NOT yet mapped to an ELF global. Candidate member names are hypotheses; do not enable editing from this type alone.",
+      "comment": "Legacy initial European sample survey with candidate names. Superseded by TOD_SaveInventoryRecord_verified after USA ELF snapshot/getter tracing. Retained for compatibility; existing analyst types are not overwritten. Neither type alone establishes safe editing.",
       "fields": [
         {
           "offset": "0x0",

@@ -77,7 +77,7 @@ The download script verifies pinned archive hashes and stores public samples onl
 
 ### Format references
 
-- [Tools of Destruction save map](docs/ToolsOfDestructionSaveFormat.md): initial read-only analysis of BCES00052_SAVE_1, wrapper headers, inventory records, gameplay names and unknown regions. Includes a repeatable inspection script; candidate fields are not enabled for editing.
+- [Tools of Destruction save map](docs/ToolsOfDestructionSaveFormat.md): read-only analysis of BCES00052_SAVE_1, wrapper headers, gameplay names and unknown regions, plus code-backed snapshot linkage and weapon XP/ammo/level/modifier fields from the USA v02.00 ELF. Includes repeatable inspection and Ghidra tracing tools; new fields are not enabled for editing pending in-game validation.
 - [Tools of Destruction ELF map](docs/ToolsOfDestructionElfMap.md): USA v02.00 executable research, including PS3 imports, scripting/physics, rendering/SPU, audio, memory and save I/O. Includes a shared address map and IDA/Ghidra annotation importers.
 - [RatchetModding's save backends](https://github.com/RatchetModding/slimseditor/blob/master/slimseditor/backends.py): PS3 byte order, remaster player blocks and file names. Its [game definitions](https://github.com/RatchetModding/slimseditor/tree/master/slimseditor/game) document trilogy currency offsets.
 - [Apollo's PS3 save-patch database](https://github.com/bucanero/apollo-patches/tree/main/PS3): A Crack in Time (`0x588`), All 4 One's character counters, and Full Frontal Assault's `player_bolts` record. Keys are retained from the bundled game-key database; the native configuration is generated from the application's catalog to avoid mismatches.

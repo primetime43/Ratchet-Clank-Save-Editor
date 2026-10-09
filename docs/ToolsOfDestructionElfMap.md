@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 183 annotations, 118 imports, evidence, byte signatures and five structure definitions.
+- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 207 annotations, 118 imports, evidence, byte signatures and six structure definitions.
 - [Ghidra importer](../Tools/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../Tools/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](ToolsOfDestructionSaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -97,7 +97,7 @@ Generated Lua configuration and gameplay source-path strings survive at `0x10019
 | `0x2C4930` | Lua `physics_off` wrapper | Matching error load `0x2C4984` resolves to `0x10025338`; calls target `0x27E2A0` |
 | `0x6687E0` | Embedded Lua version getter | Two instructions and pointer chain above |
 
-The wrappers do not establish the complete physics engine, native object layouts or safe gameplay patch points. Script names such as `get_hero_bolts`, `get_weapon_ammo` and `get_weapon_level` are additional anchors, not confirmed global-variable addresses.
+The wrappers do not establish the complete physics engine, native object layouts or safe gameplay patch points. Weapon and currency scripting anchors have now been traced separately to the saved-state block below.
 
 ### Rendering and SPU work
 
@@ -129,21 +129,68 @@ The same routine initializes these **runtime object fields**, not save-header fi
 | Object offset | Initialized value | Evidence |
 | --- | --- | --- |
 | `+0xC0` / `+0xC4` | Buffer at object `+0x108`, size `0x800` | Stores at `0x35E394–0x35E398` |
-| `+0xC8` / `+0xCC` | Two values `0x20`, meanings unknown | Stores at `0x35E3E0` / `0x35E3A8` |
-| `+0xD0` / `+0xD4` | Buffer at object `+0x908`, size `0x1F400` | Stores at `0x35E3AC` / `0x35E39C` |
+| `+0xC8` / `+0xCC` | Directory/file list maxima, each `0x20` | Stores at `0x35E3E0` / `0x35E3A8`; SDK list-buffer setup |
+| `+0xD0` / `+0xD4` | ICON0 buffer at object `+0x908`, capacity `0x1F400` | Stores at `0x35E3AC` / `0x35E39C`; file callback reads these fields |
 | `+0xD8` / `+0xDC` | Game buffer at object `+0x1FD08`, size **`0x906F0`** | Pointer calculation `0x35E2E8/0x35E2FC`; size construction `0x35E2CC/0x35E304`; stores `0x35E3A0/0x35E3A4` |
 
 `0x906F0` matches the European sample's exact `GAME.SAV` length. This independently supports the buffer length, **not** every serialized field or cross-region acceptance. The setup routine then calls runtime initialization at `0x694D28` through the cross-TOC thunk described above.
 
 Lua wrapper `0x39D588` names `save_game_exists` on its error path and calls predicate `0x39B700`. The predicate reaches an object through pointer slot `0x8A2ACC` and returns true only when both words at object `+0x100` and `+0xFC` are nonzero. Their exact purposes remain unknown; this is not a verified on-disk header parser.
 
-The serializer, inventory-to-file copy, health/armor fields, upgrade-bit semantics and any internal checksum remain unverified. The observed save inventory/gameplay types are included for manual analysis only, with candidate members clearly named. No editor fields were enabled or changed by this research.
+### Verified snapshot and weapon state
+
+The serialization boundary is now established: a contiguous **`0x906F0`-byte game-state block at RAM VA `0x101EFB20`** is copied to/from the save-manager buffer. This is a runtime/BSS address, not initialized ELF data or an emulator host-process address.
+
+```text
+RAM game state 0x101EFB20, length 0x906F0
+  -> 0x35E710 snapshot via 0x252428 -> 0x81A9A8 byte copy
+save manager +0x1FD08 (pointer at +0xD8, length at +0xDC)
+  -> 0x695BF8 file callback, state 5
+PS3 secure GAME.SAV write
+
+load restore: manager buffer -> 0x35E508 -> same RAM block
+```
+
+Evidence is independently reproducible:
+
+| Location | Established behavior |
+| --- | --- |
+| TOC slot `0x888624` | BE pointer `0x101EFB20`; used by inventory getters with TOC `0x88FF38` |
+| TOC slot `0x8A1984` | Same pointer; used by snapshot/restore with TOC `0x89FF20` |
+| `0x35E72C–0x35E744` | Loads state source, computes manager `+0x1FD08`, constructs length `0x906F0`, calls byte copy |
+| `0x35E50C–0x35E534` | Reverses source/destination with the same length |
+| `0x87EC68` | Callback descriptor: code `0x695BF8`, TOC `0x8AFE5C`; pointer slot `0x8AA484` |
+| `0x695D78–0x695DD4` | File operation WRITE (1), type SECUREFILE (0), filename manager `+0x70`, buffer from `+0xD8`, both lengths from `+0xDC`, 16-byte secure ID copied from `+0x60` |
+| `0x2D1C00` | Reads bolts at state `+0x41C`, using pointer slot `0x89F1B8 = 0x101EFB20` |
+
+Callback field names follow [RPCS3's CellSaveData structures](https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.h). The game callback does not explicitly assign `fileOffset`; [RPCS3 clears FileSet before each callback and writes from its resulting offset](https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp), giving offset zero there. That emulator behavior is not a separately verified implementation of console firmware. The copy contains no field transform; secure-file handling/PFD integrity is outside this copy, and a complete internal checksum/validation scheme remains unestablished.
+
+Before snapshot, `0x35E710` calls thunk `0x250758 → 0x24EAC8`, which calls `0x24DAB8` on another object's `+0x1AF84` area. That helper conditionally delegates through `0x12670`. Its complete synchronization semantics are not mapped; do not claim the snapshot call is the only pre-save operation. Restore also applies float state from save offsets `0x114C8`, `0x114CC`, `0x114C4` and delegates state `0x906E8`; exact meanings remain unknown.
+
+The inventory base is this same RAM block. Native getters calculate `base + ID*0x14`, not an unrelated RAM structure:
+
+| Script/native chain | Verified record use |
+| --- | --- |
+| `get_weapon_ammo`: `0x33C80 → 0x258C0` | `lfs` at `0x25964` reads float `+0x08`; subsequent conversion integerizes the script result |
+| `get_weapon_level`: `0x33A98 → 0x27608` | `lbz` at `0x27688` reads byte `+0x11`; `0x27690` adds one |
+| `get_weapon_progress`: `0x339C0 → 0x27568 → 0x11940 → 0x465FF0` | XP float `+0x04`, level byte `+0x11`, weapon-data thresholds `+0x230 + 4*level` |
+| `get_weapon_max_ammo`: `0x33BA8 → 0x27760 → 0x10CB0 → 0x466500` | Level byte `+0x11` and modifier word `+0x0C`; per-level definition values and attribute-9 modifiers |
+
+Ammo, level and progress paths gate access with byte `+0x10` and item-definition flags at definition `+0x18`. The named ownership wrapper `0x33F40` leads to `0x25AF0 → 0x12950`, but the final ownership implementation has not been resolved here. Do not rename `+0x10` to a proven ownership flag.
+
+XP setter `0x4660A8` writes float `+0x04`, recomputes stored level from weapon-data thresholds and cap helper `0x465F08`, and updates ammo on level increase. Helper `0x465E78` explicitly pairs stored level 5 with its XP threshold. Changing the byte alone can therefore leave inconsistent XP/level state. The default decompiler sometimes drops floating-point returns or represents float loads as integer casts; the raw `lfs/stfs/fsubs/fdivs` instructions establish the types.
+
+Modifier helper `0x465D00` ORs a selected bit into record `+0x0C` and refills ammo if maximum changes. Calculation `0x466258` walks weapon-data entries at `+0x464`, stride `0x18`, count at `+0x6A4`; enabled bits select entries matching an attribute ID. Kind zero adds a float, other kinds accumulate a multiplier. Maximum ammo chooses attribute 9 and a base value at weapon-data `+0x280 + 4*level`. **Specific node labels, costs, prerequisites, safe masks and universal ammo/XP bounds remain unknown**; runtime weapon assets are needed to resolve them. This helper alone does not describe a complete upgrade purchase.
+
+The JSON `serialization` section records the state/copy chain, field offsets and exact instruction guards. The new `TOD_SaveInventoryRecord_verified` type supersedes candidate field names without overwriting an existing analyst's `TOD_SaveInventoryRecord_observed` type. Both remain available because importers preserve existing types. The remaining gameplay/health/armor structures are not verified. No editor fields were enabled by this research, and the USA ELF/European sample match is not a cross-region load test.
 
 ## Import and reproduce
 
 ### Ghidra
 
-Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. Ghidra 12.0.3 successfully imported 182 mapped annotations; the unmapped third TOC base remains in JSON.
+Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
+
+Ghidra 12.0.3 passed the expanded map's live checks: 206 mapped annotations, six structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite passes 12 checks, including the original ELF hash and 19 serialization instruction guards. The reference-save inspector passes all 10 checks, including unchanged hashes for every original file.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 
@@ -156,6 +203,16 @@ For a fresh headless research project, run descriptor preparation **before** ana
 ```
 
 `SurveyTod.java <output-directory> [function-VA ...]` exports string references, descriptor-based TOC-load leads, assembly and selected decompilations. Its direct TOC-load scan assumes the descriptor TOC for that instruction; confirm r2-changing thunks and restore paths in assembly before treating every lead as resolved. Local project/copy/reports are under ignored `artifacts/ghidra/BCUS98127-02.00/`; no game binary is included in the tracked research files.
+
+`TraceTodSave.java <fresh-output-directory> <queries...>` provides a targeted, read-only survey with original instruction bytes. Queries are `f:<VA>` (function), `r:<VA>` (references and TOC leads), `d:<VA>:<hex-size>` (data), `n:<VA>:<decimal-count>` (nearby functions) and `i:<hex-immediate>` (instruction scan). It checks the reference ELF hash, refuses an existing output directory, and marks uninitialized/BSS bytes instead of inventing values. It does not add labels or change types. Example after preparing the project:
+
+```powershell
+& "$GhidraRoot/support/analyzeHeadless.bat" $ProjectDirectory TodResearch `
+  -process EBOOT.ELF -noanalysis -scriptPath "$RepoRoot/Tools/Ghidra" `
+  -postScript TraceTodSave.java "$RepoRoot/artifacts/tod-weapon-trace" `
+  f:0035e710 f:0035e508 f:00695bf8 f:000258c0 f:00027608 `
+  f:00465ff0 f:004660a8 f:00465d00 f:00466258
+```
 
 ### IDA
 

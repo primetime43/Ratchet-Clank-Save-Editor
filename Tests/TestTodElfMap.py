@@ -46,6 +46,28 @@ class MapChecks(unittest.TestCase):
             end = int(region["end_exclusive"], 0)
         self.assertEqual(end, int(MAPPING["reference_save"]["size"], 0))
 
+    def test_verified_snapshot_and_inventory_layout(self):
+        snapshot = MAPPING["serialization"]
+        self.assertEqual(int(snapshot["runtime_state_va"], 0), 0x101EFB20)
+        self.assertEqual(int(snapshot["size"], 0), int(MAPPING["reference_save"]["size"], 0))
+        names = {entry["va"]: entry for entry in MAPPING["annotations"]}
+        for key in ("snapshot_va", "restore_va", "copy_va", "file_callback_va"):
+            self.assertEqual(names[snapshot[key]]["confidence"], "confirmed")
+        for address in ("0x00888624", "0x008A1984", "0x0089F1B8"):
+            self.assertEqual(int(names[address]["bytes"], 16), int(snapshot["runtime_state_va"], 0))
+        inventory = snapshot["inventory"]
+        record = next(t for t in MAPPING["structures"] if t["name"] == inventory["verified_type"])
+        self.assertEqual(int(record["size"], 0), int(inventory["stride"], 0))
+        fields = {f["name"]: f for f in record["fields"]}
+        for name, key, expected_type in (("weapon_xp", "xp_offset", "f32"),
+                ("ammo", "ammo_offset", "f32"), ("modifier_mask", "modifier_mask_offset", "u32"),
+                ("eligibility_state", "eligibility_offset", "u8"), ("stored_level", "stored_level_offset", "u8")):
+            self.assertEqual(int(fields[name]["offset"], 0), int(inventory[key], 0))
+            self.assertEqual(fields[name]["type"], expected_type)
+        self.assertEqual(int(fields["unknown_12_13"]["offset"], 0), 0x12)
+        self.assertEqual(fields["unknown_12_13"]["count"], 2)
+        self.assertEqual(int(inventory["stride"], 0) * inventory["sample_count"], 0x280)
+
     def test_import_counts_and_resolved_name_ids(self):
         libraries = MAPPING["library_imports"]
         metadata = MAPPING["binary"]["import_table"]
@@ -81,16 +103,16 @@ class MapChecks(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest().upper(), MAPPING["binary"]["sha256"])
         self.assertEqual(len(raw), MAPPING["binary"]["size"])
         self.assertEqual(raw[:6], b"\x7fELF\x02\x02")
-        for entry in MAPPING["annotations"]:
+        for entry in MAPPING["annotations"] + MAPPING["serialization"]["instruction_guards"]:
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])
             segments = [segment for segment in MAPPING["binary"]["load_segments"]
                         if int(segment["va"], 0) <= va and va + len(expected) <= int(segment["va"], 0) + int(segment["file_size"], 0)]
-            self.assertEqual(len(segments), 1, entry["name"])
+            self.assertEqual(len(segments), 1, entry.get("name", entry["va"]))
             segment = segments[0]
             offset = va - int(segment["va"], 0) + int(segment["file_offset"], 0)
-            self.assertEqual(raw[offset:offset + len(expected)], expected, entry["name"])
+            self.assertEqual(raw[offset:offset + len(expected)], expected, entry.get("name", entry["va"]))
         table = MAPPING["binary"]["descriptor_table"]
         counts = {}
         # This table lives in the second PT_LOAD (VA = file offset + 0x10000).

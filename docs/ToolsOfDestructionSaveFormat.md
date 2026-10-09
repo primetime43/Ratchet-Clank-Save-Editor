@@ -7,6 +7,7 @@ Initial offset map for the PS3 `BCES00052_SAVE_1` sample. `GAME.SAV` contains re
 All offsets are hexadecimal and relative to the named file. Ranges use an **exclusive** end. Evidence levels:
 
 - **Documented:** established container format or existing currency offsets.
+- **Code-backed:** verified against the exact USA v02.00 ELF; not a substitute for in-game load tests or cross-region validation.
 - **Observed:** exact bytes, lengths, names or repeating patterns in this sample.
 - **Candidate:** plausible gameplay meaning; needs controlled comparison saves.
 - **Unknown:** retained without a guessed meaning.
@@ -27,11 +28,11 @@ Sample `GAME.SAV` SHA-256: `BEB457F9F5C750C46F2AD27E9DEFB15090785311696EAE7D5178
 
 ## Game data overview
 
-These ranges cover the entire sample, including unknown areas. They are an observed partition, not a verified serialization schema.
+These ranges cover the entire sample, including unknown areas. The whole-buffer copy is now verified in the USA executable; most internal subranges remain an observed partition rather than a fully understood schema.
 
 | Range | Size | Contents | Evidence |
 | --- | ---: | --- | --- |
-| `0x00000–0x00280` | `0x280` | 32 records with sequential IDs 0–31 and stride `0x14` | Observed; likely inventory/weapon state |
+| `0x00000–0x00280` | `0x280` | 32 item/weapon records with sequential IDs 0–31 and stride `0x14` | Sample count observed; stride and fields code-backed |
 | `0x00280–0x0041C` | `0x19C` | Integer lists, `FFFFFFFF` sentinels, repeated small values | Unknown; possible inventory ordering/unlock arrays |
 | `0x0041C–0x00420` | 4 | Bolts, uint32 BE | Documented |
 | `0x00420–0x00424` | 4 | Raritanium, uint32 BE | Documented |
@@ -41,7 +42,7 @@ These ranges cover the entire sample, including unknown areas. They are an obser
 | `0x08764–0x097D8` | `0x1074` | 27 named gameplay records, stride `0x9C` | Observed |
 | `0x097D8–0x906F0` | `0x86F18` | Large sparse regions and further binary state | Unknown; not proven padding |
 
-The documented currency offsets are implemented in `SaveProfile.cs`. The multiplier candidate matches both the sample's plausible 8.0 value and the relative bolts/raritanium/multiplier layout in [RatchetHax's ToD memory definitions](https://github.com/ParadoxEpoch/RatchetHax/blob/main/games/rctod_ps3_npua80965.js). **RAM addresses are not save offsets**; this is supporting evidence, not a verified save-field definition.
+The documented currency offsets are implemented in `SaveProfile.cs`. The multiplier candidate matches both the sample's plausible 8.0 value and the relative bolts/raritanium/multiplier layout in [RatchetHax's ToD memory definitions](https://github.com/ParadoxEpoch/RatchetHax/blob/main/games/rctod_ps3_npua80965.js). **RAM addresses are not automatically save offsets**; the external layout supports the multiplier hypothesis but does not verify that field. The executable snapshot linkage below establishes the conversion only for the identified saved-state block in the supplied build.
 
 ### Inventory records
 
@@ -49,17 +50,19 @@ For record ID `i`, the observed base is `i * 0x14`, for `i = 0..31`. All 32 IDs 
 
 | Relative offset | Size | Type | Meaning |
 | --- | ---: | --- | --- |
-| `+0x00` | 4 | uint32 BE | Observed sequential item/weapon ID |
-| `+0x04` | 4 | float32 BE | Candidate accumulated weapon XP |
-| `+0x08` | 4 | float32 BE | Candidate ammunition/charge count |
-| `+0x0C` | 4 | uint32 BE | Candidate upgrade bitmask |
-| `+0x10` | 4 | Four bytes | Unknown packed state; possible ownership/level flags |
+| `+0x00` | 4 | uint32 BE | Item/weapon ID used for definition lookup |
+| `+0x04` | 4 | float32 BE | Weapon XP; progress and level recalculation use it |
+| `+0x08` | 4 | float32 BE | Ammo; script getter integerizes the float |
+| `+0x0C` | 4 | uint32 BE | Modifier mask selecting weapon-definition upgrade entries |
+| `+0x10` | 1 | uint8 | Eligibility state, used alongside item-definition flags; not independently verified ownership |
+| `+0x11` | 1 | uint8 | Zero-based stored level; eligible script getter returns this plus one |
+| `+0x12` | 2 | Opaque bytes | Unknown; preserve |
 
-Do not decode the final four bytes as one meaningful BE integer. IDs 1–15 contain `01 09 00 00`; other records contain `01 00 00 00`. The second byte could be a zero-based weapon level, but this sample alone does not prove it. The first byte is also 1 for empty-looking records, so it is **not** a verified ownership flag.
+Do not decode the final four bytes as one meaningful BE integer. IDs 1–15 contain `01 09 00 00`; other records contain `01 00 00 00`. The code confirms that `09` is stored level 9, exposed as level 10 when eligible. The first byte is also 1 for empty-looking records, so it is **not** independently a verified ownership flag. The initializer at `0x465C98` does not write the final two bytes; this does not prove they are padding.
 
-The names below come from RatchetHax's ID catalog; the save values and offsets are observed here. Weapon names can change with upgrades. Its 15 ammo addresses have the same `0x14` stride and the same positions relative to bolts as this candidate table, supporting the ammo interpretation across builds. XP, ammo and mask meanings remain candidates until checked against game behavior.
+The names below come from RatchetHax's ID catalog; the values and offsets are observed in the sample. Weapon names can change with upgrades. Ammo, XP, stored level and the mask's modifier-selection role are now code-backed in the USA build. Specific upgrade-node meanings, prerequisites, prices and valid editing combinations still need verification.
 
-| ID | Base | Catalog name | Candidate ammo | Mask |
+| ID | Base | Catalog name | Ammo float | Modifier mask |
 | ---: | --- | --- | ---: | --- |
 | 0 | `0x000` | Unknown | 0 | `00000000` |
 | 1 | `0x014` | Combuster | 100 | `00003FFE` |
@@ -79,7 +82,22 @@ The names below come from RatchetHax's ID catalog; the save values and offsets a
 | 15 | `0x12C` | RYNO IV | 832 | `00007FFE` |
 | 16–31 | `0x140–0x280` | Unmapped IDs | See JSON survey | All zero masks |
 
-For example, record 1 has `00000001 47A33965 42C80000 00003FFE 01090000`: ID 1, candidate XP ≈83,570.79, candidate ammo 100, mask `0x3FFE` and four packed bytes. There is no proven checksum, signature, save version or total-length field in this prefix. `0x00000004` is a record field, **not an established header version**.
+For example, record 1 has `00000001 47A33965 42C80000 00003FFE 01090000`: ID 1, XP ≈83,570.79, ammo 100, modifier mask `0x3FFE`, eligibility byte 1, stored level 9 and two unknown bytes. There is no proven checksum, signature, save version or total-length field in this prefix. `0x00000004` is a record field, **not an established header version**.
+
+### Verified snapshot and inventory dependencies
+
+The exact USA v02.00 ELF uses RAM block `0x101EFB20`, length `0x906F0`, as its saved state. Snapshot function `0x35E710` copies it byte-for-byte to the save-manager buffer at object `+0x1FD08`; restore function `0x35E508` copies the same bytes back. Both call byte-copy implementation `0x81A9A8` through thunk `0x252428`. File callback `0x695BF8` hands that buffer and length to the PS3 save API as secure `GAME.SAV` data. Thus `save offset = game-state VA − 0x101EFB20` for this snapshot layout, not for arbitrary game RAM. Details and exact instruction guards are in the [ELF map](ToolsOfDestructionElfMap.md#verified-snapshot-and-weapon-state).
+
+The named Lua getters connect the record to gameplay: ammo `0x33C80 → 0x258C0`, level `0x33A98 → 0x27608`, and progress `0x339C0 → 0x27568 → thunk 0x11940 → 0x465FF0`. The getters use the same RAM base and `0x14` stride. Ammo and level are gated by byte `+0x10` and definition flags; inactive records must not be interpreted as usable weapons solely because their numeric fields look plausible.
+
+Editing must preserve dependencies:
+
+- `0x4660A8` stores XP at `+0x04` and recalculates level at `+0x11` from weapon-specific thresholds. On level increase, it also updates ammo and can notify another system. Writing XP alone does not reproduce the game operation.
+- `0x465FF0` computes progress between thresholds at weapon-data `+0x230 + 4*level`. The next threshold is capped using `0x465F08`; the equal-threshold path returns a fallback constant. The inspected formula does not clamp arbitrary edited XP.
+- `0x465D00` enables a bit in `+0x0C`; if maximum ammo changes, it writes the new maximum into `+0x08`. This helper is not a complete purchase transaction.
+- `0x466500` derives maximum ammo from weapon-data `+0x280 + 4*level`, then applies mask-selected attribute-9 modifiers through `0x466258`. Modifier entries begin at weapon-data `+0x464`, stride `0x18`, with count at `+0x6A4`. Node ordering and values depend on runtime weapon definitions; they are not a universal upgrade catalog embedded in the save.
+
+This confirms structural meaning, **not safe editable bounds or successful loads**. The ELF is USA; the reference save is European. Matching size/layout does not prove cross-region compatibility. The read-only survey JSON retains its original candidate property names for backward compatibility; the new `TOD_SaveInventoryRecord_verified` analysis type contains the refined semantics. No new editor controls are enabled.
 
 ### Currency and nearby values
 
@@ -207,17 +225,17 @@ Omit `-OutputFile` to return JSON without writing anything. The report includes 
 
 Run the reference-specific checks with `./Tests/TestTodSaveInspector.ps1 -SourceFolder <save-folder>`. They verify the observed tables, privacy redaction, output safeguards, malformed-input rejection and unchanged source hashes. These checks do not replace controlled in-game tests of candidate fields.
 
-## Next fields to verify
+## Runtime validation and remaining fields
 
-Executable research is recorded separately in the [Tools of Destruction ELF map](ToolsOfDestructionElfMap.md), with a shared JSON address map and IDA/Ghidra importers. The USA v02.00 setup routine at ELF VA `0x35E2C8` initializes a `GAME.SAV` buffer of `0x906F0` bytes, matching this sample's length. These are runtime object fields, not a newly identified on-disk header. Save-field semantics below remain candidates until serialization or gameplay evidence verifies them.
+Executable research is recorded separately in the [Tools of Destruction ELF map](ToolsOfDestructionElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
 
 Collect paired saves with exactly one intentional change, using copies rather than the only original. Autosave time and unrelated engine state can still change, so repeated pairs are needed.
 
 | Controlled change | Candidate offsets or region | Question |
 | --- | --- | --- |
 | Fire one Combuster shot | `0x01C` | Does the float decrease by exactly one? |
-| Earn XP with one weapon | `i * 0x14 + 4` | Is the float weapon XP or another accumulator? |
-| Level up one weapon | `i * 0x14 + 0x10` | Does byte `+0x11` encode zero-based level? |
+| Earn XP with one weapon | `i * 0x14 + 4` | Verify XP delta and threshold behavior against gameplay |
+| Level up one weapon | `i * 0x14 + 0x11` | Verify level/XP/ammo changes together |
 | Buy one raritanium upgrade | `i * 0x14 + 0x0C` | Which bit corresponds to the purchased node? |
 | Change only bolt multiplier | `0x428` | Does this float track the displayed multiplier? |
 | Unlock one gadget | `0x280–0x41C` and unmapped state | Find its ownership bit and ID |
