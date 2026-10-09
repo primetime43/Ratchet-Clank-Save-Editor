@@ -3,7 +3,8 @@
 ## Findings and definitions
 
 - [Executable map and evidence](ElfMap.md): save and non-save findings, import instructions and repeatable commands.
-- [Native address/structure map](maps/NativeMap.json): 1190 annotations, 118 imports and 31 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1205 annotations, 118 imports and 32 structure definitions.
+- [Parallel save research](ElfMap.md#parallel-save-research-rewards-replay-lifecycle-and-mission-keys): weapon experience rewards, per-world diminishing-return indices/remainders, replay lifecycle, historical segment median and81 native mission lookup pairs.
 - [Persistent grids and copied headers](ElfMap.md#persistent-grid-volume-headers-map-labels-and-group-flags): 512×512 native grid, all21 physical slot-to-level label associations, copied200-byte volume definitions and seven saved group flags.
 - [Menu routing and aggregate predicate](ElfMap.md#map-menu-routing-and-native-accumulator-predicate): inverse browse permutations, shared image IDs, readiness skips and qualified accumulator threshold.
 - [Map rectangles and clearing brush](ElfMap.md#copied-map-rectangles-world-projection-and-clearing-brush): all six group-word roles, projection/sign formula and native14×14 class-matching brush.

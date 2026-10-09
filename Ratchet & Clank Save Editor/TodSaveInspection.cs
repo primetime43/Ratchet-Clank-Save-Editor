@@ -81,6 +81,35 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return new("Read-only plaintext session snapshot; pending currency edits are excluded. USA reference definitions are not proof of regional/runtime compatibility.", (byte[])bytes.Clone());
         }
 
+        private static string MissionLookup(uint id, bool description)
+        {
+            string idKey = description ? "description_lookup_id" : "title_lookup_id";
+            string nameKey = description ? "description_enum" : "title_enum";
+            foreach (var pair in TodResearch.Map.GetProperty("segment_bindings").GetProperty("native_mission_lookup_pairs").EnumerateArray())
+                if (pair.GetProperty(idKey).GetUInt32() == id)
+                    return id.ToString(CultureInfo.InvariantCulture) + " (" + pair.GetProperty(nameKey).GetString() + ")";
+            return id.ToString(CultureInfo.InvariantCulture) + " (unmapped)";
+        }
+
+        private string WorldRewardDetails(int level)
+        {
+            int world = 0x488 + level * 0x408;
+            var text = new StringBuilder("Saved world reward tracking (not balances or current payouts):\r\n");
+            foreach (var field in TodResearch.Map.GetProperty("reward_channels").GetProperty("world_storage").GetProperty("fields").EnumerateArray())
+            {
+                int offset = world + TodResearch.Offset(field.GetProperty("offset"));
+                string kind = field.GetProperty("type").GetString();
+                uint bits = kind == "u8" ? data[offset] : U32(offset);
+                string value = kind == "f32" ? Number(bits) : bits.ToString(CultureInfo.InvariantCulture);
+                text.AppendLine($"{field.GetProperty("name").GetString()}: {value}; raw {bits:X8} at {TodResearch.Hex(offset)}.");
+            }
+            if (U32(world + 0x3F0) > 4 || U32(world + 0x3F4) > 4)
+                text.AppendLine("Reward ladder index outside the verified five-entry table; preserved, not clamped or evaluated.");
+            text.AppendLine($"Unknown world +3EC: {U32(world + 0x3EC):X8}; unknown +404..407: {Convert.ToHexString(data.AsSpan(world + 0x404, 4))}.");
+            text.AppendLine("Cached experience has a confirmed weapon-XP consumer, not a proven hero-XP balance. Bolts/raritanium have separate indices and remainders. Runtime budgets are unavailable; no current reward is calculated. Cache-ready nonzero reuses saved totals.");
+            return text.ToString();
+        }
+
         private string MissionDetails(int level)
         {
             var text = new StringBuilder("Saved mission lists (native storage; localized titles not recovered):\r\n");
@@ -94,7 +123,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 {
                     int offset = list + slot * 12;
                     uint flags = U32(offset + 8);
-                    text.AppendLine($"  Slot {slot}: title lookup ID {U32(offset)}, description lookup ID {U32(offset + 4)}, " +
+                    text.AppendLine($"  Slot {slot}: title lookup ID {MissionLookup(U32(offset), false)}, description lookup ID {MissionLookup(U32(offset + 4), true)}, " +
                         $"optional {((flags & 1) != 0 ? "Yes" : "No")}, complete {((flags & 2) != 0 ? "Yes" : "No")}, " +
                         $"available {((flags & 2) == 0 ? "Yes" : "No")}; flags0x{flags:X8}, unknown bits0x{flags & ~3u:X8}, offset {TodResearch.Hex(offset)}.");
                 }
@@ -135,8 +164,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x480, "Selected skin ID", "code-backed", "Native IDs 0..8. Select 26FC0 requires ownership; purchase 27AA0 also writes this ID."),
                     (0x8708, "Weighted skill-point total", "code-backed", "Not completion count. Native setter adds the shipped definition value for a newly earned bit."),
                     (0x8740, "Next-level selection", "code-backed", "Named set_next_level/get_next_level store/read this word. Not necessarily the current planet; unknown IDs are retained."),
+                    (0x8754, "First-restart segment median", "code-backed", "Float32 BE. 3CED40 writes the median of positive finalized segment scalars through3CEB10 only when old906EC is zero. Units unverified; later restarts skip recomputing it in this path. Empty native input reads undefined scratch; this inspector does not recompute it or invent a zero default."),
                     (0x906E8, "Saved load destination", "code-backed", "Named set_save_level stores this word. Restore passes it to the level-change routine; not necessarily the current runtime planet or SFO subtitle."),
-                    (0x906EC, "Restart/playthrough counter", "candidate", "Nonzero predicate gates multiplier and final armor availability; exact gameplay naming remains candidate.") })
+                    (0x906EC, "Engine replay/restart word", "code-backed", "Native -replay CLI option writes1; selective restart increments with unsigned wrap then caps at1000. Nonzero gates multiplier, final armor and segment scaling. Not a confirmed localized Challenge Mode label or count of completed playthroughs.") })
                 {
                     uint value = U32(field.Item1);
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 }, field.Item4));
@@ -423,13 +453,22 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         byte complete = data[offset + TodResearch.Offset(mapping.GetProperty("complete_offset"))];
                         string detail = $"Physical segment slot {slot} at {TodResearch.Hex(offset)}; completion byte 0x{complete:X2}. Named complete_segment / is_segment_complete use this byte.\r\n" +
                             "Not a mission-list entry or a current completion percentage. Segment names/slot association require loaded game configuration; no names guessed from log order. Timer units and exact reset-event cause remain unverified.\r\n" +
-                            "Reward accumulators are not wallet balances; cached totals are not current payouts. A nonzero saved restart counter skips segment tick/reset/log finalization; completion can still set the flag without a log append. Game-mode terminology remains unverified.\r\n" +
+                            "Reward accumulators are not wallet balances; cached totals are not current payouts. Experience channel A has a confirmed weapon-XP consumer; cached B/C are bolts/raritanium. Engine replay/restart word nonzero skips segment tick/reset/log finalization; completion can still set the flag without a log append. Localized game-mode terminology remains unverified.\r\n" +
                             string.Join("\r\n", mapping.GetProperty("fields").EnumerateArray().Select(field =>
                             {
                                 int address = offset + TodResearch.Offset(field.GetProperty("offset"));
                                 uint bits = U32(address);
                                 string value = field.GetProperty("type").GetString() == "f32" ? Number(bits) : bits.ToString(CultureInfo.InvariantCulture);
-                                return $"{field.GetProperty("name").GetString()}: {value}; bits {bits:X8} at {TodResearch.Hex(address)}. {field.GetProperty("comment").GetString()}";
+                                string name = TodResearch.Offset(field.GetProperty("offset")) switch
+                                {
+                                    0x10 => "experience_reward_accumulated (weapon-XP consumer confirmed)",
+                                    0x1C => "cached_experience_reward_total", 0x20 => "cached_bolts_reward_total",
+                                    0x24 => "cached_raritanium_reward_total", _ => field.GetProperty("name").GetString()
+                                };
+                                string comment = TodResearch.Offset(field.GetProperty("offset")) is 0x10 or 0x1C or 0x20 or 0x24
+                                    ? "Refined by reward_channels native attribute/message consumers; not a wallet balance or current payout."
+                                    : field.GetProperty("comment").GetString();
+                                return $"{name}: {value}; bits {bits:X8} at {TodResearch.Hex(address)}. {comment}";
                             })) + $"\r\nUnknown bytes2D..2F: {Convert.ToHexString(data.AsSpan(offset + 0x2D, 3))}; preserved, not proven padding.";
                         rows.Add(new(new[] { level.ToString(CultureInfo.InvariantCulture), level < levels.Length ? levels[level].GetProperty("enum").GetString() : "Unmapped physical level slot19",
                             slot.ToString(CultureInfo.InvariantCulture), complete != 0 ? "Recorded" : "Not recorded", U32(offset + 8).ToString(CultureInfo.InvariantCulture),
@@ -449,7 +488,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         $"Saved mission counter {U32(missionsOffset)} at {TodResearch.Hex(missionsOffset)}; menu exclusion byte 0x{data[excludedOffset]:X2} at {TodResearch.Hex(excludedOffset)}.\r\n" +
                         "These are saved values, not a completion percentage or current travel eligibility. Your runtime menu may differ. Menu requires a nonzero level ID, unlocked and clear exclusion; level3 is suppressed/remapped when level18 qualifies.\r\n" +
                         "Rows show unremapped native storage; initialized slot19 is excluded. Ten gameplay segment records are available separately.\r\n" +
-                        $"Reward-cache ready byte: 0x{data[excludedOffset + 1]:X2} at {TodResearch.Hex(excludedOffset + 1)} (nonzero reuses cached reward totals; not a mission flag). Two256-byte per-world object bitsets are available in World object flags; runtime object names remain unknown.\r\n" + MissionDetails(id) + TodResearch.Pretty(level);
+                        $"Reward-cache ready byte: 0x{data[excludedOffset + 1]:X2} at {TodResearch.Hex(excludedOffset + 1)} (nonzero reuses cached reward totals; not a mission flag). Two256-byte per-world object bitsets are available in World object flags; runtime object names remain unknown.\r\n" + WorldRewardDetails(id) + MissionDetails(id) + TodResearch.Pretty(level);
                     rows.Add(new(new[] { id.ToString(), level.GetProperty("enum").GetString(), data[unlockedOffset] != 0 ? "Yes" : "No",
                         data[visitedOffset] != 0 ? "Yes" : "No", U32(missionsOffset).ToString(CultureInfo.InvariantCulture), $"0x{data[excludedOffset]:X2}",
                         TodResearch.Hex(unlockedOffset), TodResearch.Hex(visitedOffset), TodResearch.Hex(missionsOffset) }, detail));

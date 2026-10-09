@@ -97,7 +97,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private static bool Include(string view, string[] c)
         {
             if (view == "Counters & nearby fields")
-                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x458 or 0x480 or 0x8708 or 0x8740 or 0x906E8;
+                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x458 or 0x480 or 0x8708 or 0x8740 or 0x8754 or 0x906E8 or 0x906EC;
             if (view == "Game settings") return !c[3].StartsWith("unmapped", StringComparison.Ordinal);
             if (view == "Arena challenges") return c[0] != "0";
             if (view == "Global event flags") return c[2] != "Unmapped";
@@ -162,6 +162,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             // The multiplier is a float32 field, unlike the nearby integer counters.
             if (Offset(c[0]) == 0x428)
                 value = Number(c[3]) is var multiplier && multiplier != "Invalid value" ? multiplier + "×" : multiplier;
+            if (Offset(c[0]) == 0x8754) value = Number(c[3]);
             if (Offset(c[0]) == 0x458 && uint.TryParse(value, out uint armor) && armor < 5)
                 value = new[] { "No armor", "Durafiber", "Hyperplate", "Tetramesh", "Quantonium" }[armor];
             if (Offset(c[0]) is 0x42C or 0x430 or 0x434 && uint.TryParse(value, out uint item))

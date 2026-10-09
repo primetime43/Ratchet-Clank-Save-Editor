@@ -4,6 +4,18 @@ Offset map checked against the PS3 `BCES00052_SAVE_1` plaintext sample and the s
 
 **Status:** the wrapper headers are mapped; game-state structures are partially mapped. A byte pattern is not enough to establish a field's gameplay meaning. No new fields are enabled for editing.
 
+## Newly confirmed reward and restart state
+
+For each physical world block `W = 0x488 + world*0x408` (20 initialized,19 named), saved float caches `W+3E0/3E4/3E8` represent unassigned experience/bolts/raritanium reward totals. Separate BE32 ladder indices `W+3F0/3F4` and float32 remainders `W+3F8/3FC` track diminishing bolts/raritanium rewards. Nonzero byte `W+403` reuses cached totals. Unknown `W+3EC` and `W+404..407` remain opaque. The same channels occupy segment cached members `+1C/+20/+24`; channel A accumulated at `+10` has a confirmed **weapon-XP** consumer, not a proven hero-XP balance. Actual caches, indices and remainders arezero across all20 world blocks. Runtime thresholds/budgets are not in this save, so current payouts are not calculated.
+
+Saved float32 `0x8754` is a median of positive finalized segment `+0C` scalars, written by the first-restart path only when old `906EC` iszero. Scalar units remain unverified. Actual value is4.471639156341553 (`408F17AB`) with currently zero segment inputs. Later restarts skip recomputing it in this path; this does not guarantee retention through every lifecycle. The native empty-input calculation reads undefined scratch, not a confirmed zero default.
+
+Saved BE32 `0x906EC` has native engine replay context: CLI option `-replay` writes1; selective restart computes `min(wrapping_u32(old+1),1000)`. `FFFFFFFF` wraps tozero before the cap. This does not establish a localized Challenge Mode label or completed-playthrough count. `0x906E4` remains unnamed.
+
+81 native mission title/description ID pairs now enrich the bounded active/completed list decoder. These are lookup keys, not recovered localized names or fixed slots. All38 named-world list counts in the actual snapshot arezero; unused record bytes are not interpreted as active missions. Physical gameplay-segment name/slot associations still depend on a loaded runtime table.
+
+See [exact native addresses, evidence and reproduction tools](BCUS98127/v02.00/ElfMap.md#parallel-save-research-rewards-replay-lifecycle-and-mission-keys). All new fields are view-only; raw unusual values and unknown bytes are preserved.
+
 All offsets are hexadecimal and relative to the named file. Ranges use an **exclusive** end. Evidence levels:
 
 - **Documented:** established container format or existing currency offsets.
@@ -50,7 +62,7 @@ These ranges cover the entire sample, including unknown areas. The whole-buffer 
 | `0x114D8–0x906E4` | `0x7F20C` | 21 native512×512 RLE grids, stride `0x60DC` | Copied volume headers, seven group flags and native map-label associations; pixel meanings partly unresolved |
 | `0x906E4–0x906E8` | 4 | Unresolved tail word | Unknown |
 | `0x906E8–0x906EC` | 4 | Saved load-level ID | Code-backed, not necessarily current runtime planet |
-| `0x906EC–0x906F0` | 4 | Restart/playthrough-related word | Exact gameplay terminology remains candidate |
+| `0x906EC–0x906F0` | 4 | Engine replay/restart word | Native `-replay` CLI store confirmed; localized mode/playthrough count unverified |
 
 The documented currency offsets are implemented in `SaveProfile.cs`. The multiplier at `0x428` is now established by the supplied executable's saved-state pointer, getter and update path; see the progression map below. **RAM addresses are not automatically save offsets**: the executable snapshot linkage establishes the conversion only for the identified saved-state block in the supplied build.
 
@@ -148,7 +160,7 @@ Armor IDs are 0 `ARMOR_NONE`, 1 `ARMOR_DURAFIBER`, 2 `ARMOR_HYPERPLATE`, 3 `ARMO
 
 The multiplier getter can reset the saved float to 1 depending on runtime state; its update path adds 1 and clamps to 1..20. This is observed **code behavior**, not permission to expose arbitrary multiplier edits. No new editable fields were added: the program's **Skill points**, **Armor**, **Counters & nearby fields** and **Research** views are read-only.
 
-The USA value at `0x418` is 2,315,144 hero XP, now confirmed by the named setter chain below. The saved integer is not current health, maximum health, or a directly stored hero level. Word `0x906EC` is 3; its nonzero predicate gates multiplier updates and final-armor availability, and the restart routine increments/clamps it. Its exact challenge-mode/playthrough interpretation remains a candidate. Saved health remains unresolved; global flags and gameplay-record tail provenance are mapped separately below.
+The USA value at `0x418` is 2,315,144 hero XP, now confirmed by the named setter chain below. The saved integer is not current health, maximum health, or a directly stored hero level. Word `0x906EC` is 3; its nonzero predicate gates multiplier updates and final-armor availability, and the restart routine increments/clamps it. The native `-replay` CLI option confirms engine replay context, but not a localized Challenge Mode label or count of completed playthroughs. Saved health remains unresolved; global flags and gameplay-record tail provenance are mapped separately below.
 
 Reproduce from a working-copy plaintext capture:
 
@@ -478,7 +490,7 @@ The two formerly opaque256-byte arrays within each408-byte world record are now 
 
 For world `l`, add `l*408` to either save base. For physical slot `s`, word is `base+8*(s//64)` and file byte is `word+7-(s%64)//8`, mask `1<<(s%8)`. Slot indices come from aligned runtime object-pool entries, not saved UIDs, inventory IDs or a named collectible catalog. Twenty physical worlds are initialized; only nineteen have native level names. All40 bands are zero in the supplied USA plaintext. The read-only **World object flags** view preserves exact words and set-slot indices; zero is not an object-availability or completion verdict.
 
-See the [exact-build object-bitset evidence](BCUS98127/v02.00/ElfMap.md#per-world-object-state-and-spawn-suppression-bitsets) for native addresses, mode2 segment/checkpoint dependencies, tests and reproduction commands. The segment tick/reset/log gate is specifically saved restart-counter906EC **nonzero**, not an independently named replay flag. That counter is3 in the USA snapshot; game-mode terminology and behavioral edit validation remain unconfirmed.
+See the [exact-build object-bitset evidence](BCUS98127/v02.00/ElfMap.md#per-world-object-state-and-spawn-suppression-bitsets) for native addresses, mode2 segment/checkpoint dependencies, tests and reproduction commands. The segment tick/reset/log gate is specifically saved restart-counter906EC **nonzero**, not an independently named replay flag. That counter is3 in the USA snapshot; native engine replay context is confirmed by `-replay`, but localized game-mode naming and behavioral edit validation remain unconfirmed.
 
 Executable research is recorded separately in the [Tools of Destruction ELF map](BCUS98127/v02.00/ElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
 

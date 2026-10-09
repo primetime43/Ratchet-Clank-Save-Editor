@@ -36,6 +36,51 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Replay word and retained segment median display independently without recomputing", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(0x8754, 4), 4.5f);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906EC, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            var summary = InspectionPresentation.Simplify("Counters & nearby fields", raw);
+            Equal("4.5", summary.Rows.Single(r => r.Cells[0] == "First-restart segment median").Cells[1]);
+            Equal("4294967295", summary.Rows.Single(r => r.Cells[0] == "Engine replay/restart word").Cells[1]);
+            True(raw.Rows.Single(r => r.Cells[0] == "0x8754").Details.Contains("does not recompute"), "Historical aggregate must not be recalculated from empty segments.");
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8754, 4), 0x7FC12345);
+            var nonfinite = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            Equal("7FC12345", nonfinite.Rows.Single(r => r.Cells[0] == "0x8754").Cells[4]);
+            True(before.AsSpan(0x906EC, 4).SequenceEqual(bytes.AsSpan(0x906EC, 4)), "Inspection cannot repair a replay word.");
+        });
+        Check("World reward details preserve out-of-table indices, unknown words and nonfinite caches", () =>
+        {
+            byte[] bytes = ResearchFixture(); int world = 0x488 + 18 * 0x408;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(world + 0x3F0, 4), uint.MaxValue);
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(world + 0x3FC, 4), 12.5f);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(world + 0x3E0, 4), 0x7FC12345);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(world + 0x3EC, 4), 0xDEADBEEF);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("World progress");
+            Equal(19, table.Rows.Count); Equal(4, InspectionPresentation.Simplify("World progress", table).Columns.Length);
+            string details = table.Rows[18].Details;
+            True(details.Contains("4294967295") && details.Contains("outside the verified five-entry table") && details.Contains("12.5"), "Separate reward tiers/remainders must remain raw and unsimulated.");
+            True(details.Contains("7FC12345") && details.Contains("DEADBEEF") && details.Contains("not a proven hero-XP"), "Unknown bits and weapon/hero XP distinction must survive.");
+            True(bytes.SequenceEqual(before), "World reward details must not mutate input.");
+        });
+        Check("Saved mission lookup IDs resolve native keys while unknown keys remain visible", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10148 + 0x78, 4), 2);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10148, 4), 562);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x1014C, 4), 641);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10154, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var details = TodSaveInspection.Read(bytes, "BCUS98127").Table("World progress").Rows[0].Details;
+            True(details.Contains("L01_LABEL_MISSION_DEFENSECENTER") && details.Contains("L01_DESC_MISSION_DEFENSECENTER"), "Native keys should match dual registration, not invented localized names.");
+            True(details.Contains("4294967295 (unmapped)"), "Unknown numeric IDs must stay visible.");
+            Equal(81, TodResearch.Map.GetProperty("segment_bindings").GetProperty("native_mission_lookup_pairs").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Native key lookup must remain read-only.");
+        });
         Check("Shipped settings menu distinguishes axis dispatch, disabled rows and unknown settings", () =>
         {
             var menu = TodResearch.Map.GetProperty("settings_menu");
@@ -292,7 +337,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1190, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1205, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -731,7 +776,7 @@ internal static partial class Program
                 Equal(expected.Item2, grid.Columns.Count);
             }
             views.SelectedItem = "Player summary";
-            Equal(14, grid.Rows.Count);
+            Equal(16, grid.Rows.Count);
             True(!grid.Rows.Cast<DataGridViewRow>().Any(row => row.Cells[0].Value.ToString().Contains("Unknown")), "Unknown and candidate fields belong in Technical, not the player summary.");
             views.SelectedItem = "Upgrade nodes";
             var weaponFilter = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");
