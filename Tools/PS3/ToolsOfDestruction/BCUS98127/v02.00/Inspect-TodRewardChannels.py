@@ -59,7 +59,8 @@ def inspect(elf_path, save_path=None):
             "physical_world_slots": gameplay["segments"]["initialized_world_slots"],
             "named_levels": gameplay["segments"]["native_level_count"],
             "fields": [{"offset": hex(o), "name": n, "type": t} for o, n, t in fields],
-            "unknown_word": "0x3ec", "unknown_tail_bytes": "0x404..0x407",
+            "other_mapped_members": {"0x3ec": "Independent BE32 special-bolt collected mask; see collectibles, not a reward cache."},
+            "unknown_tail_bytes": "0x404..0x407",
             "initialization": "35DFA8 clears all three cache totals, both ladder indices, both remainder float bits and cache-ready byte. Other words/bytes are not renamed."},
         "channels": [
             {"name": "experience", "runtime_attribute_id": "0xb3",
@@ -103,7 +104,7 @@ def inspect(elf_path, save_path=None):
                 values[name] = {"bits": bits.hex().upper(), "value": str(value)}
             worlds.append({"level_id": level, "offset": hex(base), "values": values,
                 "indices_outside_verified_table": any(struct.unpack_from(">I", data, base+o)[0] > 4 for o in (0x3F0, 0x3F4)),
-                "unknown_word_3ec": data[base+0x3EC:base+0x3F0].hex().upper(),
+                "special_bolt_mask_raw": data[base+0x3EC:base+0x3F0].hex().upper(),
                 "unknown_tail": data[base+0x404:base+0x408].hex().upper()})
         report["save_observation"] = {"plaintext_sha256": hashlib.sha256(data).hexdigest().upper(),
             "worlds": worlds, "restart_counter": struct.unpack_from(">I", data, 0x906EC)[0]}

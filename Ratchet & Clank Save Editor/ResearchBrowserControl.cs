@@ -28,6 +28,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(new("Overview", TodResearch.Scope + $"\r\n\r\n32 native inventory IDs; 28 shipped configuration definitions; 204 nodes including 15 starts; 15 grids; 60 skill points; 5 armor IDs; {TodResearch.Map.GetProperty("annotations").GetArrayLength()} ELF annotations and 118 imports.\r\n\r\nSelect a topic or search for a name/address. All content is embedded and read-only; original game files and private saves are not bundled. File offsets, save offsets and ELF virtual addresses must not be interchanged.\r\n\r\nResize the window for more reading space. Ctrl+C copies selected text.", new()));
             topics.Add(JsonTopic("Progression & armor", TodResearch.Map.GetProperty("progression"), 0));
             topics.Add(JsonTopic("Hero XP, collectibles & skins", TodResearch.Map.GetProperty("collectibles"), 0));
+            topics.Add(JsonTopic("Saved pack/boot types & exact pack dispatch selector", TodResearch.Map.GetProperty("hero_aux_fields"), 0));
             topics.Add(JsonTopic("World progress & quick select", TodResearch.Map.GetProperty("world_state"), 0));
             topics.Add(JsonTopic("Gameplay segments, timing & retained log", TodResearch.Map.GetProperty("gameplay_segments"), 0));
             topics.Add(JsonTopic("Reward channels, caches & diminishing returns", TodResearch.Map.GetProperty("reward_channels"), 0));
@@ -36,6 +37,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Object counters & equipment", TodResearch.Map.GetProperty("objects"), 0));
             topics.Add(JsonTopic("Mission lists & flags", TodResearch.Map.GetProperty("mission_lists"), 0));
             topics.Add(JsonTopic("Native mission lookup keys & segment naming limits", TodResearch.Map.GetProperty("segment_bindings"), 0));
+            topics.Add(JsonTopic("Segment-name configuration loader & hash collisions", TodResearch.Map.GetProperty("segment_configuration"), 0));
+            topics.Add(JsonTopic("Shipped reference segment names for 19 worlds", TodResearch.Map.GetProperty("segment_configuration_assets"), 0));
+            topics.Add(JsonTopic("World initialization footprint & opaque byte preservation", TodResearch.Map.GetProperty("world_aux_fields"), 0));
             topics.Add(JsonTopic("Blueprints & bonuses", TodResearch.Map.GetProperty("bonuses"), 0));
             topics.Add(JsonTopic("Equipment history & stored state", TodResearch.Map.GetProperty("state_storage"), 0));
             topics.Add(JsonTopic("Persistent grids, map labels & volume headers", TodResearch.Map.GetProperty("persistent_grid"), 0));

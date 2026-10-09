@@ -42,6 +42,7 @@ class RewardChannelChecks(unittest.TestCase):
         self.assertEqual(report["ordinary_segment_scaling"]["threshold_ratios"], [1.0, 1.75, 2.25])
         self.assertIn("minimum1", report["ladder"]["raritanium_return_rule"])
         self.assertIn("One threshold per call", report["ladder"]["commit_rule"])
+        self.assertIn("special-bolt", report["world_storage"]["other_mapped_members"]["0x3ec"])
 
     def test_unsigned_indices_nonfinite_float_bits_unknown_bytes_last_world(self):
         data = fixture()
@@ -66,7 +67,7 @@ class RewardChannelChecks(unittest.TestCase):
             self.assertEqual(values["bolts_reward_ladder_remainder"]["bits"], "7FC12345")
             self.assertEqual(values["raritanium_reward_ladder_remainder"]["bits"], "FF800000")
             self.assertEqual(values["reward_cache_ready"]["value"], "171")
-            self.assertEqual(world["unknown_word_3ec"], "DEADBEEF")
+            self.assertEqual(world["special_bolt_mask_raw"], "DEADBEEF")
             self.assertEqual(world["unknown_tail"], "11223344")
             json.dumps(observed, allow_nan=False)
             self.assertEqual(path.read_bytes(), data)

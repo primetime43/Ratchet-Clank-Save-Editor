@@ -4,15 +4,33 @@ Offset map checked against the PS3 `BCES00052_SAVE_1` plaintext sample and the s
 
 **Status:** the wrapper headers are mapped; game-state structures are partially mapped. A byte pattern is not enough to establish a field's gameplay meaning. No new fields are enabled for editing.
 
+## Pack/boot state, reference segment names and initializer ownership
+
+Three previously unnamed BE32 saved words now have native API provenance:
+
+| Offset | Meaning | Caveat |
+| --- | --- | --- |
+| `0x438` | Pack dispatch selector | Known consumers test exactly1, not arbitrary nonzero |
+| `0x43C` | Pack type | `PACK_HELI/THRUSTER/HYDRO/WING` IDs0..3; count sentinel4 remains unmapped |
+| `0x440` | Boot type | `BOOT_NORMAL/GRIND/GRAV/CHARGE` IDs0..3; native setter ignores its argument and writes0 |
+
+Actual three words arezero, corresponding to native `PACK_HELI` and `BOOT_NORMAL`; this does not prove ownership or current usability. Named getters/setters, enum exports, numeric conversion and dispatch consumers are traced in the [exact-build evidence](BCUS98127/v02.00/ElfMap.md#three-newly-named-saved-words). No new editing controls are enabled; unusual IDs and selector/type mismatches are not repaired.
+
+The native loader and19 original `gameplay.dat` catalogs establish **56 reference segment-name associations** at `0x488 + world*0x408 + slot*0x30`. These names come from ordered loaded asset metadata, not GAME.SAV strings or retained statistics logs. Physical slot0 is reserved in the name catalog; unmatched slots and world19 remain unnamed, not assumed padding or unused. Native folder IDs distinguish metropolis0 from meridian city17 and fastoon_return18. The inspector shows qualified USA v02.00 reference names with asset fingerprints and raw physical indices retained. See [loader/relocation/hash evidence](BCUS98127/v02.00/ElfMap.md#ordered-segment-names-from-the-native-loader-and-real-level-data).
+
+World initializer `35DFA8` writes998 of1,032 bytes: ten45-byte segment prefixes,512 object-bitset bytes and36 bytes at world`3E0..403`. It leaves680 bytes across20 worlds untouched: ten3-byte segment tails`2D..2F` plus worldtail`404..407` per world. Full snapshot/initial restore copies include those bytes, but this does not establish padding or retention through every later lifecycle. Segment word`28` is zeroed with a BE32 store; its logical meaning remains unresolved. Actual inspected words/tails arezero; fixture tests preserve extreme/nonfinite values and raw first/last-slot bytes.
+
+The combined world layout also reconciles existing findings: world`3C0..3DF` belongs to the spawn-suppression bitset and `3EC` is the known special-bolt collected mask, separate from reward tracking. [Initializer ownership evidence](BCUS98127/v02.00/ElfMap.md#exact-world-initializer-ownership-and-opaque-bytes) documents the exact stores and copy scope.
+
 ## Newly confirmed reward and restart state
 
-For each physical world block `W = 0x488 + world*0x408` (20 initialized,19 named), saved float caches `W+3E0/3E4/3E8` represent unassigned experience/bolts/raritanium reward totals. Separate BE32 ladder indices `W+3F0/3F4` and float32 remainders `W+3F8/3FC` track diminishing bolts/raritanium rewards. Nonzero byte `W+403` reuses cached totals. Unknown `W+3EC` and `W+404..407` remain opaque. The same channels occupy segment cached members `+1C/+20/+24`; channel A accumulated at `+10` has a confirmed **weapon-XP** consumer, not a proven hero-XP balance. Actual caches, indices and remainders arezero across all20 world blocks. Runtime thresholds/budgets are not in this save, so current payouts are not calculated.
+For each physical world block `W = 0x488 + world*0x408` (20 initialized,19 named), saved float caches `W+3E0/3E4/3E8` represent unassigned experience/bolts/raritanium reward totals. Separate BE32 ladder indices `W+3F0/3F4` and float32 remainders `W+3F8/3FC` track diminishing bolts/raritanium rewards. Nonzero byte `W+403` reuses cached totals. The independent special-bolt collected mask is at `W+3EC`; only `W+404..407` remains opaque. The same channels occupy segment cached members `+1C/+20/+24`; channel A accumulated at `+10` has a confirmed **weapon-XP** consumer, not a proven hero-XP balance. Actual caches, indices and remainders arezero across all20 world blocks. Runtime thresholds/budgets are not in this save, so current payouts are not calculated.
 
 Saved float32 `0x8754` is a median of positive finalized segment `+0C` scalars, written by the first-restart path only when old `906EC` iszero. Scalar units remain unverified. Actual value is4.471639156341553 (`408F17AB`) with currently zero segment inputs. Later restarts skip recomputing it in this path; this does not guarantee retention through every lifecycle. The native empty-input calculation reads undefined scratch, not a confirmed zero default.
 
 Saved BE32 `0x906EC` has native engine replay context: CLI option `-replay` writes1; selective restart computes `min(wrapping_u32(old+1),1000)`. `FFFFFFFF` wraps tozero before the cap. This does not establish a localized Challenge Mode label or completed-playthrough count. `0x906E4` remains unnamed.
 
-81 native mission title/description ID pairs now enrich the bounded active/completed list decoder. These are lookup keys, not recovered localized names or fixed slots. All38 named-world list counts in the actual snapshot arezero; unused record bytes are not interpreted as active missions. Physical gameplay-segment name/slot associations still depend on a loaded runtime table.
+81 native mission title/description ID pairs now enrich the bounded active/completed list decoder. These are lookup keys, not recovered localized names or fixed slots. All38 named-world list counts in the actual snapshot arezero; unused record bytes are not interpreted as active missions. The loader and fingerprinted reference assets above now establish56 physical segment-name associations; changed runtime tables remain outside this snapshot.
 
 See [exact native addresses, evidence and reproduction tools](BCUS98127/v02.00/ElfMap.md#parallel-save-research-rewards-replay-lifecycle-and-mission-keys). All new fields are view-only; raw unusual values and unknown bytes are preserved.
 

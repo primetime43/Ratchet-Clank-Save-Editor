@@ -36,6 +36,61 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Gameplay names come from fingerprinted reference assets, not stale save log order", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            Encoding.ASCII.GetBytes("gameplay_wrong_log_name").CopyTo(bytes, 0x87A4);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Gameplay segments");
+            Equal("gameplay_enemy", table.Rows[1].Cells[8]);
+            Equal("gameplay_sidescroll", table.Rows[2].Cells[8]);
+            Equal("gameplay_traversal", table.Rows[3].Cells[8]);
+            Equal("gameplay_magcycle", table.Rows[172].Cells[8]);
+            Equal("gameplay_robowings", table.Rows[173].Cells[8]);
+            Equal(56, table.Rows.Count(r => r.Cells[8].Length > 0));
+            Equal("", table.Rows[0].Cells[8]); Equal("", table.Rows[199].Cells[8]);
+            True(table.Rows[1].Details.Contains("not stored in GAME.SAV") && table.Rows[1].Details.Contains("SHA-256"), "Reference labels need native/asset provenance and applicability caveats.");
+            True(table.Rows[0].Details.Contains("does not make the saved slot padding"), "Reserved name catalog slot is not a padding verdict for saved bytes.");
+            var simple = InspectionPresentation.Simplify("Gameplay segments", table);
+            Equal(5, simple.Columns.Length); Equal("Enemy (slot 1)", simple.Rows[1].Cells[1]);
+            True(bytes.SequenceEqual(before), "Reference labeling must not write or normalize saves.");
+        });
+        Check("World opaque tails show specific initialization and copy caveats without inventing semantics", () =>
+        {
+            byte[] bytes = ResearchFixture(); int world = 0x488 + 18 * 0x408, segment = world + 9 * 0x30;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(segment + 0x28, 4), 0x7FC12345);
+            bytes[segment + 0x2D] = 0x11; bytes[segment + 0x2E] = 0x22; bytes[segment + 0x2F] = 0xAB;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(world + 0x404, 4), 0xDEADBEEF);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            string detail = inspection.Table("Gameplay segments").Rows[189].Details;
+            True(detail.Contains("7FC12345") && detail.Contains("1122AB") && detail.Contains("logical integer/float/flag meaning remains unresolved") && detail.Contains("untouched by35DD98"), "Uninterpreted segment word/tail need raw bits and exact initializer boundaries.");
+            True(inspection.Table("World progress").Rows[18].Details.Contains("DEADBEEF") && inspection.Table("World progress").Rows[18].Details.Contains("initializer35DFA8 leaves +404..407 untouched"), "World tail must not become padding or proven live-state retention.");
+            Equal(680, TodResearch.Map.GetProperty("world_aux_fields").GetProperty("world_initializer").GetProperty("untouched_bytes_all_worlds").GetInt32());
+            True(bytes.SequenceEqual(before), "Opaque-byte inspection must not mutate or zero values.");
+        });
+        Check("Saved pack and boot names retain unknown IDs, raw selectors and setter caveats", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x438, 4), 0xAB);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x43C, 4), 1);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x440, 4), 3);
+            byte[] before = bytes.ToArray();
+            var raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            var summary = InspectionPresentation.Simplify("Counters & nearby fields", raw);
+            Equal("Thruster", summary.Rows.Single(r => r.Cells[0] == "Saved pack type").Cells[1]);
+            Equal("Charge", summary.Rows.Single(r => r.Cells[0] == "Saved boot type").Cells[1]);
+            var selector = raw.Rows.Single(r => r.Cells[0] == "0x438");
+            Equal("000000AB", selector.Cells[4]);
+            True(selector.Details.Contains("equals1") && !summary.Rows.Any(r => r.Cells[0] == "Pack dispatch selector"), "Raw selector must not become an unconditional boolean in the simple view.");
+            True(raw.Rows.Single(r => r.Cells[0] == "0x440").Details.Contains("always writes0"), "Native setter ignores script argument; do not suggest arbitrary editing.");
+            True(bytes.SequenceEqual(before), "New hero fields must remain read-only.");
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x43C, 4), 4);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x440, 4), uint.MaxValue);
+            var unknown = InspectionPresentation.Simplify("Counters & nearby fields", TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields"));
+            Equal("Unmapped ID 4", unknown.Rows.Single(r => r.Cells[0] == "Saved pack type").Cells[1]);
+            Equal("Unmapped ID 4294967295", unknown.Rows.Single(r => r.Cells[0] == "Saved boot type").Cells[1]);
+        });
         Check("Replay word and retained segment median display independently without recomputing", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -64,7 +119,7 @@ internal static partial class Program
             Equal(19, table.Rows.Count); Equal(4, InspectionPresentation.Simplify("World progress", table).Columns.Length);
             string details = table.Rows[18].Details;
             True(details.Contains("4294967295") && details.Contains("outside the verified five-entry table") && details.Contains("12.5"), "Separate reward tiers/remainders must remain raw and unsimulated.");
-            True(details.Contains("7FC12345") && details.Contains("DEADBEEF") && details.Contains("not a proven hero-XP"), "Unknown bits and weapon/hero XP distinction must survive.");
+            True(details.Contains("7FC12345") && details.Contains("DEADBEEF") && details.Contains("not a proven hero-XP") && details.Contains("Independent special-bolt collected mask"), "Raw bits, known collectible mask and weapon/hero XP distinction must survive.");
             True(bytes.SequenceEqual(before), "World reward details must not mutate input.");
         });
         Check("Saved mission lookup IDs resolve native keys while unknown keys remain visible", () =>
@@ -200,7 +255,7 @@ internal static partial class Program
             var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
             var raw = inspection.Table("Gameplay segments");
             Equal(200, raw.Rows.Count);
-            Equal(8, raw.Columns.Length);
+            Equal(9, raw.Columns.Length);
             var last = raw.Rows[^1];
             Equal("19", last.Cells[0]); Equal("9", last.Cells[2]);
             Equal("Recorded", last.Cells[3]); Equal("4294967295", last.Cells[4]);
@@ -337,7 +392,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1205, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1239, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -765,7 +820,7 @@ internal static partial class Program
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
             tabs.SelectedIndex = 2;
             foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
-                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 9), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 8), ("Reset-event counters", 3, 5), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
+                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 9), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 9), ("Reset-event counters", 3, 5), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
                 views.SelectedItem = expected.Item1;
                 Equal(expected.Item2, grid.Columns.Count);
@@ -776,7 +831,7 @@ internal static partial class Program
                 Equal(expected.Item2, grid.Columns.Count);
             }
             views.SelectedItem = "Player summary";
-            Equal(16, grid.Rows.Count);
+            Equal(18, grid.Rows.Count);
             True(!grid.Rows.Cast<DataGridViewRow>().Any(row => row.Cells[0].Value.ToString().Contains("Unknown")), "Unknown and candidate fields belong in Technical, not the player summary.");
             views.SelectedItem = "Upgrade nodes";
             var weaponFilter = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");

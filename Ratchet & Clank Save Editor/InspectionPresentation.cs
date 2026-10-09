@@ -26,7 +26,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             int expected = view switch
             {
                 "Weapons & gadgets" => 10, "Skill points" => 8, "Armor" => 7,
-                "Counters & nearby fields" => 6, "Gameplay records" => 5, "Gameplay segments" => 8,
+                "Counters & nearby fields" => 6, "Gameplay records" => 5, "Gameplay segments" => 9,
                 "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
                 "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9,
                 "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 9,
@@ -52,7 +52,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Arena challenges" => new[] { "Challenge (config description)", "Recorded wins", "Base bolts (shipped)" },
                 "Global event flags" => new[] { "Group", "Event flag (native name)", "Recorded bit" },
                 "Gameplay records" => new[] { "Location", "Saved record", "Storage status" },
-                "Gameplay segments" => new[] { "Level", "Segment slot", "Complete flag", "Reset events", "Elapsed (units unverified)" },
+                "Gameplay segments" => new[] { "Level", "Segment (reference)", "Complete flag", "Reset events", "Elapsed (units unverified)" },
                 "World object flags" => new[] { "Level", "Stored object state", "Set bits" },
                 "Reset-event counters" => new[] { "Category (name unknown)", "Recorded events", "Evidence" },
                 "Save regions" => new[] { "Section", "Size", "Understanding" },
@@ -79,7 +79,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Quick select" => "Stored indices, not a proven wheel order. Automatic insertion searches only the first24 of32 slots.",
                     "Objects & equipment" => "Native object counters, not weapon IDs. Select a row for its high-water count and positive-addition counter; timer/arena units are unverified.",
                     "Gameplay records" => "Retained entries beyond the saved count are not active progress. Select a row for six timing/runtime floats and the integer reset-event count. Technical retains all200 physical slots.",
-                    "Gameplay segments" => "Physical per-level slots, not recovered segment names or mission counts. Timer units and reset-event cause remain unverified; reward accumulators are not balances. Technical includes initialized unmapped level slot19.",
+                    "Gameplay segments" => "Names are qualified USA v02.00 reference-asset associations, not strings stored in the save or mission counts. Unnamed physical slots remain visible. Timer units and reset-event cause remain unverified; reward accumulators are not balances. Technical includes initialized unmapped level slot19.",
                     "World object flags" => "Stored per-object bits, not named collectibles or a completion checklist. Spawn suppression applies to native mode1 only. Select a row for set slot indices, exact words and bit ordering; Technical includes unmapped level slot19.",
                     "Reset-event counters" => "Saved reset-event category counters, not a named death/failure checklist. IDs2–7 have native selectors; ID0 increment is skipped and ID1 selection remains unresolved. Counts are exact unsigned integers; no inferred totals or edits.",
                     "Save regions" => "This is a structural overview. Technical shows the original research map; selected-row details retain its offsets and limitations.",
@@ -97,7 +97,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private static bool Include(string view, string[] c)
         {
             if (view == "Counters & nearby fields")
-                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x458 or 0x480 or 0x8708 or 0x8740 or 0x8754 or 0x906E8 or 0x906EC;
+                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x43C or 0x440 or 0x458 or 0x480 or 0x8708 or 0x8740 or 0x8754 or 0x906E8 or 0x906EC;
             if (view == "Game settings") return !c[3].StartsWith("unmapped", StringComparison.Ordinal);
             if (view == "Arena challenges") return c[0] != "0";
             if (view == "Global event flags") return c[2] != "Unmapped";
@@ -130,7 +130,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Arena challenges" => new[] { c[2], c[3], c[4] },
             "Global event flags" => new[] { c[2], Label(c[1], c[1].StartsWith("LVL_", StringComparison.Ordinal) ? "LVL_" : c[1].StartsWith("HERO_", StringComparison.Ordinal) ? "HERO_" : c[1].StartsWith("MOVIE_", StringComparison.Ordinal) ? "MOVIE_" : ""), c[3] },
             "Gameplay records" => new[] { Label(c[1]), Label(c[2], "gameplay_"), c[4] },
-            "Gameplay segments" => new[] { Label(c[1], "LEVEL_"), c[2], c[3], c[4], Number(c[5]) },
+            "Gameplay segments" => new[] { Label(c[1], "LEVEL_"), string.IsNullOrEmpty(c[8]) ? "Slot " + c[2] + " (unnamed)" : Label(c[8], "gameplay_") + " (slot " + c[2] + ")", c[3], c[4], Number(c[5]) },
             "World object flags" => new[] { Label(c[1], "LEVEL_"), c[2], c[3] },
             "Reset-event counters" => new[] { "Category " + c[0], c[1], c[4] },
             "Save regions" => Region(c),
@@ -156,13 +156,24 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             string name = Offset(c[0]) switch
             {
                 0x280 => "Acquisition counter", 0x418 => "Hero XP", 0x41C => "Bolts", 0x420 => "Raritanium", 0x424 => "Special bolts spent",
-                0x428 => "Bolt multiplier", 0x458 => "Equipped armor", 0x480 => "Selected skin", 0x8708 => "Skill-point score", _ => c[1]
+                0x428 => "Bolt multiplier", 0x43C => "Saved pack type", 0x440 => "Saved boot type",
+                0x458 => "Equipped armor", 0x480 => "Selected skin", 0x8708 => "Skill-point score", _ => c[1]
             };
             string value = c[2];
             // The multiplier is a float32 field, unlike the nearby integer counters.
             if (Offset(c[0]) == 0x428)
                 value = Number(c[3]) is var multiplier && multiplier != "Invalid value" ? multiplier + "×" : multiplier;
             if (Offset(c[0]) == 0x8754) value = Number(c[3]);
+            if (Offset(c[0]) is 0x43C or 0x440 && uint.TryParse(value, out uint selection))
+            {
+                bool pack = Offset(c[0]) == 0x43C;
+                var catalog = TodResearch.Map.GetProperty("hero_aux_fields").GetProperty("enum_catalogs").GetProperty(pack ? "pack" : "boot");
+                string mapped = null;
+                foreach (var entry in catalog.EnumerateArray())
+                    if (entry.GetProperty("id").GetUInt32() == selection && !entry.GetProperty("enum").GetString().EndsWith("TYPE_COUNT", StringComparison.Ordinal))
+                        mapped = Label(entry.GetProperty("enum").GetString(), pack ? "PACK_" : "BOOT_");
+                value = mapped ?? "Unmapped ID " + value;
+            }
             if (Offset(c[0]) == 0x458 && uint.TryParse(value, out uint armor) && armor < 5)
                 value = new[] { "No armor", "Durafiber", "Hyperplate", "Tetramesh", "Quantonium" }[armor];
             if (Offset(c[0]) is 0x42C or 0x430 or 0x434 && uint.TryParse(value, out uint item))

@@ -25,6 +25,24 @@ ELF_PATH = None
 
 
 class MapChecks(unittest.TestCase):
+    def test_combined_world_and_pack_layouts_preserve_independent_ownership(self):
+        world = next(r for r in MAPPING["structures"] if r["name"] == "TOD_SaveWorldLayout_combined_verified")
+        fields = {int(f["offset"], 0): f for f in world["fields"]}
+        self.assertEqual(int(world["size"], 0), int(MAPPING["world_aux_fields"]["storage"]["world_stride"], 0))
+        self.assertEqual(fields[0]["count"], 10 * 0x30)
+        self.assertEqual(fields[0x1E0]["count"], 256)
+        self.assertEqual(fields[0x2E0]["count"], 256)
+        self.assertEqual(fields[0x3EC]["name"], "special_bolt_collected_mask")
+        self.assertIn("0x3ec", MAPPING["reward_channels"]["world_storage"]["other_mapped_members"])
+        self.assertEqual(fields[0x404]["count"], 4)
+        pack = next(r for r in MAPPING["structures"] if r["name"] == "TOD_SavePackBootState_verified")
+        self.assertEqual([int(f["offset"], 0) for f in pack["fields"]], [0, 4, 8])
+        self.assertEqual([f["name"] for f in pack["fields"]], [f["name"] for f in MAPPING["hero_aux_fields"]["fields"]])
+        catalog = next(r for r in MAPPING["structures"] if r["name"] == "TOD_RuntimeSegmentNameCatalog_verified")
+        self.assertEqual(int(catalog["size"], 0), 0x1C8)
+        self.assertEqual(catalog["fields"][0]["count"], 50)
+        self.assertEqual(catalog["fields"][1]["count"], 49)
+
     def test_map_and_type_declarations(self):
         IMPORTER.validate_map(MAPPING)
         for record in MAPPING["structures"]:
@@ -213,7 +231,10 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["grid_geometry"]["instruction_guards"]
                 + MAPPING["save_tail"]["instruction_guards"]
                 + MAPPING["reward_channels"]["instruction_guards"]
-                + MAPPING["segment_bindings"]["instruction_guards"]):
+                + MAPPING["segment_bindings"]["instruction_guards"]
+                + MAPPING["hero_aux_fields"]["instruction_guards"]
+                + MAPPING["world_aux_fields"]["instruction_guards"]
+                + MAPPING["segment_configuration"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

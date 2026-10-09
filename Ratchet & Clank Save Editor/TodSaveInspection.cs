@@ -91,6 +91,28 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return id.ToString(CultureInfo.InvariantCulture) + " (unmapped)";
         }
 
+        private static string ReferenceSegmentName(int level, int slot, out string provenance)
+        {
+            provenance = "No reference name association for this physical world/slot; no names guessed from retained log order.";
+            foreach (var native in TodResearch.Map.GetProperty("segment_configuration_assets").GetProperty("levels").EnumerateArray())
+            {
+                if (native.GetProperty("level_id").GetInt32() != level) continue;
+                provenance = slot == 0
+                    ? "Native name catalog reserves slot0 (reverse lookup FFFFFFFF); this does not make the saved slot padding or prove any completion state."
+                    : "No name in the shipped reference catalog for this physical slot; unknown raw data is retained, not assumed unused.";
+                foreach (var segment in native.GetProperty("segments").EnumerateArray())
+                {
+                    if (segment.GetProperty("slot").GetInt32() != slot) continue;
+                    string name = segment.GetProperty("name").GetString();
+                    provenance = $"USA BCUS98127 v02.00 reference name: {name}; native folder {native.GetProperty("folder").GetString()}, loaded array index {segment.GetProperty("loaded_name_index")}, hash bucket {segment.GetProperty("hash_bucket")}, forward lookup slot {segment.GetProperty("resolved_lookup_slot")}.\r\n" +
+                        $"gameplay.dat SHA-256 {native.GetProperty("gameplay_dat_sha256").GetString()}. Native2D1A88 assigns slots from the ordered asset names; this name is not stored in GAME.SAV. Runtime/cross-region assets may differ; no ownership, mission identity or edit safety inferred.";
+                    return name;
+                }
+                return "";
+            }
+            return "";
+        }
+
         private string WorldRewardDetails(int level)
         {
             int world = 0x488 + level * 0x408;
@@ -105,7 +127,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
             if (U32(world + 0x3F0) > 4 || U32(world + 0x3F4) > 4)
                 text.AppendLine("Reward ladder index outside the verified five-entry table; preserved, not clamped or evaluated.");
-            text.AppendLine($"Unknown world +3EC: {U32(world + 0x3EC):X8}; unknown +404..407: {Convert.ToHexString(data.AsSpan(world + 0x404, 4))}.");
+            text.AppendLine($"Independent special-bolt collected mask +3EC: {U32(world + 0x3EC):X8}; unknown +404..407: {Convert.ToHexString(data.AsSpan(world + 0x404, 4))}.");
+            text.AppendLine("World initializer35DFA8 leaves +404..407 untouched; full snapshot/initial restore copies include them. Not proven padding or retention through every restart lifecycle.");
             text.AppendLine("Cached experience has a confirmed weapon-XP consumer, not a proven hero-XP balance. Bolts/raritanium have separate indices and remainders. Runtime budgets are unavailable; no current reward is calculated. Cache-ready nonzero reuses saved totals.");
             return text.ToString();
         }
@@ -160,6 +183,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x42C, "Last recorded equipped item", "code-backed", "History updater1F5570 shifts old430 to434, old42C to430, then records native equipped getter11810/466EC0 at42C. Historical snapshot, not necessarily current runtime equipment; no safe editing range inferred."),
                     (0x430, "Previously recorded equipped item", "code-backed", "Previous42C value, not a dual-wield secondary slot. Restore and menu consumers use fallback logic; callback timing and reset behavior remain unverified."),
                     (0x434, "Older recorded equipped item", "code-backed", "Previous430 value; consulted by menu26CE30. Raw item ID and history order retained; unknown IDs are not repaired."),
+                    (0x438, "Pack dispatch selector", "code-backed", "set_pack_type native27A30 stores0 for argument0, otherwise1. Known hero action consumers select the alternate message only when this word equals1; malformed nonzero values are not treated as true or repaired."),
+                    (0x43C, "Saved pack type", "code-backed", "Named set_pack_type/get_pack_type write/read this BE32 word. Native PACK_HELI/THRUSTER/HYDRO/WING IDs0..3; TYPE_COUNT4 is a sentinel, not a mapped saved selection. Saved selection does not prove current runtime availability."),
+                    (0x440, "Saved boot type", "code-backed", "Named get_boot_type reads this BE32 word. Native BOOT_NORMAL/GRIND/GRAV/CHARGE IDs0..3. set_boot_type wrapper converts its argument, but native26F60 ignores it and always writes0. No editing or runtime compatibility inferred."),
                     (0x458, "Equipped armor ID", "code-backed", "Native IDs 0..4; ownership and unlock availability are separate."),
                     (0x480, "Selected skin ID", "code-backed", "Native IDs 0..8. Select 26FC0 requires ownership; purchase 27AA0 also writes this ID."),
                     (0x8708, "Weighted skill-point total", "code-backed", "Not completion count. Native setter adds the shipped definition value for a newly earned bit."),
@@ -451,8 +477,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     {
                         int offset = TodResearch.Offset(mapping.GetProperty("record_base")) + level * TodResearch.Offset(mapping.GetProperty("world_stride")) + slot * TodResearch.Offset(mapping.GetProperty("record_stride"));
                         byte complete = data[offset + TodResearch.Offset(mapping.GetProperty("complete_offset"))];
+                        string referenceName = ReferenceSegmentName(level, slot, out string provenance);
                         string detail = $"Physical segment slot {slot} at {TodResearch.Hex(offset)}; completion byte 0x{complete:X2}. Named complete_segment / is_segment_complete use this byte.\r\n" +
-                            "Not a mission-list entry or a current completion percentage. Segment names/slot association require loaded game configuration; no names guessed from log order. Timer units and exact reset-event cause remain unverified.\r\n" +
+                            provenance + "\r\nNot a mission-list entry or a current completion percentage. Reference names come from verified native loader/asset order, never retained log order. Timer units and exact reset-event cause remain unverified.\r\n" +
                             "Reward accumulators are not wallet balances; cached totals are not current payouts. Experience channel A has a confirmed weapon-XP consumer; cached B/C are bolts/raritanium. Engine replay/restart word nonzero skips segment tick/reset/log finalization; completion can still set the flag without a log append. Localized game-mode terminology remains unverified.\r\n" +
                             string.Join("\r\n", mapping.GetProperty("fields").EnumerateArray().Select(field =>
                             {
@@ -467,15 +494,17 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                                 };
                                 string comment = TodResearch.Offset(field.GetProperty("offset")) is 0x10 or 0x1C or 0x20 or 0x24
                                     ? "Refined by reward_channels native attribute/message consumers; not a wallet balance or current payout."
+                                    : TodResearch.Offset(field.GetProperty("offset")) == 0x28
+                                    ? "35DD98 zeroes this word using a BE32 store; logical integer/float/flag meaning remains unresolved. Full snapshot/initial restore copies include its raw bits."
                                     : field.GetProperty("comment").GetString();
                                 return $"{name}: {value}; bits {bits:X8} at {TodResearch.Hex(address)}. {comment}";
-                            })) + $"\r\nUnknown bytes2D..2F: {Convert.ToHexString(data.AsSpan(offset + 0x2D, 3))}; preserved, not proven padding.";
+                            })) + $"\r\nUnknown bytes2D..2F: {Convert.ToHexString(data.AsSpan(offset + 0x2D, 3))}; untouched by35DD98, included by full snapshot/initial restore copies, not proven padding or retained through every lifecycle.";
                         rows.Add(new(new[] { level.ToString(CultureInfo.InvariantCulture), level < levels.Length ? levels[level].GetProperty("enum").GetString() : "Unmapped physical level slot19",
                             slot.ToString(CultureInfo.InvariantCulture), complete != 0 ? "Recorded" : "Not recorded", U32(offset + 8).ToString(CultureInfo.InvariantCulture),
-                            Number(U32(offset)), Number(U32(offset + 4)), TodResearch.Hex(offset) }, detail));
+                            Number(U32(offset)), Number(U32(offset + 4)), TodResearch.Hex(offset), referenceName }, detail));
                     }
                 }
-                return new(new[] { "Level ID", "Native level", "Physical segment slot", "Complete flag", "Reset-event count", "Adjusted elapsed (units unverified)", "Current-attempt elapsed", "Offset" }, rows.AsReadOnly());
+                return new(new[] { "Level ID", "Native level", "Physical segment slot", "Complete flag", "Reset-event count", "Adjusted elapsed (units unverified)", "Current-attempt elapsed", "Offset", "Reference segment name" }, rows.AsReadOnly());
             }
             if (view == "World progress")
             {
