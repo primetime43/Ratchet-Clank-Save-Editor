@@ -150,6 +150,41 @@ internal static partial class Program
             True(row.Details.Contains("7FC01234") && row.Details.Contains("[31]") && row.Details.Contains("Nonfinite"), "Raw unusual values must be preserved and explained.");
             True(row.Cells[9].Contains("outside") && row.Cells[9].Contains("absent"), "Unexpected values should be flagged, not rewritten.");
         });
+        Check("Friendly presentation keeps exact source data, warnings and unknown field boundaries", () =>
+        {
+            byte[] bytes = ResearchFixture(), original = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Counters & nearby fields", "Gameplay records", "Save regions" })
+            {
+                var raw = inspection.Table(view);
+                var rawCells = raw.Rows.Select(row => string.Join("|", row.Cells)).ToArray();
+                var friendly = InspectionPresentation.Simplify(view, raw);
+                True(friendly.Columns.Length < raw.Columns.Length, "Default views should remove research-only columns.");
+                True(friendly.Rows.All(row => row.Cells.Length == friendly.Columns.Length), "Friendly schemas must be consistent.");
+                foreach (var row in friendly.Rows)
+                    True(row.Details.Contains(raw.Columns[0] + ": "), "Hidden original columns must remain available in details.");
+                True(rawCells.SequenceEqual(raw.Rows.Select(row => string.Join("|", row.Cells))), "Presentation changed raw rows.");
+            }
+            var skills = InspectionPresentation.Simplify("Skill points", inspection.Table("Skill points"));
+            True(!skills.Rows[0].Cells[0].StartsWith("SKILLPOINT_"), "Enum prefixes should not be the default skill label.");
+            True(skills.Rows[0].Details.Contains("not a recovered localized"), "Friendly enum labels must not claim to be official titles.");
+            True(original.SequenceEqual(bytes), "Presentation changed save bytes.");
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(0x428, 4), 4f);
+            var multiplierInspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var player = InspectionPresentation.Simplify("Counters & nearby fields", multiplierInspection.Table("Counters & nearby fields"));
+            var multiplier = player.Rows.Single(row => row.Cells[0] == "Bolt multiplier");
+            Equal("4×", multiplier.Cells[1]);
+            True(multiplier.Details.Contains("uint32 BE: 1082130432"), "Float presentation must retain the original bits, not display them as an integer multiplier.");
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x18, 4), 0x7FC01234);
+            bytes[0x25] = 255;
+            var unusual = TodSaveInspection.Read(bytes, "BCUS98127");
+            var item = InspectionPresentation.Simplify("Weapons & gadgets", unusual.Table("Weapons & gadgets")).Rows[1];
+            Equal("Unknown", item.Cells[2]);
+            Equal("Invalid value", item.Cells[3]);
+            True(item.Details.Contains("Needs review") && item.Details.Contains("7FC01234"), "Simplification must retain anomalies and exact bits.");
+            var unavailable = TodSaveInspection.Read(bytes, "BCUS98124").Table("Armor");
+            True(ReferenceEquals(unavailable, InspectionPresentation.Simplify("Armor", unavailable)), "Unsupported-game status must remain intact.");
+        });
         Check("Hex inspection is bounded, including the last byte", () =>
         {
             var inspection = TodSaveInspection.Read(ResearchFixture(), "BCUS98127");
@@ -168,6 +203,8 @@ internal static partial class Program
             var original = Snapshot(folder);
             var table = SaveContainerInspection.Read(folder, "GAME.SAV", game);
             var account = table.Rows.Single(row => row.Cells[2] == "ACCOUNT_ID");
+            var friendlyFiles = InspectionPresentation.Simplify("Files & headers", table);
+            Equal(account.Cells[3], friendlyFiles.Rows.Single(row => row.Cells[1] == "Account (private)").Cells[2]);
             True(account.Cells[3].Contains("redacted"), "Account bindings must not be exported.");
             True(table.Rows.Any(row => row.Cells[0] == "PARAM.PFD" && row.Cells[2] == "Entry 0"), "PFD entries should be parsed.");
             True(table.Rows.Any(row => row.Cells[0] == "ICON0.PNG" && row.Cells[2] == "IEND"), "PNG chunks should be parsed.");
@@ -245,13 +282,41 @@ internal static partial class Program
             int width = grid.Columns.Cast<DataGridViewColumn>().Sum(c => c.Width);
             True(width >= grid.ClientSize.Width - SystemInformation.VerticalScrollBarWidth - 4 && width <= grid.ClientSize.Width,
                 "Columns should fill the wide grid without overflowing it.");
-            foreach (string header in new[] { "Config", "XP", "Ammo" })
+            foreach (string header in new[] { "Item", "XP", "Ammo" })
             {
                 var column = grid.Columns[header];
                 foreach (DataGridViewRow row in grid.Rows)
                     True(column.Width >= TextRenderer.MeasureText(row.Cells[column.Index].Value.ToString(), grid.Font).Width,
                         "Off-screen or numeric data should not be truncated: " + header);
             }
+            var technical = Descendants(inspector).OfType<CheckBox>().Single(c => c.Name == "InspectionTechnical");
+            Equal(5, grid.Columns.Count);
+            Equal("10", grid.Rows[1].Cells[2].Value.ToString());
+            technical.Checked = true;
+            Equal(10, grid.Columns.Count);
+            Equal("9", grid.Rows[1].Cells[3].Value.ToString());
+            technical.Checked = false;
+            Equal(5, grid.Columns.Count);
+            grid.Sort(grid.Columns["Item"], System.ComponentModel.ListSortDirection.Ascending);
+            int combusterRow = grid.Rows.Cast<DataGridViewRow>().Single(row => row.Cells[0].Value.ToString() == "Combuster").Index;
+            typeof(DataGridView).GetMethod("OnCellDoubleClick", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(grid, new object[] { new DataGridViewCellEventArgs(0, combusterRow) });
+            True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
+            tabs.SelectedIndex = 2;
+            foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Player summary", 2, 6),
+                ("Saved locations", 2, 4), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
+            {
+                views.SelectedItem = expected.Item1;
+                Equal(expected.Item2, grid.Columns.Count);
+                True(grid.Rows.Count > 0, "Friendly views must contain information.");
+                technical.Checked = true;
+                Equal(expected.Item3, grid.Columns.Count);
+                technical.Checked = false;
+                Equal(expected.Item2, grid.Columns.Count);
+            }
+            views.SelectedItem = "Player summary";
+            Equal(6, grid.Rows.Count);
+            True(!grid.Rows.Cast<DataGridViewRow>().Any(row => row.Cells[0].Value.ToString().Contains("Unknown")), "Unknown and candidate fields belong in Technical, not the player summary.");
             views.SelectedItem = "Upgrade nodes";
             var weaponFilter = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");
             True(weaponFilter.Visible, "Upgrade weapon filter should be visible.");
@@ -340,10 +405,16 @@ internal static partial class Program
             form.ClientSize = new Size(499, 248);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-compact-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Skill points", "Armor" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Player summary", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));
+                form.ClientSize = new Size(499, 248);
+                Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-compact-reference.png"));
+                var friendlyGrid = Descendants(form).OfType<DataGridView>().Single(c => c.Name == "InspectionGrid");
+                True(friendlyGrid.Columns.Cast<DataGridViewColumn>().Sum(column => column.Width) <= friendlyGrid.ClientSize.Width,
+                    "Friendly views should fit the compact window: " + view);
+                form.ClientSize = new Size(1900, 970);
             }
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Reference inspection must not dirty the save.");
             Same(original, Snapshot(folder));

@@ -11,6 +11,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly ComboBox views = new() { Name = "InspectionView", DropDownStyle = ComboBoxStyle.DropDownList, Width = 195 };
         private readonly ComboBox upgradeWeapon = new() { Name = "UpgradeWeaponFilter", DropDownStyle = ComboBoxStyle.DropDownList, Width = 160, Visible = false };
         private bool updatingWeaponFilter;
+        private readonly CheckBox technical = new() { Name = "InspectionTechnical", Text = "Technical", AutoSize = true };
         private readonly NumericUpDown hexOffset = new() { Name = "HexOffset", Hexadecimal = true, Width = 100, Visible = false };
         private readonly DataGridView grid = new()
         {
@@ -31,10 +32,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             Dock = DockStyle.Fill;
             var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 29, WrapContents = false };
-            views.Items.AddRange(new object[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Counters & nearby fields", "Gameplay records", "Save regions", "Prefix words", "Files & headers", "Hex bytes" });
+            views.Items.AddRange(new object[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Player summary", "Saved locations", "Save layout", "Prefix words (technical)", "Files & metadata", "Hex bytes (technical)" });
             toolbar.Controls.Add(views);
             toolbar.Controls.Add(upgradeWeapon);
             toolbar.Controls.Add(hexOffset);
+            toolbar.Controls.Add(technical);
             Controls.Add(grid);
             Controls.Add(hex);
             Controls.Add(details);
@@ -42,15 +44,21 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             tip.SetToolTip(views, "Read-only views of the current plaintext session baseline. Resize the window for more space.");
             tip.SetToolTip(hexOffset, "GAME.SAV file offset in hexadecimal; 256 bytes are displayed.");
             tip.SetToolTip(upgradeWeapon, "Show upgrades for one weapon, or all weapons. Select a row for technical details.");
+            tip.SetToolTip(technical, "Show original research columns and exact values, including unknown fields. Inspection is always read-only.");
             tip.SetToolTip(grid, "Double-click a weapon to view its native binding, shipped levels, upgrades and vendor grid on the Research tab.");
             grid.CellDoubleClick += (_, args) =>
             {
                 if (views.Text == "Weapons & gadgets" && HasSnapshot && args.RowIndex >= 0 &&
-                    int.TryParse(grid.Rows[args.RowIndex].Cells[0].Value?.ToString(), out int id)) WeaponReferenceRequested?.Invoke(id);
+                    grid.Rows[args.RowIndex].HeaderCell.Tag is int id) WeaponReferenceRequested?.Invoke(id);
             };
             grid.SelectionChanged += (_, _) => details.Text = grid.CurrentRow?.Tag as string ?? snapshot?.Message ?? "Open a save folder to inspect it. Bundled references are on the Research tab.";
             grid.FontChanged += (_, _) => FitColumns();
+            grid.SizeChanged += (_, _) =>
+            {
+                if (!technical.Checked && InspectionPresentation.ViewKey(views.Text) is "Save regions" or "Files & headers") FitColumns();
+            };
             views.SelectedIndexChanged += (_, _) => RefreshView();
+            technical.CheckedChanged += (_, _) => RefreshView();
             upgradeWeapon.SelectedIndexChanged += (_, _) => { if (!updatingWeaponFilter) RefreshView(); };
             hexOffset.ValueChanged += (_, _) => { if (HasSnapshot) hex.Text = snapshot.HexBytes((int)hexOffset.Value); };
             views.SelectedIndex = 0;
@@ -80,7 +88,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private void RefreshView()
         {
-            bool showHex = views.Text == "Hex bytes";
+            string view = InspectionPresentation.ViewKey(views.Text);
+            bool showHex = view == "Hex bytes";
             bool showUpgrades = views.Text == "Upgrade nodes";
             upgradeWeapon.Visible = showUpgrades && HasSnapshot;
             grid.Visible = !showHex;
@@ -90,14 +99,17 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (showHex) { hex.Text = snapshot?.HexBytes((int)hexOffset.Value) ?? details.Text; return; }
             grid.Rows.Clear();
             grid.Columns.Clear();
-            InspectionTable table = views.Text == "Files & headers" ? containers : snapshot?.Table(views.Text);
+            InspectionTable table = view == "Files & headers" ? containers : snapshot?.Table(view);
             if (table == null) return;
+            if (!technical.Checked) table = InspectionPresentation.Simplify(view, table);
             foreach (string column in table.Columns) grid.Columns.Add(column, column);
             foreach (var row in table.Rows)
             {
                 if (showUpgrades && HasSnapshot && upgradeWeapon.SelectedIndex > 0 && row.Cells[0] != upgradeWeapon.Text) continue;
                 int index = grid.Rows.Add(row.Cells);
                 grid.Rows[index].Tag = row.Details;
+                if (view == "Weapons & gadgets" && HasSnapshot)
+                    grid.Rows[index].HeaderCell.Tag = snapshot.Inventory[index].Id;
             }
             FitColumns();
             if (grid.Rows.Count > 0)
@@ -123,6 +135,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 // Long prose/hash/tail columns wrap instead of demanding a width
                 // larger than the screen. Their full values remain in Details.
                 int maximum = TextRenderer.MeasureText(new string('M', 48), grid.Font).Width + padding;
+                // Friendly descriptions use the remaining window width and wrap;
+                // exact technical tables retain their original minimum widths.
+                if (!technical.Checked && (column.Name == "Understanding" ||
+                    InspectionPresentation.ViewKey(views.Text) == "Files & headers" && column.Name == "Value"))
+                {
+                    int occupied = grid.Columns.Cast<DataGridViewColumn>().Take(column.Index).Sum(previous => previous.MinimumWidth);
+                    maximum = Math.Max(80, grid.ClientSize.Width - SystemInformation.VerticalScrollBarWidth - 4 - occupied);
+                }
                 column.MinimumWidth = Math.Max(40, Math.Min(width, maximum));
                 column.FillWeight = column.MinimumWidth;
                 column.DefaultCellStyle.WrapMode = width > maximum ? DataGridViewTriState.True : DataGridViewTriState.False;
