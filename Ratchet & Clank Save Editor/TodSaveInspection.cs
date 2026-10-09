@@ -102,16 +102,60 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (view == "Counters & nearby fields")
             {
                 foreach (var field in new[] { (0x280, "Acquisition/removal counter", "confirmed", "Not asserted equal to the owned-item count."),
-                    (0x418, "Unknown", "unknown", "Do not infer a purpose from its value."),
+                    (0x418, "Hero progression input", "candidate", "Restored by 23E650 into 23E090; exact health/XP meaning remains unconfirmed."),
                     (0x41C, "Bolts", "confirmed", "uint32 big endian."), (0x420, "Raritanium", "confirmed", "uint32 big endian."),
                     (0x424, "Unknown", "observed", "Sample value 32 does not establish a count invariant."),
-                    (0x428, "Candidate multiplier", "candidate", "Float interpretation is not a verified gameplay meaning."),
-                    (0x42C, "Unknown", "unknown", "Unmapped state."), (0x430, "Unknown", "unknown", "Unmapped state.") })
+                    (0x428, "Bolt multiplier", "code-backed", "Float32 BE. Native getter/update 1E2568 / 1E25F0; code clamps updates to 1..20, not a validated edit range."),
+                    (0x42C, "Unknown", "unknown", "Unmapped state."), (0x430, "Unknown", "unknown", "Unmapped state."),
+                    (0x458, "Equipped armor ID", "code-backed", "Native IDs 0..4; ownership and unlock availability are separate."),
+                    (0x8708, "Weighted skill-point total", "code-backed", "Not completion count. Native setter adds the shipped definition value for a newly earned bit."),
+                    (0x906EC, "Restart/playthrough counter", "candidate", "Nonzero predicate gates multiplier and final armor availability; exact gameplay naming remains candidate.") })
                 {
                     uint value = U32(field.Item1);
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 }, field.Item4));
                 }
                 return new(new[] { "Offset", "Field", "uint32 BE", "float32 BE", "Raw bits", "Confidence" }, rows.AsReadOnly());
+            }
+            if (view == "Skill points")
+            {
+                ulong bits = BinaryPrimitives.ReadUInt64BigEndian(data.AsSpan(0x8710, 8));
+                var definition = TodResearch.Map.GetProperty("progression").GetProperty("skill_points");
+                uint expected = 0;
+                foreach (var skill in definition.GetProperty("catalog").EnumerateArray())
+                    if ((bits & (1UL << skill.GetProperty("id").GetInt32())) != 0)
+                        expected += skill.GetProperty("points").GetUInt32();
+                foreach (var skill in definition.GetProperty("catalog").EnumerateArray())
+                {
+                    int id = skill.GetProperty("id").GetInt32(), offset = 0x8710 + 7 - id / 8;
+                    bool complete = (bits & (1UL << id)) != 0;
+                    string detail = $"Native ID {id}; BE64 integer bit {id}, byte {TodResearch.Hex(offset)} mask 0x{1 << (id % 8):X2}.\r\n" +
+                        $"Saved weighted total: {U32(0x8708)}; total from these bits and shipped definitions: {expected}. " +
+                        (U32(0x8708) != expected ? "Mismatch preserved; no repair attempted. " : "") +
+                        $"Unknown high bits: 0x{bits & 0xF000000000000000UL:X16}. Unknown alignment bytes at 0x870C: {Convert.ToHexString(data, 0x870C, 4)}.\r\n" +
+                        "Static meanings are code-backed; no edit or in-game compatibility claim.\r\n" + TodResearch.Pretty(skill);
+                    rows.Add(new(new[] { id.ToString(), skill.GetProperty("enum").GetString(), complete ? "Yes" : "No",
+                        skill.GetProperty("points").ToString(), skill.GetProperty("name_tag").ToString(),
+                        skill.GetProperty("description_tag").ToString(), TodResearch.Hex(offset), $"0x{1 << (id % 8):X2}" }, detail));
+                }
+                return new(new[] { "ID", "Native name", "Complete", "Points", "Name tag", "Description tag", "Byte offset", "Bit mask" }, rows.AsReadOnly());
+            }
+            if (view == "Armor")
+            {
+                uint equipped = U32(0x458);
+                foreach (var armor in TodResearch.Map.GetProperty("progression").GetProperty("armor").GetProperty("catalog").EnumerateArray())
+                {
+                    int id = armor.GetProperty("id").GetInt32(), offset = 0x444 + id * 4;
+                    uint owned = U32(offset);
+                    byte unlock = data[0x5774 + id];
+                    string detail = $"Ownership word: 0x{owned:X8} at {TodResearch.Hex(offset)}; any nonzero value satisfies native ownership.\r\n" +
+                        $"Equipped ID: {equipped} at 0x458" + (equipped >= 5 ? " (outside the mapped catalog; retained unchanged)" : "") +
+                        $". Independent unlock byte: 0x{unlock:X2} at {TodResearch.Hex(0x5774 + id)}.\r\n" +
+                        "Availability's native getter can unlock ID4 when word906EC is nonzero; this inspector only reads the saved bytes.\r\n" +
+                        TodResearch.Pretty(armor);
+                    rows.Add(new(new[] { id.ToString(), armor.GetProperty("enum").GetString(), owned != 0 ? "Yes" : "No",
+                        $"0x{owned:X8}", equipped == id ? "Yes" : "No", $"0x{unlock:X2}", TodResearch.Hex(offset) }, detail));
+                }
+                return new(new[] { "ID", "Native name", "Owned", "Ownership word", "Equipped", "Unlock byte", "Ownership offset" }, rows.AsReadOnly());
             }
             if (view == "Upgrade nodes")
             {

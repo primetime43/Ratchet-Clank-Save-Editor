@@ -16,3 +16,7 @@
 # Test output and diagnostic build logs
 **/[Tt]est[Rr]esults/
 *.binlog
+
+# Python research tool caches
+__pycache__/
+*.py[cod]

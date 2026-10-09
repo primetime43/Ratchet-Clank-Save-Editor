@@ -1,6 +1,6 @@
 # Tools of Destruction save format
 
-Initial offset map for the PS3 `BCES00052_SAVE_1` sample. `GAME.SAV` contains readable, big-endian game state; `PARAM.SFO` is a little-endian metadata container, and `PARAM.PFD` is a separate big-endian integrity database. The game data begins with repeating inventory records, not an identified magic/version/length header. Do not apply the HD trilogy's `USR-DATA` block header to this file.
+Offset map checked against the PS3 `BCES00052_SAVE_1` plaintext sample and the supplied `BCUS98127_SAVE_1` encrypted USA save. Decrypted `GAME.SAV` contains big-endian game state; `PARAM.SFO` is a little-endian metadata container, and `PARAM.PFD` is a separate big-endian integrity database. The game data begins with repeating inventory records, not an identified magic/version/length header. Do not apply the HD trilogy's `USR-DATA` block header to this file.
 
 **Status:** the wrapper headers are mapped; game-state structures are partially mapped. A byte pattern is not enough to establish a field's gameplay meaning. No new fields are enabled for editing.
 
@@ -26,6 +26,8 @@ The SFO subtitle is `Planet Sargasso `, including a trailing space. Presence of 
 
 Sample `GAME.SAV` SHA-256: `BEB457F9F5C750C46F2AD27E9DEFB15090785311696EAE7D5178904205DD949C`. Original files were read only and their hashes checked again after inspection. Account-binding values and opaque PFD keys are omitted from reports.
 
+The table above describes the European sample only. The supplied USA save has an encrypted `GAME.SAV` of the same `0x906F0` length. Its ciphertext SHA-256 is `FA16668A09319AF0193F53674C7ED0DE7434189EA488E3FAB5AF4782D2D10D48`; the working-copy plaintext SHA-256 is `F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463`. The editor's normal `SaveSession` / `Encryption` path decrypted a private copy after a full backup; all five original hashes remained unchanged. Plaintext, save images, account IDs and PFD bindings are not tracked or embedded.
+
 ## Game data overview
 
 These ranges cover the entire sample, including unknown areas. The whole-buffer copy is now verified in the USA executable; most internal subranges remain an observed partition rather than a fully understood schema.
@@ -38,12 +40,12 @@ These ranges cover the entire sample, including unknown areas. The whole-buffer 
 | `0x0041C–0x00420` | 4 | Bolts, uint32 BE | Documented |
 | `0x00420–0x00424` | 4 | Raritanium, uint32 BE | Documented |
 | `0x00424–0x00428` | 4 | `00000020` (32) | Unknown |
-| `0x00428–0x0042C` | 4 | `41000000` (float32 8.0) | Candidate bolt multiplier |
+| `0x00428–0x0042C` | 4 | Bolt multiplier; EU 8.0, USA 1.0 | Code-backed getter and update |
 | `0x0042C–0x08764` | `0x8338` | Flags, floats, arrays and sparse binary state | Unknown |
 | `0x08764–0x097D8` | `0x1074` | 27 named gameplay records, stride `0x9C` | Observed |
 | `0x097D8–0x906F0` | `0x86F18` | Large sparse regions and further binary state | Unknown; not proven padding |
 
-The documented currency offsets are implemented in `SaveProfile.cs`. The multiplier candidate matches both the sample's plausible 8.0 value and the relative bolts/raritanium/multiplier layout in [RatchetHax's ToD memory definitions](https://github.com/ParadoxEpoch/RatchetHax/blob/main/games/rctod_ps3_npua80965.js). **RAM addresses are not automatically save offsets**; the external layout supports the multiplier hypothesis but does not verify that field. The executable snapshot linkage below establishes the conversion only for the identified saved-state block in the supplied build.
+The documented currency offsets are implemented in `SaveProfile.cs`. The multiplier at `0x428` is now established by the supplied executable's saved-state pointer, getter and update path; see the progression map below. **RAM addresses are not automatically save offsets**: the executable snapshot linkage establishes the conversion only for the identified saved-state block in the supplied build.
 
 ### Inventory records
 
@@ -112,13 +114,41 @@ The `hero_give_weapon` binding reaches `0x28B4E8`, which validates the hero and 
 
 | Offset | Bytes | Interpretation | Evidence |
 | --- | --- | --- | --- |
-| `0x418` | `0022FC63` | uint32 2,292,835 | Unknown |
+| `0x418` | `0022FC63` | uint32 2,292,835 | Hero progression input; exact health/XP naming remains candidate |
 | `0x41C` | `153814E4` | 355,996,900 bolts | Documented offset; observed value |
 | `0x420` | `0092B08E` | 9,613,454 raritanium | Documented offset; observed value |
 | `0x424` | `00000020` | uint32 32 | Unknown |
-| `0x428` | `41000000` | float32 8.0 | Candidate multiplier |
+| `0x428` | `41000000` | float32 8.0 | Code-backed multiplier; EU sample value |
 | `0x42C` | `00000018` | uint32 24 | Unknown |
 | `0x430` | `0000000F` | uint32 15 | Unknown |
+
+### Code-backed progression and armor
+
+These meanings were traced in the exact USA v02.00 ELF and checked against the supplied USA plaintext working copy. The shared JSON `progression` section records native functions, all 60 skill definitions, all five armor enums and 478 byte guards. [Inspect-TodProgression.py](../Tools/Inspect-TodProgression.py) independently reproduces that section from the original ELF; its optional save argument reads plaintext only and refuses other sizes or non-sequential inventory IDs.
+
+| Save offset | Stored type | Code-backed meaning | USA observation |
+| --- | --- | --- | --- |
+| `0x428` | float32 BE | Bolt multiplier | 1.0 |
+| `0x444 + 4*i`, `i=0..4` | uint32 BE | Armor ownership; nonzero predicate | All five words 1 |
+| `0x458` | uint32 BE | Equipped armor ID | 4, `ARMOR_QUANTONIUM` |
+| `0x5774 + i`, `i=0..4` | uint8 | Independent armor unlock bytes | All five bytes 1 |
+| `0x8708` | uint32 BE | Weighted skill-point total | 750 |
+| `0x8710–0x8718` | uint64 BE | Skill completion bitset; IDs 0..59 | `0FFFFFFFFFFFFFFF`, all 60 complete |
+
+For skill ID `i`, test integer bit `i` of the BE64 word. The equivalent file-byte expression is `0x8710 + 7 - floor(i/8)`, mask `1 << (i % 8)`: ID0 is byte `0x8717` bit0; ID59 is byte `0x8710` bit3. The high four bits and bytes `0x870C–0x8710` remain uninterpreted. The native setter adds each newly earned definition's **point value**, not one; all 60 shipped values sum to 750 and exactly match this save's stored total. It also awards ID59 `SKILLPOINT_HARDCORE` when IDs0..58 become complete. The inspector preserves unknown bits and score mismatches, never repairs them.
+
+Armor IDs are 0 `ARMOR_NONE`, 1 `ARMOR_DURAFIBER`, 2 `ARMOR_HYPERPLATE`, 3 `ARMOR_TETRAMESH`, 4 `ARMOR_QUANTONIUM`. Unlock availability, ownership and equipped ID are separate. The native availability getter can itself set unlock byte `0x5778` when word `0x906EC` is nonzero. Equipping also marks ownership and changes a runtime armor attribute; a purchase additionally deducts bolts and sends notifications. A direct file-word edit does not reproduce these transactions.
+
+The multiplier getter can reset the saved float to 1 depending on runtime state; its update path adds 1 and clamps to 1..20. This is observed **code behavior**, not permission to expose arbitrary multiplier edits. No new editable fields were added: the program's **Skill points**, **Armor**, **Counters & nearby fields** and **Research** views are read-only.
+
+The USA value at `0x418` is 2,315,144: initialization sends it to a hero progression routine which calculates a runtime level byte. Exact XP/nanotech/health naming remains a candidate. Word `0x906EC` is 3; its nonzero predicate gates multiplier updates and final-armor availability, and the restart routine increments/clamps it. Its exact challenge-mode/playthrough interpretation remains a candidate. Health, current/max health, world flags and named gameplay-record tails are not confirmed by these findings.
+
+Reproduce from a working-copy plaintext capture:
+
+```powershell
+python Tools/Inspect-TodProgression.py --elf $ElfPath --save $PlaintextSavePath
+python Tests/TestTodProgression.py --elf $ElfPath --save $PlaintextSavePath
+```
 
 ### Named gameplay records
 
@@ -262,7 +292,9 @@ Collect paired saves with exactly one intentional change, using copies rather th
 | Buy one raritanium upgrade | `i * 0x14 + 0x0C` | Which bit corresponds to the purchased node? |
 | Change only bolt multiplier | `0x428` | Does this float track the displayed multiplier? |
 | Acquire or unlock one mapped item | `i*0x14+0x10`, `0x280`, `0x5754+i` and other inventory state | Verify acquisition versus availability and counter/list updates |
-| Change health/armor | Unmapped state | Separate current health, max health, XP and armor |
+| Buy or equip armor | `0x444–0x45C`, `0x5774–0x5779` | Verify ownership, equipped ID, currency and unlock changes together |
+| Earn one skill point | `0x8708`, `0x8710–0x8718` | Verify weighted score, bit order and automatic HARDCORE award |
+| Change health | `0x418` candidate and unmapped state | Separate current health, max health and progression XP |
 | Complete one scenario | `0x8764–0x97D8` and later state | Distinguish statistics from actual progression |
 | Move, save, reload | Unmapped state | Locate checkpoint, planet ID and position fields |
 

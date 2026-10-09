@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 337 annotations, 118 imports, evidence, byte signatures and six structure definitions.
+- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 425 annotations, 118 imports, evidence, byte signatures and eight structure definitions.
 - [Ghidra importer](../Tools/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../Tools/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](ToolsOfDestructionSaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -182,7 +182,7 @@ XP setter `0x4660A8` writes float `+0x04`, recomputes stored level from weapon-d
 
 Modifier helper `0x465D00` ORs a selected bit into record `+0x0C` and refills ammo if maximum changes. Calculation `0x466258` walks weapon-data entries at `+0x464`, stride `0x18`, count at `+0x6A4`; enabled bits select entries matching an attribute ID. Kind zero adds a float, other kinds accumulate a multiplier. Maximum ammo chooses attribute 9 and a base value at weapon-data `+0x280 + 4*level`. The packed assets provide node indices, label tags, costs and XP/ammo tables. Native bindings now link all 32 inventory IDs to named configurations, and vendor bytecode supplies upgrade grids and UI checks below. **Runtime overrides, safe edited-save masks and gameplay-validated bounds remain unresolved.** This modifier helper alone does not describe a complete upgrade purchase.
 
-The JSON `serialization` section records the state/copy chain, field offsets and exact instruction guards. The new `TOD_SaveInventoryRecord_verified` type supersedes candidate field names without overwriting an existing analyst's `TOD_SaveInventoryRecord_observed` type. Both remain available because importers preserve existing types. The remaining gameplay/health/armor structures are not verified. No editor fields were enabled by this research, and the USA ELF/European sample match is not a cross-region load test.
+The JSON `serialization` section records the state/copy chain, field offsets and exact instruction guards. The `TOD_SaveInventoryRecord_verified` type supersedes candidate field names without overwriting an existing analyst's `TOD_SaveInventoryRecord_observed` type. Both remain available because importers preserve existing types. Armor and skill-point structures are now mapped below; health and gameplay-record tail meanings remain unresolved. No new editable fields were enabled, and a matching layout is not a cross-region load test.
 
 ### Ownership unlocks and acquisition
 
@@ -203,6 +203,37 @@ Word `0x280` is updated as an acquisition/removal counter, but it is **not asser
 The total unlock-array length is not established. The comparison tool decodes only the 32 IDs whose inventory records are mapped; the larger byte region still contains unknown state. Named `purchase_weapon` wrapper `0x337D8 → 0x26638` branches through thunks to `0x2D21A8` or `0x2D2D38`. The latter is now traced: it requires a hero, applies an extra condition for ID `0x13`, obtains price via `0x2D2058`, checks inventory bolts at `+0x41C`, calls acquisition/refill `0x466B70`, delegates hero inventory integration through `0x252B08`, and deducts the price through `0x24FCB8`. It also conditionally dispatches through a virtual method and sends further notifications. This leaf does not establish every vendor prerequisite or the complete semantics of those downstream calls. A one-byte edit is not a complete purchase.
 
 The auxiliary initializer `0x35DC80` clears currency and initializes a 32-word sentinel list at `0x284`, three 23-word arrays at `0x304/0x360/0x3BC`, and other state. Their complete meanings remain unknown. The restart-style routine `0x3CED40` copies and selectively resets state, including some records, then increments/clamps word `0x906EC`; **challenge-mode interpretation is a candidate**, not a confirmed editable field. These are additional leads, not imported original function names.
+
+### Progression, skill points and armor
+
+The supplied encrypted `BCUS98127_SAVE_1` now provides a same-title USA reference alongside the original European plaintext sample. The normal editor decryption path produced a private plaintext snapshot without changing any original files. Its non-private observations are in `usa_reference_save`; see [save-format notes](ToolsOfDestructionSaveFormat.md#code-backed-progression-and-armor) for hashes and values. An encryption round-trip on a disposable clone is not an in-game load test.
+
+The key pointer proof is initializer `0x23E650`: `0x23E73C` loads TOC slot `0x897B38`, whose word is `0x101EFB20`; `0x23E744` stores it into hero member `+0x1A68`. Hero member accesses therefore refer to the identified serialized block, not an arbitrary runtime object.
+
+| Native function / chain | Verified behavior |
+| --- | --- |
+| `get_current_skillpoints: 0x2EA30 → 0x27358` | Reads weighted total at state `+0x8708` |
+| `is_skillpoint_done: 0x27A700` | Tests BE64 integer bit ID at state `+0x8710`; named IDs0..59 |
+| `set_skillpoint_done: 0x27A6A0 → 0x35D5D0` | Slot `0x898FF4` points to state `+0x5528`; subobject `+0x31E0/+0x31E8` are save `0x8708/0x8710` |
+| `0x35D5D0` | Returns on already-set bit; otherwise sets bit and adds definition points; tests IDs0..58 to award ID59 |
+| `0x35EB00` | Definition points at table `0x10026654 + ID*0x10` |
+| `get_skillpoint_name: 0x2E6D0 → 0x257B8 → 0x11F60 → 0x35EB70` | Loads definition `+4` name tag at `0x35EBA4` and localizes it |
+| `get_skillpoint_desc: 0x2E5A8 → 0x256F8 → 0x10540 → 0x35ECD8` | Loads definition `+8` description tag at `0x35ED0C` and localizes it |
+| `is_armor_owned: 0x32230 → 0x25F70 → 0x10FF0 → 0x2D2400` | Tests nonzero uint32 at save `0x444 + ID*4` |
+| `hero_get_armor: 0x28A290 → 0x2510D8 → 0x1E2140` | Reads equipped ID at save `0x458` |
+| `hero_set_armor: 0x28A3C0 → 0x252098 → 0x1E2150` | Writes save `0x458`, marks corresponding ownership word, updates runtime attribute |
+| `0x2D2440` / `0x2D2588` | Read/update five armor unlock bytes at save `0x5774`; slot `0x89F1DC` is `0x101F5294` |
+| `purchase_armor: 0x32080 → 0x25F18 → 0x12FB0 → 0x2D26D0` | Checks bolts/equipped ID, marks ownership, deducts price, delegates equip and notifications |
+| `0x1E2568` / `0x1E25F0` | Read/reset/update saved float `0x428`; update clamps 1..20 |
+| `0x2D1860` | Returns whether saved word `0x906EC` is nonzero; called by multiplier and armor availability |
+
+Native registration `0x294E90` exports all 60 `SKILLPOINT_*` IDs and count60; registration `0x28440` exports the five `ARMOR_*` IDs and count5. [Inspect-TodProgression.py](../Tools/Inspect-TodProgression.py) decodes their literal float exports and TOC name pointers, not string order or guessed enum numbering. It also reads all 60 definition records: points, name tag, description tag and **unknown** member `+0xC`. Localization tags are numeric IDs, not direct pointers or recovered English descriptions. Runtime localization branches are not fully reconstructed.
+
+The shared `progression` section contains **478** additional original-ELF byte guards and the complete catalogs. The types `TOD_SaveArmorState_verified` (relative to save `0x444`) and `TOD_SaveSkillPointState_verified` (relative to `0x8708`) are added without replacing prior types. Raw BE64 bit order and unknown high bits are explicitly documented. The program embeds the map and displays these findings read-only.
+
+Multiplier use is traced through cross-TOC thunk `0x251518 → 0x1E2568`; `0x2D073C` calls it, `0x2D0744` retains its float result in f31, and `0x2D02F8` multiplies it in the consumer. Do not treat this as a complete reconstruction of that consumer's reward/side-effect logic. Raw PPC instructions remain authoritative: the decompiler can omit TOC-restoration and float semantics.
+
+Additional leads remain deliberately unnamed: save `0x418` is passed to progression routine `0x23E090`, which calculates runtime level byte `+0x1B61`; exact health/XP semantics are not established. The tail word `0x906EC` is a restart/playthrough-count candidate despite its confirmed nonzero predicate and reset/increment paths. Neither field gained an editable control.
 
 ### Packed weapon configuration and native field bindings
 
@@ -379,7 +410,7 @@ The project's README points to [Slim's Editor](https://github.com/RatchetModding
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 336 mapped annotations (the third TOC reference base is unmapped), six structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog instruction guards and ownership/acquisition relationships. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 424 mapped annotations (the third TOC reference base is unmapped), eight structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression instruction guards and ownership/acquisition relationships. The progression decoder reproduces the bundled catalog independently from the original ELF and checks the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

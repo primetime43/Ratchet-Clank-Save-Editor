@@ -41,7 +41,9 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(337, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(425, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(60, TodResearch.Map.GetProperty("progression").GetProperty("skill_points").GetProperty("catalog").GetArrayLength());
+            Equal(5, TodResearch.Map.GetProperty("progression").GetProperty("armor").GetProperty("catalog").GetArrayLength());
             var configuration = TodResearch.Map.GetProperty("weapon_configuration");
             Equal(15, configuration.GetProperty("vendor_upgrade_layout").GetProperty("grids").EnumerateObject().Count());
             Equal(24, configuration.GetProperty("native_fields").GetProperty("mods_array_capacity").GetInt32());
@@ -80,11 +82,40 @@ internal static partial class Program
             Equal("Bit set", special.Cells[2]);
             Equal("r3 c5", special.Cells[6]);
             Equal("1, 5, 13", special.Cells[8]);
-            foreach (string view in new[] { "Weapons & gadgets", "Upgrade nodes", "Counters & nearby fields", "Gameplay records", "Save regions", "Prefix words" }) inspection.Table(view);
+            foreach (string view in new[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Counters & nearby fields", "Gameplay records", "Save regions", "Prefix words" }) inspection.Table(view);
             inspection.HexBytes(0x5754);
             True(original.SequenceEqual(bytes), "Inspection changed the input.");
             bytes[0x26] = 0;
             Equal((ushort)0xABCD, inspection.Inventory[1].UnknownTail);
+        });
+        Check("Progression inspection preserves BE64 bit order, independent armor flags and unusual values", () =>
+        {
+            byte[] bytes = ResearchFixture(), original;
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x8710, 8), (1UL << 63) | (1UL << 59) | 1);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8708, 4), 9999);
+            bytes[0x870C] = 0xAB;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x448, 4), 2);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x458, 4), 99);
+            bytes[0x5775] = 0;
+            original = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var skills = inspection.Table("Skill points");
+            Equal(60, skills.Rows.Count);
+            Equal("Yes", skills.Rows[0].Cells[2]);
+            Equal("Yes", skills.Rows[59].Cells[2]);
+            Equal("No", skills.Rows[1].Cells[2]);
+            Equal("0x8717", skills.Rows[0].Cells[6]);
+            Equal("0x8710", skills.Rows[59].Cells[6]);
+            True(skills.Rows[0].Details.Contains("8000000000000000") && skills.Rows[0].Details.Contains("Mismatch") &&
+                skills.Rows[0].Details.Contains("AB000000"), "Unknown bits, score mismatch and alignment bytes must remain visible.");
+            var armor = inspection.Table("Armor");
+            Equal(5, armor.Rows.Count);
+            Equal("Yes", armor.Rows[1].Cells[2]);
+            Equal("0x00000002", armor.Rows[1].Cells[3]);
+            Equal("0x00", armor.Rows[1].Cells[5]);
+            True(armor.Rows.All(row => row.Cells[4] == "No"), "Invalid equipped ID must not be clamped.");
+            True(armor.Rows[1].Details.Contains("outside"), "Unknown equipped ID should be explained.");
+            True(original.SequenceEqual(bytes), "New inspector views changed input.");
         });
         Check("Research refuses other games, sizes and mismatched IDs without guessing", () =>
         {
@@ -246,6 +277,19 @@ internal static partial class Program
             Equal(32, inspection.Inventory.Count);
             Equal("Combuster", inspection.Inventory[1].Name);
             var bytes = session.ReadInspectionData();
+            ulong skillBits = BinaryPrimitives.ReadUInt64BigEndian(bytes.AsSpan(0x8710, 8));
+            var skills = inspection.Table("Skill points");
+            Equal(60, skills.Rows.Count);
+            for (int id = 0; id < 60; id++)
+                Equal((skillBits & (1UL << id)) != 0 ? "Yes" : "No", skills.Rows[id].Cells[2]);
+            var armor = inspection.Table("Armor");
+            Equal(5, armor.Rows.Count);
+            for (int id = 0; id < 5; id++)
+            {
+                uint owned = BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x444 + id * 4, 4));
+                Equal($"0x{owned:X8}", armor.Rows[id].Cells[3]);
+                Equal($"0x{bytes[0x5774 + id]:X2}", armor.Rows[id].Cells[5]);
+            }
             Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x20, 4)), inspection.Inventory[1].ModifierMask);
             Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x280, 4)), inspection.AcquisitionCounter);
             Equal((uint)session.Bolts, BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x41C, 4)));
@@ -267,6 +311,12 @@ internal static partial class Program
             Capture(form, Path.GetFullPath("artifacts/ui-save-information-reference.png"));
             Field<TabControl>(form, "TabControl").SelectedIndex = 2;
             Capture(form, Path.GetFullPath("artifacts/ui-inspector-reference.png"));
+            var inspectorViews = Descendants(form).OfType<ComboBox>().Single(c => c.Name == "InspectionView");
+            foreach (string view in new[] { "Skill points", "Armor" })
+            {
+                inspectorViews.SelectedItem = view;
+                Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));
+            }
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Reference inspection must not dirty the save.");
             Same(original, Snapshot(folder));
             Console.WriteLine($"Reference {session.Metadata.Region}: {(session.IsEncrypted ? "encrypted PS3" : "plaintext")}, 32 records, {inspection.Inventory.Count(i => i.ScriptOwned)} script-owned, acquisition counter {inspection.AcquisitionCounter}. Source unchanged.");

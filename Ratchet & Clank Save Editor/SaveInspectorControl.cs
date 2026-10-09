@@ -28,7 +28,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             Dock = DockStyle.Fill;
             var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 29, WrapContents = false };
-            views.Items.AddRange(new object[] { "Weapons & gadgets", "Upgrade nodes", "Counters & nearby fields", "Gameplay records", "Save regions", "Prefix words", "Files & headers", "Hex bytes" });
+            views.Items.AddRange(new object[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Counters & nearby fields", "Gameplay records", "Save regions", "Prefix words", "Files & headers", "Hex bytes" });
             toolbar.Controls.Add(views);
             toolbar.Controls.Add(hexOffset);
             Controls.Add(grid);

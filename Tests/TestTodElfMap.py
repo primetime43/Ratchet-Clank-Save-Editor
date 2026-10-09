@@ -192,7 +192,8 @@ class MapChecks(unittest.TestCase):
         self.assertEqual(raw[:6], b"\x7fELF\x02\x02")
         for entry in (MAPPING["annotations"] + MAPPING["serialization"]["instruction_guards"]
                 + MAPPING["weapon_configuration"]["instruction_guards"]
-                + MAPPING["weapon_configuration"]["catalog_instruction_guards"]):
+                + MAPPING["weapon_configuration"]["catalog_instruction_guards"]
+                + MAPPING["progression"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])
