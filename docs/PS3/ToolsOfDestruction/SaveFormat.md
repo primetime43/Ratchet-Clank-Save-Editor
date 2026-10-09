@@ -458,6 +458,17 @@ Exact USA ELF evidence establishes **23 BE32 words at `0x56D8–0x5734` (end exc
 
 The [arena executable mapping](BCUS98127/v02.00/ElfMap.md#arena-challenges-direct-ids-saved-wins-and-shipped-definitions) joins all22 IDs to shipped config descriptions, restrictions and base rewards; CSV order is not native ID order. Runtime ArenaConfig records are not save records, and the runtime menu table/index order remains unresolved. Success additionally changes currency and potentially inventory/quick-select state. No challenge editing controls or live payout guarantee are enabled; the app provides a read-only **Arena challenges** view.
 
+### Per-world object bitsets
+
+The two formerly opaque256-byte arrays within each408-byte world record are now mapped as **32 BE64 words /2,048 physical object-slot bits each**:
+
+- World member1E0, save base668: recorded object-specific lifecycle state; native set/clear/check and restore consumers are identified. This is not universally a dead/killed flag.
+- World member2E0, save base768: spawn suppression; a set bit rejects the corresponding object definition in native load mode1. Other load modes have different rules.
+
+For world `l`, add `l*408` to either save base. For physical slot `s`, word is `base+8*(s//64)` and file byte is `word+7-(s%64)//8`, mask `1<<(s%8)`. Slot indices come from aligned runtime object-pool entries, not saved UIDs, inventory IDs or a named collectible catalog. Twenty physical worlds are initialized; only nineteen have native level names. All40 bands are zero in the supplied USA plaintext. The read-only **World object flags** view preserves exact words and set-slot indices; zero is not an object-availability or completion verdict.
+
+See the [exact-build object-bitset evidence](BCUS98127/v02.00/ElfMap.md#per-world-object-state-and-spawn-suppression-bitsets) for native addresses, mode2 segment/checkpoint dependencies, tests and reproduction commands. The segment tick/reset/log gate is specifically saved restart-counter906EC **nonzero**, not an independently named replay flag. That counter is3 in the USA snapshot; game-mode terminology and behavioral edit validation remain unconfirmed.
+
 Executable research is recorded separately in the [Tools of Destruction ELF map](BCUS98127/v02.00/ElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
 
 Packed-asset research supplies [weapon XP/ammo tables and upgrade-node catalogs](BCUS98127/v02.00/ElfMap.md#packed-weapon-configuration-and-native-field-bindings). The [native ID catalog](BCUS98127/v02.00/ElfMap.md#native-inventory-id-catalog) now independently links all 32 save records to enum/config names through exports, constructors and named getters; CSV order is **not** the ID map. The read-only asset report covers 28 internal configurations and 204 entries including start nodes. All 15 [vendor upgrade grids and their UI checks](BCUS98127/v02.00/ElfMap.md#vendor-upgrade-grids-and-purchasing) are mapped separately from the native purchasing transaction. The native ammo array has 20 slots and the modifier array 24; neither array capacity nor a 32-bit mask establishes playable levels or valid arbitrary upgrades. Asset values, node masks and calculated capacities remain research facts, not gameplay-validated edit limits.

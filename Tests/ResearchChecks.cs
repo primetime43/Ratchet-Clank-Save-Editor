@@ -36,6 +36,36 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Per-world object bitsets preserve BE64 ordering, distinct bands and all physical slots", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            int[] setSlots = { 0, 7, 8, 63, 64, 127, 1023, 1024, 2047 };
+            foreach (int slot in setSlots)
+            {
+                int offset = 0x668 + slot / 64 * 8;
+                ulong bits = BinaryPrimitives.ReadUInt64BigEndian(bytes.AsSpan(offset, 8)) | (1UL << (slot % 64));
+                BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(offset, 8), bits);
+            }
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x768, 8), 1UL << 2);
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x768 + 19 * 0x408 + 31 * 8, 8), 1UL << 63);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x5500, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var raw = inspection.Table("World object flags");
+            Equal(40, raw.Rows.Count); Equal(7, raw.Columns.Length);
+            Equal("9", raw.Rows[0].Cells[3]);
+            Equal("0, 7, 8, 63, 64, 127, 1023, 1024, 2047", raw.Rows[0].Cells[6]);
+            Equal("2", raw.Rows[1].Cells[6]); Equal("1", raw.Rows[^1].Cells[3]);
+            Equal("2047", raw.Rows[^1].Cells[6]);
+            True(raw.Rows[^1].Cells[5].EndsWith("8000000000000000"), "Last bit must retain BE64 byte order.");
+            True(raw.Rows[0].Details.Contains("Not universally") && raw.Rows[1].Details.Contains("Other modes"), "Object-bit meanings must retain lifecycle/mode qualifications.");
+            var friendly = InspectionPresentation.Simplify("World object flags", raw);
+            Equal(38, friendly.Rows.Count); Equal(3, friendly.Columns.Length);
+            True(friendly.Rows[0].Details.Contains("not named collectibles"), "Object slots must not become a collectible checklist.");
+            True(bytes.SequenceEqual(before), "Object-bit inspection must not mutate input.");
+            Array.Clear(bytes);
+            Equal("9", inspection.Table("World object flags").Rows[0].Cells[3]);
+        });
         Check("Gameplay segments preserve completion bytes, scalar types, unknown tails and physical bounds", () =>
         {
             byte[] bytes = ResearchFixture(), before = bytes.ToArray();
@@ -187,7 +217,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1152, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1163, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -615,7 +645,7 @@ internal static partial class Program
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
             tabs.SelectedIndex = 2;
             foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
-                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 8), ("World progress", 4, 9), ("Gameplay segments", 5, 8), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
+                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 8), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 8), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
                 views.SelectedItem = expected.Item1;
                 Equal(expected.Item2, grid.Columns.Count);
@@ -739,8 +769,23 @@ internal static partial class Program
             uint logCount = BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x10144, 4));
             Equal(200, logs.Rows.Count);
             Equal(Math.Min(logCount, 200u), (uint)logs.Rows.Count(r => r.Cells[4] == "Within saved count"));
+            var objectFlags = inspection.Table("World object flags");
+            Equal(40, objectFlags.Rows.Count);
+            for (int level = 0; level < 20; level++)
+            {
+                for (int band = 0; band < 2; band++)
+                {
+                    int offset = 0x668 + band * 0x100 + level * 0x408;
+                    int setCount = 0;
+                    for (int word = 0; word < 32; word++)
+                        setCount += System.Numerics.BitOperations.PopCount(BinaryPrimitives.ReadUInt64BigEndian(bytes.AsSpan(offset + word * 8, 8)));
+                    Equal(setCount.ToString(), objectFlags.Rows[level * 2 + band].Cells[3]);
+                    Equal(Convert.ToHexString(bytes.AsSpan(offset, 256)), objectFlags.Rows[level * 2 + band].Cells[5]);
+                }
+            }
             if (Convert.ToHexString(SHA256.HashData(bytes)) == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463")
             {
+                True(objectFlags.Rows.All(r => r.Cells[3] == "0"), "Actual40 object bitsets must match zero source bytes without inferring object availability.");
                 Equal(0u, logCount);
                 Equal(27, logs.Rows.Count(r => r.Cells[4] == "Retained beyond saved count"));
                 True(logs.Rows[0].Details.Contains("reset_events: 1; bits 00000001"), "Actual log counter must agree with native integer store.");
@@ -790,7 +835,7 @@ internal static partial class Program
             form.ClientSize = new Size(900, 620);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-minimum-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Gameplay segments", "Global event flags", "Arena challenges", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "World object flags", "Gameplay segments", "Global event flags", "Arena challenges", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));

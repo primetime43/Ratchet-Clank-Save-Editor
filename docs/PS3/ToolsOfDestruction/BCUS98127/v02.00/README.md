@@ -3,7 +3,8 @@
 ## Findings and definitions
 
 - [Executable map and evidence](ElfMap.md): save and non-save findings, import instructions and repeatable commands.
-- [Native address/structure map](maps/NativeMap.json): 1152 annotations, 118 imports and 26 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1163 annotations, 118 imports and 27 structure definitions.
+- [Per-world object bitsets](ElfMap.md#per-world-object-state-and-spawn-suppression-bitsets): saved object state, mode-qualified spawn suppression and runtime-index limits.
 - [Gameplay segment and retained-log evidence](ElfMap.md#gameplay-segments-timers-reward-accumulators-and-retained-log): named completion bindings, integer counters and stale-entry distinction.
 - [Weapon/gadget configuration definitions](maps/WeaponConfigs.json)
 - [Global event flag evidence](ElfMap.md#global-event-flags-named-story-tutorial-movie-and-equipment-bits): all292 named IDs, BE64 storage and acquisition/story dependencies.

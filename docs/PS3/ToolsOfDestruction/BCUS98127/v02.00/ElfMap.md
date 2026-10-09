@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1152 annotations, 118 imports, evidence, byte signatures and 26 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1163 annotations, 118 imports, evidence, byte signatures and 27 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -724,7 +724,7 @@ The `gameplay_segments` section reproduces **58 exact byte guards** using [Inspe
 
 ### Ten segment records per world
 
-Initializer `35DFA8` calls `35DD98` ten times with stride `(1<<6)-(1<<4) = 0x30`. Save selector `2D14E0` computes **`488 + saved_load_level*408 + physical_segment_slot*30`**. Twenty world slots are initialized (`35E110`); only nineteen have native level names. Each world's first `0x1E0` bytes contain ten records, followed by two opaque256-byte arrays at `+1E0` and `+2E0`.
+Initializer `35DFA8` calls `35DD98` ten times with stride `(1<<6)-(1<<4) = 0x30`. Save selector `2D14E0` computes **`488 + saved_load_level*408 + physical_segment_slot*30`**. Twenty world slots are initialized (`35E110`); only nineteen have native level names. Each world's first `0x1E0` bytes contain ten records, followed by two256-byte object bitsets at `+1E0` and `+2E0`, mapped below.
 
 | Segment member | Type | Confirmed role |
 | --- | --- | --- |
@@ -742,7 +742,7 @@ Initializer `35DFA8` calls `35DD98` ten times with stride `(1<<6)-(1<<4) = 0x30`
 
 Registrations **`89D960: complete_segment → 2C8A18 → 2782E8 → 2D15C8`** and **`89D968: is_segment_complete → 2C8950 → 2782B0 → 2D1538`** establish the flag's name. Runtime string lookup resolves segment names to slots; the retained log's name order is not a static slot catalog. These records are separate from the active/completed mission lists at10148/10AF8.
 
-`2D15C8` calls `2CE328` only for a previously clear flag, then stores1 at `+2C`. Finalizer/tick/reset paths skip saved segment operations when replay predicate `2D1860` is true; completion still sets the flag after invoking the skipped finalizer. Therefore a set flag alone does not prove a log append. Runtime checkpoint mask at10330610+44 is separate, outside the saved block.
+`2D15C8` calls `2CE328` only for a previously clear flag, then stores1 at `+2C`. Finalizer/tick/reset paths skip saved segment operations when **saved restart-counter predicate `2D1860` reads906EC nonzero**; completion still sets the flag after invoking the skipped finalizer. Earlier wording called this a replay predicate, but the exact game-mode name is unverified. Therefore a set flag alone does not prove a log append. Runtime checkpoint mask at10330610+44 is separate, outside the saved block.
 
 Reward consumers confirm `2CEF70 → 3842B8 → 369AA8` delivers bolts to hero state+41C, while `2CEBC0 → 3842B8 → 36A458` delivers raritanium to+420. Their segment accumulators are+14/+18. No current payout or safe edited balance is calculated. Cache byte **world+403** is read/set by `2CF4C8`, which also stores world reward totals at3E0/3E4/3E8. Its nonzero state reuses cached totals; it is not another mission-completion flag.
 
@@ -773,9 +773,51 @@ python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodGameplaySegments.
 
 The five native tests cover bundled-map/type reproduction, nonboolean flags, integer/float distinction, unusual/nonfinite bits, unknown bytes, last physical slots, stale entries, malformed count clipping, invalid inputs and unchanged sources. App fixtures independently exercise scalar types, retained-entry presentation and detached snapshots; actual-save checks compare the new views against decrypted working-copy bytes.
 
+## Per-world object state and spawn-suppression bitsets
+
+[Inspect-TodWorldObjectFlags.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWorldObjectFlags.py) reproduces the `world_object_flags` map section using **44 exact byte guards** against the fingerprinted USA executable. The two previously opaque256-byte arrays are **32 BE64 words / 2,048 physical object-slot bits each**. Initializer35DFA8 clears the two arrays independently; twenty physical world records are initialized, nineteen have native level names.
+
+| Saved bitset | World member / world0 save offset | Native operations | Confirmed interpretation |
+| --- | --- | --- | --- |
+| Recorded object state | `+1E0` / `668` | Clear2F7720, set2F77A8, check2F7830 | Per-object lifecycle state restored by consumers; not universally a dead/killed flag |
+| Spawn suppression | `+2E0` / `768` | Mark2F7930, load predicate2F79E0, loader2F8690 | A set bit rejects the corresponding definition in native load mode1 only |
+
+For world `l` and physical object slot `s`, bitset base is `668 + l*408` or `768 + l*408`. Word address is `base + 8*floor(s/64)` and integer bit is `s%64`. **File byte** is `word + 7 - floor((s%64)/8)`, byte mask `1<<(s%8)`. For the first bitset in world0, slot0 is byte66F mask01, slot63 byte668 mask80, slot64 byte677 mask01, and slot2047 byte760 mask80. These are not byte-LSB-first arrays; BE64 word order matters.
+
+### Runtime indices are not object names or UIDs
+
+The accessors receive a runtime object-entry pointer, obtain the entry-array base through object-pool root1064FC80, and derive a slot from aligned entry stride **180**. Assembly subtracts the base, signed-shifts7 and low32-multipliesAAAAAAAB, effectively dividing a valid aligned difference by384. Native set/clear derive world stride as `(1<<10)+(1<<3)=408` and use state pointer101EFB20 from descriptor TOC89FF20. TOC slots89FC64/89FC74 point to the runtime pool;89FC68/89FC78 point to serialized state; mode2 slot89FC7C points to runtime checkpoint10330610.
+
+An arbitrary pointer or stored object UID cannot safely be substituted. The physical2,048-bit capacity does not establish that all slots are valid/populated or that native accessors check bounds. The runtime pool and per-level definition table are not captured by the save; **no named object catalog is inferred from bit numbers**, and indices from different worlds do not necessarily identify the same object. This catalog is separate from the named object counters and inventory IDs mapped earlier.
+
+### Verified consumers and load-mode qualifications
+
+`2DD698` checks recorded object state before calling `2DD588`; that routine invokes an object virtual callback and sets the saved bit. Separate initialization3BEB78 uses the same bit to select alternate runtime state9. These paths establish persistence/restoration of object-specific state, not one universal “killed” interpretation. The first bitset has both set and clear accessors; the second bitset's inspected writer sets a bit only when runtime object+68 flag10000 is present, then forwards through common object-manager dispatch2501C8/68EC38. No original method/class name is asserted from that virtual call.
+
+`2F79E0` reads a16-bit mode at loaded definition+42:
+
+- **Mode1:** return true only when the object's spawn-suppression bit is clear. Loader2F8690 iterates48-byte definitions and skips entries whose predicate is false before forwarding creation. A clear bit alone is not a complete loader-acceptance guarantee.
+- **Mode2:** runtime checkpoint mask+44 blocks the associated gameplay segment; otherwise use definition byte40 before saved segment completion and byte41 after completion. The saved segment byte is world+slot*30+2C. Runtime checkpoint state is outside serialized GAME.SAV.
+- **Other modes:** this predicate returns true; other loader/runtime conditions are not removed or claimed irrelevant.
+
+No set bit is promoted to a mission/collectible checklist or completion percentage. Reset dependencies, runtime slot/name mapping and controlled in-game before/after behavior remain unresolved. The third reward channel still has no confirmed player-facing label: its traced consumers forward a runtime message value, which is not enough to rename it XP.
+
+### Actual save and inspector
+
+All **40 physical bitsets are zero** in the supplied USA plaintext snapshot. Restart counter906EC is3; the directly observed counter value makes predicate2D1860 true and therefore gates segment tick/reset/log finalization. This does not explain every other zero flag or prove an exact replay/challenge mode. Original encrypted GAME.SAV, metadata/PFD and ELF are unchanged.
+
+The new read-only **World object flags** view shows38 rows for nineteen named levels by default and40 physical rows in Technical. Select a row for all set slot indices,32 exact words and byte-order rules. **Set bits** is a stored-bit count, not a tally of killed enemies, objects present or collectibles completed. `TOD_SaveWorldObjectFlags_verified` refines world record boundaries without overwriting existing observed/progress structures or applying the type automatically to ELF globals.
+
+The five independent native tests check bundled map/type reproduction, explicit byte ordering, invalid indices, word/bit boundaries, both bitsets, last physical world/slot, adjacent-tail exclusion, input rejection and immutable actual snapshots. App fixtures decode independently with BE64 operations and preserve detached snapshots; actual-save UI checks compare every256-byte band and render the view at minimum and expanded sizes.
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWorldObjectFlags.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodWorldObjectFlags.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes the two world-record256-byte arrays, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, the separate eight words at5734, any persisted checkpoint/health dependencies, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. The5734 array now has an identified incrementing writer in2CE518, indexed by a nonzero runtime category; its category catalog and bounds are unresolved, so it is not labeled challenge failures. Direct arena IDs/counters/configuration, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, the separate eight words at5734, any persisted checkpoint/health dependencies, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. The5734 array now has an identified incrementing writer in2CE518, indexed by a nonzero runtime category; its category catalog and bounds are unresolved, so it is not labeled challenge failures. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -785,7 +827,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1151 mapped annotations (the third TOC reference base is unmapped), 26 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1162 mapped annotations (the third TOC reference base is unmapped), 27 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

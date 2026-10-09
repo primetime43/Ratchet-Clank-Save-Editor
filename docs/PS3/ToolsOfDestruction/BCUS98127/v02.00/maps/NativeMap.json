@@ -21445,18 +21445,21 @@
         "0x2d14e0"
       ],
       "unknown_tail": "Bytes2D..2F are preserved, not proven padding; word28 remains unknown. Twenty physical worlds initialized, only19 named native levels.",
-      "replay_rule": "Tick/reset/finalizer paths skip segment updates when2D1860 is true. complete_segment still writes2C after calling finalizer; flag alone does not prove a log append.",
+      "restart_counter_gate": "Tick/reset/finalizer paths skip segment updates when2D1860 reads saved restart counter906EC nonzero. Game-mode terminology remains unverified. complete_segment still writes2C after calling finalizer; flag alone does not prove a log append.",
       "world_reward_cache_ready_member": "0x403",
-      "opaque_arrays": [
+      "object_bitsets": [
         {
           "offset": "0x1e0",
-          "size": "0x100"
+          "size": "0x100",
+          "role": "recorded_object_state"
         },
         {
           "offset": "0x2e0",
-          "size": "0x100"
+          "size": "0x100",
+          "role": "spawn_suppression"
         }
-      ]
+      ],
+      "object_bitsets_evidence": "Initialization boundaries here; native access/restore/load semantics guarded independently in world_object_flags."
     },
     "log": {
       "offset": "0x8764",
@@ -21756,7 +21759,336 @@
       }
     ]
   },
+  "world_object_flags": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 static evidence, not gameplay-validated edits. Physical slots are runtime pool indices, not object UIDs, inventory IDs, collectible names or a completion percentage. No new editing controls.",
+    "record_base": "0x488",
+    "world_stride": "0x408",
+    "native_level_count": 19,
+    "initialized_world_slots": 20,
+    "bitset_size": "0x100",
+    "word_count": 32,
+    "bits_per_word": 64,
+    "physical_bits_per_bitset": 2048,
+    "byte_mapping": "word=offset+8*(slot//64); byte=word+7-(slot%64)//8; mask=1<<(slot%8)",
+    "bitsets": [
+      {
+        "id": "recorded_object_state",
+        "label": "Recorded object state",
+        "member": "0x1e0",
+        "offset": "0x668",
+        "clear_va": "0x2f7720",
+        "set_va": "0x2f77a8",
+        "check_va": "0x2f7830",
+        "meaning": "Saved per-object lifecycle state. Restore2DD698 checks the bit before invoking2DD588; object initialization3BEB78 selects alternate state when set. Not universally a dead/killed flag; object-specific meaning and runtime names unresolved."
+      },
+      {
+        "id": "spawn_suppression",
+        "label": "Spawn suppression (mode1)",
+        "member": "0x2e0",
+        "offset": "0x768",
+        "set_va": "0x2f7930",
+        "load_predicate_va": "0x2f79e0",
+        "meaning": "Writer sets the object-slot bit only when runtime object+68 flag10000 is set. Native load-definition mode1 admits the object only when its saved bit is clear. Other modes follow different rules; not an unconditional present/absent verdict."
+      }
+    ],
+    "runtime_index": {
+      "object_pool_pointer_slot_va": "0x89fc64",
+      "object_pool_va": "0x1064fc80",
+      "entry_stride": "0x180",
+      "calculation": "For an aligned runtime object-entry pointer, (pointer - *object_pool)/0x180. Assembly uses signed shift7 then low32 multiplyAAAAAAAB, dividing the remaining factor3.",
+      "warning": "Only aligned valid runtime entries justify division. Native leaves do not establish the2048-slot bounds check. Do not compute indices from arbitrary pointers or stored UID values."
+    },
+    "load_modes": {
+      "mode_member": "0x42",
+      "mode1": "Return saved spawn-suppression bit clear; loader2F8690 skips records when predicate is false.",
+      "mode2": "Runtime checkpoint mask44 blocks a segment; otherwise use load-definition byte40 before saved segment completion, byte41 after completion. Segment complete byte is world+slot*30+2C. Runtime checkpoint is not serialized.",
+      "other_modes": "Predicate returns true; this is not the whole loader's acceptance/availability logic."
+    },
+    "segment_update_gate": {
+      "counter_offset": "0x906ec",
+      "predicate_va": "0x2d1860",
+      "rule": "Saved restart-counter nonzero predicate gates segment tick/reset/log finalization. Nonzero skips those updates. Named game-mode terminology remains unverified; do not equate this predicate to a separately confirmed replay flag."
+    },
+    "instruction_guards": [
+      {
+        "va": "0x2d1860",
+        "bytes": "8082F268386000003D240009800906EC2F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2d1868",
+        "bytes": "3D240009"
+      },
+      {
+        "va": "0x2d186c",
+        "bytes": "800906EC"
+      },
+      {
+        "va": "0x2dd588",
+        "bytes": "F821FF717CA802A6FBA10078FB810070FBC10080FBE10088F8A100A08803001D7C7D1B782F800000419E00303BC000019BDD001DEB8100A0EBA100787F8803A6EBC10080EB810070EBE10088382100904E80002060000000816300007884062078630020812B004880C90000F84100287CC903A6804900044E800421E8410028807D00144801A19D600000008382F54C807C00002C0300004182FF9483C2F5483BE0000048000010801C00007F00F8404099FF7C7BCA00203BFF00013BDE0004806A00004BF731FDE8410028811D001480E30020808800647C8720004086FFCC3BC00001398000009983000C9BDD001DEB8100A0EBA100787F8803A6EBC10080EB810070EBE10088382100904E800020"
+      },
+      {
+        "va": "0x2dd698",
+        "bytes": "F821FF817C8802A6FBE10078F88100908803001E7C7F1B782F800000409E001CE8610090EBE10078382100807C6803A64E8000206000000038C000008063001498DF001E4801A15560000000388000005465063E7BE300202C0500004182FFC4E8E10090EBE10078382100807CE803A64BFFFE8060000000"
+      },
+      {
+        "va": "0x2f7720",
+        "bytes": "F821FF717D4802A6FBA10078F94100A07C7D1B784BFD9D5D600000008102FD443D60AAAA8002FD485469502A54671838616CAAAB80C800007C874A147CA6E8507C6402147CAA3E703903066838C00001790300207CEA61D654EBE8F854FD06BE7CC5E8367D23582A7D2428787C83592AE80100A0EBA10078382100907C0803A64E80002060000000"
+      },
+      {
+        "va": "0x2f7788",
+        "bytes": "7D242878"
+      },
+      {
+        "va": "0x2f77a8",
+        "bytes": "F821FF717D4802A6FBA10078F94100A07C7D1B784BFD9CD5600000008102FD443D60AAAA8002FD485469502A54671838616CAAAB80C800007C874A147CA6E8507C6402147CAA3E703903066838C00001790300207CEA61D654EBE8F854FD06BE7CC5E8367D23582A7CA44B787C83592AE80100A0EBA10078382100907C0803A64E80002060000000"
+      },
+      {
+        "va": "0x2f77d0",
+        "bytes": "5469502A"
+      },
+      {
+        "va": "0x2f77d4",
+        "bytes": "54671838"
+      },
+      {
+        "va": "0x2f77d8",
+        "bytes": "616CAAAB"
+      },
+      {
+        "va": "0x2f77ec",
+        "bytes": "7CAA3E70"
+      },
+      {
+        "va": "0x2f77f0",
+        "bytes": "39030668"
+      },
+      {
+        "va": "0x2f7800",
+        "bytes": "54EBE8F8"
+      },
+      {
+        "va": "0x2f7804",
+        "bytes": "54FD06BE"
+      },
+      {
+        "va": "0x2f7810",
+        "bytes": "7CA44B78"
+      },
+      {
+        "va": "0x2f7830",
+        "bytes": "F821FF717D4802A6FBA10078F94100A07C7D1B784BFD9C4D600000008102FD44546938303CE0AAAA7D891A1460E6AAAB806800008102FD487FA3E850386000007FA53E707C8531D65480D1BE549D06BE7D6C0214556A183838EA06607CE607B47D264214E8A900087CA4EC36548007FE2F800000419E000838600001E96100A07C6307B4EBA10078382100907D6803A64E80002060000000"
+      },
+      {
+        "va": "0x2f7894",
+        "bytes": "E8A90008"
+      },
+      {
+        "va": "0x2f7898",
+        "bytes": "7CA4EC36"
+      },
+      {
+        "va": "0x2f7930",
+        "bytes": "F821FF717C8802A6FBE10088FBA10078F88100A07C7F1B78806300683D60AAAA546003DE616BAAAB2F800000419E00608182FD54814C00007D2AF8507D283E707FA859D64BFD9B1D6000000080A2FD585467502A5466183857ABE8F87C863A14380B01007C642A147C0507B43983066857BD06BE79860020394000017D48E8367D26282A7D074B787CE6292A7BE300204BF58809E8410028EBE100A0EBA100787FE803A6EBE10088382100904E800020"
+      },
+      {
+        "va": "0x2f7950",
+        "bytes": "546003DE"
+      },
+      {
+        "va": "0x2f7990",
+        "bytes": "380B0100"
+      },
+      {
+        "va": "0x2f799c",
+        "bytes": "39830668"
+      },
+      {
+        "va": "0x2f79b4",
+        "bytes": "7D074B78"
+      },
+      {
+        "va": "0x2f79e0",
+        "bytes": "F821FF717C6802A6FB810070FBA10078FBE10088F86100A0A06400447C9D23787CBC2B784BFD9EAD600000007C7F1B784BFD9A8160000000546838305787D1BE7CC81A145460502A57E4203657EB3032546C18387CA63A147D0C0214A01D00427CE4585054AA18387CC74214392A07608142FD58388604A07D2507B48122FD5C7C8307B42F8000017D6352147CE55214895D004081090044579C06BE2F000002893D004138600000896B0014419E00343BA00001386000017FA0F830419A005CEBE100A07C6307B4EB8100707FE803A6EBA10078EBE10088382100904E800020EBA700087FA8E436550707FE2C8700004086007868630001EBE100A07C6307B4EB8100707FE803A6EBA10078EBE10088382100904E8000207C1F40382F8B00002C1F0000386000004082FF987D46FE707CC552787D2AFE707C8628507D4B4A787C0400D07D2A5850541C0FFE7D8900D07F83E37855890FFE419EFF687D234B784BFFFF606000000038600001686300014BFFFF8860000000"
+      },
+      {
+        "va": "0x2f7a3c",
+        "bytes": "A01D0042"
+      },
+      {
+        "va": "0x2f7a64",
+        "bytes": "2F800001"
+      },
+      {
+        "va": "0x2f7a7c",
+        "bytes": "2F000002"
+      },
+      {
+        "va": "0x2f7a88",
+        "bytes": "896B0014"
+      },
+      {
+        "va": "0x2f7ac0",
+        "bytes": "EBA70008"
+      },
+      {
+        "va": "0x2f7ad4",
+        "bytes": "68630001"
+      },
+      {
+        "va": "0x2f8690",
+        "bytes": "F821FF617CA802A6FBC10090FB410070FB610078FB810080FBA10088FBE10098F8A100B0800400447C9E23782F800000419E008C787B00208342FD543BE000003B800000480000204BF59971E84100283BFF0001811E00443B9C00487C88F8404085005C80DE00407BE500207F63DB787C9C3214789D00207FA4EB784BFFF2D57FA4EB785463063E2C0300007F63DB784082FFB8482275656000000080FA0014392700013BFF0001913A0014811E00443B9C00487C88F8404185FFACE94100B0EB410070EB6100787D4803A6EB810080EBA10088EBC10090EBE10098382100A04E80002060000000"
+      },
+      {
+        "va": "0x35dfa8",
+        "bytes": "F821FF717C0802A6FBA10078FBE100883BA000007C7F1B78F80100A06000000057A6203657A530323BBD00017C8628507C7F2214786300204BFFFDB92FBD000A409EFFE0395F01E03BA00000794300203880000038A0010093BF03E093BF03E493BF03E84BEF492DE8410028393F02E0388000007923002038A001004BEF4915E84100283900000093BF03FC991F0403911F03EC911F03F0911F03F493BF03F8991F0400991F0401991F0402E8E100A0EBA10078EBE100887CE803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x35dfec",
+        "bytes": "395F01E0"
+      },
+      {
+        "va": "0x35dffc",
+        "bytes": "38A00100"
+      },
+      {
+        "va": "0x35e014",
+        "bytes": "393F02E0"
+      },
+      {
+        "va": "0x35e020",
+        "bytes": "38A00100"
+      },
+      {
+        "va": "0x35e164",
+        "bytes": "2FBF0014"
+      },
+      {
+        "va": "0x3beb78",
+        "bytes": "F821FF617C8802A6FB8100807C7C1B7878630020FB610078FBA10088FBE10098F88100B0FBC100904BE92859E84100288362386C381C002439200000781F00203BA00001913F00009BBF0008C01B00B4D01F0004807C00144BF38C6160000000C0023880FC2000905460063E2F800000419E0040386000099BBF0008907F0000C03B00B4D03F00049BBC0248E98100B0EB610078EB8100807D8803A6EBA10088EBC10090EBE10098382100A04E80002081623870C0423874C0623878938B0000807C0014981C024AD01C0244901C00C8981C0248901C01FC901C0200981C024981430054810A004038E8002078E40020480D56E16000000080C2387CE8A6000090BC0020E98100B0EB610078EB8100807D8803A6EBA10088EBC10090EBE10098382100A04E800020"
+      },
+      {
+        "va": "0x89fc64",
+        "bytes": "1064FC80"
+      },
+      {
+        "va": "0x89fc68",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89fc74",
+        "bytes": "1064FC80"
+      },
+      {
+        "va": "0x89fc78",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89fc7c",
+        "bytes": "10330610"
+      }
+    ]
+  },
   "annotations": [
+    {
+      "va": "0x002F7720",
+      "name": "TOD_world_object_state_clear",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717D4802A6FBA10078F94100A0",
+      "comment": "Clears saved world+1E0 BE64 bit for an aligned runtime object-pool slot.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x002F77A8",
+      "name": "TOD_world_object_state_set",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717D4802A6FBA10078F94100A0",
+      "comment": "Sets saved world+1E0 BE64 bit; object-specific lifecycle interpretation, not universally killed.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x002F7830",
+      "name": "TOD_world_object_state_check",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717D4802A6FBA10078F94100A0",
+      "comment": "Tests world+1E0 bit using integer-LSB BE64 numbering; no arbitrary pointer bounds guard established.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x002F7930",
+      "name": "TOD_world_spawn_suppression_mark",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717C8802A6FBE10088FBA10078",
+      "comment": "Sets world+2E0 object-slot bit only with runtime object68 flag10000; then forwards object through common runtime manager call.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x002F79E0",
+      "name": "TOD_object_load_mode_predicate",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717C6802A6FB810070FBA10078",
+      "comment": "Mode1 returns spawn-suppression bit clear. Mode2 consults runtime checkpoint mask and saved segment2C, choosing definition40/41. Other modes true; not full load acceptance.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x002F8690",
+      "name": "TOD_object_definitions_load_filtered",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617CA802A6FBC10090FB410070",
+      "comment": "Iterates48-byte definitions; false mode predicate skips definition before object-creation forwarding.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x002DD588",
+      "name": "TOD_object_saved_lifecycle_apply",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717CA802A6FBA10078FB810070",
+      "comment": "Calls object virtual callback then records world+1E0 bit; object-specific meaning, not a global mission flag.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x002DD698",
+      "name": "TOD_object_saved_lifecycle_restore",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF817C8802A6FBE10078F8810090",
+      "comment": "Conditional initialization checks world+1E0 bit then invokes lifecycle apply2DD588.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x003BEB78",
+      "name": "TOD_object_saved_alternate_state_restore_example",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C8802A6FB8100807C7C1B78",
+      "comment": "Initialization checks first object bitset and selects alternate runtime state9 if set. Original class name and general meaning not recovered.",
+      "evidence": "Exact original ELF assembly, descriptor TOC and guarded world_object_flags reader/writer/loader chains; no edited-save gameplay acceptance inferred."
+    },
+    {
+      "va": "0x0089FC64",
+      "name": "TOD_world_object_pool_pointer_slot",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "1064FC80",
+      "comment": "TOC1 object-pool root1064FC80; first word supplies runtime entry-array base, not a serialized object address.",
+      "evidence": "Original pointer bytes plus native descriptor TOC89FF20 and readers/writers2F7720/2F77A8/2F7830."
+    },
+    {
+      "va": "0x0089FC68",
+      "name": "TOD_world_object_saved_state_pointer_slot",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101EFB20",
+      "comment": "TOC1 serialized-state base101EFB20 used by first world object bitset set/clear/check.",
+      "evidence": "Original pointer bytes plus native descriptor TOC89FF20 and readers/writers2F7720/2F77A8/2F7830."
+    },
     {
       "va": "0x0035DD98",
       "name": "TOD_segment_initialize",
@@ -30026,6 +30358,72 @@
   ],
   "structures": [
     {
+      "name": "TOD_SaveWorldObjectFlags_verified",
+      "size": "0x408",
+      "comment": "Partial refinement of per-world408-byte record. Object bitsets are32 BE64 words each, represented as byte arrays for portable importer support. Physical index is runtime pool slot, not a named object UID. No automatic ELF-global application.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "gameplay_segments_prefix",
+          "type": "u8",
+          "count": 480,
+          "comment": "Ten30-byte records, separately described by TOD_SaveGameplaySegment_verified."
+        },
+        {
+          "offset": "0x1e0",
+          "name": "recorded_object_state_be64",
+          "type": "u8",
+          "count": 256,
+          "comment": "32 big-endian64-bit words. Set/check/clear target physical runtime object slot; not universal killed flags."
+        },
+        {
+          "offset": "0x2e0",
+          "name": "spawn_suppression_be64",
+          "type": "u8",
+          "count": 256,
+          "comment": "32 big-endian64-bit words. A set bit suppresses native load-definition mode1; other modes have different rules."
+        },
+        {
+          "offset": "0x3e0",
+          "name": "reward_collectible_tail",
+          "type": "u8",
+          "count": 32,
+          "comment": "Reward cache/tier fields and special-bolt word3EC; partly mapped separately, not disposable padding."
+        },
+        {
+          "offset": "0x400",
+          "name": "unlocked",
+          "type": "u8",
+          "comment": "Nonzero predicate, separate from object state."
+        },
+        {
+          "offset": "0x401",
+          "name": "visited_seen",
+          "type": "u8",
+          "comment": "Nonzero visited/seen predicate."
+        },
+        {
+          "offset": "0x402",
+          "name": "menu_exclusion",
+          "type": "u8",
+          "comment": "Code-backed exclusion role; original gameplay field name unknown."
+        },
+        {
+          "offset": "0x403",
+          "name": "reward_cache_ready",
+          "type": "u8",
+          "comment": "Nonzero reuses cached reward totals in2CF4C8; not a mission flag."
+        },
+        {
+          "offset": "0x404",
+          "name": "unknown_tail",
+          "type": "u8",
+          "count": 4,
+          "comment": "Opaque preserved bytes; not proven padding."
+        }
+      ]
+    },
+    {
       "name": "TOD_SaveGameplaySegment_verified",
       "size": "0x30",
       "comment": "Exact USA per-level gameplay segment. Ten records at world+0; no automatic ELF-global application. Names require runtime config; not mission-list entries.",
@@ -30100,7 +30498,7 @@
           "offset": "0x2c",
           "name": "complete_segment_byte",
           "type": "u8",
-          "comment": "Named complete_segment/is_segment_complete; nonzero predicate. Replay may set without log append."
+          "comment": "Named complete_segment/is_segment_complete; nonzero predicate. A nonzero saved restart counter can suppress log finalization without suppressing this flag store."
         },
         {
           "offset": "0x2d",

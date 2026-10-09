@@ -30,7 +30,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
                 "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9,
                 "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 8,
-                "Game settings" => 5, "Arena challenges" => 7, "Global event flags" => 8, _ => 0
+                "Game settings" => 5, "Arena challenges" => 7, "Global event flags" => 8, "World object flags" => 7, _ => 0
             };
             if (expected == 0 || source.Columns.Length != expected) return source;
 
@@ -53,6 +53,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Global event flags" => new[] { "Group", "Event flag (native name)", "Recorded bit" },
                 "Gameplay records" => new[] { "Location", "Saved record", "Storage status" },
                 "Gameplay segments" => new[] { "Level", "Segment slot", "Complete flag", "Reset events", "Elapsed (units unverified)" },
+                "World object flags" => new[] { "Level", "Stored object state", "Set bits" },
                 "Save regions" => new[] { "Section", "Size", "Understanding" },
                 _ => new[] { "File", "Information", "Value" }
             };
@@ -78,6 +79,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Objects & equipment" => "Native object counters, not weapon IDs. Select a row for its high-water count and positive-addition counter; timer/arena units are unverified.",
                     "Gameplay records" => "Retained entries beyond the saved count are not active progress. Select a row for six timing/runtime floats and the integer reset-event count. Technical retains all200 physical slots.",
                     "Gameplay segments" => "Physical per-level slots, not recovered segment names or mission counts. Timer units and reset-event cause remain unverified; reward accumulators are not balances. Technical includes initialized unmapped level slot19.",
+                    "World object flags" => "Stored per-object bits, not named collectibles or a completion checklist. Spawn suppression applies to native mode1 only. Select a row for set slot indices, exact words and bit ordering; Technical includes unmapped level slot19.",
                     "Save regions" => "This is a structural overview. Technical shows the original research map; selected-row details retain its offsets and limitations.",
                     _ => "Technical shows all decoded fields, including unknowns. This view does not validate save integrity."
                 };
@@ -98,6 +100,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (view == "Arena challenges") return c[0] != "0";
             if (view == "Global event flags") return c[2] != "Unmapped";
             if (view == "Gameplay segments") return c[0] != "19";
+            if (view == "World object flags") return c[0] != "19";
             if (view == "Gameplay records") return c[4] != "Unused / zero";
             if (view == "Blueprints") return c[1] == "Yes" || c[2] == "Yes";
             if (view != "Files & headers") return true;
@@ -126,6 +129,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Global event flags" => new[] { c[2], Label(c[1], c[1].StartsWith("LVL_", StringComparison.Ordinal) ? "LVL_" : c[1].StartsWith("HERO_", StringComparison.Ordinal) ? "HERO_" : c[1].StartsWith("MOVIE_", StringComparison.Ordinal) ? "MOVIE_" : ""), c[3] },
             "Gameplay records" => new[] { Label(c[1]), Label(c[2], "gameplay_"), c[4] },
             "Gameplay segments" => new[] { Label(c[1], "LEVEL_"), c[2], c[3], c[4], Number(c[5]) },
+            "World object flags" => new[] { Label(c[1], "LEVEL_"), c[2], c[3] },
             "Save regions" => Region(c),
             _ => new[] { c[0], MetadataLabel(c[2]), c[2] == "Length" ? c[3].Split(" (0x", StringSplitOptions.None)[0] : c[3] }
         };
