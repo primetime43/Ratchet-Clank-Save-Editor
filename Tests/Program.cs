@@ -511,6 +511,9 @@ internal static partial class Program
             sessionField.SetValue(form, session);
             show.Invoke(form, null);
             busy.Invoke(form, new object[] { false });
+            string loadedTitle = initialTitle + " — " + session.Profile.Name;
+            Equal(loadedTitle, form.Text);
+            Equal(session.Profile.Name.Replace("&", "&&"), Field<GroupBox>(form, "AccountInfoGroupBox").Text);
             True(Field<Button>(form, "OpenBackupButton").Enabled, "Open Backups should be available immediately after opening.");
             tabs.SelectedIndex = 1;
             True(Field<NumericUpDown>(form, "CasinoChipsNumericUpDown").Visible == session.Profile.RaritaniumOffset.HasValue,
@@ -534,7 +537,7 @@ internal static partial class Program
                 Equal(444m, money.Value);
                 money.Value = 123;
                 Capture(form, Path.Combine(artifacts, "ui-all4one.png"));
-                Equal(initialTitle, form.Text);
+                Equal(loadedTitle, form.Text);
             }
             tabs.SelectedIndex = 1;
             if (hasArtwork)
@@ -546,10 +549,10 @@ internal static partial class Program
             var bolts = Field<NumericUpDown>(form, "MoneyNumericUpDown");
             bolts.Value++;
             True(Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Editing currency should enable save.");
-            Equal(initialTitle + " • Unsaved changes", form.Text);
+            Equal(loadedTitle + " • Unsaved changes", form.Text);
             bolts.Value = session.Bolts;
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Reverting an edit should disable save.");
-            Equal(initialTitle, form.Text);
+            Equal(loadedTitle, form.Text);
         }
         foreach (var size in new[] { new Size(499, 248) })
         {

@@ -67,6 +67,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 selectedCharacter = 0;
                 CharacterComboBox.SelectedIndex = 0;
                 CharacterComboBox.Visible = CharacterLabel.Visible = session.Profile.Layout == CurrencyLayout.Characters;
+                AccountInfoGroupBox.Text = session.Profile.Name.Replace("&", "&&");
                 AccountIDTextBox.Text = session.Metadata.AccountId;
                 GameVersionTextBox.Text = session.Metadata.Region;
                 GameSaveKeyTextBox.Text = session.Profile.Key;
@@ -177,7 +178,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private void UpdateTitle()
         {
-            Text = WindowTitle + (Dirty ? " • Unsaved changes" : string.Empty);
+            Text = WindowTitle + (session == null ? string.Empty : " — " + session.Profile.Name) +
+                (Dirty ? " • Unsaved changes" : string.Empty);
             RefreshSaveActions();
         }
 

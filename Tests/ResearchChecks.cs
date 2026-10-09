@@ -200,6 +200,25 @@ internal static partial class Program
             Capture(form, Path.GetFullPath("artifacts/ui-research-compact.png"));
             form.ClientSize = new Size(1050, 650);
             Capture(form, Path.GetFullPath("artifacts/ui-inspector-expanded.png"));
+            form.ClientSize = new Size(1900, 970);
+            form.PerformLayout();
+            True(grid.Columns.Cast<DataGridViewColumn>().All(c => c.AutoSizeMode == DataGridViewAutoSizeColumnMode.NotSet), "Columns should inherit the grid fill mode.");
+            Equal(DataGridViewAutoSizeColumnsMode.Fill, grid.AutoSizeColumnsMode);
+            int width = grid.Columns.Cast<DataGridViewColumn>().Sum(c => c.Width);
+            True(width >= grid.ClientSize.Width - SystemInformation.VerticalScrollBarWidth - 4 && width <= grid.ClientSize.Width,
+                "Columns should fill the wide grid without overflowing it.");
+            foreach (string header in new[] { "Config", "XP", "Ammo" })
+            {
+                var column = grid.Columns[header];
+                foreach (DataGridViewRow row in grid.Rows)
+                    True(column.Width >= TextRenderer.MeasureText(row.Cells[column.Index].Value.ToString(), grid.Font).Width,
+                        "Off-screen or numeric data should not be truncated: " + header);
+            }
+            views.SelectedItem = "Upgrade nodes";
+            True(grid.Columns.Cast<DataGridViewColumn>().Sum(c => c.Width) >= grid.ClientSize.Width - SystemInformation.VerticalScrollBarWidth - 4,
+                "Switching views should preserve width filling.");
+            views.SelectedItem = "Weapons & gadgets";
+            form.ClientSize = new Size(1050, 650);
             tabs.SelectedIndex = 3;
             tree.Nodes[1].Expand();
             tree.SelectedNode = tree.Nodes[1].Nodes[1];
@@ -217,13 +236,20 @@ internal static partial class Program
         Check("Original reference ToD save loads in the UI without changing any source file", () =>
         {
             var original = Snapshot(folder);
-            using var session = SaveSession.Open(folder, new FakeTools(), decrypted: true, backupRoot: Path.Combine(root, "reference-research-backups"));
+            var metadata = SfoMetadata.Read(Path.Combine(folder, "PARAM.SFO"));
+            bool plaintext = TodSaveInspection.Read(original["GAME.SAV"], metadata.Region).Available;
+            using var tools = new Encryption();
+            using var session = SaveSession.Open(folder, tools, decrypted: plaintext, backupRoot: Path.Combine(root, "reference-research-backups"));
+            Equal(!plaintext && !metadata.IsRpcS3, session.IsEncrypted);
             var inspection = TodSaveInspection.Read(session.ReadInspectionData(), session.Metadata.Region);
             True(inspection.Available, inspection.Message);
             Equal(32, inspection.Inventory.Count);
             Equal("Combuster", inspection.Inventory[1].Name);
-            Equal(0x3FFEu, inspection.Inventory[1].ModifierMask);
-            Equal(46u, inspection.AcquisitionCounter);
+            var bytes = session.ReadInspectionData();
+            Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x20, 4)), inspection.Inventory[1].ModifierMask);
+            Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x280, 4)), inspection.AcquisitionCounter);
+            Equal((uint)session.Bolts, BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x41C, 4)));
+            Equal((uint)session.Raritanium, BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x420, 4)));
             var files = SaveContainerInspection.Read(session.WorkingFolder, session.Profile.FileName, session.ReadInspectionData());
             True(!files.Rows.Any(r => r.Cells[2] == "Inspection unavailable"), "Reference headers should parse cleanly.");
             using var form = new MainForm();
@@ -234,10 +260,43 @@ internal static partial class Program
             typeof(MainForm).GetField("session", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(form, session);
             typeof(MainForm).GetMethod("ShowSession", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(form, null);
             typeof(MainForm).GetMethod("SetBusy", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(form, new object[] { false });
-            form.ClientSize = new Size(1050, 650);
+            form.ClientSize = new Size(1900, 970);
+            Equal(session.Profile.Name.Replace("&", "&&"), Field<GroupBox>(form, "AccountInfoGroupBox").Text);
+            True(form.Text.Contains(session.Profile.Name), "The loaded game name must appear in the title.");
+            Field<TabControl>(form, "TabControl").SelectedIndex = 0;
+            Capture(form, Path.GetFullPath("artifacts/ui-save-information-reference.png"));
             Field<TabControl>(form, "TabControl").SelectedIndex = 2;
             Capture(form, Path.GetFullPath("artifacts/ui-inspector-reference.png"));
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Reference inspection must not dirty the save.");
+            Same(original, Snapshot(folder));
+            Console.WriteLine($"Reference {session.Metadata.Region}: {(session.IsEncrypted ? "encrypted PS3" : "plaintext")}, 32 records, {inspection.Inventory.Count(i => i.ScriptOwned)} script-owned, acquisition counter {inspection.AcquisitionCounter}. Source unchanged.");
+        });
+        Check("Actual ToD save decrypt/edit/encrypt/reopen round-trip uses only a disposable copy", () =>
+        {
+            var original = Snapshot(folder);
+            string copyFolder = Path.Combine(root, "actual-tod-roundtrip");
+            Directory.CreateDirectory(copyFolder);
+            foreach (string path in Directory.GetFiles(folder)) File.Copy(path, Path.Combine(copyFolder, Path.GetFileName(path)));
+            var metadata = SfoMetadata.Read(Path.Combine(copyFolder, "PARAM.SFO"));
+            bool plaintext = TodSaveInspection.Read(original["GAME.SAV"], metadata.Region).Available;
+            using var tools = new Encryption();
+            byte[] expected;
+            bool encrypted;
+            using (var session = SaveSession.Open(copyFolder, tools, decrypted: plaintext, backupRoot: Path.Combine(root, "reference-roundtrip-backups")))
+            {
+                encrypted = session.IsEncrypted;
+                expected = session.ReadInspectionData();
+                int bolts = session.Bolts == int.MaxValue ? session.Bolts - 1 : session.Bolts + 1;
+                int raritanium = session.Raritanium == int.MaxValue ? session.Raritanium - 1 : session.Raritanium + 1;
+                SaveData.Write(expected, session.Profile, new[] { bolts }, raritanium);
+                session.Save(bolts, raritanium, Path.Combine(root, "reference-roundtrip-backups"));
+            }
+            using var reopened = SaveSession.Open(copyFolder, tools, decrypted: plaintext, backupRoot: Path.Combine(root, "reference-roundtrip-backups"));
+            True(expected.SequenceEqual(reopened.ReadInspectionData()), "Reopened plaintext must match every expected byte, including unrelated inventory/world state.");
+            True(original["PARAM.SFO"].SequenceEqual(File.ReadAllBytes(Path.Combine(copyFolder, "PARAM.SFO"))), "Original metadata must be preserved.");
+            if (encrypted)
+                True(PfdBinding.SfoHashes(original["PARAM.PFD"]).SequenceEqual(PfdBinding.SfoHashes(File.ReadAllBytes(Path.Combine(copyFolder, "PARAM.PFD")))),
+                    "Actual source account/console/disc bindings must be preserved.");
             Same(original, Snapshot(folder));
         });
     }

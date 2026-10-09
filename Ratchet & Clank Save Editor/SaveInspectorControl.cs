@@ -12,7 +12,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly DataGridView grid = new()
         {
             Name = "InspectionGrid", Dock = DockStyle.Fill, ReadOnly = true, AllowUserToAddRows = false,
-            AllowUserToDeleteRows = false, AllowUserToOrderColumns = true, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells,
+            AllowUserToDeleteRows = false, AllowUserToOrderColumns = true, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
             MultiSelect = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect, RowHeadersVisible = false,
             BackgroundColor = SystemColors.Window, BorderStyle = BorderStyle.FixedSingle
         };
@@ -44,6 +44,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     int.TryParse(grid.Rows[args.RowIndex].Cells[0].Value?.ToString(), out int id)) WeaponReferenceRequested?.Invoke(id);
             };
             grid.SelectionChanged += (_, _) => details.Text = grid.CurrentRow?.Tag as string ?? snapshot?.Message ?? "Open a save folder to inspect it. Bundled references are on the Research tab.";
+            grid.FontChanged += (_, _) => FitColumns();
             views.SelectedIndexChanged += (_, _) => RefreshView();
             hexOffset.ValueChanged += (_, _) => { if (HasSnapshot) hex.Text = snapshot.HexBytes((int)hexOffset.Value); };
             views.SelectedIndex = 0;
@@ -77,11 +78,35 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 int index = grid.Rows.Add(row.Cells);
                 grid.Rows[index].Tag = row.Details;
             }
+            FitColumns();
             if (grid.Rows.Count > 0)
             {
                 grid.CurrentCell = grid.Rows[0].Cells[0];
                 details.Text = grid.Rows[0].Tag as string;
             }
+        }
+
+        private void FitColumns()
+        {
+            // Measure every loaded row, including off-screen gadgets and unusual
+            // float values. Fill expands the columns when the window grows;
+            // minimum widths keep key data readable in the compact window.
+            int padding = TextRenderer.MeasureText("00", grid.Font).Width;
+            foreach (DataGridViewColumn column in grid.Columns)
+            {
+                int width = TextRenderer.MeasureText(column.HeaderText, grid.Font, Size.Empty,
+                    TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix).Width + padding;
+                foreach (DataGridViewRow row in grid.Rows)
+                    width = Math.Max(width, TextRenderer.MeasureText(row.Cells[column.Index].Value?.ToString() ?? string.Empty,
+                        grid.Font, Size.Empty, TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix).Width + padding);
+                // Long prose/hash/tail columns wrap instead of demanding a width
+                // larger than the screen. Their full values remain in Details.
+                int maximum = TextRenderer.MeasureText(new string('M', 48), grid.Font).Width + padding;
+                column.MinimumWidth = Math.Max(40, Math.Min(width, maximum));
+                column.FillWeight = column.MinimumWidth;
+                column.DefaultCellStyle.WrapMode = width > maximum ? DataGridViewTriState.True : DataGridViewTriState.False;
+            }
+            grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
         }
 
         protected override void Dispose(bool disposing)
