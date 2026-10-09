@@ -85,6 +85,23 @@ class MapChecks(unittest.TestCase):
                 resolved += 1
         self.assertEqual(resolved, metadata["resolved_name_count"])
 
+    def test_ownership_unlock_and_acquisition_evidence(self):
+        inventory = MAPPING["serialization"]["inventory"]
+        annotations = {entry["va"]: entry for entry in MAPPING["annotations"]}
+        self.assertEqual(inventory["code_count"], inventory["sample_count"])
+        self.assertEqual(inventory["code_count"], 32)
+        self.assertEqual(inventory["script_ownership_offset"], inventory["eligibility_offset"])
+        self.assertEqual(int(inventory["acquisition_counter_offset"], 0), 0x280)
+        self.assertEqual(int(inventory["unlock_bytes_offset"], 0), 0x5754)
+        self.assertEqual(int(annotations["0x00898F50"]["bytes"], 16), int(MAPPING["serialization"]["runtime_state_va"], 0))
+        for key in ("ownership_predicate_va", "array_initializer_va", "acquire_va", "remove_va", "unlock_setter_va"):
+            self.assertEqual(annotations[inventory[key]]["confidence"], "confirmed")
+        fields = next(t["fields"] for t in MAPPING["structures"] if t["name"] == inventory["verified_type"])
+        byte = next(f for f in fields if int(f["offset"], 0) == 0x10)
+        self.assertEqual(byte["type"], "u8")
+        self.assertIn("nonzero", byte["comment"])
+        self.assertIn("Counter", inventory["ownership_warning"])
+
     def test_reject_bad_schema_duplicates_and_overlap(self):
         invalid = copy.deepcopy(MAPPING)
         invalid["schema_version"] = 99

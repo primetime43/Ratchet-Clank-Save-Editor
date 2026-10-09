@@ -24,7 +24,7 @@ All offsets are hexadecimal and relative to the named file. Ranges use an **excl
 
 The SFO subtitle is `Planet Sargasso `, including a trailing space. Presence of a PFD does **not** establish that `GAME.SAV` is encrypted. This sample has both a PFD and readable game state, but no `RPCS3_BLIST` field. Use **Open Decrypted Folder** if opening this exact sample in the editor. The survey does not validate PFD cryptographic integrity or console acceptance.
 
-Sample `GAME.SAV` SHA-256: `BEB457F9F5C750C46F2AD27E9DEFB15090785311696EAE7D5178904205DD949C`. Original files were read only and their hashes checked again after inspection. Ownership values and opaque PFD keys are omitted from reports.
+Sample `GAME.SAV` SHA-256: `BEB457F9F5C750C46F2AD27E9DEFB15090785311696EAE7D5178904205DD949C`. Original files were read only and their hashes checked again after inspection. Account-binding values and opaque PFD keys are omitted from reports.
 
 ## Game data overview
 
@@ -32,8 +32,9 @@ These ranges cover the entire sample, including unknown areas. The whole-buffer 
 
 | Range | Size | Contents | Evidence |
 | --- | ---: | --- | --- |
-| `0x00000–0x00280` | `0x280` | 32 item/weapon records with sequential IDs 0–31 and stride `0x14` | Sample count observed; stride and fields code-backed |
-| `0x00280–0x0041C` | `0x19C` | Integer lists, `FFFFFFFF` sentinels, repeated small values | Unknown; possible inventory ordering/unlock arrays |
+| `0x00000–0x00280` | `0x280` | 32 item/weapon records with IDs 0–31, stride `0x14` | Count, stride and several fields code-backed |
+| `0x00280–0x00284` | 4 | Acquisition/removal counter, sample 46 | Code-backed updates; not equated to flagged-record count |
+| `0x00284–0x0041C` | `0x198` | Integer lists, `FFFFFFFF` sentinels, repeated small values | Unknown; possible inventory ordering/unlock arrays |
 | `0x0041C–0x00420` | 4 | Bolts, uint32 BE | Documented |
 | `0x00420–0x00424` | 4 | Raritanium, uint32 BE | Documented |
 | `0x00424–0x00428` | 4 | `00000020` (32) | Unknown |
@@ -46,7 +47,7 @@ The documented currency offsets are implemented in `SaveProfile.cs`. The multipl
 
 ### Inventory records
 
-For record ID `i`, the observed base is `i * 0x14`, for `i = 0..31`. All 32 IDs match their array index.
+For record ID `i`, the base is `i * 0x14`, for `i = 0..31`. All 32 sample IDs match their array index; initializer `0x466A60` independently establishes the count and stride in code.
 
 | Relative offset | Size | Type | Meaning |
 | --- | ---: | --- | --- |
@@ -54,11 +55,11 @@ For record ID `i`, the observed base is `i * 0x14`, for `i = 0..31`. All 32 IDs 
 | `+0x04` | 4 | float32 BE | Weapon XP; progress and level recalculation use it |
 | `+0x08` | 4 | float32 BE | Ammo; script getter integerizes the float |
 | `+0x0C` | 4 | uint32 BE | Modifier mask selecting weapon-definition upgrade entries |
-| `+0x10` | 1 | uint8 | Eligibility state, used alongside item-definition flags; not independently verified ownership |
+| `+0x10` | 1 | uint8 | Script ownership flag: any nonzero value satisfies `is_weapon_owned`; other getters also check definition flags |
 | `+0x11` | 1 | uint8 | Zero-based stored level; eligible script getter returns this plus one |
 | `+0x12` | 2 | Opaque bytes | Unknown; preserve |
 
-Do not decode the final four bytes as one meaningful BE integer. IDs 1–15 contain `01 09 00 00`; other records contain `01 00 00 00`. The code confirms that `09` is stored level 9, exposed as level 10 when eligible. The first byte is also 1 for empty-looking records, so it is **not** independently a verified ownership flag. The initializer at `0x465C98` does not write the final two bytes; this does not prove they are padding.
+Do not decode the final four bytes as one meaningful BE integer. IDs 1–15 contain `01 09 00 00`; other records contain `01 00 00 00`. The code confirms that `09` is stored level 9, exposed as level 10 when eligible. All 32 sample records satisfy the script ownership predicate, including empty-looking slots; ownership alone does not prove a usable weapon. The initializer at `0x465C98` does not write the final two bytes; this does not prove they are padding.
 
 The names below come from RatchetHax's ID catalog; the values and offsets are observed in the sample. Weapon names can change with upgrades. Ammo, XP, stored level and the mask's modifier-selection role are now code-backed in the USA build. Specific upgrade-node meanings, prerequisites, prices and valid editing combinations still need verification.
 
@@ -82,7 +83,7 @@ The names below come from RatchetHax's ID catalog; the values and offsets are ob
 | 15 | `0x12C` | RYNO IV | 832 | `00007FFE` |
 | 16–31 | `0x140–0x280` | Unmapped IDs | See JSON survey | All zero masks |
 
-For example, record 1 has `00000001 47A33965 42C80000 00003FFE 01090000`: ID 1, XP ≈83,570.79, ammo 100, modifier mask `0x3FFE`, eligibility byte 1, stored level 9 and two unknown bytes. There is no proven checksum, signature, save version or total-length field in this prefix. `0x00000004` is a record field, **not an established header version**.
+For example, record 1 has `00000001 47A33965 42C80000 00003FFE 01090000`: ID 1, XP ≈83,570.79, ammo 100, modifier mask `0x3FFE`, ownership byte 1, stored level 9 and two unknown bytes. There is no proven checksum, signature, save version or total-length field in this prefix. `0x00000004` is a record field, **not an established header version**.
 
 ### Verified snapshot and inventory dependencies
 
@@ -98,6 +99,14 @@ Editing must preserve dependencies:
 - `0x466500` derives maximum ammo from weapon-data `+0x280 + 4*level`, then applies mask-selected attribute-9 modifiers through `0x466258`. Modifier entries begin at weapon-data `+0x464`, stride `0x18`, with count at `+0x6A4`. Node ordering and values depend on runtime weapon definitions; they are not a universal upgrade catalog embedded in the save.
 
 This confirms structural meaning, **not safe editable bounds or successful loads**. The ELF is USA; the reference save is European. Matching size/layout does not prove cross-region compatibility. The read-only survey JSON retains its original candidate property names for backward compatibility; the new `TOD_SaveInventoryRecord_verified` analysis type contains the refined semantics. No new editor controls are enabled.
+
+### Ownership and unlock state
+
+The full named ownership chain is `0x33F40 → 0x25AF0 → thunk 0x12950 → 0x2D1C10`; the leaf returns whether record byte `+0x10` is nonzero. Acquisition helper `0x466B70` sets it to 1, initializes XP/level, can refill ammo and increments word `0x280`. Removal helper `0x466AE8` resets XP/ammo, clears the byte and decrements that word. The sample counter is 46 despite 32 flagged records, so **do not normalize it to the ownership-byte count** without finding all writers and validating the intended invariant.
+
+The separately named `unlock_weapon` path `0x2A4EC0 → 0x27A5B8` sets byte `0x5754 + item ID` to 1. Predicate `0x2D24C0` combines that byte with definition flags and ownership; unlocking availability is not the same as acquiring possession. The total byte-array length remains unknown. Only IDs 0–31 are interpreted by the comparison tool.
+
+The `hero_give_weapon` binding reaches `0x28B4E8`, which validates the hero and ID, acquires through `0x466B70`, delegates inventory integration, optionally sets XP/ammo and can notify another system. See the [ELF ownership and acquisition map](ToolsOfDestructionElfMap.md#ownership-unlocks-and-acquisition) for exact labels and dependencies. Script helpers are not proof that arbitrary file edits safely reproduce those runtime operations.
 
 ### Currency and nearby values
 
@@ -225,6 +234,18 @@ Omit `-OutputFile` to return JSON without writing anything. The report includes 
 
 Run the reference-specific checks with `./Tests/TestTodSaveInspector.ps1 -SourceFolder <save-folder>`. They verify the observed tables, privacy redaction, output safeguards, malformed-input rejection and unchanged source hashes. These checks do not replace controlled in-game tests of candidate fields.
 
+## Compare plaintext snapshots
+
+[Compare-TodSaves.ps1](../Tools/Compare-TodSaves.ps1) compares two `GAME.SAV` files without editing them. It requires the exact `0x906F0` size and plaintext sequential record IDs, emits JSON to stdout only, and reads no SFO/PFD or account-binding data. Unknown regions are reported as byte-range/count changes without dumping their contents.
+
+```powershell
+./Tools/Compare-TodSaves.ps1 -BeforeFile "before/GAME.SAV" -AfterFile "after/GAME.SAV"
+```
+
+Reports include hashes, exact changed ranges, region totals, XP/ammo/level/ownership/modifier changes, added/cleared modifier-bit indices, currency deltas, unlock bytes for IDs 0–31 and acquisition-counter changes. Float changes retain raw bytes, including nonfinite values. `-MaxRanges 200` limits displayed ranges, not total changed-byte/range counts. Differing bytes show correlation, not the cause of a gameplay event; the script does not infer a valid XP/level combination or validate console acceptance.
+
+Run `./Tests/TestTodSaveComparison.ps1 -SourceFile <reference-GAME.SAV>` for 11 checks against this exact sample. Tests generate and modify temporary copies to verify decoding, bounds, masks, unknown ranges and input preservation. **These are generated fixtures, not before/after game captures.** Only one supplied save is available; runtime paired-save and edited-load validation remain outstanding.
+
 ## Runtime validation and remaining fields
 
 Executable research is recorded separately in the [Tools of Destruction ELF map](ToolsOfDestructionElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
@@ -238,7 +259,7 @@ Collect paired saves with exactly one intentional change, using copies rather th
 | Level up one weapon | `i * 0x14 + 0x11` | Verify level/XP/ammo changes together |
 | Buy one raritanium upgrade | `i * 0x14 + 0x0C` | Which bit corresponds to the purchased node? |
 | Change only bolt multiplier | `0x428` | Does this float track the displayed multiplier? |
-| Unlock one gadget | `0x280–0x41C` and unmapped state | Find its ownership bit and ID |
+| Acquire or unlock one mapped item | `i*0x14+0x10`, `0x280`, `0x5754+i` and other inventory state | Verify acquisition versus availability and counter/list updates |
 | Change health/armor | Unmapped state | Separate current health, max health, XP and armor |
 | Complete one scenario | `0x8764–0x97D8` and later state | Distinguish statistics from actual progression |
 | Move, save, reload | Unmapped state | Locate checkpoint, planet ID and position fields |

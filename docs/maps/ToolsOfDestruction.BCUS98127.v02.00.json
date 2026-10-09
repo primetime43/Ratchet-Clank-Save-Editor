@@ -97,6 +97,17 @@
       "ammo_offset": "0x8",
       "modifier_mask_offset": "0xC",
       "eligibility_offset": "0x10",
+      "script_ownership_offset": "0x10",
+      "ownership_predicate_va": "0x002D1C10",
+      "code_count": 32,
+      "array_initializer_va": "0x00466A60",
+      "acquire_va": "0x00466B70",
+      "remove_va": "0x00466AE8",
+      "acquisition_counter_offset": "0x280",
+      "unlock_bytes_offset": "0x5754",
+      "unlock_setter_va": "0x0027A5B8",
+      "unlock_comparison_ids": 32,
+      "ownership_warning": "Script-owned tests any nonzero byte; item usability also depends on definitions. Total unlock-array length is not established. Counter at280 is not asserted equal to nonzero record count; reference counter46 versus32 flagged records.",
       "stored_level_offset": "0x11"
     },
     "limitations": [
@@ -106,6 +117,15 @@
       "Static field meaning is not sufficient to authorize editable UI controls; paired saves and load tests remain required."
     ],
     "instruction_guards": [
+      { "va": "0x002D1C2C", "bytes": "7C0918AE" },
+      { "va": "0x002D1C6C", "bytes": "8003000C" },
+      { "va": "0x00466AA8", "bytes": "3BFF0014" },
+      { "va": "0x00466AB4", "bytes": "2F9E001F" },
+      { "va": "0x00466C4C", "bytes": "995F0010" },
+      { "va": "0x00466CF8", "bytes": "93BC0280" },
+      { "va": "0x00466B50", "bytes": "913E0280" },
+      { "va": "0x0027A5CC", "bytes": "98030014" },
+      { "va": "0x002D2434", "bytes": "80690420" },
       {
         "va": "0x0035E72C",
         "bytes": "80821A64"
@@ -2036,6 +2056,159 @@
       "evidence": "TOC slots888624/8A1984/89F1B8 point here; copy routines35E710/35E508 and named gameplay getters agree."
     },
     {
+      "va": "0x00033F40",
+      "name": "TOD_lua_is_weapon_owned",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C8802A6",
+      "comment": "Named Lua is_weapon_owned wrapper; calls25AF0 and pushes boolean. This establishes the script ownership predicate, not full item usability.",
+      "evidence": "33F8C error load slot889A4C ->100056A0; native call33FF8."
+    },
+    {
+      "va": "0x00025AF0",
+      "name": "TOD_is_weapon_owned_adapter",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF917C8802A6",
+      "comment": "Calls cross-TOC thunk12950 and converts result to byte-sized script boolean.",
+      "evidence": "25AFC call12950; wrapper33F40 has named ownership error."
+    },
+    {
+      "va": "0x00012950",
+      "name": "TOD_owned_to_TOC1_thunk",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F84100283C420001",
+      "comment": "Saves r2 at stack+28, changes TOC88FF38 ->89FF20, branches2D1C10.",
+      "evidence": "12954 addis r2,1;12958 subi r2,18;1295C branch2D1C10."
+    },
+    {
+      "va": "0x002D1C10",
+      "name": "TOD_is_weapon_owned_saved_state",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "546720368122F298",
+      "comment": "Returns true iff byte at state101EFB20+itemID*14(hex)+10(hex) is nonzero. Any nonzero byte satisfies this predicate; definitions still gate other getters.",
+      "evidence": "2D1C14 slot89F1B8=101EFB20;2D1C2C lbzx and comparison; named Lua chain33F40->25AF0->12950."
+    },
+    {
+      "va": "0x002D1C48",
+      "name": "TOD_has_weapon_modifier_bit",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "546A203680A2F298",
+      "comment": "Tests word at record+0C using PPC slw of1 by requested bit index. No bound check in this leaf;2D1EF8 checks the definition entry count.",
+      "evidence": "2D1C6C lwz+0C;2D1C70 bitwise AND; same serialized state base."
+    },
+    {
+      "va": "0x002D1EF8",
+      "name": "TOD_modifier_index_unset_on_owned_item",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF817CA802A6",
+      "comment": "True iff index is below weapon-data+6A4 entry count, item is script-owned and mask bit is unset. This is NOT a complete purchase-eligibility test; no price/prerequisite handling is established here.",
+      "evidence": "2D1F24 count read; calls2D1C10 and2D1C48 at2D1F50/2D1F68."
+    },
+    {
+      "va": "0x00466A60",
+      "name": "TOD_initialize_32_inventory_records",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717C8802A6",
+      "comment": "Clears first280(hex) bytes, initializes exactly32 records at stride14(hex) with IDs0..31, then clears word+280. Establishes code-backed inventory count, not just the sample's pattern.",
+      "evidence": "466AA8 stride14;466AAC call465C98;466AB4 compareID31;466AC4 counter clear."
+    },
+    {
+      "va": "0x00466AE8",
+      "name": "TOD_remove_owned_item_record",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "548620367CE802A6",
+      "comment": "If record+10 is nonzero, delegates XP/ammo resets, clears ownership byte and decrements word at inventory+280. Other inventory/list state may need separate updates.",
+      "evidence": "466B44 stb+10;466B50 stw inventory+280 after subtract1; calls4660A8 and465DC0."
+    },
+    {
+      "va": "0x00466B70",
+      "name": "TOD_acquire_item_record",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617CC802A6",
+      "comment": "Definition flags and refill option control ammo behavior. On previously unowned item, sets byte+10=1, delegates XP/level initialization and increments word+280. It may set bit400(hex) in state+5528 for a class of items. Already owned items can return after ammo refill.",
+      "evidence": "466C4C ownership store;466C50 XP setter;466CF8 counter increment. hero_give_weapon28B4E8 calls this with refill option1."
+    },
+    {
+      "va": "0x00465DC0",
+      "name": "TOD_set_weapon_ammo_clamped",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717C8802A6",
+      "comment": "Sets float record+08, bounded by zero fallback and the maximum from463DE0; uses PPC fsel arithmetic. Safe maximum is definition/level/mask-dependent; NaN behavior is not inferred here.",
+      "evidence": "465DF8 fsel;465DFC stfs+08; raw assembly supersedes erroneous decompiler integer casts."
+    },
+    {
+      "va": "0x0027A5B8",
+      "name": "TOD_unlock_item_in_saved_state",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38C3574080A29030",
+      "comment": "Sets one byte at state+5754+itemID to1. Separate from record ownership+10. Total unlock-array length and all index bounds remain unestablished.",
+      "evidence": "27A5BC TOC slot898F50=101EFB20;27A5B8 adds5740;27A5CC stores at additional14. Named Lua unlock_weapon wrapper2A4EC0."
+    },
+    {
+      "va": "0x002A4EC0",
+      "name": "TOD_lua_unlock_weapon",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C8802A6",
+      "comment": "Named unlock_weapon wrapper; converts first argument to item ID and calls27A5B8. Does not itself acquire a record, charge currency or validate full usability.",
+      "evidence": "2A4F0C error pointer slot89E86C ->10020A20; native call inspected in assembly."
+    },
+    {
+      "va": "0x002BB778",
+      "name": "TOD_lua_hero_give_weapon",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF417C0802A6",
+      "comment": "Named hero_give_weapon binding; validates hero handle and numeric arguments then calls28B4E8 with item ID and optional XP/ammo values.",
+      "evidence": "2BB7CC error pointer slot89ED18 ->10024060; inspected native argument/call path."
+    },
+    {
+      "va": "0x0028B4E8",
+      "name": "TOD_hero_give_weapon",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2B84001F7C0802A6",
+      "comment": "Validates item ID0..31 and hero context, acquires through466B70, delegates inventory integration via thunk252B08, optionally sets XP via4660A8 and ammo via465DC0, and can notify another system. Not equivalent to setting only ownership or unlock byte.",
+      "evidence": "Named binding2BB778; raw calls/ID bound in function; live hero-state inventory pointer at hero+1A68."
+    },
+    {
+      "va": "0x002D24C0",
+      "name": "TOD_item_unlock_availability_predicate",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A357408162F298",
+      "comment": "Checks byte state+5754+ID; if set, definition flag2 permits availability, otherwise ownership byte must be zero. Distinguishes unlock availability from possession. No purchase/cost proof from this predicate alone.",
+      "evidence": "Raw assembly loads5754+ID and same record+10; definition lookup463190."
+    },
+    {
+      "va": "0x002D2430",
+      "name": "TOD_read_saved_raritanium",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "8122F29880690420",
+      "comment": "Reads uint32 state+420, independently corroborating the existing raritanium save offset. Named caller beyond118E0 has not been mapped here.",
+      "evidence": "2D2434 =80690420; slot89F1B8=101EFB20. Existing editor/profile labels420 as raritanium."
+    },
+    {
+      "va": "0x00898F50",
+      "name": "TOD_unlock_state_base_slot",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "101EFB20",
+      "comment": "TOC1 89FF20-6FD0; unlock_weapon target27A5B8 uses this serialized state base.",
+      "evidence": "Pointer bytes plus named Lua wrapper and native store chain."
+    },
+    {
       "va": "0x0083A4EC",
       "name": "TOD_import_cellSync_cellSyncLFQueueGetDirection",
       "kind": "import_stub",
@@ -2079,7 +2252,7 @@
           "offset": "0x10",
           "name": "eligibility_state",
           "type": "u8",
-          "comment": "Used alongside definition flags; not independently proven ownership."
+          "comment": "Script ownership predicate2D1C10 tests this byte for nonzero; other getters also use definition flags. Acquisition sets1, removal clears0. Field name retained for existing type compatibility."
         },
         {
           "offset": "0x11",
@@ -2347,10 +2520,16 @@
       "start": "0x0",
       "end_exclusive": "0x280",
       "confidence": "observed",
-      "comment": "32 inventory records, stride 0x14."
+      "comment": "32 inventory records, stride0x14 confirmed by initializer466A60; several fields code-backed, bytes12/13 unknown."
     },
     {
       "start": "0x280",
+      "end_exclusive": "0x284",
+      "confidence": "confirmed",
+      "comment": "Acquisition/removal counter updated by466B70/466AE8; sample46, not asserted equal to32 nonzero ownership flags."
+    },
+    {
+      "start": "0x284",
       "end_exclusive": "0x41C",
       "confidence": "candidate",
       "comment": "Unknown integer lists, flags and sentinels; possible inventory ordering/unlocks."
@@ -2359,13 +2538,13 @@
       "start": "0x41C",
       "end_exclusive": "0x420",
       "confidence": "confirmed",
-      "comment": "Existing editor bolts offset; uint32 BE. Not yet independently traced to ELF serialization."
+      "comment": "Existing editor bolts offset; uint32 BE. Getter2D1C00 reads serialized state base+41C."
     },
     {
       "start": "0x420",
       "end_exclusive": "0x424",
       "confidence": "confirmed",
-      "comment": "Existing editor raritanium offset; uint32 BE. Not yet independently traced to ELF serialization."
+      "comment": "Existing editor raritanium offset; uint32 BE. Getter2D2430 reads serialized state base+420."
     },
     {
       "start": "0x424",
