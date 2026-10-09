@@ -1,0 +1,3076 @@
+{
+  "schema_version": 1,
+  "title": "Tools of Destruction USA v02.00 executable and save research map",
+  "binary": {
+    "filename": "EBOOT.ELF",
+    "title_id": "BCUS98127",
+    "version": "02.00",
+    "size": 10923400,
+    "sha256": "0EE9A8414C8FC182BC19FA2A523E6D050D0BE76138B3733AE515798D77D2468C",
+    "ghidra_language": "PowerPC:BE:64:64-32addr",
+    "endianness": "big",
+    "address_space": "Original ELF virtual addresses, NOT file offsets, save offsets or emulator host RAM addresses. Rebasing is not supported.",
+    "entry_descriptor_va": "0x00859418",
+    "entry_code_va": "0x00014360",
+    "descriptor_table": {
+      "start": "0x00859408",
+      "end_exclusive": "0x00887F38",
+      "stride": 8,
+      "count": 23910
+    },
+    "toc_bases": [
+      {
+        "va": "0x0088FF38",
+        "descriptor_count": 8186
+      },
+      {
+        "va": "0x0089FF20",
+        "descriptor_count": 7519
+      },
+      {
+        "va": "0x008AFE5C",
+        "descriptor_count": 8205
+      }
+    ],
+    "load_segments": [
+      {
+        "file_offset": "0x000000",
+        "va": "0x00010000",
+        "file_size": "0x82C648",
+        "memory_size": "0x82C648"
+      },
+      {
+        "file_offset": "0x830000",
+        "va": "0x00840000",
+        "file_size": "0x6D4E8",
+        "memory_size": "0x6D4E8"
+      },
+      {
+        "file_offset": "0x8A0000",
+        "va": "0x10000000",
+        "file_size": "0x56B80",
+        "memory_size": "0x56B80"
+      },
+      {
+        "file_offset": "0x900000",
+        "va": "0x10060000",
+        "file_size": "0x14EF00",
+        "memory_size": "0x82C570"
+      }
+    ],
+    "import_table": {
+      "start": "0x0083C46C",
+      "end_exclusive": "0x0083C5F8",
+      "stride": 44,
+      "library_count": 9,
+      "function_count": 118,
+      "resolved_name_count": 99
+    },
+    "section_names": {
+      "file_offset": "0xA6A3B2",
+      "size": "0x150",
+      "observation": "All bytes zero; section indices/ranges survive, names do not."
+    }
+  },
+  "reference_save": {
+    "directory": "BCES00052_SAVE_1",
+    "filename": "GAME.SAV",
+    "size": "0x906F0",
+    "sha256": "BEB457F9F5C750C46F2AD27E9DEFB15090785311696EAE7D5178904205DD949C",
+    "warning": "European sample versus USA executable. Matching observed layout does not establish cross-region save acceptance. Save offsets below are NOT ELF VAs."
+  },
+  "annotations": [
+    {
+      "va": "0x00859408",
+      "name": "TOD_PS3_function_descriptors",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "000102100088FF38008396280088FF38",
+      "comment": "23910 eight-byte big-endian descriptors: uint32 code VA, uint32 r2 TOC base. End exclusive 0x887F38. Three TOCs, not one; do not decode as 24-byte native PPC64 descriptors.",
+      "evidence": "ELF section 22, file offset 0x849408, size 0x2EB30; all 23910 records inspected."
+    },
+    {
+      "va": "0x00859418",
+      "name": "TOD_PS3_entry_descriptor",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "000143600088FF38",
+      "comment": "ELF e_entry points here. Actual entry code is 0x14360 with r2 = 0x88FF38, not instructions at the descriptor address.",
+      "evidence": "ELF64 BE e_entry at file offset 0x18 and descriptor bytes at file offset 0x849418."
+    },
+    {
+      "va": "0x00014360",
+      "name": "TOD_PS3_entry_code",
+      "kind": "function",
+      "confidence": "confirmed",
+      "comment": "Code entry resolved from the ELF entry descriptor. Startup role only; not identified as the save serializer.",
+      "evidence": "Descriptor at VA 0x859418 contains code VA 0x14360, TOC 0x88FF38.",
+      "bytes": "3840000064420085"
+    },
+    {
+      "va": "0x0088FF38",
+      "name": "TOD_PS3_toc_0",
+      "kind": "reference_base",
+      "confidence": "confirmed",
+      "comment": "r2 TOC base used by 8186 function descriptors. This is a reference base, not the start of an independently identified C structure.",
+      "evidence": "Full descriptor-table enumeration in the reference ELF."
+    },
+    {
+      "va": "0x0089FF20",
+      "name": "TOD_PS3_toc_1",
+      "kind": "reference_base",
+      "confidence": "confirmed",
+      "comment": "r2 TOC base used by 7519 function descriptors. GAME.SAV pointer slot at 0x8A1974 is +0x1A54 from this base.",
+      "evidence": "Full descriptor-table enumeration; pointer word at VA 0x8A1974."
+    },
+    {
+      "va": "0x008AFE5C",
+      "name": "TOD_PS3_toc_2",
+      "kind": "reference_base",
+      "confidence": "confirmed",
+      "comment": "r2 TOC base used by 8205 function descriptors. Use each function's own descriptor for reference recovery. This reference base lies beyond the mapped data section; valid TOC accesses use negative offsets. Importers skip labeling it if unmapped, without creating memory.",
+      "evidence": "Full descriptor-table enumeration in the reference ELF."
+    },
+    {
+      "va": "0x10026648",
+      "name": "TOD_str_GAME_SAV",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "47414D452E53415600",
+      "comment": "NUL-terminated game-data filename GAME.SAV. Follow pointer at 0x8A1974 to save I/O code.",
+      "evidence": "ASCII bytes at ELF file offset 0x8C6648."
+    },
+    {
+      "va": "0x008A1974",
+      "name": "TOD_ptr_GAME_SAV",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "10026648",
+      "comment": "32-bit big-endian pointer to GAME.SAV string at 0x10026648; r2-relative offset +0x1A54 for TOC 0x89FF20.",
+      "evidence": "Pointer bytes at ELF file offset 0x891974 and pointed-to filename."
+    },
+    {
+      "va": "0x10026F48",
+      "name": "TOD_str_save_game_exists",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "736176655F67616D655F65786973747300",
+      "comment": "Embedded save_game_exists name. A string alone does not prove the address of its implementation.",
+      "evidence": "ASCII bytes at ELF file offset 0x8C6F48."
+    },
+    {
+      "va": "0x10026F98",
+      "name": "TOD_str_save_game_exists_error",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "23666572726F7220696E2066756E6374696F6E2027736176655F67616D655F657869737473272E00",
+      "comment": "Error string: #ferror in function 'save_game_exists'. Follow pointer slot at 0x8A2D24 for the script wrapper/error path.",
+      "evidence": "ASCII bytes at ELF file offset 0x8C6F98."
+    },
+    {
+      "va": "0x008A2D24",
+      "name": "TOD_ptr_save_game_exists_error",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "10026F98",
+      "comment": "Pointer to save_game_exists error string; +0x2E04 from TOC 0x89FF20.",
+      "evidence": "Pointer bytes at ELF file offset 0x892D24."
+    },
+    {
+      "va": "0x10002DD8",
+      "name": "TOD_str_get_hero_bolts",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "6765745F6865726F5F626F6C747300",
+      "comment": "Script-visible get_hero_bolts name. Useful anchor for currency getter research, not itself a bolts global.",
+      "evidence": "ASCII bytes at ELF file offset 0x8A2DD8."
+    },
+    {
+      "va": "0x10002F28",
+      "name": "TOD_str_get_weapon_ammo",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "6765745F776561706F6E5F616D6D6F00",
+      "comment": "Script-visible get_weapon_ammo name. Trace its binding before asserting inventory field semantics.",
+      "evidence": "ASCII bytes at ELF file offset 0x8A2F28."
+    },
+    {
+      "va": "0x10002F50",
+      "name": "TOD_str_get_weapon_level",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "6765745F776561706F6E5F6C6576656C00",
+      "comment": "Script-visible get_weapon_level name, useful for verifying packed level state.",
+      "evidence": "ASCII bytes at ELF file offset 0x8A2F50."
+    },
+    {
+      "va": "0x1002AC50",
+      "name": "TOD_str_Lua_5_0_2",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4C756120352E302E3200",
+      "comment": "Embedded Lua version string. Getter at 0x6687E0 returns this pointer; embedded version text is not a claim that every Lua component is unmodified upstream code.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x1002AC50; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x1001A330",
+      "name": "TOD_str_physics_off",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "706879736963735F6F666600",
+      "comment": "Physics script name; Lua error wrapper at 0x2C4930 calls target 0x27E2A0.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x1001A330; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x1001A4E0",
+      "name": "TOD_str_physics_on",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "706879736963735F6F6E00",
+      "comment": "Physics script name; Lua error wrapper at 0x2C4770 calls target 0x27F558.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x1001A4E0; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10025310",
+      "name": "TOD_str_physics_on_error",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "23666572726F7220696E2066756E6374696F6E2027706879736963735F6F6E272E00",
+      "comment": "Referenced by the Lua physics_on wrapper at instruction 0x2C47C4 through TOC slot 0x89EEE4.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10025310; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10025338",
+      "name": "TOD_str_physics_off_error",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "23666572726F7220696E2066756E6374696F6E2027706879736963735F6F6666272E00",
+      "comment": "Referenced by the Lua physics_off wrapper at instruction 0x2C4984 through TOC slot 0x89EEE8.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10025338; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10019668",
+      "name": "TOD_str_generated_lua_config_source",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "783A2F7263662F636F64652F646973632F70656E64696E672F70726F6A6563742F67616D657073332F636F6E6669672F6C75615F636F6E6669675F6D6574686F64735F67656E6572617465642E63707000",
+      "comment": "Embedded developer source path: generated Lua configuration bindings. Path is a build-time string, not a file available on this PC.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10019668; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x100260B0",
+      "name": "TOD_str_generated_lua_gameplay_source",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "783A2F7263662F636F64652F646973632F70656E64696E672F70726F6A6563742F67616D657073332F6C75612F6C75615F67616D65706C61795F6D6574686F64735F67656E6572617465642E63707000",
+      "comment": "Embedded developer source path for generated gameplay script bindings; source contents are not present.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x100260B0; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10029DA0",
+      "name": "TOD_str_anark_pool_allocator_source",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "783A2F7263662F636F64652F646973632F70656E64696E672F73646B2F616E61726B5F737570706F72742F6D656D6F72792F706F6F6C5F616C6C6F6361746F722E6800",
+      "comment": "Embedded Anark-support allocator source path. Direct references include 0x6AB868, 0x6AB898, 0x6AB910 and 0x6AB974; original function names unverified.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10029DA0; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x1002C2E0",
+      "name": "TOD_str_tolua_mapping_source",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "783A2F7263662F636F64652F646973632F70656E64696E672F73646B2F746F6C75612B2B2F7372632F6C69622F746F6C75615F6D61702E6300",
+      "comment": "Embedded tolua++ source path: additional evidence for Lua/C++ binding infrastructure.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x1002C2E0; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10027C18",
+      "name": "TOD_str_moby_shader_update",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4D6F6279536861646572436F6E73747355706461746500",
+      "comment": "Rendering marker passed at 0x51FDC0. The inspected routine waits on another operation; the full shader-update implementation is not mapped.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10027C18; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x100278E8",
+      "name": "TOD_str_spu_draw_sort_timeout",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4947473A3A5370754275636B6574657244726177536F72742074696D656F757400",
+      "comment": "Diagnostic anchor for SPU draw sorting. A named string is not itself a function or recovered source symbol.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x100278E8; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10028D60",
+      "name": "TOD_str_dynamic_collision_spu_timeout",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "44796E616D696344624765745175657279526573756C74733A207370752074696D656F757400",
+      "comment": "SPU dynamic-query timeout diagnostic; query structures and collision implementation are not mapped.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10028D60; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10028D90",
+      "name": "TOD_str_static_collision_spu_timeout",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "53746174696344624765745175657279526573756C74733A207370752074696D656F757400",
+      "comment": "SPU static-query timeout diagnostic; inspect references before assigning function semantics.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10028D90; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10028F08",
+      "name": "TOD_str_geometry_spu_timeout",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "696747656F6D43756C6C436C6970205350552054696D656F75742100",
+      "comment": "Geometry cull/clip timeout anchor; not a recovered function address.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10028F08; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10029820",
+      "name": "TOD_str_render_database_spu_timeout",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "72656E646572206462207370752074696D656F757420696E205761697454696C6C52656164792E00",
+      "comment": "Rendering database SPU synchronization diagnostic.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10029820; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10027728",
+      "name": "TOD_str_spu_broad_collision_elf",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "74656D705C5053335F5350555F52656C656173655C6967436F6C6C42726F61645370752E656C6600",
+      "comment": "Embedded build path naming a separate SPU ELF for collision work; this PPU executable is not that SPU program.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10027728; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10027818",
+      "name": "TOD_str_spu_collision_elf",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "74656D705C5053335F5350555F52656C656173655C6967636F6C6C7370752E656C6600",
+      "comment": "Embedded SPU collision-program build path. Does not prove that this file exists in the installed game directory.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10027818; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x1002CB88",
+      "name": "TOD_str_scream_allocator_required",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "53435245414D3A204552524F522120596F75206D7573742063616C6C20736E645F52656769737465724D61696E4D656D416C6C6F6361746F7220746F2070726F766964652053435245414D206D656D6F727920616C6C6F636174696F6E20726F7574696E6573210A00",
+      "comment": "Audio allocator diagnostic referenced by fallback routines 0x6DBDC4 and 0x6DBDF0. SCREAM-related audio code is present; no middleware version established.",
+      "evidence": "ASCII bytes plus newline and NUL terminator at ELF VA 0x1002CB88."
+    },
+    {
+      "va": "0x1002BF90",
+      "name": "TOD_str_auto_save_thread",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4175746F20536176652054687265616400",
+      "comment": "Embedded thread name: asynchronous autosave infrastructure research anchor, not a verified thread entry address.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x1002BF90; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x1002BFA8",
+      "name": "TOD_str_save_thread",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "536176652054687265616400",
+      "comment": "Embedded save-thread name.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x1002BFA8; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x1002C868",
+      "name": "TOD_str_auto_load_thread",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4175746F204C6F61642054687265616400",
+      "comment": "Embedded auto-load thread name.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x1002C868; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x1002C880",
+      "name": "TOD_str_load_thread",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4C6F61642054687265616400",
+      "comment": "Embedded load-thread name.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x1002C880; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10026C58",
+      "name": "TOD_str_game_data_thread",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "5374616765436F72653A3A47616D6544617461546872656164282900",
+      "comment": "StageCore game-data initialization thread marker, distinct from GAME.SAV serialized fields.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10026C58; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x10026C78",
+      "name": "TOD_str_cache_mount_thread",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "5374616765436F72653A3A53797343616368654D6F756E74546872656164282900",
+      "comment": "StageCore system-cache mounting thread marker.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x10026C78; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x100275E8",
+      "name": "TOD_str_game_data_check_thread",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "43656C6C2047616D65204461746120436865636B204372656174652054687265616400",
+      "comment": "Game-data installation/check thread marker.",
+      "evidence": "NUL-terminated ASCII bytes in the reference ELF at VA 0x100275E8; see the ELF PT_LOAD mappings for file offset."
+    },
+    {
+      "va": "0x0035E2C8",
+      "name": "TOD_initialize_GAME_SAV_io",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "80821A503CA00009",
+      "comment": "Initializes GAME.SAV I/O configuration. Writes object+0xD8 = object+0x1FD08, object+0xDC = 0x906F0; copies GAME.SAV to object+0x70. This is setup code, not yet identified as the serializer.",
+      "evidence": "Instructions 0x35E2E8, 0x35E2FC, 0x35E304, 0x35E3A0..0x35E3A4, 0x35E3FC..0x35E41C; function descriptor supplies TOC 0x89FF20."
+    },
+    {
+      "va": "0x0039D588",
+      "name": "TOD_lua_save_game_exists_wrapper",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C8802A6",
+      "comment": "Lua-facing save_game_exists wrapper. Calls 0x39B700, pushes a boolean via a helper; argument error uses the named error string at 0x10026F98.",
+      "evidence": "Call at 0x39D5C8, boolean conversion 0x39D5D0, error string load 0x39D600 from TOC slot 0x8A2D24."
+    },
+    {
+      "va": "0x0039B700",
+      "name": "TOD_save_game_exists_state_predicate",
+      "kind": "function",
+      "confidence": "observed",
+      "bytes": "81222BAC39600000",
+      "comment": "Returns true only if both state words +0x100 and +0xFC are nonzero. Object reached via **(uint32*)0x8A2ACC. Exact meanings of these two flags remain unknown.",
+      "evidence": "Assembly 0x39B700..0x39B73C, called by verified save_game_exists wrapper at 0x39D5C8."
+    },
+    {
+      "va": "0x0024F908",
+      "name": "TOD_thunk_save_io_initialize",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F84100283C420001",
+      "comment": "Cross-TOC thunk: save r2 at stack+0x28, add 0x10000-0xC4 to r2, branch to 0x694D28. Converts caller TOC 0x89FF20 to 0x8AFE5C.",
+      "evidence": "Four instructions at 0x24F908..0x24F914; called at 0x35E45C."
+    },
+    {
+      "va": "0x00694D28",
+      "name": "TOD_initialize_save_io_runtime_state",
+      "kind": "function",
+      "confidence": "observed",
+      "bytes": "398300487C0802A6",
+      "comment": "Initializer called by GAME.SAV setup through TOC-adjusting thunk 0x24F908. Initializes state fields and helper objects at +0x8,+0x20,+0x38; original class/function name unknown.",
+      "evidence": "Assembly/decompilation of 0x694D28; call chain 0x35E45C -> 0x24F908 -> 0x694D28."
+    },
+    {
+      "va": "0x002C4770",
+      "name": "TOD_lua_physics_on_wrapper",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF517C0802A6",
+      "comment": "Lua physics_on wrapper validates a pod_handle and argument count, then calls 0x27F558 with the retrieved handle. Error path names physics_on. Internal physics state still unmapped.",
+      "evidence": "TOC slot 0x89EEE4 -> 0x10025310 at load 0x2C47C4; call to binding target at 0x2C483C."
+    },
+    {
+      "va": "0x002C4930",
+      "name": "TOD_lua_physics_off_wrapper",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF517C0802A6",
+      "comment": "Lua physics_off wrapper validates a pod_handle and argument count, then calls 0x27E2A0. No claim that this is the complete engine physics implementation.",
+      "evidence": "TOC slot 0x89EEE8 -> 0x10025338 at load 0x2C4984; inspected call chain to 0x27E2A0."
+    },
+    {
+      "va": "0x006687E0",
+      "name": "TOD_get_embedded_Lua_version",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "80629FC04E800020",
+      "comment": "Two-instruction getter returns pointer to Lua 5.0.2 version text. Descriptive research name, not claimed original Lua API symbol.",
+      "evidence": "lwz r3,-0x6040(r2); blr, with descriptor TOC 0x8AFE5C. Slot 0x8A9E1C contains 0x1002AC50."
+    },
+    {
+      "va": "0x0083C46C",
+      "name": "TOD_import_record_sysPrxForUser",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009001300000000000000000083C1FC0083C28800856C4800000000000000000000000000000000",
+      "comment": "sysPrxForUser: 19 imported functions, no variable or TLS imports. NIDs at 0x0083C288, function-address slots at 0x00856C48.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C1FC",
+      "name": "TOD_import_module_sysPrxForUser",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "737973507278466F725573657200",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C46C.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083964C",
+      "name": "TOD_import_sysPrxForUser_nid_1573DC3F",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x1573DC3F, function-address slot 0x00856C48. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083966C",
+      "name": "TOD_import_sysPrxForUser_nid_1BC200F4",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x1BC200F4, function-address slot 0x00856C4C. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083968C",
+      "name": "TOD_import_sysPrxForUser_nid_24A1EA07",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x24A1EA07, function-address slot 0x00856C50. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x008396AC",
+      "name": "TOD_import_sysPrxForUser__sys_process_atexitspawn",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x2C847572, function-address slot 0x00856C54. Resolved SDK name: _sys_process_atexitspawn. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/sysPrxForUser.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x008396CC",
+      "name": "TOD_import_sysPrxForUser_nid_2F85C0EF",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x2F85C0EF, function-address slot 0x00856C58. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x008396EC",
+      "name": "TOD_import_sysPrxForUser_nid_409AD939",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x409AD939, function-address slot 0x00856C5C. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083970C",
+      "name": "TOD_import_sysPrxForUser_nid_4643BA6E",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x4643BA6E, function-address slot 0x00856C60. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083972C",
+      "name": "TOD_import_sysPrxForUser_nid_744680A2",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x744680A2, function-address slot 0x00856C64. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083974C",
+      "name": "TOD_import_sysPrxForUser_sys_time_get_system_time",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x8461E528, function-address slot 0x00856C68. Resolved SDK name: sys_time_get_system_time. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/sysPrxForUser.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083976C",
+      "name": "TOD_import_sysPrxForUser_nid_A2C7BA64",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0xA2C7BA64, function-address slot 0x00856C6C. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083978C",
+      "name": "TOD_import_sysPrxForUser_nid_AFF080A4",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0xAFF080A4, function-address slot 0x00856C70. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x008397AC",
+      "name": "TOD_import_sysPrxForUser_nid_B257540B",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0xB257540B, function-address slot 0x00856C74. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x008397CC",
+      "name": "TOD_import_sysPrxForUser_nid_C3476D0C",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0xC3476D0C, function-address slot 0x00856C78. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x008397EC",
+      "name": "TOD_import_sysPrxForUser_nid_DC578057",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0xDC578057, function-address slot 0x00856C7C. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083980C",
+      "name": "TOD_import_sysPrxForUser_sys_process_exit",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0xE6F2C1E7, function-address slot 0x00856C80. Resolved SDK name: sys_process_exit. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/sysPrxForUser.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083982C",
+      "name": "TOD_import_sysPrxForUser_nid_FC52A7A9",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0xFC52A7A9, function-address slot 0x00856C84. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083A0EC",
+      "name": "TOD_import_sysPrxForUser_nid_350D454E",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x350D454E, function-address slot 0x00856C88. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083A10C",
+      "name": "TOD_import_sysPrxForUser_sys_process_is_stack",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0x4F7172C9, function-address slot 0x00856C8C. Resolved SDK name: sys_process_is_stack. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/sysPrxForUser.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A12C",
+      "name": "TOD_import_sysPrxForUser_nid_AEB78725",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sysPrxForUser import stub. NID 0xAEB78725, function-address slot 0x00856C90. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C46C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C498",
+      "name": "TOD_import_record_sys_fs",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009000E00000000000000000083C2100083C2D400856C9400000000000000000000000000000000",
+      "comment": "sys_fs: 14 imported functions, no variable or TLS imports. NIDs at 0x0083C2D4, function-address slots at 0x00856C94.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C210",
+      "name": "TOD_import_module_sys_fs",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "7379735F667300",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C498.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083984C",
+      "name": "TOD_import_sys_fs_cellFsClose",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x2CB51F0D, function-address slot 0x00856C94. Resolved SDK name: cellFsClose. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083986C",
+      "name": "TOD_import_sys_fs_cellFsRead",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x4D5FF8E2, function-address slot 0x00856C98. Resolved SDK name: cellFsRead. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083988C",
+      "name": "TOD_import_sys_fs_cellFsOpen",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x718BF5F8, function-address slot 0x00856C9C. Resolved SDK name: cellFsOpen. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x008398AC",
+      "name": "TOD_import_sys_fs_cellFsStat",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x7DE6DCED, function-address slot 0x00856CA0. Resolved SDK name: cellFsStat. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x008398CC",
+      "name": "TOD_import_sys_fs_cellFsUnlink",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x7F4677A8, function-address slot 0x00856CA4. Resolved SDK name: cellFsUnlink. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x008398EC",
+      "name": "TOD_import_sys_fs_cellFsMkdir",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0xBA901FE6, function-address slot 0x00856CA8. Resolved SDK name: cellFsMkdir. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083990C",
+      "name": "TOD_import_sys_fs_cellFsWrite",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0xECDCF2AB, function-address slot 0x00856CAC. Resolved SDK name: cellFsWrite. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083992C",
+      "name": "TOD_import_sys_fs_cellFsFstat",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0xEF3EFA34, function-address slot 0x00856CB0. Resolved SDK name: cellFsFstat. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A14C",
+      "name": "TOD_import_sys_fs_cellFsRmdir",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x2796FDF3, function-address slot 0x00856CB4. Resolved SDK name: cellFsRmdir. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A16C",
+      "name": "TOD_import_sys_fs_cellFsOpendir",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x3F61245C, function-address slot 0x00856CB8. Resolved SDK name: cellFsOpendir. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A18C",
+      "name": "TOD_import_sys_fs_cellFsReaddir",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x5C74903D, function-address slot 0x00856CBC. Resolved SDK name: cellFsReaddir. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A1AC",
+      "name": "TOD_import_sys_fs_cellFsFsync",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0x967A162B, function-address slot 0x00856CC0. Resolved SDK name: cellFsFsync. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A1CC",
+      "name": "TOD_import_sys_fs_cellFsLseek",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0xA397D042, function-address slot 0x00856CC4. Resolved SDK name: cellFsLseek. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A1EC",
+      "name": "TOD_import_sys_fs_cellFsClosedir",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_fs import stub. NID 0xFF42DCC3, function-address slot 0x00856CC8. Resolved SDK name: cellFsClosedir. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C498; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083C4C4",
+      "name": "TOD_import_record_sys_io",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009000900000000000000000083C21C0083C30C00856CCC00000000000000000000000000000000",
+      "comment": "sys_io: 9 imported functions, no variable or TLS imports. NIDs at 0x0083C30C, function-address slots at 0x00856CCC.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C21C",
+      "name": "TOD_import_module_sys_io",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "7379735F696F00",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C4C4.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083994C",
+      "name": "TOD_import_sys_io_cellPadInfoPressMode",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0x0E2DFAAD, function-address slot 0x00856CCC. Resolved SDK name: cellPadInfoPressMode. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083996C",
+      "name": "TOD_import_sys_io_cellPadInit",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0x1CF98800, function-address slot 0x00856CD0. Resolved SDK name: cellPadInit. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083998C",
+      "name": "TOD_import_sys_io_cellPadGetInfo",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0x3AAAD464, function-address slot 0x00856CD4. Resolved SDK name: cellPadGetInfo. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x008399AC",
+      "name": "TOD_import_sys_io_cellPadEnd",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0x4D9B75D5, function-address slot 0x00856CD8. Resolved SDK name: cellPadEnd. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x008399CC",
+      "name": "TOD_import_sys_io_cellPadInfoSensorMode",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0x78200559, function-address slot 0x00856CDC. Resolved SDK name: cellPadInfoSensorMode. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x008399EC",
+      "name": "TOD_import_sys_io_cellPadGetData",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0x8B72CDA1, function-address slot 0x00856CE0. Resolved SDK name: cellPadGetData. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839A0C",
+      "name": "TOD_import_sys_io_cellPadSetSensorMode",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0xBE5BE3BA, function-address slot 0x00856CE4. Resolved SDK name: cellPadSetSensorMode. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839A2C",
+      "name": "TOD_import_sys_io_cellPadSetActDirect",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0xF65544EE, function-address slot 0x00856CE8. Resolved SDK name: cellPadSetActDirect. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839A4C",
+      "name": "TOD_import_sys_io_cellPadSetPressMode",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 sys_io import stub. NID 0xF83F8182, function-address slot 0x00856CEC. Resolved SDK name: cellPadSetPressMode. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4C4; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083C4F0",
+      "name": "TOD_import_record_cellGcmSys",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009000F00000000000000000083C2280083C33000856B3400000000000000000000000000000000",
+      "comment": "cellGcmSys: 15 imported functions, no variable or TLS imports. NIDs at 0x0083C330, function-address slots at 0x00856B34.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C228",
+      "name": "TOD_import_module_cellGcmSys",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "63656C6C47636D53797300",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C4F0.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839A6C",
+      "name": "TOD_import_cellGcmSys_cellGcmGetTiledPitchSize",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0x055BD74D, function-address slot 0x00856B34. Resolved SDK name: cellGcmGetTiledPitchSize. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839A8C",
+      "name": "TOD_import_cellGcmSys__cellGcmInitBody",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0x15BAE46B, function-address slot 0x00856B38. Resolved SDK name: _cellGcmInitBody. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839AAC",
+      "name": "TOD_import_cellGcmSys_cellGcmAddressToOffset",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0x21AC3697, function-address slot 0x00856B3C. Resolved SDK name: cellGcmAddressToOffset. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839ACC",
+      "name": "TOD_import_cellGcmSys__cellGcmFunc15",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0x3A33C1FD, function-address slot 0x00856B40. Resolved SDK name: _cellGcmFunc15. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839AEC",
+      "name": "TOD_import_cellGcmSys_cellGcmSetFlipMode",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0x4AE8D215, function-address slot 0x00856B44. Resolved SDK name: cellGcmSetFlipMode. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839B0C",
+      "name": "TOD_import_cellGcmSys_cellGcmMapEaIoAddress",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0x63441CB4, function-address slot 0x00856B48. Resolved SDK name: cellGcmMapEaIoAddress. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839B2C",
+      "name": "TOD_import_cellGcmSys_cellGcmSetWaitFlip",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0x983FB9AA, function-address slot 0x00856B4C. Resolved SDK name: cellGcmSetWaitFlip. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839B4C",
+      "name": "TOD_import_cellGcmSys_cellGcmSetDisplayBuffer",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0xA53D12AE, function-address slot 0x00856B50. Resolved SDK name: cellGcmSetDisplayBuffer. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839B6C",
+      "name": "TOD_import_cellGcmSys_cellGcmGetControlRegister",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0xA547ADDE, function-address slot 0x00856B54. Resolved SDK name: cellGcmGetControlRegister. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839B8C",
+      "name": "TOD_import_cellGcmSys_cellGcmSetVBlankHandler",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0xA91B0402, function-address slot 0x00856B58. Resolved SDK name: cellGcmSetVBlankHandler. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839BAC",
+      "name": "TOD_import_cellGcmSys_cellGcmSetTile",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0xD0B1D189, function-address slot 0x00856B5C. Resolved SDK name: cellGcmSetTile. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839BCC",
+      "name": "TOD_import_cellGcmSys_cellGcmSetZcull",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0xD34A420D, function-address slot 0x00856B60. Resolved SDK name: cellGcmSetZcull. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839BEC",
+      "name": "TOD_import_cellGcmSys_cellGcmSetFlip",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0xDC09357E, function-address slot 0x00856B64. Resolved SDK name: cellGcmSetFlip. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839C0C",
+      "name": "TOD_import_cellGcmSys_cellGcmGetConfiguration",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0xE315A0B2, function-address slot 0x00856B68. Resolved SDK name: cellGcmGetConfiguration. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839C2C",
+      "name": "TOD_import_cellGcmSys_cellGcmGetLabelAddress",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellGcmSys import stub. NID 0xF80196C1, function-address slot 0x00856B6C. Resolved SDK name: cellGcmGetLabelAddress. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C4F0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083C51C",
+      "name": "TOD_import_record_cellAudio",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009000700000000000000000083C2380083C36C00856B1800000000000000000000000000000000",
+      "comment": "cellAudio: 7 imported functions, no variable or TLS imports. NIDs at 0x0083C36C, function-address slots at 0x00856B18.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C238",
+      "name": "TOD_import_module_cellAudio",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "63656C6C417564696F00",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C51C.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839C4C",
+      "name": "TOD_import_cellAudio_cellAudioInit",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellAudio import stub. NID 0x0B168F92, function-address slot 0x00856B18. Resolved SDK name: cellAudioInit. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839C6C",
+      "name": "TOD_import_cellAudio_cellAudioQuit",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellAudio import stub. NID 0xCA5AC370, function-address slot 0x00856B1C. Resolved SDK name: cellAudioQuit. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A20C",
+      "name": "TOD_import_cellAudio_cellAudioPortClose",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellAudio import stub. NID 0x4129FE2D, function-address slot 0x00856B20. Resolved SDK name: cellAudioPortClose. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A22C",
+      "name": "TOD_import_cellAudio_cellAudioPortStop",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellAudio import stub. NID 0x5B1E2C73, function-address slot 0x00856B24. Resolved SDK name: cellAudioPortStop. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A24C",
+      "name": "TOD_import_cellAudio_cellAudioGetPortConfig",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellAudio import stub. NID 0x74A66AF0, function-address slot 0x00856B28. Resolved SDK name: cellAudioGetPortConfig. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A26C",
+      "name": "TOD_import_cellAudio_cellAudioPortStart",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellAudio import stub. NID 0x89BE28F2, function-address slot 0x00856B2C. Resolved SDK name: cellAudioPortStart. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A28C",
+      "name": "TOD_import_cellAudio_cellAudioPortOpen",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellAudio import stub. NID 0xCD7BC431, function-address slot 0x00856B30. Resolved SDK name: cellAudioPortOpen. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C51C; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083C548",
+      "name": "TOD_import_record_cellSysutil",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009001300000000000000000083C2480083C38800856BFC00000000000000000000000000000000",
+      "comment": "cellSysutil: 19 imported functions, no variable or TLS imports. NIDs at 0x0083C388, function-address slots at 0x00856BFC.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C248",
+      "name": "TOD_import_module_cellSysutil",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "63656C6C5379737574696C00",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C548.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839C8C",
+      "name": "TOD_import_cellSysutil_cellVideoOutConfigure",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x0BAE8772, function-address slot 0x00856BFC. Resolved SDK name: cellVideoOutConfigure. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellVideoOut.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839CAC",
+      "name": "TOD_import_cellSysutil_cellSysutilCheckCallback",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x189A74DA, function-address slot 0x00856C00. Resolved SDK name: cellSysutilCheckCallback. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysutil.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839CCC",
+      "name": "TOD_import_cellSysutil_cellSaveDataListLoad2",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x1DFBFDD6, function-address slot 0x00856C04. Resolved SDK name: cellSaveDataListLoad2. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839CEC",
+      "name": "TOD_import_cellSysutil_nid_1E7BFF94",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x1E7BFF94, function-address slot 0x00856C08. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839D0C",
+      "name": "TOD_import_cellSysutil_cellSaveDataListAutoLoad",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x21425307, function-address slot 0x00856C0C. Resolved SDK name: cellSaveDataListAutoLoad. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839D2C",
+      "name": "TOD_import_cellSysutil_cellSaveDataListSave2",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x2DE0D663, function-address slot 0x00856C10. Resolved SDK name: cellSaveDataListSave2. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839D4C",
+      "name": "TOD_import_cellSysutil_cellSysutilGetSystemParamInt",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x40E895D3, function-address slot 0x00856C14. Resolved SDK name: cellSysutilGetSystemParamInt. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysutil.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839D6C",
+      "name": "TOD_import_cellSysutil_nid_4692AB35",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x4692AB35, function-address slot 0x00856C18. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839D8C",
+      "name": "TOD_import_cellSysutil_cellSaveDataListAutoSave",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x4DD03A4E, function-address slot 0x00856C1C. Resolved SDK name: cellSaveDataListAutoSave. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839DAC",
+      "name": "TOD_import_cellSysutil_nid_744C1544",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x744C1544, function-address slot 0x00856C20. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839DCC",
+      "name": "TOD_import_cellSysutil_cellVideoOutGetState",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x887572D5, function-address slot 0x00856C24. Resolved SDK name: cellVideoOutGetState. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellVideoOut.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839DEC",
+      "name": "TOD_import_cellSysutil_cellSysutilRegisterCallback",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0x9D98AFA0, function-address slot 0x00856C28. Resolved SDK name: cellSysutilRegisterCallback. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysutil.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839E0C",
+      "name": "TOD_import_cellSysutil_cellVideoOutGetResolutionAvailability",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0xA322DB75, function-address slot 0x00856C2C. Resolved SDK name: cellVideoOutGetResolutionAvailability. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellVideoOut.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839E2C",
+      "name": "TOD_import_cellSysutil_cellDiscGameGetBootDiscInfo",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0xB72BC4E6, function-address slot 0x00856C30. Resolved SDK name: cellDiscGameGetBootDiscInfo. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGame.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839E4C",
+      "name": "TOD_import_cellSysutil_nid_C01B4E7C",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0xC01B4E7C, function-address slot 0x00856C34. SDK symbol name unresolved; numeric NID retained without guessing.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839E6C",
+      "name": "TOD_import_cellSysutil_cellGameDataCheckCreate2",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0xC9645C41, function-address slot 0x00856C38. Resolved SDK name: cellGameDataCheckCreate2. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGame.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839E8C",
+      "name": "TOD_import_cellSysutil_cellVideoOutGetResolution",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0xE558748D, function-address slot 0x00856C3C. Resolved SDK name: cellVideoOutGetResolution. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellVideoOut.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839EAC",
+      "name": "TOD_import_cellSysutil_cellGameDataCheckCreate",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0xE7951DEE, function-address slot 0x00856C40. Resolved SDK name: cellGameDataCheckCreate. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGame.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839ECC",
+      "name": "TOD_import_cellSysutil_cellSaveDataDelete2",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysutil import stub. NID 0xEDADD797, function-address slot 0x00856C44. Resolved SDK name: cellSaveDataDelete2. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C548; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083C574",
+      "name": "TOD_import_record_cellSysmodule",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009000300000000000000000083C2580083C3D400856BF000000000000000000000000000000000",
+      "comment": "cellSysmodule: 3 imported functions, no variable or TLS imports. NIDs at 0x0083C3D4, function-address slots at 0x00856BF0.",
+      "evidence": "PS3 import descriptor at 0x0083C574; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C258",
+      "name": "TOD_import_module_cellSysmodule",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "63656C6C5379736D6F64756C6500",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C574.",
+      "evidence": "PS3 import descriptor at 0x0083C574; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839EEC",
+      "name": "TOD_import_cellSysmodule_cellSysmoduleUnloadModule",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysmodule import stub. NID 0x112A5EE9, function-address slot 0x00856BF0. Resolved SDK name: cellSysmoduleUnloadModule. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C574; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysmodule.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839F0C",
+      "name": "TOD_import_cellSysmodule_cellSysmoduleLoadModule",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysmodule import stub. NID 0x32267A31, function-address slot 0x00856BF4. Resolved SDK name: cellSysmoduleLoadModule. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C574; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysmodule.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839F2C",
+      "name": "TOD_import_cellSysmodule_cellSysmoduleInitialize",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSysmodule import stub. NID 0x63FF6FF9, function-address slot 0x00856BF8. Resolved SDK name: cellSysmoduleInitialize. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C574; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysmodule.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083C5A0",
+      "name": "TOD_import_record_cellSpurs",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009001F00000000000000000083C26C0083C3E000856B7000000000000000000000000000000000",
+      "comment": "cellSpurs: 31 imported functions, no variable or TLS imports. NIDs at 0x0083C3E0, function-address slots at 0x00856B70.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C26C",
+      "name": "TOD_import_module_cellSpurs",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "63656C6C537075727300",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C5A0.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x00839F4C",
+      "name": "TOD_import_cellSpurs__cellSpursTasksetAttributeInitialize",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x16394A4E, function-address slot 0x00856B70. Resolved SDK name: _cellSpursTasksetAttributeInitialize. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839F6C",
+      "name": "TOD_import_cellSpurs_cellSpursEventFlagDetachLv2EventQueue",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x22AAB31D, function-address slot 0x00856B74. Resolved SDK name: cellSpursEventFlagDetachLv2EventQueue. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839F8C",
+      "name": "TOD_import_cellSpurs_cellSpursEventFlagWait",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x373523D4, function-address slot 0x00856B78. Resolved SDK name: cellSpursEventFlagWait. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839FAC",
+      "name": "TOD_import_cellSpurs_cellSpursEventFlagClear",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x4AC7BAE4, function-address slot 0x00856B7C. Resolved SDK name: cellSpursEventFlagClear. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839FCC",
+      "name": "TOD_import_cellSpurs__cellSpursEventFlagInitialize",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x5EF96465, function-address slot 0x00856B80. Resolved SDK name: _cellSpursEventFlagInitialize. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x00839FEC",
+      "name": "TOD_import_cellSpurs_cellSpursTasksetAttributeSetName",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x652B70E2, function-address slot 0x00856B84. Resolved SDK name: cellSpursTasksetAttributeSetName. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A00C",
+      "name": "TOD_import_cellSpurs_cellSpursEventFlagAttachLv2EventQueue",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x87630976, function-address slot 0x00856B88. Resolved SDK name: cellSpursEventFlagAttachLv2EventQueue. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A02C",
+      "name": "TOD_import_cellSpurs__cellSpursAttributeInitialize",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x95180230, function-address slot 0x00856B8C. Resolved SDK name: _cellSpursAttributeInitialize. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A04C",
+      "name": "TOD_import_cellSpurs_cellSpursJoinTaskset",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x9F72ADD3, function-address slot 0x00856B90. Resolved SDK name: cellSpursJoinTaskset. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A06C",
+      "name": "TOD_import_cellSpurs_cellSpursShutdownTaskset",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xA789E631, function-address slot 0x00856B94. Resolved SDK name: cellSpursShutdownTaskset. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A08C",
+      "name": "TOD_import_cellSpurs_cellSpursInitializeWithAttribute",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xAA6269A8, function-address slot 0x00856B98. Resolved SDK name: cellSpursInitializeWithAttribute. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A0AC",
+      "name": "TOD_import_cellSpurs_cellSpursCreateTasksetWithAttribute",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xC10931CB, function-address slot 0x00856B9C. Resolved SDK name: cellSpursCreateTasksetWithAttribute. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A0CC",
+      "name": "TOD_import_cellSpurs_cellSpursFinalize",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xCA4C4600, function-address slot 0x00856BA0. Resolved SDK name: cellSpursFinalize. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A2AC",
+      "name": "TOD_import_cellSpurs__cellSpursLFQueueInitialize",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x011EE38B, function-address slot 0x00856BA4. Resolved SDK name: _cellSpursLFQueueInitialize. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A2CC",
+      "name": "TOD_import_cellSpurs_cellSpursLFQueueAttachLv2EventQueue",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x1656D49F, function-address slot 0x00856BA8. Resolved SDK name: cellSpursLFQueueAttachLv2EventQueue. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A2EC",
+      "name": "TOD_import_cellSpurs_cellSpursRequestIdleSpu",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x182D9890, function-address slot 0x00856BAC. Resolved SDK name: cellSpursRequestIdleSpu. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A30C",
+      "name": "TOD_import_cellSpurs_cellSpursGetInfo",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x1F402F8F, function-address slot 0x00856BB0. Resolved SDK name: cellSpursGetInfo. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A32C",
+      "name": "TOD_import_cellSpurs_cellSpursWorkloadAttributeSetName",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x4A5EAB63, function-address slot 0x00856BB4. Resolved SDK name: cellSpursWorkloadAttributeSetName. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A34C",
+      "name": "TOD_import_cellSpurs_cellSpursDetachLv2EventQueue",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x4E66D483, function-address slot 0x00856BB8. Resolved SDK name: cellSpursDetachLv2EventQueue. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A36C",
+      "name": "TOD_import_cellSpurs_cellSpursRemoveWorkload",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x57E4DEC3, function-address slot 0x00856BBC. Resolved SDK name: cellSpursRemoveWorkload. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A38C",
+      "name": "TOD_import_cellSpurs_cellSpursWaitForWorkloadShutdown",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x5FD43FE4, function-address slot 0x00856BC0. Resolved SDK name: cellSpursWaitForWorkloadShutdown. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A3AC",
+      "name": "TOD_import_cellSpurs_cellSpursLFQueueDetachLv2EventQueue",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x73E06F91, function-address slot 0x00856BC4. Resolved SDK name: cellSpursLFQueueDetachLv2EventQueue. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A3CC",
+      "name": "TOD_import_cellSpurs_cellSpursSetPriorities",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x80A29E27, function-address slot 0x00856BC8. Resolved SDK name: cellSpursSetPriorities. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A3EC",
+      "name": "TOD_import_cellSpurs__cellSpursLFQueuePushBody",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x8A85674D, function-address slot 0x00856BCC. Resolved SDK name: _cellSpursLFQueuePushBody. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A40C",
+      "name": "TOD_import_cellSpurs_cellSpursShutdownWorkload",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0x98D5B343, function-address slot 0x00856BD0. Resolved SDK name: cellSpursShutdownWorkload. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A42C",
+      "name": "TOD_import_cellSpurs_cellSpursAttachLv2EventQueue",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xB9BC6207, function-address slot 0x00856BD4. Resolved SDK name: cellSpursAttachLv2EventQueue. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A44C",
+      "name": "TOD_import_cellSpurs_cellSpursCreateTask",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xBEB600AC, function-address slot 0x00856BD8. Resolved SDK name: cellSpursCreateTask. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A46C",
+      "name": "TOD_import_cellSpurs_cellSpursAddWorkloadWithAttribute",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xC0158D8B, function-address slot 0x00856BDC. Resolved SDK name: cellSpursAddWorkloadWithAttribute. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A48C",
+      "name": "TOD_import_cellSpurs_cellSpursSetExceptionEventHandler",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xD2E23FA9, function-address slot 0x00856BE0. Resolved SDK name: cellSpursSetExceptionEventHandler. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A4AC",
+      "name": "TOD_import_cellSpurs__cellSpursWorkloadAttributeInitialize",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xEFEB2679, function-address slot 0x00856BE4. Resolved SDK name: _cellSpursWorkloadAttributeInitialize. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083A4CC",
+      "name": "TOD_import_cellSpurs_cellSpursReadyCountStore",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSpurs import stub. NID 0xF843818D, function-address slot 0x00856BE8. Resolved SDK name: cellSpursReadyCountStore. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5A0; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    },
+    {
+      "va": "0x0083C5CC",
+      "name": "TOD_import_record_cellSync",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "2C0000010009000100000000000000000083C27C0083C45C00856BEC00000000000000000000000000000000",
+      "comment": "cellSync: 1 imported functions, no variable or TLS imports. NIDs at 0x0083C45C, function-address slots at 0x00856BEC.",
+      "evidence": "PS3 import descriptor at 0x0083C5CC; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083C27C",
+      "name": "TOD_import_module_cellSync",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "63656C6C53796E6300",
+      "comment": "Library name referenced by the confirmed PS3 import record at 0x0083C5CC.",
+      "evidence": "PS3 import descriptor at 0x0083C5CC; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp)."
+    },
+    {
+      "va": "0x0083A4EC",
+      "name": "TOD_import_cellSync_cellSyncLFQueueGetDirection",
+      "kind": "import_stub",
+      "confidence": "confirmed",
+      "bytes": "39800000658C0085",
+      "comment": "PS3 cellSync import stub. NID 0xD59AA307, function-address slot 0x00856BEC. Resolved SDK name: cellSyncLFQueueGetDirection. The implementation is external; this address is the local stub.",
+      "evidence": "PS3 import descriptor at 0x0083C5CC; layout matches RPCS3 ppu_prx_module_info (https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUModule.cpp). Name registered in https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSync.cpp; SHA-1(name + PS3 suffix) first four bytes interpreted little-endian equals this NID."
+    }
+  ],
+  "structures": [
+    {
+      "name": "TOD_PS3_FunctionDescriptor",
+      "size": "0x8",
+      "comment": "Confirmed descriptor layout in this ELF. All integers big-endian; code and TOC addresses are 32-bit despite ELF64 header.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "code_va",
+          "type": "u32",
+          "comment": "Instruction entry VA."
+        },
+        {
+          "offset": "0x4",
+          "name": "toc_va",
+          "type": "u32",
+          "comment": "r2 base for this function."
+        }
+      ]
+    },
+    {
+      "name": "TOD_SaveInventoryRecord_observed",
+      "size": "0x14",
+      "comment": "Observed European save layout, NOT yet mapped to an ELF global. Candidate member names are hypotheses; do not enable editing from this type alone.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "observed_id",
+          "type": "u32",
+          "comment": "Sequential IDs 0..31 in the sample."
+        },
+        {
+          "offset": "0x4",
+          "name": "candidate_xp",
+          "type": "f32",
+          "comment": "Candidate weapon experience, not yet proven."
+        },
+        {
+          "offset": "0x8",
+          "name": "candidate_ammo",
+          "type": "f32",
+          "comment": "Candidate ammo; supported by relative external RAM layout."
+        },
+        {
+          "offset": "0xC",
+          "name": "candidate_upgrade_mask",
+          "type": "u32",
+          "comment": "Candidate upgrade-node bitmask."
+        },
+        {
+          "offset": "0x10",
+          "name": "unknown_packed_state",
+          "type": "u8",
+          "count": 4,
+          "comment": "Observed 01 09 00 00 or 01 00 00 00; ownership/level semantics unverified."
+        }
+      ]
+    },
+    {
+      "name": "TOD_SaveGameplayRecord_observed",
+      "size": "0x9C",
+      "comment": "Observed 27 records at save offset 0x8764. Names do not prove progression/completion semantics. Not applied to ELF globals.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "location_ascii",
+          "type": "u8",
+          "count": 64,
+          "comment": "NUL-terminated location string and zero fill."
+        },
+        {
+          "offset": "0x40",
+          "name": "scenario_ascii",
+          "type": "u8",
+          "count": 64,
+          "comment": "NUL-terminated scenario string and zero fill."
+        },
+        {
+          "offset": "0x80",
+          "name": "unknown_numeric_tail",
+          "type": "u8",
+          "count": 28,
+          "comment": "Numeric state; preserve opaque until verified."
+        }
+      ]
+    },
+    {
+      "name": "TOD_PS3_ImportRecord",
+      "size": "0x2C",
+      "comment": "Confirmed PS3 import descriptor layout for nine records at 0x83C46C. Big-endian fields; matching RPCS3 ppu_prx_module_info.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "size",
+          "type": "u8",
+          "comment": "0x2C in all nine records."
+        },
+        {
+          "offset": "0x1",
+          "name": "unknown_01",
+          "type": "u8",
+          "comment": "Observed zero."
+        },
+        {
+          "offset": "0x2",
+          "name": "version",
+          "type": "u16",
+          "comment": "Observed 1."
+        },
+        {
+          "offset": "0x4",
+          "name": "attributes",
+          "type": "u16",
+          "comment": "Observed 9."
+        },
+        {
+          "offset": "0x6",
+          "name": "function_count",
+          "type": "u16",
+          "comment": "Imported function count."
+        },
+        {
+          "offset": "0x8",
+          "name": "variable_count",
+          "type": "u16",
+          "comment": "Observed zero."
+        },
+        {
+          "offset": "0xA",
+          "name": "tls_variable_count",
+          "type": "u16",
+          "comment": "Observed zero."
+        },
+        {
+          "offset": "0xC",
+          "name": "info_hash_bytes",
+          "type": "u8",
+          "count": 4,
+          "comment": "Info hash, TLS hash and two unknown bytes; zero here."
+        },
+        {
+          "offset": "0x10",
+          "name": "module_name_va",
+          "type": "u32",
+          "comment": "Pointer to ASCII library name."
+        },
+        {
+          "offset": "0x14",
+          "name": "function_nids_va",
+          "type": "u32",
+          "comment": "Pointer to uint32 NID array."
+        },
+        {
+          "offset": "0x18",
+          "name": "function_slots_va",
+          "type": "u32",
+          "comment": "Pointer to uint32 local-stub address array."
+        },
+        {
+          "offset": "0x1C",
+          "name": "variable_nids_va",
+          "type": "u32",
+          "comment": "Observed zero."
+        },
+        {
+          "offset": "0x20",
+          "name": "variable_stubs_va",
+          "type": "u32",
+          "comment": "Observed zero."
+        },
+        {
+          "offset": "0x24",
+          "name": "unknown_24",
+          "type": "u32",
+          "comment": "Observed zero."
+        },
+        {
+          "offset": "0x28",
+          "name": "unknown_28",
+          "type": "u32",
+          "comment": "Observed zero."
+        }
+      ]
+    },
+    {
+      "name": "TOD_SaveIOConfiguration_prefix_observed",
+      "size": "0xE0",
+      "comment": "Runtime I/O configuration PREFIX observed in 0x35E2C8, not GAME.SAV contents and not the full object. No automatic ELF-global application.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "unknown_prefix",
+          "type": "u8",
+          "count": 192,
+          "comment": "Includes a 16-byte opaque value at +0x60 and filename GAME.SAV at +0x70; internals not fully mapped."
+        },
+        {
+          "offset": "0xC0",
+          "name": "work_buffer_va",
+          "type": "u32",
+          "comment": "Initialized to object +0x108."
+        },
+        {
+          "offset": "0xC4",
+          "name": "work_buffer_size",
+          "type": "u32",
+          "comment": "Initialized to 0x800."
+        },
+        {
+          "offset": "0xC8",
+          "name": "unknown_limit_c8",
+          "type": "u32",
+          "comment": "Initialized to 0x20; purpose not established."
+        },
+        {
+          "offset": "0xCC",
+          "name": "unknown_limit_cc",
+          "type": "u32",
+          "comment": "Initialized to 0x20; purpose not established."
+        },
+        {
+          "offset": "0xD0",
+          "name": "aux_buffer_va",
+          "type": "u32",
+          "comment": "Initialized to object +0x908."
+        },
+        {
+          "offset": "0xD4",
+          "name": "aux_buffer_size",
+          "type": "u32",
+          "comment": "Initialized to 0x1F400."
+        },
+        {
+          "offset": "0xD8",
+          "name": "game_buffer_va",
+          "type": "u32",
+          "comment": "Initialized to object +0x1FD08."
+        },
+        {
+          "offset": "0xDC",
+          "name": "game_buffer_size",
+          "type": "u32",
+          "comment": "Initialized to 0x906F0; matches supplied GAME.SAV length."
+        }
+      ]
+    }
+  ],
+  "save_regions": [
+    {
+      "start": "0x0",
+      "end_exclusive": "0x280",
+      "confidence": "observed",
+      "comment": "32 inventory records, stride 0x14."
+    },
+    {
+      "start": "0x280",
+      "end_exclusive": "0x41C",
+      "confidence": "candidate",
+      "comment": "Unknown integer lists, flags and sentinels; possible inventory ordering/unlocks."
+    },
+    {
+      "start": "0x41C",
+      "end_exclusive": "0x420",
+      "confidence": "confirmed",
+      "comment": "Existing editor bolts offset; uint32 BE. Not yet independently traced to ELF serialization."
+    },
+    {
+      "start": "0x420",
+      "end_exclusive": "0x424",
+      "confidence": "confirmed",
+      "comment": "Existing editor raritanium offset; uint32 BE. Not yet independently traced to ELF serialization."
+    },
+    {
+      "start": "0x424",
+      "end_exclusive": "0x428",
+      "confidence": "observed",
+      "comment": "Unknown uint32, sample value 32."
+    },
+    {
+      "start": "0x428",
+      "end_exclusive": "0x42C",
+      "confidence": "candidate",
+      "comment": "Candidate float32 bolt multiplier, sample value 8.0."
+    },
+    {
+      "start": "0x42C",
+      "end_exclusive": "0x8764",
+      "confidence": "observed",
+      "comment": "Unmapped game state; not padding."
+    },
+    {
+      "start": "0x8764",
+      "end_exclusive": "0x97D8",
+      "confidence": "observed",
+      "comment": "27 named gameplay records, stride 0x9C."
+    },
+    {
+      "start": "0x97D8",
+      "end_exclusive": "0x906F0",
+      "confidence": "observed",
+      "comment": "Sparse binary world state; not proven padding."
+    }
+  ],
+  "library_imports": [
+    {
+      "function_count": 19,
+      "module": "sysPrxForUser",
+      "record_bytes": "2C0000010009001300000000000000000083C1FC0083C28800856C4800000000000000000000000000000000",
+      "name_va": "0x0083C1FC",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x1573DC3F",
+          "stub_va": "0x0083964C",
+          "name": null,
+          "slot_va": "0x00856C48",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x1BC200F4",
+          "stub_va": "0x0083966C",
+          "name": null,
+          "slot_va": "0x00856C4C",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x24A1EA07",
+          "stub_va": "0x0083968C",
+          "name": null,
+          "slot_va": "0x00856C50",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x2C847572",
+          "stub_va": "0x008396AC",
+          "name": "_sys_process_atexitspawn",
+          "slot_va": "0x00856C54",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/sysPrxForUser.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x2F85C0EF",
+          "stub_va": "0x008396CC",
+          "name": null,
+          "slot_va": "0x00856C58",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x409AD939",
+          "stub_va": "0x008396EC",
+          "name": null,
+          "slot_va": "0x00856C5C",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4643BA6E",
+          "stub_va": "0x0083970C",
+          "name": null,
+          "slot_va": "0x00856C60",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x744680A2",
+          "stub_va": "0x0083972C",
+          "name": null,
+          "slot_va": "0x00856C64",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x8461E528",
+          "stub_va": "0x0083974C",
+          "name": "sys_time_get_system_time",
+          "slot_va": "0x00856C68",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/sysPrxForUser.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xA2C7BA64",
+          "stub_va": "0x0083976C",
+          "name": null,
+          "slot_va": "0x00856C6C",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xAFF080A4",
+          "stub_va": "0x0083978C",
+          "name": null,
+          "slot_va": "0x00856C70",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xB257540B",
+          "stub_va": "0x008397AC",
+          "name": null,
+          "slot_va": "0x00856C74",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xC3476D0C",
+          "stub_va": "0x008397CC",
+          "name": null,
+          "slot_va": "0x00856C78",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xDC578057",
+          "stub_va": "0x008397EC",
+          "name": null,
+          "slot_va": "0x00856C7C",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xE6F2C1E7",
+          "stub_va": "0x0083980C",
+          "name": "sys_process_exit",
+          "slot_va": "0x00856C80",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/sysPrxForUser.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xFC52A7A9",
+          "stub_va": "0x0083982C",
+          "name": null,
+          "slot_va": "0x00856C84",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x350D454E",
+          "stub_va": "0x0083A0EC",
+          "name": null,
+          "slot_va": "0x00856C88",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4F7172C9",
+          "stub_va": "0x0083A10C",
+          "name": "sys_process_is_stack",
+          "slot_va": "0x00856C8C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/sysPrxForUser.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xAEB78725",
+          "stub_va": "0x0083A12C",
+          "name": null,
+          "slot_va": "0x00856C90",
+          "source": null
+        }
+      ],
+      "nids_va": "0x0083C288",
+      "record_va": "0x0083C46C",
+      "slots_va": "0x00856C48"
+    },
+    {
+      "function_count": 14,
+      "module": "sys_fs",
+      "record_bytes": "2C0000010009000E00000000000000000083C2100083C2D400856C9400000000000000000000000000000000",
+      "name_va": "0x0083C210",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x2CB51F0D",
+          "stub_va": "0x0083984C",
+          "name": "cellFsClose",
+          "slot_va": "0x00856C94",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4D5FF8E2",
+          "stub_va": "0x0083986C",
+          "name": "cellFsRead",
+          "slot_va": "0x00856C98",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x718BF5F8",
+          "stub_va": "0x0083988C",
+          "name": "cellFsOpen",
+          "slot_va": "0x00856C9C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x7DE6DCED",
+          "stub_va": "0x008398AC",
+          "name": "cellFsStat",
+          "slot_va": "0x00856CA0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x7F4677A8",
+          "stub_va": "0x008398CC",
+          "name": "cellFsUnlink",
+          "slot_va": "0x00856CA4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xBA901FE6",
+          "stub_va": "0x008398EC",
+          "name": "cellFsMkdir",
+          "slot_va": "0x00856CA8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xECDCF2AB",
+          "stub_va": "0x0083990C",
+          "name": "cellFsWrite",
+          "slot_va": "0x00856CAC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xEF3EFA34",
+          "stub_va": "0x0083992C",
+          "name": "cellFsFstat",
+          "slot_va": "0x00856CB0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x2796FDF3",
+          "stub_va": "0x0083A14C",
+          "name": "cellFsRmdir",
+          "slot_va": "0x00856CB4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x3F61245C",
+          "stub_va": "0x0083A16C",
+          "name": "cellFsOpendir",
+          "slot_va": "0x00856CB8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x5C74903D",
+          "stub_va": "0x0083A18C",
+          "name": "cellFsReaddir",
+          "slot_va": "0x00856CBC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x967A162B",
+          "stub_va": "0x0083A1AC",
+          "name": "cellFsFsync",
+          "slot_va": "0x00856CC0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xA397D042",
+          "stub_va": "0x0083A1CC",
+          "name": "cellFsLseek",
+          "slot_va": "0x00856CC4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xFF42DCC3",
+          "stub_va": "0x0083A1EC",
+          "name": "cellFsClosedir",
+          "slot_va": "0x00856CC8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellFs.cpp"
+        }
+      ],
+      "nids_va": "0x0083C2D4",
+      "record_va": "0x0083C498",
+      "slots_va": "0x00856C94"
+    },
+    {
+      "function_count": 9,
+      "module": "sys_io",
+      "record_bytes": "2C0000010009000900000000000000000083C21C0083C30C00856CCC00000000000000000000000000000000",
+      "name_va": "0x0083C21C",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x0E2DFAAD",
+          "stub_va": "0x0083994C",
+          "name": "cellPadInfoPressMode",
+          "slot_va": "0x00856CCC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x1CF98800",
+          "stub_va": "0x0083996C",
+          "name": "cellPadInit",
+          "slot_va": "0x00856CD0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x3AAAD464",
+          "stub_va": "0x0083998C",
+          "name": "cellPadGetInfo",
+          "slot_va": "0x00856CD4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4D9B75D5",
+          "stub_va": "0x008399AC",
+          "name": "cellPadEnd",
+          "slot_va": "0x00856CD8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x78200559",
+          "stub_va": "0x008399CC",
+          "name": "cellPadInfoSensorMode",
+          "slot_va": "0x00856CDC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x8B72CDA1",
+          "stub_va": "0x008399EC",
+          "name": "cellPadGetData",
+          "slot_va": "0x00856CE0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xBE5BE3BA",
+          "stub_va": "0x00839A0C",
+          "name": "cellPadSetSensorMode",
+          "slot_va": "0x00856CE4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xF65544EE",
+          "stub_va": "0x00839A2C",
+          "name": "cellPadSetActDirect",
+          "slot_va": "0x00856CE8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xF83F8182",
+          "stub_va": "0x00839A4C",
+          "name": "cellPadSetPressMode",
+          "slot_va": "0x00856CEC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellPad.cpp"
+        }
+      ],
+      "nids_va": "0x0083C30C",
+      "record_va": "0x0083C4C4",
+      "slots_va": "0x00856CCC"
+    },
+    {
+      "function_count": 15,
+      "module": "cellGcmSys",
+      "record_bytes": "2C0000010009000F00000000000000000083C2280083C33000856B3400000000000000000000000000000000",
+      "name_va": "0x0083C228",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x055BD74D",
+          "stub_va": "0x00839A6C",
+          "name": "cellGcmGetTiledPitchSize",
+          "slot_va": "0x00856B34",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x15BAE46B",
+          "stub_va": "0x00839A8C",
+          "name": "_cellGcmInitBody",
+          "slot_va": "0x00856B38",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x21AC3697",
+          "stub_va": "0x00839AAC",
+          "name": "cellGcmAddressToOffset",
+          "slot_va": "0x00856B3C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x3A33C1FD",
+          "stub_va": "0x00839ACC",
+          "name": "_cellGcmFunc15",
+          "slot_va": "0x00856B40",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4AE8D215",
+          "stub_va": "0x00839AEC",
+          "name": "cellGcmSetFlipMode",
+          "slot_va": "0x00856B44",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x63441CB4",
+          "stub_va": "0x00839B0C",
+          "name": "cellGcmMapEaIoAddress",
+          "slot_va": "0x00856B48",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x983FB9AA",
+          "stub_va": "0x00839B2C",
+          "name": "cellGcmSetWaitFlip",
+          "slot_va": "0x00856B4C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xA53D12AE",
+          "stub_va": "0x00839B4C",
+          "name": "cellGcmSetDisplayBuffer",
+          "slot_va": "0x00856B50",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xA547ADDE",
+          "stub_va": "0x00839B6C",
+          "name": "cellGcmGetControlRegister",
+          "slot_va": "0x00856B54",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xA91B0402",
+          "stub_va": "0x00839B8C",
+          "name": "cellGcmSetVBlankHandler",
+          "slot_va": "0x00856B58",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xD0B1D189",
+          "stub_va": "0x00839BAC",
+          "name": "cellGcmSetTile",
+          "slot_va": "0x00856B5C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xD34A420D",
+          "stub_va": "0x00839BCC",
+          "name": "cellGcmSetZcull",
+          "slot_va": "0x00856B60",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xDC09357E",
+          "stub_va": "0x00839BEC",
+          "name": "cellGcmSetFlip",
+          "slot_va": "0x00856B64",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xE315A0B2",
+          "stub_va": "0x00839C0C",
+          "name": "cellGcmGetConfiguration",
+          "slot_va": "0x00856B68",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xF80196C1",
+          "stub_va": "0x00839C2C",
+          "name": "cellGcmGetLabelAddress",
+          "slot_va": "0x00856B6C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGcmSys.cpp"
+        }
+      ],
+      "nids_va": "0x0083C330",
+      "record_va": "0x0083C4F0",
+      "slots_va": "0x00856B34"
+    },
+    {
+      "function_count": 7,
+      "module": "cellAudio",
+      "record_bytes": "2C0000010009000700000000000000000083C2380083C36C00856B1800000000000000000000000000000000",
+      "name_va": "0x0083C238",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x0B168F92",
+          "stub_va": "0x00839C4C",
+          "name": "cellAudioInit",
+          "slot_va": "0x00856B18",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xCA5AC370",
+          "stub_va": "0x00839C6C",
+          "name": "cellAudioQuit",
+          "slot_va": "0x00856B1C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4129FE2D",
+          "stub_va": "0x0083A20C",
+          "name": "cellAudioPortClose",
+          "slot_va": "0x00856B20",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x5B1E2C73",
+          "stub_va": "0x0083A22C",
+          "name": "cellAudioPortStop",
+          "slot_va": "0x00856B24",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x74A66AF0",
+          "stub_va": "0x0083A24C",
+          "name": "cellAudioGetPortConfig",
+          "slot_va": "0x00856B28",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x89BE28F2",
+          "stub_va": "0x0083A26C",
+          "name": "cellAudioPortStart",
+          "slot_va": "0x00856B2C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xCD7BC431",
+          "stub_va": "0x0083A28C",
+          "name": "cellAudioPortOpen",
+          "slot_va": "0x00856B30",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellAudio.cpp"
+        }
+      ],
+      "nids_va": "0x0083C36C",
+      "record_va": "0x0083C51C",
+      "slots_va": "0x00856B18"
+    },
+    {
+      "function_count": 19,
+      "module": "cellSysutil",
+      "record_bytes": "2C0000010009001300000000000000000083C2480083C38800856BFC00000000000000000000000000000000",
+      "name_va": "0x0083C248",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x0BAE8772",
+          "stub_va": "0x00839C8C",
+          "name": "cellVideoOutConfigure",
+          "slot_va": "0x00856BFC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellVideoOut.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x189A74DA",
+          "stub_va": "0x00839CAC",
+          "name": "cellSysutilCheckCallback",
+          "slot_va": "0x00856C00",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysutil.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x1DFBFDD6",
+          "stub_va": "0x00839CCC",
+          "name": "cellSaveDataListLoad2",
+          "slot_va": "0x00856C04",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x1E7BFF94",
+          "stub_va": "0x00839CEC",
+          "name": null,
+          "slot_va": "0x00856C08",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x21425307",
+          "stub_va": "0x00839D0C",
+          "name": "cellSaveDataListAutoLoad",
+          "slot_va": "0x00856C0C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x2DE0D663",
+          "stub_va": "0x00839D2C",
+          "name": "cellSaveDataListSave2",
+          "slot_va": "0x00856C10",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x40E895D3",
+          "stub_va": "0x00839D4C",
+          "name": "cellSysutilGetSystemParamInt",
+          "slot_va": "0x00856C14",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysutil.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4692AB35",
+          "stub_va": "0x00839D6C",
+          "name": null,
+          "slot_va": "0x00856C18",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4DD03A4E",
+          "stub_va": "0x00839D8C",
+          "name": "cellSaveDataListAutoSave",
+          "slot_va": "0x00856C1C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x744C1544",
+          "stub_va": "0x00839DAC",
+          "name": null,
+          "slot_va": "0x00856C20",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x887572D5",
+          "stub_va": "0x00839DCC",
+          "name": "cellVideoOutGetState",
+          "slot_va": "0x00856C24",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellVideoOut.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x9D98AFA0",
+          "stub_va": "0x00839DEC",
+          "name": "cellSysutilRegisterCallback",
+          "slot_va": "0x00856C28",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysutil.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xA322DB75",
+          "stub_va": "0x00839E0C",
+          "name": "cellVideoOutGetResolutionAvailability",
+          "slot_va": "0x00856C2C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellVideoOut.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xB72BC4E6",
+          "stub_va": "0x00839E2C",
+          "name": "cellDiscGameGetBootDiscInfo",
+          "slot_va": "0x00856C30",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGame.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xC01B4E7C",
+          "stub_va": "0x00839E4C",
+          "name": null,
+          "slot_va": "0x00856C34",
+          "source": null
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xC9645C41",
+          "stub_va": "0x00839E6C",
+          "name": "cellGameDataCheckCreate2",
+          "slot_va": "0x00856C38",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGame.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xE558748D",
+          "stub_va": "0x00839E8C",
+          "name": "cellVideoOutGetResolution",
+          "slot_va": "0x00856C3C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellVideoOut.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xE7951DEE",
+          "stub_va": "0x00839EAC",
+          "name": "cellGameDataCheckCreate",
+          "slot_va": "0x00856C40",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellGame.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xEDADD797",
+          "stub_va": "0x00839ECC",
+          "name": "cellSaveDataDelete2",
+          "slot_va": "0x00856C44",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSaveData.cpp"
+        }
+      ],
+      "nids_va": "0x0083C388",
+      "record_va": "0x0083C548",
+      "slots_va": "0x00856BFC"
+    },
+    {
+      "function_count": 3,
+      "module": "cellSysmodule",
+      "record_bytes": "2C0000010009000300000000000000000083C2580083C3D400856BF000000000000000000000000000000000",
+      "name_va": "0x0083C258",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x112A5EE9",
+          "stub_va": "0x00839EEC",
+          "name": "cellSysmoduleUnloadModule",
+          "slot_va": "0x00856BF0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysmodule.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x32267A31",
+          "stub_va": "0x00839F0C",
+          "name": "cellSysmoduleLoadModule",
+          "slot_va": "0x00856BF4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysmodule.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x63FF6FF9",
+          "stub_va": "0x00839F2C",
+          "name": "cellSysmoduleInitialize",
+          "slot_va": "0x00856BF8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSysmodule.cpp"
+        }
+      ],
+      "nids_va": "0x0083C3D4",
+      "record_va": "0x0083C574",
+      "slots_va": "0x00856BF0"
+    },
+    {
+      "function_count": 31,
+      "module": "cellSpurs",
+      "record_bytes": "2C0000010009001F00000000000000000083C26C0083C3E000856B7000000000000000000000000000000000",
+      "name_va": "0x0083C26C",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x16394A4E",
+          "stub_va": "0x00839F4C",
+          "name": "_cellSpursTasksetAttributeInitialize",
+          "slot_va": "0x00856B70",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x22AAB31D",
+          "stub_va": "0x00839F6C",
+          "name": "cellSpursEventFlagDetachLv2EventQueue",
+          "slot_va": "0x00856B74",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x373523D4",
+          "stub_va": "0x00839F8C",
+          "name": "cellSpursEventFlagWait",
+          "slot_va": "0x00856B78",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4AC7BAE4",
+          "stub_va": "0x00839FAC",
+          "name": "cellSpursEventFlagClear",
+          "slot_va": "0x00856B7C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x5EF96465",
+          "stub_va": "0x00839FCC",
+          "name": "_cellSpursEventFlagInitialize",
+          "slot_va": "0x00856B80",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x652B70E2",
+          "stub_va": "0x00839FEC",
+          "name": "cellSpursTasksetAttributeSetName",
+          "slot_va": "0x00856B84",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x87630976",
+          "stub_va": "0x0083A00C",
+          "name": "cellSpursEventFlagAttachLv2EventQueue",
+          "slot_va": "0x00856B88",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x95180230",
+          "stub_va": "0x0083A02C",
+          "name": "_cellSpursAttributeInitialize",
+          "slot_va": "0x00856B8C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x9F72ADD3",
+          "stub_va": "0x0083A04C",
+          "name": "cellSpursJoinTaskset",
+          "slot_va": "0x00856B90",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xA789E631",
+          "stub_va": "0x0083A06C",
+          "name": "cellSpursShutdownTaskset",
+          "slot_va": "0x00856B94",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xAA6269A8",
+          "stub_va": "0x0083A08C",
+          "name": "cellSpursInitializeWithAttribute",
+          "slot_va": "0x00856B98",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xC10931CB",
+          "stub_va": "0x0083A0AC",
+          "name": "cellSpursCreateTasksetWithAttribute",
+          "slot_va": "0x00856B9C",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xCA4C4600",
+          "stub_va": "0x0083A0CC",
+          "name": "cellSpursFinalize",
+          "slot_va": "0x00856BA0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x011EE38B",
+          "stub_va": "0x0083A2AC",
+          "name": "_cellSpursLFQueueInitialize",
+          "slot_va": "0x00856BA4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x1656D49F",
+          "stub_va": "0x0083A2CC",
+          "name": "cellSpursLFQueueAttachLv2EventQueue",
+          "slot_va": "0x00856BA8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x182D9890",
+          "stub_va": "0x0083A2EC",
+          "name": "cellSpursRequestIdleSpu",
+          "slot_va": "0x00856BAC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x1F402F8F",
+          "stub_va": "0x0083A30C",
+          "name": "cellSpursGetInfo",
+          "slot_va": "0x00856BB0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4A5EAB63",
+          "stub_va": "0x0083A32C",
+          "name": "cellSpursWorkloadAttributeSetName",
+          "slot_va": "0x00856BB4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x4E66D483",
+          "stub_va": "0x0083A34C",
+          "name": "cellSpursDetachLv2EventQueue",
+          "slot_va": "0x00856BB8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x57E4DEC3",
+          "stub_va": "0x0083A36C",
+          "name": "cellSpursRemoveWorkload",
+          "slot_va": "0x00856BBC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x5FD43FE4",
+          "stub_va": "0x0083A38C",
+          "name": "cellSpursWaitForWorkloadShutdown",
+          "slot_va": "0x00856BC0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x73E06F91",
+          "stub_va": "0x0083A3AC",
+          "name": "cellSpursLFQueueDetachLv2EventQueue",
+          "slot_va": "0x00856BC4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x80A29E27",
+          "stub_va": "0x0083A3CC",
+          "name": "cellSpursSetPriorities",
+          "slot_va": "0x00856BC8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x8A85674D",
+          "stub_va": "0x0083A3EC",
+          "name": "_cellSpursLFQueuePushBody",
+          "slot_va": "0x00856BCC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0x98D5B343",
+          "stub_va": "0x0083A40C",
+          "name": "cellSpursShutdownWorkload",
+          "slot_va": "0x00856BD0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xB9BC6207",
+          "stub_va": "0x0083A42C",
+          "name": "cellSpursAttachLv2EventQueue",
+          "slot_va": "0x00856BD4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xBEB600AC",
+          "stub_va": "0x0083A44C",
+          "name": "cellSpursCreateTask",
+          "slot_va": "0x00856BD8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xC0158D8B",
+          "stub_va": "0x0083A46C",
+          "name": "cellSpursAddWorkloadWithAttribute",
+          "slot_va": "0x00856BDC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xD2E23FA9",
+          "stub_va": "0x0083A48C",
+          "name": "cellSpursSetExceptionEventHandler",
+          "slot_va": "0x00856BE0",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xEFEB2679",
+          "stub_va": "0x0083A4AC",
+          "name": "_cellSpursWorkloadAttributeInitialize",
+          "slot_va": "0x00856BE4",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        },
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xF843818D",
+          "stub_va": "0x0083A4CC",
+          "name": "cellSpursReadyCountStore",
+          "slot_va": "0x00856BE8",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSpurs.cpp"
+        }
+      ],
+      "nids_va": "0x0083C3E0",
+      "record_va": "0x0083C5A0",
+      "slots_va": "0x00856B70"
+    },
+    {
+      "function_count": 1,
+      "module": "cellSync",
+      "record_bytes": "2C0000010009000100000000000000000083C27C0083C45C00856BEC00000000000000000000000000000000",
+      "name_va": "0x0083C27C",
+      "functions": [
+        {
+          "bytes": "39800000658C0085",
+          "nid": "0xD59AA307",
+          "stub_va": "0x0083A4EC",
+          "name": "cellSyncLFQueueGetDirection",
+          "slot_va": "0x00856BEC",
+          "source": "https://raw.githubusercontent.com/RPCS3/rpcs3/master/rpcs3/Emu/Cell/Modules/cellSync.cpp"
+        }
+      ],
+      "nids_va": "0x0083C45C",
+      "record_va": "0x0083C5CC",
+      "slots_va": "0x00856BEC"
+    }
+  ]
+}

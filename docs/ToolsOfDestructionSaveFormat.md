@@ -209,6 +209,8 @@ Run the reference-specific checks with `./Tests/TestTodSaveInspector.ps1 -Source
 
 ## Next fields to verify
 
+Executable research is recorded separately in the [Tools of Destruction ELF map](ToolsOfDestructionElfMap.md), with a shared JSON address map and IDA/Ghidra importers. The USA v02.00 setup routine at ELF VA `0x35E2C8` initializes a `GAME.SAV` buffer of `0x906F0` bytes, matching this sample's length. These are runtime object fields, not a newly identified on-disk header. Save-field semantics below remain candidates until serialization or gameplay evidence verifies them.
+
 Collect paired saves with exactly one intentional change, using copies rather than the only original. Autosave time and unrelated engine state can still change, so repeated pairs are needed.
 
 | Controlled change | Candidate offsets or region | Question |
