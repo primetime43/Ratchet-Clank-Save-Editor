@@ -444,6 +444,12 @@ python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodSettings.py --elf
 
 ## Runtime validation and remaining fields
 
+### Global event bitset
+
+Exact USA code establishes **five BE64 words at `0x5528–0x5550`**, end exclusive. Two separate registrations agree on292 named IDs0..291; `GLOBAL_FLAG_COUNT292` is a sentinel and bits292..319 remain unknown. Bit ID selects integer bit `id%64` in word `floor(id/64)`: file byte is `5528+8*floor(id/64)+7-floor((id%64)/8)`, mask `1<<(id%8)`. Native check/set/clear leaves share this saved region and do not enforce the enum-count bound. All five words are zero in the supplied USA snapshot.
+
+Names include story/tutorial/movie events and equipment-event bits. Acquisition specifically sets ID10 `HERO_HAS_TWO_ITEMS` when its qualifying owned-item class count exceeds1; this is an event bit, not a continuously maintained inventory predicate. Arena story flags74/75 are distinct from the numeric win counters at56D8. See [global flag evidence](BCUS98127/v02.00/ElfMap.md#global-event-flags-named-story-tutorial-movie-and-equipment-bits) for native addresses, source-script consumers and the complete catalog. The app's read-only **Global event flags** view preserves all320 physical bits in Technical mode. Clear does not universally mean unfinished; no new editing controls are enabled.
+
 ### Arena challenge counters
 
 Exact USA ELF evidence establishes **23 BE32 words at `0x56D8–0x5734` (end exclusive)**, indexed by direct native ID. ID0 is INVALID; IDs1..22 are the named `IFF_` challenges. Getter sign-extension and wrapping increments are preserved; unusual negative values are not normalized. The following **eight words `0x5734–0x5754` are a separate unknown array**, not a24th challenge or proven failure counts. All31 words are zero in the supplied USA snapshot.
@@ -470,6 +476,7 @@ Collect paired saves with exactly one intentional change, using copies rather th
 | Complete one scenario | `0x8764–0x97D8` and later state | Distinguish statistics from actual progression |
 | Change only one option | `0x114A8–0x114D8` | Verify persisted options and reset/restore timing; retain unknown word/tail |
 | Win one named arena challenge | `0x56D8+4*nativeId`, `0x41C`, inventory/quick-select state | Verify the direct counter and currency/weapon transaction together; runtime menu order is not native ID order |
+| Trigger one named tutorial/story/equipment event | Five BE64 words `0x5528–0x5550` | Verify the corresponding global flag and its script/reset dependencies independently of inventory, arena counters and per-level flags |
 | Move, save, reload | `0x906E8`, `0x8740` and unmapped persisted state | Verify load-selection updates; find any persisted checkpoint/position linkage separately from runtime object |
 
 Do not expose speculative fields in the editor until their meaning, bounds, dependencies and in-game load behavior are verified. No internal game checksum algorithm has been established for this sample.

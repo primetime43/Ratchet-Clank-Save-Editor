@@ -36,6 +36,38 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Global event flags preserve BE64 ordering, all320 physical bits and detached input", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            int[] set = { 0, 7, 8, 10, 63, 64, 127, 128, 191, 192, 255, 256, 291, 292, 319 };
+            foreach (int id in set)
+            {
+                int offset = 0x5528 + id / 64 * 8;
+                ulong word = BinaryPrimitives.ReadUInt64BigEndian(bytes.AsSpan(offset, 8)) | (1UL << (id % 64));
+                BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(offset, 8), word);
+            }
+            Array.Fill(bytes, (byte)255, 0x5550, 8);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var raw = inspection.Table("Global event flags");
+            Equal(320, raw.Rows.Count);
+            Equal(8, raw.Columns.Length);
+            for (int id = 0; id < 320; id++) Equal(set.Contains(id) ? "Set" : "Clear", raw.Rows[id].Cells[3]);
+            Equal("0x552F", raw.Rows[0].Cells[4]);
+            Equal("0x5528", raw.Rows[63].Cells[4]);
+            Equal("0x5537", raw.Rows[64].Cells[4]);
+            Equal("HERO_HAS_TWO_ITEMS", raw.Rows[10].Cells[1]);
+            Equal("UNMAPPED_BIT_292", raw.Rows[292].Cells[1]);
+            Equal("8000001800000001", raw.Rows[319].Cells[7]);
+            var friendly = InspectionPresentation.Simplify("Global event flags", raw);
+            Equal(292, friendly.Rows.Count);
+            Equal(3, friendly.Columns.Length);
+            Equal("Set", friendly.Rows[10].Cells[2]);
+            True(friendly.Rows[10].Details.Contains("not a story-completion checklist"), "Recorded flags must not become an unsupported completion verdict.");
+            True(bytes.SequenceEqual(before), "Flag viewing must not modify input.");
+            Array.Clear(bytes);
+            Equal("Set", inspection.Table("Global event flags").Rows[319].Cells[3]);
+        });
         Check("Arena successes use23 direct-ID counters, not24 menu slots, and preserve signed raw values", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -110,7 +142,8 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(829, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1137, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
             Equal(13, TodResearch.Map.GetProperty("bonuses").GetProperty("blueprints").GetProperty("all_grant_ids").GetArrayLength());
@@ -639,6 +672,13 @@ internal static partial class Program
             Equal(23, arena.Rows.Count);
             for (int id = 0; id < 23; id++)
                 Equal(BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(0x56D8 + id * 4, 4)).ToString(), arena.Rows[id].Cells[3]);
+            var events = inspection.Table("Global event flags");
+            Equal(320, events.Rows.Count);
+            for (int id = 0; id < 320; id++)
+            {
+                ulong word = BinaryPrimitives.ReadUInt64BigEndian(bytes.AsSpan(0x5528 + id / 64 * 8, 8));
+                Equal((word & (1UL << (id % 64))) != 0 ? "Set" : "Clear", events.Rows[id].Cells[3]);
+            }
             if (Convert.ToHexString(SHA256.HashData(bytes)) == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463")
             {
                 Equal(19, blocks.Rows.Count(row => row.Cells[1] == "Yes"));
@@ -686,7 +726,7 @@ internal static partial class Program
             form.ClientSize = new Size(900, 620);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-minimum-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Arena challenges", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Global event flags", "Arena challenges", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));

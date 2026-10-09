@@ -30,7 +30,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
                 "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9,
                 "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 8,
-                "Game settings" => 5, "Arena challenges" => 7, _ => 0
+                "Game settings" => 5, "Arena challenges" => 7, "Global event flags" => 8, _ => 0
             };
             if (expected == 0 || source.Columns.Length != expected) return source;
 
@@ -50,6 +50,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Counters & nearby fields" => new[] { "Information", "Value" },
                 "Game settings" => new[] { "Setting", "Value" },
                 "Arena challenges" => new[] { "Challenge (config description)", "Recorded wins", "Base bolts (shipped)" },
+                "Global event flags" => new[] { "Group", "Event flag (native name)", "Recorded bit" },
                 "Gameplay records" => new[] { "Location", "Saved record" },
                 "Save regions" => new[] { "Section", "Size", "Understanding" },
                 _ => new[] { "File", "Information", "Value" }
@@ -70,6 +71,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Stored state blocks" => "Bounded native-format RLE inspection, not a planet/completion map. Select a row for decoded hash, byte histogram, clipping and header evidence.",
                     "Game settings" => "Saved options, read-only. Percentages are display conversions of volume floats, not measured audio loudness. Technical retains unknown fields and exact raw bytes.",
                     "Arena challenges" => "Read-only recorded wins, not current arena availability. Descriptions are shipped config comments; base bolts are not a live payout quote. Technical retains the reserved ID0 and exact bits.",
+                    "Global event flags" => "Recorded bits, not a story-completion checklist: Clear does not necessarily mean unfinished. Labels are formatted native identifiers; Technical preserves the28 unnamed tail bits and exact BE64 words.",
                     "World progress" => "Saved flags/counters only, not a completion percentage or current travel eligibility. Labels are formatted native identifiers.",
                     "Quick select" => "Stored indices, not a proven wheel order. Automatic insertion searches only the first24 of32 slots.",
                     "Objects & equipment" => "Native object counters, not weapon IDs. Select a row for its high-water count and positive-addition counter; timer/arena units are unverified.",
@@ -92,6 +94,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x458 or 0x480 or 0x8708 or 0x8740 or 0x906E8;
             if (view == "Game settings") return !c[3].StartsWith("unmapped", StringComparison.Ordinal);
             if (view == "Arena challenges") return c[0] != "0";
+            if (view == "Global event flags") return c[2] != "Unmapped";
             if (view == "Blueprints") return c[1] == "Yes" || c[2] == "Yes";
             if (view != "Files & headers") return true;
             return c[2] is "Length" or "Dimensions" or "Inspection unavailable" ||
@@ -116,6 +119,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Counters & nearby fields" => Summary(c),
             "Game settings" => new[] { c[0], c[1] },
             "Arena challenges" => new[] { c[2], c[3], c[4] },
+            "Global event flags" => new[] { c[2], Label(c[1], c[1].StartsWith("LVL_", StringComparison.Ordinal) ? "LVL_" : c[1].StartsWith("HERO_", StringComparison.Ordinal) ? "HERO_" : c[1].StartsWith("MOVIE_", StringComparison.Ordinal) ? "MOVIE_" : ""), c[3] },
             "Gameplay records" => new[] { Label(c[1]), Label(c[2], "gameplay_") },
             "Save regions" => Region(c),
             _ => new[] { c[0], MetadataLabel(c[2]), c[2] == "Length" ? c[3].Split(" (0x", StringSplitOptions.None)[0] : c[3] }

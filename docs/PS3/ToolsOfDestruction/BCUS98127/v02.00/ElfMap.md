@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 829 annotations, 118 imports, evidence, byte signatures and 23 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1137 annotations, 118 imports, evidence, byte signatures and 24 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -189,7 +189,7 @@ The JSON `serialization` section records the state/copy chain, field offsets and
 | Function or field | Established behavior |
 | --- | --- |
 | `0x466A60` | Initializes exactly **32** records, IDs 0–31, stride `0x14`, then clears word `+0x280`. The count is now code-backed, not merely an observed sample pattern. |
-| `0x466B70` | Acquisition helper: can refill ammo according to item-definition flags; on a previously unowned item, sets record `+0x10` to 1, delegates XP/level initialization, increments word `+0x280`, and can set an additional item-class bit in state `+0x5528`. |
+| `0x466B70` | Acquisition helper: can refill ammo according to item-definition flags; on a previously unowned item, sets record `+0x10` to 1, delegates XP/level initialization, increments word `+0x280`, and can set global flag10 `HERO_HAS_TWO_ITEMS` in the BE64 word at `+0x5528`. This event flag is not a continuously maintained item-count predicate. |
 | `0x466AE8` | For an owned record, delegates XP/ammo resets, clears `+0x10` and decrements word `+0x280`. |
 | `0x465DC0` | Absolute ammo setter, clamped using the maximum from `0x463DE0` and a zero constant; stores float `+0x08`. |
 | `0x2BB778 → 0x28B4E8` | Named `hero_give_weapon` binding. Native code checks ID 0–31 and hero context, calls acquisition with refill enabled, delegates inventory integration, optionally sets XP and ammo, and can notify another system. |
@@ -447,6 +447,49 @@ Pointers `0x888624`, `0x889AF4`, `0x89550C` and `0x89F16C` all resolve to serial
 
 The USA snapshot has all32 quick-select slots empty, all19 mission counters/unlocked/exclusion bytes zero, and only native level0 visited. This surprising observation is retained without inferring current runtime progress. See the [save-format notes](../../SaveFormat.md#confirmed-world-progress-and-quick-select-storage) for limitations and reproduction checks. No completion percentage, wheel position, mission-ID catalog or safe edit range is established.
 
+### Global event flags: named story, tutorial, movie and equipment bits
+
+[Inspect-TodGlobalFlags.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGlobalFlags.py) independently reproduces the `global_flags` section using two separate enum registrations and six named API wrappers from this exact ELF. Its **509 coalesced byte guards** cover both export ranges, names/value pointers, native readers/writers, initialization and the acquisition consumer. [TestTodGlobalFlags.py](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodGlobalFlags.py) checks agreement, BE64 byte order, word boundaries, unknown high bits, rejected inputs and unchanged actual save/ELF bytes.
+
+The storage is **five BE64 words at save `5528–5550`, end exclusive**. Initializer `35E110` passes `save+5528` to `35D9A0`; stores at `35D9D0..35D9E0` explicitly clear members20/00/08/10/18. This confirms320 physical bits, not320 named or valid script flags. Enum registrations `28440 → 12990` and `294E90 → 252EB8` independently agree on **IDs0..291**; both export `GLOBAL_FLAG_COUNT=292`. The higher28 physical bits292..319 are unresolved. COUNT is not a flag name or proof of a safe native upper bound.
+
+| API | Menu-side wrapper / native | Gameplay-side wrapper / native |
+| --- | --- | --- |
+| check_flag | 34750 /27948 | 2CB138 /2770F0 |
+| set_flag | 34698 /24A80 | 2CB080 /27BB10 |
+| clear_flag | 345E0 /27988 | 2CAFC8 /27BAE0 |
+
+Both families resolve saved-state base `101EFB20` through their descriptor-specific TOCs (`888624` /`898F50`). Native getters/writers select **word `floor(id/64)` and integer bit `id%64`**. File byte is `5528+8*floor(id/64)+7-floor((id%64)/8)`, byte mask `1<<(id%8)`. Setting ORs the mask; clearing AND-NOTs it; checking returns a boolean. Native leaves have **no GLOBAL_FLAG_COUNT range check**. The read-only inspector bounds access to these five physical words instead of following arbitrary script IDs.
+
+Examples from the complete292-entry catalog:
+
+| ID / native identifier | File byte / mask | Evidence limit |
+| --- | --- | --- |
+| 3 / HERO_FIRED_WEAPON | 552F /08 | Native event name, not current ammo or firing eligibility |
+| 10 / HERO_HAS_TWO_ITEMS | 552E /04 | Acquisition writer independently confirmed below |
+| 32 / RYNO_COMPLETE | 552B /01 | Separate flag, not a replacement for inventory/blueprint state |
+| 74 / LVL_IFF_CHALLENGE_1_DONE | 5536 /04 | Story/menu-list gate; not the numeric win counter |
+| 75 / LVL_IFF_CHALLENGE_2_DONE | 5536 /08 | Story/menu/training gate; independent of arena counters |
+| 183 / MOVIE_METROPOLIS_INTRO | 5539 /80 | Internal movie-event identifier, not recovered movie text |
+| 275 / MAGNETIZER_ACQUIRED | 554D /08 | Separate event bit; usable equipment state not established by it alone |
+| 276 / MAPOMATIC_ACQUIRED | 554D /10 | Separate event bit |
+| 285 / BOXBASHER_ACQUIRED | 554C /20 | Separate event bit |
+| 286 / GOLDENGROOVITRON_ACQUIRED | 554C /40 | Separate event bit |
+| 287 / TREASURE_MAPPER_ACQUIRED | 554C /80 | Separate event bit |
+
+Acquisition `466B70` tests mask400 in the first BE64 word and the acquired item's definition flag2. If the global bit is clear and that definition flag is set, it scans32 owned records, counts entries whose definitions also have flag2, and sets mask400 when the count exceeds1. Both independent enum catalogs identify bit10 as **HERO_HAS_TWO_ITEMS**. This confirms the named relationship, not a continuously recomputed inventory invariant or its reset policy. Do not repair the global flag merely from an owned-item count.
+
+The exact archive's shipped source offers an additional distinction. In `packed/game/global_cached.psarc`, entry2476 `/levels/imperial fight fest/scripts/arena.lua` (4026 bytes, SHA-256 `774C349B4C66E11EF878509079DDDEEB95BA8FABA318264CC45031EFA47C907B`) selects first-visit challenge lists at lines55–63 using flags74/75. Lines117–131 also use flag75 with the separate training flag and can set the left-after-Crushto flag. Entry2478 `arena_2.lua` (5389 bytes, SHA-256 `5E27723DCED186EA87354F792A63DCDC21CA72F54B831A99FC1EF227B4C485F2`) checks return-challenge flags before running scripts at lines81–94. Both sources separately derive some `.active` values from **numeric `get_challenge_successes(...id)>0`**. These are static source observations; payloads were read only, not executed, and commented-out alternative checks are not treated as live logic. Numeric win counters and global story bits are therefore not interchangeable; exact runtime synchronization remains unverified.
+
+**Actual USA observation:** all five words are zero, so no named or unknown tail bit is set. This surprising snapshot is preserved without inferring that the player has completed no story events. The app's **Global event flags** view shows group, formatted native identifier and Set/Clear; Technical retains all320 bits, exact byte/mask/word offsets and raw BE64 values. Labels are not recovered localized titles; Clear is not universally equivalent to unfinished. No new flag editing controls are enabled.
+
+Portable `TOD_SaveGlobalFlags_verified` represents the five words as five8-byte arrays to preserve exact layout using the shared importer types. It is not automatically applied to globals/save bytes, and older analyst types/names remain intact.
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGlobalFlags.py --elf artifacts/ghidra/BCUS98127-02.00/EBOOT.ELF --save artifacts/tod-research-capture/USA-GAME.plaintext.bin
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodGlobalFlags.py --elf artifacts/ghidra/BCUS98127-02.00/EBOOT.ELF --save artifacts/tod-research-capture/USA-GAME.plaintext.bin
+```
+
 ### Remaining native leads, not promoted to saved-field names
 
 `get_times_challenge_completed` registration at `0x88944C` reaches wrapper `0x315A8`, native `0x279B8`, then TOC thunk `0x110B0 → 0x2756F8`. This menu resolver reads `ARENA_CHALLENGE_DATA[argument].id`, caps the resolved index at23 and reads `save+0x56D8+4*resolvedIndex`. Its table/order and lower-bound safety remain unresolved. Independent direct-ID API and initializer evidence now establish **23 counters, not24**, as documented below. Index23 would alias the separate unknown array at5734; the menu cap is not a valid-counter count.
@@ -687,7 +730,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 828 mapped annotations (the third TOC reference base is unmapped), 23 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1136 mapped annotations (the third TOC reference base is unmapped), 24 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

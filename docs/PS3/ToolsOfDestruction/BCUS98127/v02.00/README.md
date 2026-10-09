@@ -3,8 +3,9 @@
 ## Findings and definitions
 
 - [Executable map and evidence](ElfMap.md): save and non-save findings, import instructions and repeatable commands.
-- [Native address/structure map](maps/NativeMap.json): 829 annotations, 118 imports and 23 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1137 annotations, 118 imports and 24 structure definitions.
 - [Weapon/gadget configuration definitions](maps/WeaponConfigs.json)
+- [Global event flag evidence](ElfMap.md#global-event-flags-named-story-tutorial-movie-and-equipment-bits): all292 named IDs, BE64 storage and acquisition/story dependencies.
 - [Shared save-format notes](../../SaveFormat.md): includes the supplied encrypted USA save and European plaintext sample, with evidence distinguished.
 
 ## Matching tools and tests

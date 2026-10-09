@@ -143,6 +143,30 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
                 return new(new[] { "Offset", "Field", "uint32 BE", "float32 BE", "Raw bits", "Confidence" }, rows.AsReadOnly());
             }
+            if (view == "Global event flags")
+            {
+                var catalog = TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").EnumerateArray()
+                    .ToDictionary(e => e.GetProperty("id").GetInt32());
+                for (int id = 0; id < 320; id++)
+                {
+                    int wordOffset = 0x5528 + id / 64 * 8;
+                    int byteOffset = wordOffset + 7 - id % 64 / 8;
+                    int byteMask = 1 << (id % 8);
+                    ulong word = BinaryPrimitives.ReadUInt64BigEndian(data.AsSpan(wordOffset, 8));
+                    bool set = (word & (1UL << (id % 64))) != 0;
+                    bool mapped = catalog.TryGetValue(id, out var entry);
+                    string name = mapped ? entry.GetProperty("enum").GetString() : "UNMAPPED_BIT_" + id;
+                    string category = mapped ? entry.GetProperty("category").GetString() : "Unmapped";
+                    string details = "Recorded global event bit, not a per-level record flag or a current story-completion verdict. " +
+                        "Readable names are formatted native identifiers, not recovered localized titles. Set/clear polarity and dependencies require individual script/runtime validation.\r\n" +
+                        $"ID {id}: BE64 word {TodResearch.Hex(wordOffset)}, integer bit {id % 64}; file byte {TodResearch.Hex(byteOffset)}, mask 0x{byteMask:X2}. Raw word: {word:X16}.\r\n" +
+                        "Both named check/set/clear API families target the same bitset. Native leaves do not check the292-name bound; physical bits292–319 remain unknown, not named flags. No flag editing is enabled.\r\n" +
+                        (mapped ? TodResearch.Pretty(entry) : "Unknown physical tail bit; GLOBAL_FLAG_COUNT292 is a sentinel, not a flag name.");
+                    rows.Add(new(new[] { id.ToString(CultureInfo.InvariantCulture), name, category, set ? "Set" : "Clear",
+                        TodResearch.Hex(byteOffset), $"0x{byteMask:X2}", TodResearch.Hex(wordOffset), $"{word:X16}" }, details));
+                }
+                return new(new[] { "ID", "Native enum", "Group", "Recorded bit", "Byte offset", "Byte mask", "Word offset", "Raw BE64 word" }, rows.AsReadOnly());
+            }
             if (view == "Arena challenges")
             {
                 var map = TodResearch.Map.GetProperty("arena_challenges");
