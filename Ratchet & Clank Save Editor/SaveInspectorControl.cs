@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
@@ -8,6 +9,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
     public sealed class SaveInspectorControl : UserControl
     {
         private readonly ComboBox views = new() { Name = "InspectionView", DropDownStyle = ComboBoxStyle.DropDownList, Width = 195 };
+        private readonly ComboBox upgradeWeapon = new() { Name = "UpgradeWeaponFilter", DropDownStyle = ComboBoxStyle.DropDownList, Width = 160, Visible = false };
+        private bool updatingWeaponFilter;
         private readonly NumericUpDown hexOffset = new() { Name = "HexOffset", Hexadecimal = true, Width = 100, Visible = false };
         private readonly DataGridView grid = new()
         {
@@ -30,6 +33,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 29, WrapContents = false };
             views.Items.AddRange(new object[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Counters & nearby fields", "Gameplay records", "Save regions", "Prefix words", "Files & headers", "Hex bytes" });
             toolbar.Controls.Add(views);
+            toolbar.Controls.Add(upgradeWeapon);
             toolbar.Controls.Add(hexOffset);
             Controls.Add(grid);
             Controls.Add(hex);
@@ -37,6 +41,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             Controls.Add(toolbar);
             tip.SetToolTip(views, "Read-only views of the current plaintext session baseline. Resize the window for more space.");
             tip.SetToolTip(hexOffset, "GAME.SAV file offset in hexadecimal; 256 bytes are displayed.");
+            tip.SetToolTip(upgradeWeapon, "Show upgrades for one weapon, or all weapons. Select a row for technical details.");
             tip.SetToolTip(grid, "Double-click a weapon to view its native binding, shipped levels, upgrades and vendor grid on the Research tab.");
             grid.CellDoubleClick += (_, args) =>
             {
@@ -46,6 +51,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             grid.SelectionChanged += (_, _) => details.Text = grid.CurrentRow?.Tag as string ?? snapshot?.Message ?? "Open a save folder to inspect it. Bundled references are on the Research tab.";
             grid.FontChanged += (_, _) => FitColumns();
             views.SelectedIndexChanged += (_, _) => RefreshView();
+            upgradeWeapon.SelectedIndexChanged += (_, _) => { if (!updatingWeaponFilter) RefreshView(); };
             hexOffset.ValueChanged += (_, _) => { if (HasSnapshot) hex.Text = snapshot.HexBytes((int)hexOffset.Value); };
             views.SelectedIndex = 0;
         }
@@ -54,6 +60,18 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             byte[] bytes = session.ReadInspectionData();
             snapshot = TodSaveInspection.Read(bytes, session.Metadata.Region);
+            updatingWeaponFilter = true;
+            try
+            {
+                string previous = upgradeWeapon.SelectedItem as string;
+                upgradeWeapon.Items.Clear();
+                upgradeWeapon.Items.Add("All weapons");
+                if (HasSnapshot)
+                    foreach (string weapon in snapshot.Table("Upgrade nodes").Rows.Select(row => row.Cells[0]).Distinct())
+                        upgradeWeapon.Items.Add(weapon);
+                upgradeWeapon.SelectedItem = previous != null && upgradeWeapon.Items.Contains(previous) ? previous : "All weapons";
+            }
+            finally { updatingWeaponFilter = false; }
             containers = SaveContainerInspection.Read(session.WorkingFolder, session.Profile.FileName, bytes);
             hexOffset.Value = 0;
             hexOffset.Maximum = Math.Max(0, snapshot.Length - 1);
@@ -63,6 +81,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private void RefreshView()
         {
             bool showHex = views.Text == "Hex bytes";
+            bool showUpgrades = views.Text == "Upgrade nodes";
+            upgradeWeapon.Visible = showUpgrades && HasSnapshot;
             grid.Visible = !showHex;
             hex.Visible = showHex;
             hexOffset.Visible = showHex && HasSnapshot;
@@ -75,6 +95,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (string column in table.Columns) grid.Columns.Add(column, column);
             foreach (var row in table.Rows)
             {
+                if (showUpgrades && HasSnapshot && upgradeWeapon.SelectedIndex > 0 && row.Cells[0] != upgradeWeapon.Text) continue;
                 int index = grid.Rows.Add(row.Cells);
                 grid.Rows[index].Tag = row.Details;
             }

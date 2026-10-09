@@ -78,10 +78,17 @@ internal static partial class Program
             Equal(1024, inspection.Table("Prefix words").Rows.Count);
             var upgrades = inspection.Table("Upgrade nodes");
             Equal(204, upgrades.Rows.Count);
-            var special = upgrades.Rows.Single(row => row.Cells[0] == "Combuster" && row.Cells[1] == "12");
-            Equal("Bit set", special.Cells[2]);
-            Equal("r3 c5", special.Cells[6]);
-            Equal("1, 5, 13", special.Cells[8]);
+            True(upgrades.Columns.SequenceEqual(new[] { "Weapon", "Upgrade", "Status", "Raritanium cost" }), "Upgrade view should show only four plain-language columns.");
+            var special = upgrades.Rows.Single(row => row.Cells[0] == "Combuster" && row.Details.Contains("Technical details: node 12."));
+            Equal("Duration +4 (special)", special.Cells[1]);
+            Equal("Enabled", special.Cells[2]);
+            Equal("300", special.Cells[3]);
+            True(special.Details.Contains("r3 c5") && special.Details.Contains("[1, 5, 13]") &&
+                special.Details.Contains("0x00003FFE") && special.Details.Contains("MOD_DURATION"), "Raw research data must remain in Details.");
+            Equal("Damage +5%", upgrades.Rows.First(row => row.Cells[0] == "Combuster" && row.Cells[1] == "Damage +5%").Cells[1]);
+            Equal("Starting node", upgrades.Rows[0].Cells[2]);
+            Equal("—", upgrades.Rows[0].Cells[3]);
+            Equal("Not enabled", upgrades.Rows.First(row => row.Cells[0] == "Grenade" && row.Cells[1] != "Starting node").Cells[2]);
             foreach (string view in new[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Counters & nearby fields", "Gameplay records", "Save regions", "Prefix words" }) inspection.Table(view);
             inspection.HexBytes(0x5754);
             True(original.SequenceEqual(bytes), "Inspection changed the input.");
@@ -217,7 +224,7 @@ internal static partial class Program
             tabs.SelectedIndex = 2;
             var inspector = Field<SaveInspectorControl>(form, "saveInspector");
             var grid = Descendants(inspector).OfType<DataGridView>().Single();
-            var views = Descendants(inspector).OfType<ComboBox>().Single();
+            var views = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "InspectionView");
             True(grid.ReadOnly && !grid.AllowUserToAddRows && !grid.AllowUserToDeleteRows, "Research must not offer edits.");
             Equal(32, grid.Rows.Count);
             typeof(DataGridView).GetMethod("OnCellDoubleClick", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -246,9 +253,20 @@ internal static partial class Program
                         "Off-screen or numeric data should not be truncated: " + header);
             }
             views.SelectedItem = "Upgrade nodes";
+            var weaponFilter = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");
+            True(weaponFilter.Visible, "Upgrade weapon filter should be visible.");
+            Equal(204, grid.Rows.Count);
+            weaponFilter.SelectedItem = "Combuster";
+            Equal(14, grid.Rows.Count);
+            True(grid.Rows.Cast<DataGridViewRow>().All(row => row.Cells[0].Value.ToString() == "Combuster"), "Filter must exclude other weapons.");
+            weaponFilter.SelectedItem = "Grenade";
+            Equal(11, grid.Rows.Count);
+            weaponFilter.SelectedItem = "All weapons";
+            Equal(204, grid.Rows.Count);
             True(grid.Columns.Cast<DataGridViewColumn>().Sum(c => c.Width) >= grid.ClientSize.Width - SystemInformation.VerticalScrollBarWidth - 4,
                 "Switching views should preserve width filling.");
             views.SelectedItem = "Weapons & gadgets";
+            True(!weaponFilter.Visible, "Upgrade filter must not appear on other views.");
             form.ClientSize = new Size(1050, 650);
             tabs.SelectedIndex = 3;
             tree.Nodes[1].Expand();
@@ -256,6 +274,9 @@ internal static partial class Program
             Capture(form, Path.GetFullPath("artifacts/ui-research-expanded.png"));
             using var other = SaveSession.Open(Fixture(root, "BCUS98124"), new FakeTools(), backupRoot: Path.Combine(root, "research-ui-backups"));
             inspector.LoadSession(other);
+            views.SelectedItem = "Upgrade nodes";
+            Equal(1, weaponFilter.Items.Count);
+            True(!weaponFilter.Visible, "Other games must clear and hide the upgrade filter.");
             True(!inspector.HasSnapshot, "Other games must clear the previous ToD inspection.");
             Equal(1, grid.Rows.Count);
             True(!grid.Rows[0].Cells[0].Value.ToString().Contains("Combuster"), "Old weapon rows leaked across games.");
@@ -312,6 +333,13 @@ internal static partial class Program
             Field<TabControl>(form, "TabControl").SelectedIndex = 2;
             Capture(form, Path.GetFullPath("artifacts/ui-inspector-reference.png"));
             var inspectorViews = Descendants(form).OfType<ComboBox>().Single(c => c.Name == "InspectionView");
+            inspectorViews.SelectedItem = "Upgrade nodes";
+            var weaponFilter = Descendants(form).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");
+            weaponFilter.SelectedItem = "Combuster";
+            Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-reference.png"));
+            form.ClientSize = new Size(499, 248);
+            Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-compact-reference.png"));
+            form.ClientSize = new Size(1900, 970);
             foreach (string view in new[] { "Skill points", "Armor" })
             {
                 inspectorViews.SelectedItem = view;

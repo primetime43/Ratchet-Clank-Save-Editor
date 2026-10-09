@@ -189,14 +189,21 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         string purchased = index == 0 ? "Start; " + bit : bit;
                         string value = mod.GetProperty("value").ValueKind == System.Text.Json.JsonValueKind.Null ? "Unspecified" : mod.GetProperty("value").ToString() + (mod.GetProperty("is_percent").GetBoolean() ? "%" : "");
                         string cost = mod.GetProperty("cost").ValueKind == System.Text.Json.JsonValueKind.Null ? "Unspecified" : mod.GetProperty("cost").ToString();
-                        string detail = $"{item.Name} · node {index}. {purchased}; raw mask 0x{item.ModifierMask:X8}; script-owned: {item.ScriptOwned}.\r\n" +
+                        string effect = UpgradeEffect(mod.GetProperty("type").GetString(), value);
+                        if (special) effect += " (special)";
+                        string status = index == 0 ? "Starting node" : (item.ModifierMask & (1u << index)) != 0 ? "Enabled" : "Not enabled";
+                        string shownCost = index == 0 ? "—" : cost == "Unspecified" ? "Unknown" : cost;
+                        string detail = $"{item.Name} — {effect}. {status}.\r\n" +
+                            (index == 0 ? "Starting node; no purchase required.\r\n" : $"Raritanium cost: {shownCost} (game definition). Enabled means the upgrade's saved bit is set.\r\n") +
+                            "Read-only. Effects and costs come from game definitions; they are not a purchase-eligibility check.\r\n\r\n" +
+                            $"Technical details: node {index}. {purchased}; raw mask 0x{item.ModifierMask:X8}; script-owned: {item.ScriptOwned}.\r\n" +
                             "Type/value/cost/tags are shipped definitions, not captured runtime values or a purchase-eligibility verdict.\r\n" +
                             $"Grid position: {cell}; orthogonal nonnegative neighbors: [{neighbors}]; special node: {special}.\r\n" +
                             TodResearch.Pretty(mod) + "\r\n" + TodResearch.Pretty(layouts.GetProperty("rules"));
-                        rows.Add(new(new[] { item.Name, index.ToString(), purchased, mod.GetProperty("type").GetString(), value, cost, cell, special ? "Yes" : "No", neighbors }, detail));
+                        rows.Add(new(new[] { item.Name, effect, status, shownCost }, detail));
                     }
                 }
-                return new(new[] { "Config", "Node", "Saved bit / start", "Shipped type", "Shipped value", "Shipped cost", "Grid cell", "Special", "Neighbors" }, rows.AsReadOnly());
+                return new(new[] { "Weapon", "Upgrade", "Status", "Raritanium cost" }, rows.AsReadOnly());
             }
             if (view == "Gameplay records")
             {
@@ -231,6 +238,32 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 return new(new[] { "Offset", "Raw bits", "uint32 BE", "float32 BE" }, rows.AsReadOnly());
             }
             throw new ArgumentException("Unknown inspection view.", nameof(view));
+        }
+
+        private static string UpgradeEffect(string type, string value)
+        {
+            string name = type switch
+            {
+                "MOD_START" => "Starting node",
+                "MOD_DAMAGE" => "Damage",
+                "MOD_ALT_DAMAGE" => "Alternate damage",
+                "MOD_AMMO" => "Ammo capacity",
+                "MOD_AOE" => "Area of effect",
+                "MOD_BOLTS" => "Bolt bonus",
+                "MOD_MINERALS" => "Raritanium bonus",
+                "MOD_DURATION" => "Duration",
+                "MOD_KNOCKBACK" => "Knockback",
+                "MOD_RANGE" => "Range",
+                "MOD_SPEED" => "Speed",
+                "MOD_SPAWNCOUNT" => "Spawn count",
+                "MOD_SPECIAL" => "Special upgrade",
+                "MOD_MISC" => "Other upgrade",
+                _ => type ?? "Unknown upgrade"
+            };
+            if (type == "MOD_START" || value == "Unspecified") return name;
+            // Native units are not established for every modifier. Keep the
+            // shipped number/percentage without inventing seconds or meters.
+            return name + " " + (value.StartsWith("-", StringComparison.Ordinal) ? "" : "+") + value;
         }
 
         private string Text(int offset, int capacity)
