@@ -102,6 +102,24 @@ class MapChecks(unittest.TestCase):
         self.assertIn("nonzero", byte["comment"])
         self.assertIn("Counter", inventory["ownership_warning"])
 
+    def test_weapon_asset_fingerprints_and_native_bindings(self):
+        import runpy
+        hashes = runpy.run_path(str(ROOT / "Tools/Inspect-TodWeaponConfigs.py"))["REFERENCE_HASHES"]
+        configuration = MAPPING["weapon_configuration"]
+        self.assertEqual(configuration["asset_weapon_count"], 28)
+        self.assertEqual(configuration["asset_modifier_count_including_start_nodes"], 204)
+        self.assertEqual({Path(asset["name"]).name: asset["sha256"] for asset in configuration["assets"]}, hashes)
+        fields = configuration["native_fields"]
+        self.assertEqual(fields["max_ammo_array_capacity"], 20)
+        self.assertEqual(fields["mod_ammo_attribute_id"], 9)
+        self.assertEqual(int(fields["vendor_offset"], 0), 0x6A8)
+        self.assertEqual(int(fields["num_mods_offset"], 0), 0x6A4)
+        annotations = {entry["va"]: entry for entry in MAPPING["annotations"]}
+        for key, value in fields.items():
+            if key.endswith("_va"):
+                self.assertEqual(annotations[value]["confidence"], "confirmed", key)
+        self.assertIn("CSV order", configuration["warning"])
+
     def test_reject_bad_schema_duplicates_and_overlap(self):
         invalid = copy.deepcopy(MAPPING)
         invalid["schema_version"] = 99
@@ -120,7 +138,7 @@ class MapChecks(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest().upper(), MAPPING["binary"]["sha256"])
         self.assertEqual(len(raw), MAPPING["binary"]["size"])
         self.assertEqual(raw[:6], b"\x7fELF\x02\x02")
-        for entry in MAPPING["annotations"] + MAPPING["serialization"]["instruction_guards"]:
+        for entry in MAPPING["annotations"] + MAPPING["serialization"]["instruction_guards"] + MAPPING["weapon_configuration"]["instruction_guards"]:
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

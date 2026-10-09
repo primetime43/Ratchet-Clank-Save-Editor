@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 224 annotations, 118 imports, evidence, byte signatures and six structure definitions.
+- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 238 annotations, 118 imports, evidence, byte signatures and six structure definitions.
 - [Ghidra importer](../Tools/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../Tools/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](ToolsOfDestructionSaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -180,7 +180,7 @@ Ammo, level and progress paths gate access with byte `+0x10` and item-definition
 
 XP setter `0x4660A8` writes float `+0x04`, recomputes stored level from weapon-data thresholds and cap helper `0x465F08`, and updates ammo on level increase. Helper `0x465E78` explicitly pairs stored level 5 with its XP threshold. Changing the byte alone can therefore leave inconsistent XP/level state. The default decompiler sometimes drops floating-point returns or represents float loads as integer casts; the raw `lfs/stfs/fsubs/fdivs` instructions establish the types.
 
-Modifier helper `0x465D00` ORs a selected bit into record `+0x0C` and refills ammo if maximum changes. Calculation `0x466258` walks weapon-data entries at `+0x464`, stride `0x18`, count at `+0x6A4`; enabled bits select entries matching an attribute ID. Kind zero adds a float, other kinds accumulate a multiplier. Maximum ammo chooses attribute 9 and a base value at weapon-data `+0x280 + 4*level`. **Specific node labels, costs, prerequisites, safe masks and universal ammo/XP bounds remain unknown**; runtime weapon assets are needed to resolve them. This helper alone does not describe a complete upgrade purchase.
+Modifier helper `0x465D00` ORs a selected bit into record `+0x0C` and refills ammo if maximum changes. Calculation `0x466258` walks weapon-data entries at `+0x464`, stride `0x18`, count at `+0x6A4`; enabled bits select entries matching an attribute ID. Kind zero adds a float, other kinds accumulate a multiplier. Maximum ammo chooses attribute 9 and a base value at weapon-data `+0x280 + 4*level`. The packed assets now provide node indices, label tags, costs and XP/ammo tables, and native bindings confirm the field names below. **Prerequisites, save-ID/name linkage, safe masks and gameplay-validated bounds remain unresolved.** This helper alone does not describe a complete upgrade purchase.
 
 The JSON `serialization` section records the state/copy chain, field offsets and exact instruction guards. The new `TOD_SaveInventoryRecord_verified` type supersedes candidate field names without overwriting an existing analyst's `TOD_SaveInventoryRecord_observed` type. Both remain available because importers preserve existing types. The remaining gameplay/health/armor structures are not verified. No editor fields were enabled by this research, and the USA ELF/European sample match is not a cross-region load test.
 
@@ -200,9 +200,77 @@ The JSON `serialization` section records the state/copy chain, field offsets and
 
 Word `0x280` is updated as an acquisition/removal counter, but it is **not asserted equal to the number of nonzero ownership bytes**. The reference sample has counter 46 and 32 nonzero record flags. This may reflect other writers, prior edits or another invariant; these routines alone do not settle it. Do not automatically normalize the counter to 32.
 
-The total unlock-array length is not established. The comparison tool decodes only the 32 IDs whose inventory records are mapped; the larger byte region still contains unknown state. Named `purchase_weapon` wrapper `0x337D8 → 0x26638` branches through thunks to `0x2D21A8` or `0x2D2D38`; the latter purchase path remains unmapped. This is another reason a one-byte edit cannot yet reproduce a complete acquisition or purchase.
+The total unlock-array length is not established. The comparison tool decodes only the 32 IDs whose inventory records are mapped; the larger byte region still contains unknown state. Named `purchase_weapon` wrapper `0x337D8 → 0x26638` branches through thunks to `0x2D21A8` or `0x2D2D38`. The latter is now traced: it requires a hero, applies an extra condition for ID `0x13`, obtains price via `0x2D2058`, checks inventory bolts at `+0x41C`, calls acquisition/refill `0x466B70`, delegates hero inventory integration through `0x252B08`, and deducts the price through `0x24FCB8`. It also conditionally dispatches through a virtual method and sends further notifications. This leaf does not establish every vendor prerequisite or the complete semantics of those downstream calls. A one-byte edit is not a complete purchase.
 
 The auxiliary initializer `0x35DC80` clears currency and initializes a 32-word sentinel list at `0x284`, three 23-word arrays at `0x304/0x360/0x3BC`, and other state. Their complete meanings remain unknown. The restart-style routine `0x3CED40` copies and selectively resets state, including some records, then increments/clamps word `0x906EC`; **challenge-mode interpretation is a candidate**, not a confirmed editable field. These are additional leads, not imported original function names.
+
+### Packed weapon configuration and native field bindings
+
+The supplied game's `packed/game/global_cached.psarc` contains plaintext `weapon.csv`, `mods.csv`, `vendor.csv` and their Lua loaders under `/data/configs/`. Selective extracts remain under ignored `artifacts/tod-assets-v02.00/`; no archive, Lua source, compiled code or game binary is tracked. The six SHA-256 fingerprints are recorded in the JSON map's `weapon_configuration.assets` section and the report tool.
+
+This particular archive has 3,297 entries, version `0x00010002`, `zlib` compression, 30-byte TOC records and 64 KiB blocks. All 3,296 filename hashes match **ASCII-uppercase full manifest paths**, including their leading slash. Filename MD5s are not payload-integrity hashes. The independent [archive inspector](../Tools/Inspect-Psarc.py) follows the field/block layout corroborated by this [primary PSARC extractor implementation](https://raw.githubusercontent.com/rscustom/rocksmith-custom-song-toolkit/master/RocksmithToolkitCLI/generalscripts/psarc-extract.rb); uppercase normalization is an observation from these ToD bytes, not assumed for every PSARC variant.
+
+The [configuration report](../Tools/Inspect-TodWeaponConfigs.py) parses numeric literals without executing Lua or expressions. It reports all 28 named weapon/gadget configurations, all per-level variables, 204 modifier entries across 15 weapon groups, vendor weapon/armor records, node masks, costs and localization tags. The 204 entries include 15 `MOD_START` entries: they are not 204 purchasable upgrades. These are shipped **asset definitions**, not independently captured runtime configuration or safe editor limits.
+
+Loader rules established by reading the source:
+
+- `weapon.lua` maps Lua column 4 to level index 0, column 5 to index 1, and so on. `NumLevels` stores the largest populated zero-based index, not a count. Blank cells are unspecified; the report does not fill them from previous levels.
+- `mods.lua` maps the CSV node index directly to `Mods[index]`; `NumMods = index + 1`. `PERCENT` values are multiplied by `0.01`, while absolute values are left unchanged. Some `MOD_SPECIAL` rows deliberately omit numeric values, and negative percentage values exist. Neither blank nor negative automatically means corrupt data.
+- `vendor.lua` assigns named fields under `config.<weapon>.Vendor`; it also populates armor vendor configuration. Its unlock strings are level identifiers, not save offsets or inventory possession flags.
+
+The ELF independently binds several names to the previously traced native offsets. Registration routine `0x80848` passes named strings and getter/setter descriptors into Lua property registration. Confirmed descriptor TOC is `0x88FF38`; raw instructions and float stores resolve decompiler ambiguities.
+
+| Named property | Native accessors | Runtime field |
+| --- | --- | --- |
+| `MaxAmmo[index]` | Get `0xB8840`, set `0xB8728` | Weapon config `+0x280 + index*4`, float32; index check allows **0–19** |
+| `NumMods` | Get `0xB4870`, set `0xA73A0` | Weapon config `+0x6A4`, word |
+| `Vendor` | Get `0x99B20` | Subobject at weapon config `+0x6A8` |
+| `Vendor.BasePrice` | Get `0xB4BB0` | Vendor `+0`, hence weapon config `+0x6A8` |
+| `Vendor.AmmoPrice` | Get `0xB4AE0` | Vendor `+4`, hence weapon config `+0x6AC` |
+| `Vendor.MegaPrice` | Get `0xB4A10` | Vendor `+8`, hence weapon config `+0x6B0` |
+| `config.Combuster` | Get `0x971E0` | Parent configuration `+0x1CFC`, **not** a save offset |
+| `config.Grenade` | Get `0x96FD0` | Parent configuration `+0x3178`, **not** a save offset |
+
+The maximum-ammo array has **20 native slots**, but the supplied CSV defines ten levels for each of the 15 upgradeable weapons. Capacity does not establish 20 playable levels. The registration also exports `MOD_AMMO = 9`: float constant `9.0` at `0x88B334` is passed with the `MOD_AMMO` string, matching attribute 9 used by `0x466500`. Price selector `0x2D2058` chooses `AmmoPrice` for definition flag 2, otherwise `BasePrice`; the promotion path uses `MegaPrice`.
+
+The table below summarizes the assets using **internal configuration names**, not confirmed save IDs or player-visible weapon names. “Ammo +mods” is the arithmetic result of enabling every listed `MOD_AMMO` node; it does not claim that every mask is attainable or accepted. All listed ammo modifiers in these assets are absolute additions.
+
+| Config name | Base ammo | Ammo +mods | Nodes incl. start | XP for level 5 | XP for level 10 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Combuster | 100 | 100 | 14 | 5,368 | 83,336 |
+| Grenade | 8 | 10 | 11 | 5,368 | 83,336 |
+| GoopMine | 8 | 10 | 13 | 3,221 | 46,760 |
+| Tornado | 5 | 5 | 12 | 5,368 | 46,760 |
+| Predator | 25 | 30 | 16 | 8,052 | 88,083 |
+| Ravager | 30 | 36 | 14 | 4,294 | 48,760 |
+| Reaper | 30 | 40 | 14 | 10,736 | 131,780 |
+| BuzzBlade | 200 | 260 | 14 | 13,420 | 137,280 |
+| EnergyClaws | 30 | 50 | 12 | 26,840 | 120,520 |
+| AlphaNova | 4 | 5 | 11 | 18,788 | 62,760 |
+| RoboHive | 4 | 6 | 15 | 8,052 | 91,520 |
+| Rocket | 12 | 15 | 12 | 32,208 | 161,280 |
+| FlameThrower | 30 | 40 | 15 | 21,472 | 113,520 |
+| MagNet | 12 | 16 | 16 | 16,104 | 72,760 |
+| Ryno | 300 / 750 at indices 5–9 | 450 / 900 | 15 | 80,520 | 242,040 |
+
+Combuster's full XP threshold array is `[0, 1000, 2200, 3640, 5368, 5500, 20000, 37400, 58280, 83336]`. Its node 12 is `MOD_DURATION`, absolute `4`, cost `300`, with localization tags identifying the special burn-patch upgrade. Its complete CSV node catalog spans 0–13, whereas the reference save's modifier word `0x3FFE` enables bits 1–13. That is compatible with this catalog **if** record 1's name linkage is established; it is not an independent proof of that ID mapping or of prerequisites.
+
+Other configurations are Wrench, Groovitron, MiniLeech, ConfusionGas, Zurkon, MaxiLeech, Copter, Morph, Slinkonator, SwingShot, Inflatopod, Gelanator and Decryptor. The first group has only index-0 values; the last four have two populated XP columns but only one populated ammo column. Do not invent missing gadget levels/ammo values. CSV order differs between weapon and vendor tables and must not be used to label the 32 save records.
+
+Reproduce without modifying the game:
+
+```powershell
+# Create a separate, ignored output folder first. Each --out must be a new file.
+python -B Tools/Inspect-Psarc.py "path/to/global_cached.psarc"
+python -B Tools/Inspect-Psarc.py "path/to/global_cached.psarc" `
+  --name /data/configs/weapon.csv --out artifacts/tod-assets-v02.00/weapon.csv
+# Repeat explicitly for weapon.lua, mods.csv/.lua, and vendor.csv/.lua.
+python -B Tools/Inspect-TodWeaponConfigs.py artifacts/tod-assets-v02.00
+python -B Tests/TestPsarc.py --archive "path/to/global_cached.psarc" -v
+python -B Tests/TestTodWeaponConfigs.py --assets artifacts/tod-assets-v02.00 -v
+```
+
+The archive tool refuses existing outputs and extraction into the original archive directory. Bounds, decompression size, malformed manifests, untrusted names and overwrite protection are fixture-tested. Reference tests verify matching extracted hashes and unchanged original archive/assets. Remaining work: link every configuration to its inventory ID, establish node adjacency/prerequisites and runtime overrides, and validate edited copies in-game. No new editor fields are enabled by these findings.
 
 ### External editor references
 

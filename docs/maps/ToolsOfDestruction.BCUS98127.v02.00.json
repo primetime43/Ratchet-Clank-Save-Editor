@@ -204,7 +204,157 @@
       }
     ]
   },
+  "weapon_configuration": {
+    "archive": "packed/game/global_cached.psarc",
+    "archive_version": "0x00010002",
+    "archive_entry_count": 3297,
+    "filename_hash_normalization_observed": "ASCII-uppercase UTF-8 full manifest paths, including leading slash",
+    "report_tool": "Tools/Inspect-TodWeaponConfigs.py",
+    "asset_weapon_count": 28,
+    "asset_modifier_count_including_start_nodes": 204,
+    "assets": [
+      {"name": "/data/configs/weapon.csv", "sha256": "2E9D75D6509F35E75B27626D1D777F4D5414FCBAA1AC553D36AE9D9F4A728F7A"},
+      {"name": "/data/configs/weapon.lua", "sha256": "DECDC62DF183E47640E8B05D137E2A3C1F3C6929C55A81CB9C60BDB7694F0F85"},
+      {"name": "/data/configs/mods.csv", "sha256": "0A01163D76189C7AB532345C22B5355290E3D1170E76672F0309F888EC5A68EE"},
+      {"name": "/data/configs/mods.lua", "sha256": "5007B0FDDD3F8D46BFE22DCBE9ABB06E679CA6993149F26D9EA75BCE81C464FF"},
+      {"name": "/data/configs/vendor.csv", "sha256": "E5163C6E8195EBAF761B2B9FD4F96BCFE227A902454AC1323EDE720ED1DB639D"},
+      {"name": "/data/configs/vendor.lua", "sha256": "E9C1E5500FA6B690EA8FA4C82B373A2C69AE5C192D5381C3BF9EA92679786B20"}
+    ],
+    "native_fields": {
+      "registration_va": "0x00080848",
+      "max_ammo_getter_va": "0x000B8840",
+      "max_ammo_setter_va": "0x000B8728",
+      "max_ammo_offset": "0x280",
+      "max_ammo_array_capacity": 20,
+      "num_mods_getter_va": "0x000B4870",
+      "num_mods_setter_va": "0x000A73A0",
+      "num_mods_offset": "0x6A4",
+      "vendor_getter_va": "0x00099B20",
+      "vendor_offset": "0x6A8",
+      "vendor_base_price_getter_va": "0x000B4BB0",
+      "vendor_ammo_price_getter_va": "0x000B4AE0",
+      "vendor_mega_price_getter_va": "0x000B4A10",
+      "vendor_base_price_offset": "0x0",
+      "vendor_ammo_price_offset": "0x4",
+      "vendor_mega_price_offset": "0x8",
+      "mod_ammo_attribute_id": 9,
+      "purchase_price_va": "0x002D2058",
+      "purchase_va": "0x002D2D38"
+    },
+    "instruction_guards": [
+      {"va": "0x000B87D0", "bytes": "281D0013"},
+      {"va": "0x000B87FC", "bytes": "38E30280"},
+      {"va": "0x000B880C", "bytes": "7C2B352E"},
+      {"va": "0x000B48B4", "bytes": "80A906A4"},
+      {"va": "0x000A7444", "bytes": "90A906A4"},
+      {"va": "0x00099B5C", "bytes": "38DE06A8"},
+      {"va": "0x002D2098", "bytes": "800B06A8"},
+      {"va": "0x002D20B8", "bytes": "800B06AC"},
+      {"va": "0x002D2DA0", "bytes": "8003041C"},
+      {"va": "0x002D2DE8", "bytes": "48193D89"},
+      {"va": "0x002D2E10", "bytes": "4BF7CEA9"},
+      {"va": "0x00080B80", "bytes": "C322B3FC"},
+      {"va": "0x00080E3C", "bytes": "FC20C890"},
+      {"va": "0x00080E40", "bytes": "8082B4DC"},
+      {"va": "0x0088B414", "bytes": "100003B8"},
+      {"va": "0x100003B8", "bytes": "4D4F445F414D4D4F00"}
+    ],
+    "warning": "These are shipped asset definitions and native bindings, not gameplay-validated edit bounds. CSV order is not a save-record ID map. Blank cells remain unspecified; adjacency/prerequisites, runtime overrides and cross-region acceptance are unresolved. Twenty native slots do not imply twenty playable weapon levels."
+  },
   "annotations": [
+    {
+      "va": "0x002D2D38",
+      "name": "TOD_purchase_weapon_native",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C0802A6",
+      "comment": "Native branch of named purchase_weapon: requires hero, checks a special condition for ID 0x13, obtains price from 0x2D2058, compares bolts at hero inventory +0x41C, acquires/refills via 0x466B70, integrates hero inventory through 0x252B08, and deducts price via 0x24FCB8. Additional virtual dispatch and notifications follow. This leaf alone does not establish all vendor availability/prerequisite checks.",
+      "evidence": "Named Lua chain 0x337D8 -> 0x26638 -> thunk 0x12010; raw instructions at 0x2D2DA0, 0x2D2DE8 and 0x2D2E10."
+    },
+    {
+      "va": "0x002D2058",
+      "name": "TOD_get_weapon_purchase_price_native",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF917C0802A6",
+      "comment": "Looks up definition, returns zero for missing definition/config; selects weapon config +0x6AC (AmmoPrice) when definition flag 2 is set, otherwise +0x6A8 (BasePrice). Vendor native bindings independently name these fields.",
+      "evidence": "0x2D2098/0x2D20B8 plus Vendor getter 0x99B20 and price getters 0xB4BB0/0xB4AE0."
+    },
+    {
+      "va": "0x00080848",
+      "name": "TOD_register_Lua_config_and_constants",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FE317D4802A6",
+      "comment": "Large native Lua registration routine. Named config property getter/setter descriptors connect MaxAmmo, NumMods, Vendor, and named weapon subobjects to concrete field accessors. Also exports numeric MOD_AMMO=9. Not a function that loads or executes the CSV itself.",
+      "evidence": "TOC 0x88FF38; string/descriptor slots 0x88E84C, 0x88E8AC, 0x88E8B8, 0x88ED38, 0x88ED5C; registration calls 0x893C8, 0x89488, 0x894A0 and 0x80E48."
+    },
+    {
+      "va": "0x000B8840", "name": "TOD_Lua_config_MaxAmmo_getter",
+      "kind": "function", "confidence": "confirmed", "bytes": "F821FF517C8802A6",
+      "comment": "Named MaxAmmo property getter. Float array at weapon config +0x280, stride 4, index range 0..19. Native capacity is 20; shipped CSV fills only ten levels for the 15 upgradeable weapons.",
+      "evidence": "Name slot 0x88E84C -> getter descriptor 0x85E990; raw lfsx and index check corroborate native ammo calculation 0x466500."
+    },
+    {
+      "va": "0x000B8728", "name": "TOD_Lua_config_MaxAmmo_setter",
+      "kind": "function", "confidence": "confirmed", "bytes": "F821FF517C8802A6",
+      "comment": "Named MaxAmmo property setter. Checks unsigned index against 0x13 and stores f32 at config +0x280 + 4*index. This changes runtime config, not directly the save-record ammo field.",
+      "evidence": "Name slot 0x88E84C -> setter descriptor 0x85E988; instructions 0xB87D0, 0xB87FC and stfsx 0xB880C."
+    },
+    {
+      "va": "0x000B4870", "name": "TOD_Lua_config_NumMods_getter",
+      "kind": "function", "confidence": "confirmed", "bytes": "38A000007C0802A6",
+      "comment": "Named NumMods property getter; unsigned word at weapon config +0x6A4. mods.lua sets this to the last parsed node index plus one, including MOD_START.",
+      "evidence": "Name slot 0x88E8AC -> getter descriptor 0x85E700; lwz at 0xB48B4."
+    },
+    {
+      "va": "0x000A73A0", "name": "TOD_Lua_config_NumMods_setter",
+      "kind": "function", "confidence": "confirmed", "bytes": "38A000007C0802A6",
+      "comment": "Named NumMods setter; numeric argument converted and stored as word at config +0x6A4. Does not demonstrate safe player-edit masks or prerequisite enforcement.",
+      "evidence": "Name slot 0x88E8AC -> setter descriptor 0x85DDC8; stw at 0xA7444."
+    },
+    {
+      "va": "0x00099B20", "name": "TOD_Lua_config_Vendor_getter",
+      "kind": "function", "confidence": "confirmed", "bytes": "38A000007C0802A6",
+      "comment": "Named Vendor subobject getter; returns userdata for weapon config +0x6A8. Its BasePrice/AmmoPrice/MegaPrice properties are words at +0/+4/+8 within the subobject.",
+      "evidence": "Name slot 0x88E8B8 -> getter descriptor 0x85D540; addi at 0x99B5C."
+    },
+    {
+      "va": "0x000B4BB0", "name": "TOD_Lua_config_Vendor_BasePrice_getter",
+      "kind": "function", "confidence": "confirmed", "bytes": "38A00000",
+      "comment": "Named Vendor.BasePrice getter; reads unsigned word at vendor subobject +0, equivalent to weapon config +0x6A8.",
+      "evidence": "Name slot 0x88E7C0 -> getter descriptor 0x85E720."
+    },
+    {
+      "va": "0x000B4AE0", "name": "TOD_Lua_config_Vendor_AmmoPrice_getter",
+      "kind": "function", "confidence": "confirmed", "bytes": "38A00000",
+      "comment": "Named Vendor.AmmoPrice getter; reads unsigned word at vendor subobject +4, equivalent to weapon config +0x6AC.",
+      "evidence": "Name slot 0x88E7CC -> getter descriptor 0x85E718."
+    },
+    {
+      "va": "0x000B4A10", "name": "TOD_Lua_config_Vendor_MegaPrice_getter",
+      "kind": "function", "confidence": "confirmed", "bytes": "38A00000",
+      "comment": "Named Vendor.MegaPrice getter; reads unsigned word at vendor subobject +8, equivalent to weapon config +0x6B0.",
+      "evidence": "Name slot 0x88E7D8 -> getter descriptor 0x85E710; same config offset used by promotion path 0x2D21A8."
+    },
+    {
+      "va": "0x0088B334", "name": "TOD_Lua_MOD_AMMO_enum_value",
+      "kind": "data", "confidence": "confirmed", "bytes": "41100000",
+      "comment": "Big-endian float 9 used when exporting the MOD_AMMO Lua constant. Corroborates attribute 9 selected by native maximum-ammo calculation.",
+      "evidence": "Registration 0x80848: lfs f25 at 0x80B80 with TOC 0x88FF38, then fmr f1,f25 at 0x80E3C and MOD_AMMO name load at 0x80E40."
+    },
+    {
+      "va": "0x000971E0", "name": "TOD_Lua_config_Combuster_subobject_getter",
+      "kind": "function", "confidence": "confirmed", "bytes": "38A000007C0802A6",
+      "comment": "Named config.Combuster getter returns parent config +0x1CFC. This is a runtime configuration offset, NOT a save offset or independently proven inventory ID.",
+      "evidence": "Registration 0x89F4C -> name slot 0x88ED38 -> descriptor 0x85D360; addi at 0x9721C."
+    },
+    {
+      "va": "0x00096FD0", "name": "TOD_Lua_config_Grenade_subobject_getter",
+      "kind": "function", "confidence": "confirmed", "bytes": "38A000007C0802A6",
+      "comment": "Named config.Grenade getter returns parent config +0x3178. Runtime config pointer linkage remains separate from save-record ID enumeration.",
+      "evidence": "Registration 0x89F94 -> name slot 0x88ED5C -> descriptor 0x85D348; raw/decompiled subobject accessor."
+    },
     {
       "va": "0x00859408",
       "name": "TOD_PS3_function_descriptors",

@@ -250,6 +250,8 @@ Run `./Tests/TestTodSaveComparison.ps1 -SourceFile <reference-GAME.SAV>` for 11 
 
 Executable research is recorded separately in the [Tools of Destruction ELF map](ToolsOfDestructionElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
 
+Packed-asset research now supplies [weapon XP/ammo tables and upgrade-node catalogs](ToolsOfDestructionElfMap.md#packed-weapon-configuration-and-native-field-bindings). Native Lua bindings independently name the maximum-ammo, modifier-count and vendor-price fields. The read-only report covers 28 internal configurations and 204 entries including start nodes; CSV order is **not** a save-ID map. The 20-slot native ammo array does not establish 20 playable levels. Asset values, node masks and calculated capacities remain research facts, not gameplay-validated edit limits.
+
 Collect paired saves with exactly one intentional change, using copies rather than the only original. Autosave time and unrelated engine state can still change, so repeated pairs are needed.
 
 | Controlled change | Candidate offsets or region | Question |
