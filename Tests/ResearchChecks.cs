@@ -36,13 +36,45 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Shipped settings menu distinguishes axis dispatch, disabled rows and unknown settings", () =>
+        {
+            var menu = TodResearch.Map.GetProperty("settings_menu");
+            Equal(12, menu.GetProperty("descriptors").GetArrayLength());
+            Equal(6, menu.GetProperty("visible_descriptor_indices").GetArrayLength());
+            Equal("is_x_inverted", menu.GetProperty("axis_dispatch").GetProperty("scheme_0").GetProperty("x_getter").GetString());
+            Equal("is_look_x_inverted", menu.GetProperty("axis_dispatch").GetProperty("scheme_1").GetProperty("x_getter").GetString());
+            True(!menu.GetProperty("descriptors")[7].GetProperty("enabled_literal").GetBoolean(), "Literal first-person row must not imply visible UI.");
+            var settings = TodSaveInspection.Read(ResearchFixture(), "BCUS98127").Table("Game settings");
+            True(settings.Rows.Single(r => r.Cells[2] == "0x114A8").Details.Contains("not saved-flag polarity"), "Axis dispatch must not invert the meaning of stored bits.");
+            True(settings.Rows.Single(r => r.Cells[2] == "0x114C8").Details.Contains("+0.1/-0.1"), "Percentage action step should come from the shipped script.");
+            True(settings.Rows.Single(r => r.Cells[2] == "0x114C0").Details.Contains("option name and polarity remain unresolved"), "Pause-menu metadata does not name the unknown word.");
+        });
+        Check("Grid browse namespaces and native accumulator predicate stay read-only and unsigned", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            uint threshold = 0x36666;
+            for (int slot = 0; slot < 15; slot++) BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114D8 + slot * 0x60DC + 0xC8, 4), threshold);
+            var first = TodSaveInspection.Read(bytes, "BCUS98127").Table("Stored state blocks");
+            True(first.Rows[15].Details.Contains("position: 1 of 21") && first.Rows[15].Details.Contains("image resource index 21"), "Menu ordinal, physical slot and image ID must stay distinct.");
+            True(first.Rows[0].Details.Contains("snapshot qualifies 15/21; function 24E7E8 returns 0"), "Fifteen does not pass the strict aggregate count comparison.");
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114D8 + 20 * 0x60DC + 0xC8, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Stored state blocks");
+            True(table.Rows[20].Details.Contains("snapshot qualifies 16/21; function 24E7E8 returns 1"), "Unsigned high words qualify even in a not-ready block.");
+            True(table.Rows[20].Details.Contains("without a readiness gate") && table.Rows[20].Details.Contains("No confirmed trophy/completion caller"), "The unreferenced predicate must not be called trophy progress.");
+            Equal(4, InspectionPresentation.Simplify("Stored state blocks", table).Columns.Length);
+            True(bytes.SequenceEqual(before), "Routing inspection must not mutate source.");
+        });
         Check("Persistent grid labels, copied headers and seven group flags are bounded and preserved", () =>
         {
             byte[] bytes = ResearchFixture(); int offset = 0x114D8 + 20 * 0x60DC;
             BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 4, 4), 0x535);
             BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 0x10, 4), 20);
             BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset, 4), 0xDEADBEEF);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 0x24 + 6 * 24, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 0x28 + 6 * 24, 4), 0x80000000);
             BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 0x2C + 6 * 24, 4), 7);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 0x30 + 6 * 24, 4), 5);
             bytes[offset + 0x60DA] = 0xAB; bytes[offset + 0x60DB] = 0xCD;
             byte[] before = bytes.ToArray();
             var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
@@ -51,6 +83,7 @@ internal static partial class Program
             Equal("metropolis", table.Rows[15].Cells[8]); Equal("sargasso", table.Rows[3].Cells[8]);
             True(table.Rows[^1].Details.Contains("DEADBEEF") && table.Rows[^1].Details.Contains("saved flag 0xAB") && table.Rows[^1].Details.Contains("60DB: CD"), "Unknown bits and last-group boundaries must survive.");
             True(table.Rows[^1].Details.Contains("not portable") && table.Rows[^1].Details.Contains("not mission"), "Runtime pointers and group flags must not imply portable progress edits.");
+            True(table.Rows[^1].Details.Contains("origin (4294967295, 2147483648), extents (7, 5)") && table.Rows[^1].Details.Contains("14×14 brush"), "Rectangle words must retain unsigned extremes and native brush qualification.");
             Equal(4, InspectionPresentation.Simplify("Stored state blocks", table).Columns.Length);
             True(InspectionPresentation.Simplify("Stored state blocks", table).Rows[15].Cells[0].Contains("Metropolis"), "Native map-label associations should be readable.");
             True(bytes.SequenceEqual(before), "Grid header inspection must not mutate source.");
@@ -259,7 +292,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1181, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1190, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

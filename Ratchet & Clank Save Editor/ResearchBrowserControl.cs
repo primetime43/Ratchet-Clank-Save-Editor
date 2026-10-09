@@ -36,7 +36,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Blueprints & bonuses", TodResearch.Map.GetProperty("bonuses"), 0));
             topics.Add(JsonTopic("Equipment history & stored state", TodResearch.Map.GetProperty("state_storage"), 0));
             topics.Add(JsonTopic("Persistent grids, map labels & volume headers", TodResearch.Map.GetProperty("persistent_grid"), 0));
+            topics.Add(JsonTopic("Map-menu order, images & native grid checks", TodResearch.Map.GetProperty("grid_routing"), 0));
+            topics.Add(JsonTopic("Map rectangles, world projection & clearing brush", TodResearch.Map.GetProperty("grid_geometry"), 0));
             topics.Add(JsonTopic("Settings, load destinations & runtime limits", TodResearch.Map.GetProperty("settings"), 0));
+            topics.Add(JsonTopic("Shipped pause-menu settings & API dispatch", TodResearch.Map.GetProperty("settings_menu"), 0));
             topics.Add(JsonTopic("Arena challenges, recorded wins & reward rules", TodResearch.Map.GetProperty("arena_challenges"), 0));
             topics.Add(JsonTopic("Reset-event categories & runtime countdown", TodResearch.Map.GetProperty("reset_categories"), 0));
             topics.Add(JsonTopic("Global event flags & native bit addressing", TodResearch.Map.GetProperty("global_flags"), 0));

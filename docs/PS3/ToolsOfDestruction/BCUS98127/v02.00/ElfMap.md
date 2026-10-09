@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1181 annotations, 118 imports, evidence, byte signatures and 30 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1190 annotations, 118 imports, evidence, byte signatures and 31 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -627,21 +627,21 @@ Selector `24DEA8` iterates enabled definitions (`+C` nonzero), requires class `+
 | `+10`, BE32 | Physical saved block slot |
 | `+14`, BE32 | Baked resource layer index |
 | `+18`, BE32 | Optional runtime volume reference; preserve `FFFFFFFF` sentinel bits |
-| `+1C`, byte | Coordinate-sign control used by `24D570`; axis orientation unverified |
+| `+1C`, byte | Coordinate-sign control: zero gives−1, nonzero+1; world-axis naming unverified |
 | `+1D..1F` | Unresolved bytes |
 | `+20..C7` | Seven24-byte groups |
 
-Each group has reference index `+00`, unnamed words `+04/+08`, nonzero activation word `+0C`, unnamed word `+10`, and image/resource index `+14`. `TOD_SaveGridVolumeHeader_verified` and `TOD_SaveGridGroup_verified` model only these distinctions. No save pointer is dereferenced and no unknown field is normalized.
+Each group has reference index `+00`, map rectangle origin words `+04/+08`, extent words `+0C/+10`, and image/resource index `+14`. The formerly named activation word is **first rectangle extent**, whose nonzero value also gates containment/image visibility. `TOD_SaveGridRectangleGroup_verified` refines the original raw `TOD_SaveGridGroup_verified` without replacing existing database types. No save pointer is dereferenced and no unknown field is normalized. Display-consumer evidence is detailed below.
 
 #### Seven containment flags and image visibility
 
-`24E8A0` iterates exactly seven groups. A nonzero saved byte at block `+60D4+group` skips further checks. Otherwise it follows the group's runtime volume-list reference (skipping `FFFFFFFF`), checks hero containment, and writes1 when group activation `+0C` is nonzero. `25AE08` uses those saved bytes and activation words to display image index `+14+25`. A nonzero independently named `OBJ_TREASURE_MAPPER` count at save `31C` bypasses the saved-flag visibility requirement, not the activation requirement. These are qualified containment/visibility flags, **not a mission completion checklist**. Eighth tail byte `+60DB` remains unknown.
+`24E8A0` iterates exactly seven groups. A nonzero saved byte at block `+60D4+group` skips further checks. Otherwise it follows the group's runtime volume-list reference (skipping `FFFFFFFF`), checks hero containment, and writes1 when first extent `+0C` is nonzero. `25AE08` uses those saved bytes and nonzero first extent to display image index `+14+25`. A nonzero independently named `OBJ_TREASURE_MAPPER` count at save `31C` bypasses the saved-flag visibility requirement, not the nonzero-extent requirement. These are qualified containment/visibility flags, **not a mission completion checklist**. Eighth tail byte `+60DB` remains unknown.
 
 #### Native512×512 grid
 
 `24DCA0` reads baked resource `250D0`, selecting layer from definition `+14`. Two512-iteration loops consume eight high-to-low nibbles per BE32 and write persistent state bytes at runtime manager `+24`, separate image bytes through pointer `+40028`. Index is `first_coordinate*512 + second_coordinate`; the persistent grid is exactly `0x40000` bytes.
 
-Conversion `24D6E8` yields image0/state0 for input0. Otherwise image is `min((input & 15)*17,254)` and state is `min(ceil(image/127),2)`, with native constants127 and1 guarded independently. Thus baked nibbles1..7 initialize state1 and8..15 initialize state2. `24D570` projects world coordinates using runtime geometry and the sign byte; `24D788` checks coordinates below512 and clears qualifying cells in a bounded neighboring region to0. State2 is not another spelling of boolean true. Coordinate orientation/scale, pixel-specific terrain meaning, palette and edited-save acceptance are still unverified; this does not authorize a fog-map editor.
+Conversion `24D6E8` yields image0/state0 for input0. Otherwise image is `min((input & 15)*17,254)` and state is `min(ceil(image/127),2)`, with native constants127 and1 guarded independently. Thus baked nibbles1..7 initialize state1 and8..15 initialize state2. `24D570` projects world coordinates using runtime geometry and the sign byte; `24D788` checks coordinates below512 and clears qualifying cells in a bounded neighboring region to0. State2 is not another spelling of boolean true. Projection formula and brush are now refined below; world-axis naming, runtime geometry, pixel-specific terrain meaning, palette and edited-save acceptance remain unverified. This does not authorize a fog-map editor.
 
 #### All21 physical slot-to-level label associations
 
@@ -677,6 +677,68 @@ The `114C0` consumer `20F3F0` sets independently cataloged global bit6 `HERO_FIR
 ```powershell
 python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodPersistentGrid.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
 python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodPersistentGrid.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
+### Map-menu routing and native accumulator predicate
+
+[Inspect-TodGridRouting.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGridRouting.py) independently reproduces `grid_routing` with **102 native byte guards**. Three unsigned-input switches establish separate namespaces:
+
+| Function | Input → output | Out-of-range result |
+| --- | --- | --- |
+| `24E398` | Physical saved grid slot → browse ordinal0..20 | 21 |
+| `24E4C0` | Browse ordinal → physical saved grid slot | `FFFFFFFF` |
+| `24E5E8` | Physical saved grid slot → shared resource image index21..36 | 21 |
+
+The first two are inverse permutations, not native level catalogs. Full browse order by **physical slot** is `[15,7,19,9,11,5,6,16,17,2,3,4,12,13,20,0,1,18,8,14,10]`. Shared image indices by slot are `[32,32,29,29,29,26,26,22,34,24,36,25,30,30,35,21,27,28,33,23,31]`; duplicate image IDs do not merge separately saved grids.
+
+Consumer `25D1D0` calls TOC thunks `2520C8 → 24E398` and `2512B8 → 24E4C0`, wraps directional searches across21 ordinals, and skips blocks with ready byte`+CC==0`. Both paths address save `114D8+slot*60DC`; tests at `25D4CC`/`25D5AC` reach exactly`+CC`. Nonzero readiness is accepted, not normalized. Runtime selection `+AD0` and selected block pointer `+B08` are not additional save fields. `25BBF0` and `25D1D0` call image thunk `2500D8 → 24E5E8`, then resource helper `251898` with extent512 and flag`20000`; a separate physical-slot lookup uses flag`80000`. Image names/palette remain unassigned.
+
+Unreferenced predicate `24E7E8` reads **all21 saved BE32 encoder accumulators** at `115A0+slot*60DC`, counts unsigned words **greater than or equal to`0x36666` /222822**, and returns1 only when count **exceeds15**. It does not check readiness or decode cells. TOC slots `897F04`/`897F08` point to `102010C0` / `102802CC`; the second is a stride sentinel beyond serialized state, **never dereferenced**. The last actual read remains inside the save. The sign-bit arithmetic uses zero-extended loaded words, so values`80000000`/`FFFFFFFF` qualify, not negative counts.
+
+Only descriptor `869388` references predicate code in the native pointer scan; no direct caller or descriptor-pointer reference was found. **No trophy, mission or completion meaning is established.** The accumulator already excludes the first two zero bytes of every repeated run, so this is not an exact cleared-cell count or percentage. The actual USA snapshot qualifies19 words; slots3/4 have0. Its ready menu order is the permutation above with3/4 omitted. Both are snapshot/static-code observations, not runtime acceptance tests.
+
+Seven routing checks cover inverse mappings, namespace/default differences, shared image IDs, threshold equality, strict15/16 count boundary, unsigned extremes, readiness independence, sentinel bounds and unchanged actual inputs. Inspector details show menu position/image ID and explicitly qualified predicate evaluation; the simple four-column grid view stays unchanged.
+
+### Copied map rectangles, world projection and clearing brush
+
+[Inspect-TodGridGeometry.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGridGeometry.py) reproduces `grid_geometry` with **28 native byte guards**, including six complete functions, TOC constants and the196-byte brush. `25BF68` addresses copied group`20+group*18`, converts unsigned BE32 words into display geometry and clips endpoints/adjusts UVs:
+
+| Group member | Confirmed role |
+| --- | --- |
+| `+00` | Runtime volume-list reference, already verified |
+| `+04 / +08` | First/second map rectangle origins |
+| `+0C / +10` | First/second map rectangle extents |
+| `+14` | Image resource index, already verified |
+
+Loads at `25C0BC/C0/C4` establish first extent and two origins; indexed load `25C16C` from header`30+group*18` establishes second extent. Display constants include400/512 and200/512, clipping axes800/400. These are **map-display coordinates, not raw world coordinates**. In the actual save33 ready groups have nonzero first extent; all33 origin-plus-extent rectangles fit512×512,28have nonzero saved flags and5have0. First origins span4..454; second27..439. These observed bounds are not universal edit limits or a validator for arbitrary resources.
+
+`24D570` projects using copied runtime geometry pointer`+00` and sign byte`+1C`: zero means−1, any nonzero+1. Let `n=sqrt(g[0]^2+g[1]^2+g[2]^2)` and `c` be geometry translation`+30` or`+38`. For corresponding input component`p`, simplified finite arithmetic is:
+
+```text
+t = 512 + sign*(p-c)*512/n
+coordinate = truncate_toward_zero((t >= 0 ? 1024-t : 1111)*0.5)
+```
+
+The translation center gives256; negative`t` gives555, an out-of-grid result, **not an edge clamp**. `24D9C0` sends the hero-transform`+38`-derived coordinate first and`+30`-derived coordinate second to `24D788`, whose index is first*512+second. Guarded constants are1/1024,512,1111,1024,0.5 and0. The formula follows native single-precision/FMA/conversion operations; simplified algebra is not a bit-exact float emulator. Geometry is unavailable from saved pointer bits, so actual-save world-coordinate projection and pathological NaN/zero-normalizer behavior are not validated.
+
+`24D788` uses the **14×14 mask at`10060DE8`**, via TOC`897EC8`:129bytes`FF`,67bytes0. Nominal ranges are `[center-7,center+7)` on both coordinates. Mask index is first-loop index+14*second-loop index. Original assembly preserves converted **center class in r24** (`24D8D0`) and loads candidate class in r7 (`24D958`); clearing condition at`24D978/97C` is **`(center_class & brush_byte)==candidate_class`**, then writes0 at`24D9B4`. It is not a candidate-only mask test. Zero mask bytes can still match class0; they are not unconditional skips. Minimum-edge negative starting coordinates fail unsigned bounds/loop comparisons and skip the loop; maximum-edge loops stop at512. Do not replace this behavior with a symmetric clamped brush.
+
+Seven geometry checks cover unsigned rectangle extremes/last-group boundaries, nonboolean flags, retained unready fields, mask shape, exact class-source distinction, qualified projection/order and unchanged actual input. Original types remain intact; `TOD_SaveGridRectangleGroup_verified` supplies the refined field names. Header`+08`, `+0D..0F`, `+1D..1F` and final tail`+60DB` remain unnamed.
+
+### Shipped pause-menu settings dispatch
+
+[Inspect-TodSettingsMenu.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSettingsMenu.py) independently reproduces `settings_menu` from **shipped asset evidence, not ELF addresses**. Exact `global_cached.psarc` entry `/built/anark/pause/built.dat` is1152780bytes, SHA-256`26FC24DD3564FDF94F0F6278FC0F0BC5578FE73C6813D3F39CD113FD22CF761B`. Embedded Lua5.0 `controlHandler` occupies asset offsets`F38FC..F715E`. Four function-code digests and17raw asset-byte guards check initialization/activation/display/adjustment. Literal table folding allows only construction instructions, never calls or executes Lua. Asset offsets must not be treated as ELF VAs/save offsets.
+
+The12 literal descriptors produce enabled indices`[1,4,7,10,11,12]`. Separate first-person inversion descriptors exist but are disabled; `onActivate` filters disabled descriptors, so a literal row is not proof of runtime visibility. Axis descriptors10/11 have native API tables: **scheme0 → `is_x/y_inverted` / `set_x/y_inverted`**, **scheme1 → `is_look_x/y_inverted` / `set_look_x/y_inverted`**. Both display and adjustment index by `get_cur_control_scheme`; this selects the saved field/API, **not reversal of flag polarity**. An initializer's space-combat display of scheme2 does not prove a scheme2 entry in those0/1 tables.
+
+Boolean/axis adjustment passes the logical opposite of the selected getter result. Percentage adjustment divides input delta by10 before adding to getter value; ±1 requests±0.1, then native setters clamp ordinary finite values0..1. Activation checks/sets independently named `HERO_SAW_CONTROL_MENU`. Display tags93/94 for boolean true/false and95/96 for axis true/false are **local text-tag IDs**, not native enum IDs or proven English NORMAL/INVERTED strings. Six asset tests cover exact hash/guards, descriptor filtering, API dispatch, action math/tag separation, mutation rejection and bundled-report reproduction.
+
+The actual save's control scheme is0, making the scheme0 dispatch applicable to these saved bits as a **static interpretation**, not a claim about current runtime menus. `114C0`, `114D6/114D7` and`906E4` remain semantically unnamed. Read-only settings details explain the dispatch/steps while preserving all native fields, raw flags and unknown bytes; no setters or Lua scripts are run.
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGridRouting.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGridGeometry.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSettingsMenu.py "path/to/global_cached.psarc"
 ```
 
 ### Saved settings and load destinations
@@ -935,7 +997,7 @@ python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodResetCategories.p
 
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, player-facing reset-category names and category1 selection, any persisted checkpoint/health dependencies, additional snapshot synchronization, grid world-coordinate scale/orientation and pixel-specific meanings, unnamed copied-header/group words and final tail byte60DB. The5734 bank has confirmed initialization/increment mechanics, selectors2..7 and runtime expiration; this still does not make it named challenge failures or prove in-game counter semantics. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above. All21 grid slots now have native map-label associations and partially verified volume headers/group flags, not a fully understood planet/mission completion map. Tail `0x906E4`, settings word `114C0` and settings bytes `114D6/114D7` remain semantically unresolved; first-person context is established without guessing an option label or polarity. The final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, player-facing reset-category names and category1 selection, any persisted checkpoint/health dependencies, additional snapshot synchronization, runtime grid geometry/world-axis naming and pixel-specific meanings, unnamed common copied-header bytes and final tail byte60DB. The5734 bank has confirmed initialization/increment mechanics, selectors2..7 and runtime expiration; this still does not make it named challenge failures or prove in-game counter semantics. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above. All21 grid slots now have native map-label associations and partially verified volume headers/group flags, not a fully understood planet/mission completion map. Tail `0x906E4`, settings word `114C0` and settings bytes `114D6/114D7` remain semantically unresolved; first-person context is established without guessing an option label or polarity. The final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -945,7 +1007,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1180 mapped annotations (the third TOC reference base is unmapped), 30 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1189 mapped annotations (the third TOC reference base is unmapped), 31 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

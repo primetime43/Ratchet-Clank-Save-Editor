@@ -232,10 +232,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         $"Native getter {field.GetProperty("getter_va").GetString()}, setter {field.GetProperty("setter_va").GetString()}.\r\n" +
                         (type == "f32" ? $"Exact float32: {Number(bits)}. " : $"Raw integer: {bits}. ") +
                         "Boolean getters test nonzero. Float setters clamp ordinary finite inputs to0..1; no safe edit range is asserted. Control-scheme names are not recovered.\r\n" + Message;
+                    if (name.EndsWith("_inverted", StringComparison.Ordinal) || name == "control_scheme_index")
+                        details += "\r\nShipped pause-menu axis dispatch: scheme 0 selects normal-camera APIs; scheme 1 selects look/first-person APIs for both display and adjustment. This selects an API, not saved-flag polarity. Stored scheme bits: " + $"0x{U32(0x114BC):X8}. Entries for other schemes are not inferred. " + TodResearch.Map.GetProperty("settings_menu").GetProperty("actions").GetProperty("activation_filter").GetString();
+                    if (name.EndsWith("_volume", StringComparison.Ordinal) || name == "camera_speed")
+                        details += "\r\nShipped menu percentage adjustment divides input delta by 10: +1/-1 requests +0.1/-0.1 before the native setter. Descriptor presence does not establish current menu visibility.";
                     rows.Add(new(new[] { InspectionPresentation.Label(name), value, TodResearch.Hex(offset), type, raw }, details));
                 }
                 rows.Add(new(new[] { "Unknown settings word", U32(0x114C0).ToString(CultureInfo.InvariantCulture), "0x114C0", "unmapped u32", Convert.ToHexString(data.AsSpan(0x114C0, 4)) },
-                    "Initializer writes1. Consumers20F3F0/2108D8 compare with zero and select runtime modes0F/10; the option and mode names remain unresolved. get_button_layout returns constant0 and set_button_layout is a no-op; this is not a confirmed button-layout word."));
+                    "Initializer writes1. Consumers20F3F0/2108D8 compare with zero and select runtime modes0F/10;20F3F0 sets independently named HERO_FIRST_PERSON bit6. The option name and polarity remain unresolved, including after shipped pause-menu analysis. get_button_layout returns constant0 and set_button_layout is a no-op; this is not a confirmed button-layout word."));
                 rows.Add(new(new[] { "Unknown settings tail", Convert.ToHexString(data.AsSpan(0x114D6, 2)), "0x114D6", "unmapped bytes", Convert.ToHexString(data.AsSpan(0x114D6, 2)) },
                     "Two preserved bytes. Not proven padding; not normalized or interpreted."));
                 return new(new[] { "Setting", "Value", "Offset", "Storage", "Raw bytes" }, rows.AsReadOnly());
@@ -244,6 +248,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 var definition = TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks");
                 int baseOffset = TodResearch.Offset(definition.GetProperty("base")), stride = TodResearch.Offset(definition.GetProperty("stride"));
+                var routing = TodResearch.Map.GetProperty("grid_routing");
+                uint threshold = routing.GetProperty("accumulator_predicate").GetProperty("threshold").GetUInt32();
+                int qualifyingCount = Enumerable.Range(0, definition.GetProperty("count").GetInt32()).Count(s => U32(baseOffset + stride * s + 0xC8) >= threshold);
+                int requiredCount = routing.GetProperty("accumulator_predicate").GetProperty("count_must_exceed").GetInt32();
                 for (int slot = 0; slot < definition.GetProperty("count").GetInt32(); slot++)
                 {
                     int offset = baseOffset + stride * slot;
@@ -277,12 +285,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     for (int group = 0; group < 7; group++)
                     {
                         int g = offset + 0x20 + group * 0x18;
-                        header.AppendLine($"Group {group}: reference 0x{U32(g):X8}, activation word {U32(g + 0xC)}, image index {U32(g + 0x14)}, saved flag 0x{data[offset + 0x60D4 + group]:X2} at {TodResearch.Hex(offset + 0x60D4 + group)}; unknown words {U32(g + 4):X8}/{U32(g + 8):X8}/{U32(g + 0x10):X8}.");
+                        header.AppendLine($"Group {group}: reference 0x{U32(g):X8}; map rectangle origin ({U32(g + 4)}, {U32(g + 8)}), extents ({U32(g + 0xC)}, {U32(g + 0x10)}); image index {U32(g + 0x14)}; saved flag 0x{data[offset + 0x60D4 + group]:X2} at {TodResearch.Hex(offset + 0x60D4 + group)}. Nonzero first extent gates visibility/containment checks, not a standalone activation boolean.");
                     }
                     string details = $"Physical stored block {slot} at {TodResearch.Hex(offset)}; ready byte0x{ready:X2}; declared encoded size {length}; saved accumulator {savedAccumulator}.\r\n" +
                         $"Native map-label level: {level} (ID {catalog.GetProperty("label_level_id")}). Several grid slots may share a level; not the current runtime planet.\r\n" +
+                        $"Native map-menu position: {routing.GetProperty("slot_to_browse").GetProperty("values")[slot].GetInt32() + 1} of 21 (zero-based ordinal {routing.GetProperty("slot_to_browse").GetProperty("values")[slot]}); image resource index {routing.GetProperty("slot_to_image").GetProperty("values")[slot]}. Menu navigation skips ready byte 0, not a completion verdict.\r\n" +
+                        $"Native accumulator threshold check: this word >= {threshold}: {(savedAccumulator >= threshold ? "Yes" : "No")}; snapshot qualifies {qualifyingCount}/21; function 24E7E8 returns {(qualifyingCount > requiredCount ? 1 : 0)} (requires count > {requiredCount}). Reads all words without a readiness gate. No confirmed trophy/completion caller; not exact cleared-cell count.\r\n" +
                         header + $"Unknown last byte60DB: {data[offset + 0x60DB]:X2}.\r\n" + status + "\r\n" + result + "\r\n" +
-                        "Persistent 512×512 byte grid; native index=first coordinate*512+second coordinate. Cells0/1/2 are not interchangeable booleans: a native update clears qualifying cells to0. Unknown values are preserved. " +
+                        "Persistent 512×512 byte grid; native index=first coordinate*512+second coordinate. The native 14×14 brush has129 nonzero mask bytes and clears when (center class & brush byte)==candidate class; minimum-edge loops may skip rather than clamp. Projection requires runtime geometry not available from this save. Cells0/1/2 are not interchangeable booleans; unknown values are preserved. " +
                         "Seven group flags record conditional volume containment and affect map image display; the treasure mapper can bypass flag display requirements. They are not mission/collectible completion flags. " +
                         "Readiness is not visit/completion status. Runtime geometry pointer bits are not portable and never dereferenced. Safe decoding bounds both input and output; native final runs may be clipped. Original compressed bytes are never rewritten.";
                     rows.Add(new(new[] { slot.ToString(), ready != 0 ? "Yes" : "No", length.ToString(CultureInfo.InvariantCulture), decodedSize,

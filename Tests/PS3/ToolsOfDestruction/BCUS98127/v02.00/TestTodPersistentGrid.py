@@ -61,7 +61,7 @@ class PersistentGridChecks(unittest.TestCase):
             self.assertEqual(observed["runtime_geometry_pointer_bits"],"0xdeadbeef")
             self.assertEqual(observed["coordinate_sign_byte"],255)
             self.assertEqual(observed["groups"][-1]["saved_flag"],0xAB)
-            self.assertEqual(observed["groups"][-1]["activation_word"],7)
+            self.assertEqual(observed["groups"][-1]["extent_1"],7)
             self.assertEqual(observed["unknown_last_byte"],0xCD)
             self.assertIsNone(observed["decoded"])
             self.assertEqual(path.read_bytes(),data)

@@ -21783,11 +21783,14 @@
         "count": 7,
         "stride": "0x18",
         "reference_member": "0x0",
-        "activation_member": "0xc",
+        "coordinate_1_member": "0x4",
+        "coordinate_2_member": "0x8",
+        "extent_1_member": "0xc",
+        "extent_2_member": "0x10",
         "image_index_member": "0x14",
         "flag_base": "0x60d4",
         "unknown_last_byte": "0x60db",
-        "semantics": "24E8A0 tests referenced volume-list entries against hero position; if group+0C nonzero and containment succeeds, stores1 in its saved flag. Nonzero saved flags skip further checks.25AE08 reads those flags and group+0C to choose/show group image index+14+25; treasure-mapper object count at save31C can bypass flag display requirement. No localized group names or completion meanings inferred."
+        "semantics": "24E8A0 tests referenced volume-list entries against hero position; if group+0C nonzero and containment succeeds, stores1 in its saved flag. Nonzero saved flags skip further checks.25AE08 reads flags and group+0C for image index+14+25; treasure-mapper count at save31C can bypass flag display requirement.25BF68 establishes+04/+08 as map rectangle origins,+0C/+10 as extents: the nonzero gate is first extent, not a standalone activation boolean. See grid_geometry for guarded consumers. No localized group names or completion meanings inferred."
       }
     },
     "grid": {
@@ -21800,7 +21803,7 @@
       "initialization": "24DCA0 reads resource250D0, layer definition+14; each BE32 contributes eight high-to-low nibbles. Nested512 loops store persistent bytes at runtime+24 and converted image bytes via+40028.",
       "conversion": "24D6E8: zero input yields image0/state0; otherwise image=min((input&15)*17,254), state=min(ceil(image/127),2). Thus nibble1..7->state1,8..15->state2.",
       "updates": "24D570 maps world coordinates using runtime geometry pointer and sign byte1C;24D788 checks coordinates<512, processes a bounded neighboring region and clears qualifying saved-grid cells to0. Zero is a cleared cell, not a mission-completion bit.1/2 encode native state classes, not boolean equivalents.",
-      "limits": "Coordinate orientation/scale, pixel-specific terrain labels, runtime image palette and visual/edited-save acceptance remain unverified. Native logical grid is distinct from encoded physical bytes."
+      "limits": "See grid_geometry for native projection, sign polarity and clearing brush. Runtime geometry is unavailable from copied pointer bits; world-axis naming, pixel-specific terrain labels, image palette and visual/edited-save acceptance remain unverified. Native logical grid is distinct from encoded physical bytes."
     },
     "slot_catalog": [
       {
@@ -22300,6 +22303,1017 @@
       }
     ]
   },
+  "grid_routing": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 only. Browse ordinal, saved physical slot, map-label level and resource image index are different namespaces. Native aggregate predicate has no confirmed gameplay caller; do not label it trophy/completion progress.",
+    "blocks": {
+      "base": "0x114d8",
+      "stride": "0x60dc",
+      "count": 21
+    },
+    "slot_to_browse": {
+      "function_va": "0x24e398",
+      "table_va": "0x24e3c0",
+      "table_slot_va": "0x897ef4",
+      "values": [
+        15,
+        16,
+        9,
+        10,
+        11,
+        5,
+        6,
+        1,
+        18,
+        3,
+        20,
+        4,
+        12,
+        13,
+        19,
+        0,
+        7,
+        8,
+        17,
+        2,
+        14
+      ],
+      "out_of_range_result": 21
+    },
+    "browse_to_slot": {
+      "function_va": "0x24e4c0",
+      "table_va": "0x24e4e8",
+      "table_slot_va": "0x897ef8",
+      "values": [
+        15,
+        7,
+        19,
+        9,
+        11,
+        5,
+        6,
+        16,
+        17,
+        2,
+        3,
+        4,
+        12,
+        13,
+        20,
+        0,
+        1,
+        18,
+        8,
+        14,
+        10
+      ],
+      "out_of_range_result": 4294967295
+    },
+    "slot_to_image": {
+      "function_va": "0x24e5e8",
+      "table_va": "0x24e60c",
+      "table_slot_va": "0x897efc",
+      "values": [
+        32,
+        32,
+        29,
+        29,
+        29,
+        26,
+        26,
+        22,
+        34,
+        24,
+        36,
+        25,
+        30,
+        30,
+        35,
+        21,
+        27,
+        28,
+        33,
+        23,
+        31
+      ],
+      "out_of_range_result": 21
+    },
+    "menu_provenance": {
+      "consumer_va": "0x25d1d0",
+      "initial_consumer_va": "0x25bbf0",
+      "selection_runtime_member": "0xad0",
+      "selected_saved_block_pointer_member": "0xb08",
+      "ready_save_member": "0xcc",
+      "state_pointer_slot_va": "0x8982ec",
+      "semantics": "25D1D0 converts selected slot to browse ordinal via2520C8->24E398, wraps directional searches over21 ordinals, converts back via2512B8->24E4C0 and skips saved ready byte0 at block+CC. Nonzero flags are accepted without normalization. It stores runtime selection+AD0 and block pointer+B08; these are not new save fields.",
+      "image_semantics": "25BBF0 and25D1D0 call2500D8->24E5E8, feeding its image index to251898 with512 extent and20000 flags; a separate call uses physical slot with80000 flags. Shared image indices do not merge their distinct saved grid slots. Image file names/palette are not proven."
+    },
+    "accumulator_predicate": {
+      "function_va": "0x24e7e8",
+      "first_pointer_slot_va": "0x897f04",
+      "end_pointer_slot_va": "0x897f08",
+      "first_runtime_va": "0x102010c0",
+      "end_pointer_va": "0x102802cc",
+      "first_save_offset": "0x115a0",
+      "stride": "0x60dc",
+      "count": 21,
+      "threshold": 222822,
+      "comparison": "unsigned saved accumulator >= threshold",
+      "count_must_exceed": 15,
+      "ready_gate": false,
+      "semantics": "Reads21 BE32 encoder accumulators at block+C8, counts each word >=0x36666, returns1 iff count>15. The end pointer is a stride sentinel beyond the serialized end; it is never dereferenced. No decoding or ready-byte test is performed. Accumulator is not exact zero-cell count or checksum.",
+      "caller_evidence": "Only function descriptor869388 references code24E7E8 in the native scan; no descriptor-pointer references or direct callers found. Gameplay invocation/purpose remains unresolved."
+    },
+    "instruction_guards": [
+      {
+        "va": "0x24e398",
+        "bytes": "2B83001438000015419D007881627FBC786917887C89582E7C8307B47C035A147C0903A64E8004200000006000000068000000700000007800000080000000880000009000000098000000A0000000A8000000B0000000B8000000C0000000C800000054000000D0000000D8000000E0000000E8000000F0000000F838000013780306E04E8000203800000F4BFFFFF4380000104BFFFFEC380000094BFFFFE43800000A4BFFFFDC3800000B4BFFFFD4380000054BFFFFCC380000064BFFFFC4380000014BFFFFBC380000124BFFFFB4380000034BFFFFAC380000144BFFFFA4380000044BFFFF9C3800000C4BFFFF943800000D4BFFFF8C380000004BFFFF84380000074BFFFF7C380000084BFFFF74380000114BFFFF6C380000024BFFFF643800000E4BFFFF5C"
+      },
+      {
+        "va": "0x24e39c",
+        "bytes": "38000015"
+      },
+      {
+        "va": "0x24e3a0",
+        "bytes": "419D0078"
+      },
+      {
+        "va": "0x24e3c0",
+        "bytes": "0000006000000068000000700000007800000080000000880000009000000098000000A0000000A8000000B0000000B8000000C0000000C800000054000000D0000000D8000000E0000000E8000000F0000000F8"
+      },
+      {
+        "va": "0x24e414",
+        "bytes": "38000013780306E0"
+      },
+      {
+        "va": "0x24e420",
+        "bytes": "3800000F4BFFFFF4"
+      },
+      {
+        "va": "0x24e428",
+        "bytes": "380000104BFFFFEC"
+      },
+      {
+        "va": "0x24e430",
+        "bytes": "380000094BFFFFE4"
+      },
+      {
+        "va": "0x24e438",
+        "bytes": "3800000A4BFFFFDC"
+      },
+      {
+        "va": "0x24e440",
+        "bytes": "3800000B4BFFFFD4"
+      },
+      {
+        "va": "0x24e448",
+        "bytes": "380000054BFFFFCC"
+      },
+      {
+        "va": "0x24e450",
+        "bytes": "380000064BFFFFC4"
+      },
+      {
+        "va": "0x24e458",
+        "bytes": "380000014BFFFFBC"
+      },
+      {
+        "va": "0x24e460",
+        "bytes": "380000124BFFFFB4"
+      },
+      {
+        "va": "0x24e468",
+        "bytes": "380000034BFFFFAC"
+      },
+      {
+        "va": "0x24e470",
+        "bytes": "380000144BFFFFA4"
+      },
+      {
+        "va": "0x24e478",
+        "bytes": "380000044BFFFF9C"
+      },
+      {
+        "va": "0x24e480",
+        "bytes": "3800000C4BFFFF94"
+      },
+      {
+        "va": "0x24e488",
+        "bytes": "3800000D4BFFFF8C"
+      },
+      {
+        "va": "0x24e490",
+        "bytes": "380000004BFFFF84"
+      },
+      {
+        "va": "0x24e498",
+        "bytes": "380000074BFFFF7C"
+      },
+      {
+        "va": "0x24e4a0",
+        "bytes": "380000084BFFFF74"
+      },
+      {
+        "va": "0x24e4a8",
+        "bytes": "380000114BFFFF6C"
+      },
+      {
+        "va": "0x24e4b0",
+        "bytes": "380000024BFFFF64"
+      },
+      {
+        "va": "0x24e4b8",
+        "bytes": "3800000E4BFFFF5C"
+      },
+      {
+        "va": "0x24e4c0",
+        "bytes": "2B8300143800FFFF419D007881627FC0786917887C89582E7C8307B47C035A147C0903A64E8004200000006000000068000000700000007800000080000000880000009000000098000000A0000000A8000000B0000000B8000000C0000000C8000000D0000000D8000000E0000000E8000000F000000054000000F83800000E780300204E8000203800000F4BFFFFF4380000074BFFFFEC380000134BFFFFE4380000094BFFFFDC3800000B4BFFFFD4380000054BFFFFCC380000064BFFFFC4380000104BFFFFBC380000114BFFFFB4380000024BFFFFAC380000034BFFFFA4380000044BFFFF9C3800000C4BFFFF943800000D4BFFFF8C380000144BFFFF84380000004BFFFF7C380000014BFFFF74380000124BFFFF6C380000084BFFFF643800000A4BFFFF5C"
+      },
+      {
+        "va": "0x24e4c4",
+        "bytes": "3800FFFF"
+      },
+      {
+        "va": "0x24e4c8",
+        "bytes": "419D0078"
+      },
+      {
+        "va": "0x24e4e8",
+        "bytes": "0000006000000068000000700000007800000080000000880000009000000098000000A0000000A8000000B0000000B8000000C0000000C8000000D0000000D8000000E0000000E8000000F000000054000000F8"
+      },
+      {
+        "va": "0x24e53c",
+        "bytes": "3800000E78030020"
+      },
+      {
+        "va": "0x24e548",
+        "bytes": "3800000F4BFFFFF4"
+      },
+      {
+        "va": "0x24e550",
+        "bytes": "380000074BFFFFEC"
+      },
+      {
+        "va": "0x24e558",
+        "bytes": "380000134BFFFFE4"
+      },
+      {
+        "va": "0x24e560",
+        "bytes": "380000094BFFFFDC"
+      },
+      {
+        "va": "0x24e568",
+        "bytes": "3800000B4BFFFFD4"
+      },
+      {
+        "va": "0x24e570",
+        "bytes": "380000054BFFFFCC"
+      },
+      {
+        "va": "0x24e578",
+        "bytes": "380000064BFFFFC4"
+      },
+      {
+        "va": "0x24e580",
+        "bytes": "380000104BFFFFBC"
+      },
+      {
+        "va": "0x24e588",
+        "bytes": "380000114BFFFFB4"
+      },
+      {
+        "va": "0x24e590",
+        "bytes": "380000024BFFFFAC"
+      },
+      {
+        "va": "0x24e598",
+        "bytes": "380000034BFFFFA4"
+      },
+      {
+        "va": "0x24e5a0",
+        "bytes": "380000044BFFFF9C"
+      },
+      {
+        "va": "0x24e5a8",
+        "bytes": "3800000C4BFFFF94"
+      },
+      {
+        "va": "0x24e5b0",
+        "bytes": "3800000D4BFFFF8C"
+      },
+      {
+        "va": "0x24e5b8",
+        "bytes": "380000144BFFFF84"
+      },
+      {
+        "va": "0x24e5c0",
+        "bytes": "380000004BFFFF7C"
+      },
+      {
+        "va": "0x24e5c8",
+        "bytes": "380000014BFFFF74"
+      },
+      {
+        "va": "0x24e5d0",
+        "bytes": "380000124BFFFF6C"
+      },
+      {
+        "va": "0x24e5d8",
+        "bytes": "380000084BFFFF64"
+      },
+      {
+        "va": "0x24e5e0",
+        "bytes": "3800000A4BFFFF5C"
+      },
+      {
+        "va": "0x24e5e8",
+        "bytes": "2B830014419D007481627FC4786917887C89582E7C8307B47C035A147C0903A64E800420000000600000006000000068000000680000006800000070000000700000007800000080000000880000009000000098000000A0000000A0000000A800000054000000B0000000B8000000C0000000C8000000D038600015786306A04E800020386000204BFFFFF43860001D4BFFFFEC3860001A4BFFFFE4386000164BFFFFDC386000224BFFFFD4386000184BFFFFCC386000244BFFFFC4386000194BFFFFBC3860001E4BFFFFB4386000234BFFFFAC3860001B4BFFFFA43860001C4BFFFF9C386000214BFFFF94386000174BFFFF8C3860001F4BFFFF8460000000"
+      },
+      {
+        "va": "0x24e5ec",
+        "bytes": "419D0074"
+      },
+      {
+        "va": "0x24e60c",
+        "bytes": "000000600000006000000068000000680000006800000070000000700000007800000080000000880000009000000098000000A0000000A0000000A800000054000000B0000000B8000000C0000000C8000000D0"
+      },
+      {
+        "va": "0x24e660",
+        "bytes": "38600015786306A0"
+      },
+      {
+        "va": "0x24e66c",
+        "bytes": "386000204BFFFFF4"
+      },
+      {
+        "va": "0x24e674",
+        "bytes": "3860001D4BFFFFEC"
+      },
+      {
+        "va": "0x24e67c",
+        "bytes": "3860001A4BFFFFE4"
+      },
+      {
+        "va": "0x24e684",
+        "bytes": "386000164BFFFFDC"
+      },
+      {
+        "va": "0x24e68c",
+        "bytes": "386000224BFFFFD4"
+      },
+      {
+        "va": "0x24e694",
+        "bytes": "386000184BFFFFCC"
+      },
+      {
+        "va": "0x24e69c",
+        "bytes": "386000244BFFFFC4"
+      },
+      {
+        "va": "0x24e6a4",
+        "bytes": "386000194BFFFFBC"
+      },
+      {
+        "va": "0x24e6ac",
+        "bytes": "3860001E4BFFFFB4"
+      },
+      {
+        "va": "0x24e6b4",
+        "bytes": "386000234BFFFFAC"
+      },
+      {
+        "va": "0x24e6bc",
+        "bytes": "3860001B4BFFFFA4"
+      },
+      {
+        "va": "0x24e6c4",
+        "bytes": "3860001C4BFFFF9C"
+      },
+      {
+        "va": "0x24e6cc",
+        "bytes": "386000214BFFFF94"
+      },
+      {
+        "va": "0x24e6d4",
+        "bytes": "386000174BFFFF8C"
+      },
+      {
+        "va": "0x24e6dc",
+        "bytes": "3860001F4BFFFF84"
+      },
+      {
+        "va": "0x24e7e8",
+        "bytes": "81027FD03920000081427FCC60000000794B0020394A60DC380900017F8A400080AB00003C85FFFD3864999A78690FE07D290050409EFFDC2809000F3860000040810008386000017C6307B44E800020"
+      },
+      {
+        "va": "0x24e7f0",
+        "bytes": "81427FCC"
+      },
+      {
+        "va": "0x24e7fc",
+        "bytes": "394A60DC"
+      },
+      {
+        "va": "0x24e808",
+        "bytes": "80AB0000"
+      },
+      {
+        "va": "0x24e80c",
+        "bytes": "3C85FFFD"
+      },
+      {
+        "va": "0x24e810",
+        "bytes": "3864999A"
+      },
+      {
+        "va": "0x24e814",
+        "bytes": "78690FE0"
+      },
+      {
+        "va": "0x24e818",
+        "bytes": "7D290050"
+      },
+      {
+        "va": "0x24e820",
+        "bytes": "2809000F"
+      },
+      {
+        "va": "0x2500d8",
+        "bytes": "F84100283C42FFFF384200184BFFE504"
+      },
+      {
+        "va": "0x2512b8",
+        "bytes": "F84100283C42FFFF384200184BFFD1FC"
+      },
+      {
+        "va": "0x2520c8",
+        "bytes": "F84100283C42FFFF384200184BFFC2C4"
+      },
+      {
+        "va": "0x25bbf0",
+        "bytes": "38E000007D4802A6F821FED1F9410140FB610108FB810110FBA10118FBC10120FBE1012898E368157C7F1B784807587560000000787D00203B6000007FA3EB7848074D59600000007C7C1B787FA3EB7848074FD960000000391F09C880A2842878670020790400207B860020386000024BFF5559E8410028817F00547965002038C000003C85000690DF67E4937F67E83F8B00018064B4FC4BFF7191E84100287C7E1B78387CC5F0786300204BFF505DE8410028393C5F10792300209B7F6817800300342F800000409E0298807F0B0C7BFD002078690020812900202C090000913F0B084182009C793B0020801F0AD0813B00107C8048004186005479230020809F0ACC38A0020080DF0AC83CE00008913F0AD04BFF5B95E8410028907F0ADC807F0AD04BFF43C5E8410028809F0AD880DF0AD47863002038A002003CE000024BFF5B69E8410028907F0AE0801F0ADC2F000000419A0008901F0794801F0AE02F800000419E0008901F01887BFD0020809F0B087FA3EB784BFFF0A1807F0B0C786300204BFF5A45E8410028807F0B0C4BFF54F9E8410028815F0B08C00284042C0A0000C1A2842C38600000C1828430C1628434907F6800D01F67F0D1BF67F8D19F67F4D17F67FC907F68044182007879440020811E0014C1228438C10283E480C40000C1680030C0660004ED8300F2C0460030C0260000ECEB1028C1A60008EC01607AED4D037AFC60502CECC71824ED660272D17F680080BE001481640000C0850038C0AB0038EC442828EC221824EC010232D01F68048BC4001C2C9E000040860108809F68103920000083C283CC3864000138800001907F681038600004E97E552865600002F81E5528913F0B284BFF6949E841002838800001386000074BFF6939E8410028388000013860000D4BFF6929E841002838800001386000034BFF6919E8410028386000004BFF508DE8410028386000014824F781600000004BFF5CA9E84100287FA3EB783BBC8D5C4BFFEE413981008038800007799B00207F63DB784BFF6F55E8410028386100703940067B38E000027F64DB789141008890E100E44BFF31F5E84100287BA3002083E300342F1F0000419A000C48002DE560000000EB810140EB6101087F8803A6EBA10118EB810110EBC10120EBE10128382101304E800020FC800050FD005850D09F6804D11F68004BFFFEEC600000004BFF65B9E841002839800001999F68174BFFFD5C60000000"
+      },
+      {
+        "va": "0x25bd14",
+        "bytes": "4BFF43C5"
+      },
+      {
+        "va": "0x25d1d0",
+        "bytes": "F821FEC17C0802A6FBE10138FB210108FB410110FB610118FB810120FBA10128FBC10130F801015081230B0C7C7F1B78834900202F9A0000419E023880630AD02C03FFFF4182022C786300204BFF4EADE84100282C83FFFF7C7E1B784186021438BF00B83880000078BC00207C7D1B787F83E3784BFF3FE5E84100285463063E2F030000409A02C47F83E378388000014BFF3FC9E8410028547B063E2F1B0000409A01FC7F1DF000419A01C87BBC00207F83E3787BF900204BFF4031E8410028814283CC7C7C1B787F23CB78939F0AD07B5B00201D9C60DC3D0C00017D68521438EB14D878E4002090FF0B084BFFDB4D809F0ACC38A0020080DF0AC83CE00008807F0AD04BFF45C5E8410028907F0ADC807F0AD04BFF2DF5E8410028809F0AD880DF0AD438A002003CE00002786300204BFF4599E8410028809F0AD0907F0AE0807F0B0C4BFF4C65E841002883DF0AD0835B00107F9ED000419E02E0807F0B0C4BFF54E9E8410028807F0AD04BFF40EDE841002883C2841C7C7B1B788BBE00002C1D00004182028C838284207B9C00203880060C7F83E3784BFF4F31E84100287C7D1B78887E00002C830000418602407F83E3787BA4002038A000004BFF3B1DE84100282F030000419A0298786400208064000838FF0A4880A284C87866002078E400207B7C0020386000013BDF09C84BFF3DF9E84100287F83E378480735BD600000003BE000027C7B1B787F83E378480738396000000080A28428786700207B6600207BC40020386000024BFF3DBDE84100287F23CB784BFFD96938C100803880001478DA00203B20067B7F43D3784BFF5A09E84100287F44D378386100709321008893E100E44BFF1CB1E8410028E9610150EB210108EB4101107D6803A6EB610118EB810120EBA10128EBC10130EBE10138382101404E80002038BDFFEC38C0FFEB7CA7FE703800FFEB7CC438387D2428507D23FE707C1C18387FBC48507BBC00207F83E3784BFF3E21E84100287F9DF000419EFF9C836283CC1D2360DC4800000C600000001D2360DC3F290001399915907D8A07B47D0ADA14896800142C0B00004082FDAC387DFFEC3880FFEB7C66FE703BA0FFEB7C8530387D2518507D20FE707FBC00387FBC48507BBC00207F83E3784BFF3DB5E84100287C9DF0004086FFA84BFFFF2C391EFFEA3980FFEB7D19FE7038E0FFEB7D8AC8387CCA40507CCBFE707CE458387FA430507BA300204BFF3D79E84100287F9DF000419EFD0C836283CC1D2360DC4800004460000000391DFFEA3980FFEB7D19FE703BA0FFEB7D8AC8387CEA40507CEBFE707FA658387FA638507BA300204BFF3D31E84100287C9DF0004186FCC41D2360DC3C89000138A415907CA307B47D23DA14880900142C0000004182FFAC4BFFFCA07F83E3784BFF39D9E841002838A000018062842498BE00004BFF20B5E84100284BFFFDA4838284207B8300204BFF39B1E84100283800000180628424981E00004BFF208DE84100284BFFFD583920FFFF807F0B0C38A00000792400204BFF4331E8410028807F0B0C4BFF3C55E84100284BFFFD0C806284C44BFFFD70"
+      },
+      {
+        "va": "0x25d21c",
+        "bytes": "4BFF4EAD"
+      },
+      {
+        "va": "0x25d288",
+        "bytes": "4BFF4031"
+      },
+      {
+        "va": "0x25d290",
+        "bytes": "814283CC"
+      },
+      {
+        "va": "0x25d2e4",
+        "bytes": "4BFF2DF5"
+      },
+      {
+        "va": "0x25d4c0",
+        "bytes": "39991590"
+      },
+      {
+        "va": "0x25d4cc",
+        "bytes": "89680014"
+      },
+      {
+        "va": "0x25d5a0",
+        "bytes": "38A41590"
+      },
+      {
+        "va": "0x25d5ac",
+        "bytes": "88090014"
+      },
+      {
+        "va": "0x35e170",
+        "bytes": "1D7F60DC"
+      },
+      {
+        "va": "0x35e180",
+        "bytes": "390914D8"
+      },
+      {
+        "va": "0x35e190",
+        "bytes": "2C3F0015"
+      },
+      {
+        "va": "0x869388",
+        "bytes": "0024E7E80088FF38"
+      },
+      {
+        "va": "0x897ef4",
+        "bytes": "0024E3C0"
+      },
+      {
+        "va": "0x897ef8",
+        "bytes": "0024E4E8"
+      },
+      {
+        "va": "0x897efc",
+        "bytes": "0024E60C"
+      },
+      {
+        "va": "0x897f04",
+        "bytes": "102010C0"
+      },
+      {
+        "va": "0x897f08",
+        "bytes": "102802CC"
+      },
+      {
+        "va": "0x8982ec",
+        "bytes": "101EFB20"
+      }
+    ]
+  },
+  "grid_geometry": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 only. Read-only mathematical/display semantics, not edited-save acceptance or complete terrain/fog semantics.",
+    "groups": {
+      "base": "0x20",
+      "count": 7,
+      "stride": "0x18",
+      "coordinate_1_member": "0x4",
+      "coordinate_2_member": "0x8",
+      "extent_1_member": "0xc",
+      "extent_2_member": "0x10",
+      "storage_type": "BE unsigned32 words",
+      "consumer_va": "0x25bf68",
+      "semantics": "25BF68 consumes group+04/+08 as rectangle origins and+0C/+10 as extents, transforms them to map-display rectangle endpoints, clips endpoints and adjusts texture UVs. Group+0C is therefore horizontal extent, not merely a boolean activation word; it also gates containment flag recording and image visibility when nonzero. Axes are map-display coordinates, not raw world coordinates.",
+      "display_constants": {
+        "coordinate_1_factor": "400/512",
+        "coordinate_2_factor": "200/512",
+        "clip_axis_1": 800,
+        "clip_axis_2": 400
+      },
+      "unknown_members": "Header+08,+0D..0F,+1D..1F and saved tail+60DB remain unresolved. No completion meaning inferred."
+    },
+    "projection": {
+      "consumer_va": "0x24d570",
+      "caller_va": "0x24d9c0",
+      "geometry_pointer_member": "0x0",
+      "sign_member": "0x1c",
+      "normalizer": "sqrt(geometry[0]^2 + geometry[1]^2 + geometry[2]^2)",
+      "translation_offsets": [
+        "0x30",
+        "0x38"
+      ],
+      "sign": "header+1C zero -> -1; nonzero -> +1",
+      "formula": "For each input component p and corresponding geometry translation c: t=512 + sign*(p-c)*512/normalizer; output=truncate_toward_zero((t>=0 ? 1024-t : 1111)*0.5). At finite nonzero normalizer and translation center the coordinate is256. Negative t gives555, an out-of-grid result, not an edge clamp.",
+      "buffer_order": "24DEA8 passes hero transform+30/+38 pairs to24D9C0;24D9C0 forwards the +38-derived coordinate first and +30-derived coordinate second to24D788, which uses first*512+second.",
+      "limits": "Geometry is a copied runtime pointer and cannot be reconstructed or dereferenced from save bytes. Formula follows PPC single-precision/FMA/conversion operations; simplified algebra is not a bit-exact floating-point emulator. World-axis naming/orientation beyond transform offsets and pathological NaN/zero-normalizer behavior remain unverified."
+    },
+    "brush": {
+      "consumer_va": "0x24d788",
+      "pointer_slot_va": "0x897ec8",
+      "data_va": "0x10060de8",
+      "width": 14,
+      "height": 14,
+      "mask_hex": "00000000FFFFFFFFFF0000000000000000FFFFFFFFFFFFFF000000000000FFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFFFF000000000000FFFFFFFFFFFFFF0000000000000000FFFFFFFFFF00000000000000000000000000000000000000",
+      "nonzero_cells": 129,
+      "range": "Nominal first/second coordinate ranges [center-7,center+7), mask index=first_loop_index+14*second_loop_index. Native unsigned coordinate checks require each coordinate<512. Near minimum edge a negative starting coordinate causes the corresponding loop to skip; maximum-edge loops stop at512. Do not replace this with a symmetric clamped brush.",
+      "predicate": "Center image byte and each candidate image byte are converted with24D6E8. Clear persistent grid cell to0 exactly when (center_class & brush_byte)==candidate_class. This is not candidate_class&mask==candidate_class: center_class is preserved in r24 at24D8D0, whereas candidate_class is loaded in r7 at24D958.",
+      "zero_mask": "Zero mask entries can still satisfy the predicate for candidate class0; they are not an unconditional skip."
+    },
+    "instruction_guards": [
+      {
+        "va": "0x24d570",
+        "bytes": "81230020C0E27F84816900008869001C7D4300D0C10B00047C6C5378ECC80232C0AB00007D80FE76C16B0038780807E0C08B0008C1AB0030EC4258287D000338EC2168287C05AE767804056039250001ED85317A386407FF2BA900027C6A0378794A0524EC64613AFC00182CEC00002A409C00087C0A0378F941FFF0C921FFF0FC804E9CC1A27F70ED600372C1827F74C0A27F7CC1227F78FD402018C0827F80EC6A5824EC0260FAED6160FAFCC03828FD8B3828ED050028FDA64A2EEC0D0132ED455828FC6C4AAEEC430132FCE0065EFC20165ED8E1FFF0E961FFF0D821FFF0E881FFF090860000916700004E800020"
+      },
+      {
+        "va": "0x24d6e8",
+        "bytes": "5483073E2F840000546920367C604B7878090020419E007C3809FF02C1627F88C0A27F8C7C09FE767D230038398300FE798A002099850000F941FFF0C901FFF0FCE0469CFCC03818EC465824FC60165EFC601E9CFC031028FC83282AFD82192EFC2060AEFC000050FC20606EFDA00E5ED9A1FFF0E8A1FFF0210500027D0BFE707D0758387C853A14988600004E8000209885000038800000988600004E800020"
+      },
+      {
+        "va": "0x24d788",
+        "bytes": "2B8401FF7C0802A6F821FEF1F9E10088FA010090FA210098FA4100A0FA6100A8FA8100B0FAA100B8FAC100C0FAE100C8FB0100D0FB2100D8FB4100E0FB6100E8FB8100F0FBA100F8FBC10100FBE10108F80101207C6F1B787CA82B78419D000C280501FF40810058E9E10120EA0100907DE803A6EA210098E9E10088EA4100A0EA6100A8EA8100B0EAA100B8EAC100C0EAE100C8EB0100D0EB2100D8EB4100E0EB6100E8EB8100F0EBA100F8EBC10100EBE10108382101104E800020787A00205497482C3F3A000438A4FFF9388400072265040022240400831900283B88FFF93BA800077ED7C214219C04007EB64214207D04007AAB00207E32FE707E74FE707E2A90387E66A0387C69FE707D90FE703A8100703AA100717C6848387E4532147FE45214888B00007D8780387F43D3787E85A3787EA6AB787F7C3A147E3D42144BFFFE217C92F8408B0100714084FF1C2B1201FF565E482C7E5793787EDEDA147E12F8503A6000004199FF00600000007F1B8840409800902B9B01FF419D008883A27F907CB67A147EDEB3787F93EA147F7FDB783BA500247F3B8850600000003CFA00047F43D3787E85A3787EA6AB783BFF0001818700287D3E62143BDE000179280020888800004BFFFD997B8B002088E100717C9BCA147BA80020289F01FF7F04F800894B00003B9C000E3BBD00017F0050387F803800419E0030419A00084085FFA03AF700017FF282147C1FB8004182FE58289701FF3A7300013AD602004085FF504BFFFE4438C0000098C800004BFFFFCC60000000"
+      },
+      {
+        "va": "0x24d978",
+        "bytes": "7F005038"
+      },
+      {
+        "va": "0x24d97c",
+        "bytes": "7F803800"
+      },
+      {
+        "va": "0x24d9b4",
+        "bytes": "98C80000"
+      },
+      {
+        "va": "0x24d9c0",
+        "bytes": "F821FF517C8802A6FBA100987C7D1B7878C3002278A5002290610080C04100807FA3EB7890A1008038C10070C021008038E10074F88100C04BFFFB797FA3EB788081007480A100704BFFFD81E80100C0EBA10098382100B07C0803A64E800020"
+      },
+      {
+        "va": "0x24dea8",
+        "bytes": "F821FF417C8802A6FB21008878790020FB6100983D390004FB010080FB410090FB8100A0FBA100A8FBC100B0FBE100B8F88100D0880900247C7B1B782F800001419E02383BA100703B8000007BA500207CA32B787CBF2B784BDC2471E841002848000020600000004BF92FA1600000007C7C1B787FE3FB784BDC2B41E84100287FE3FB784BDC2645E84100285466063E7FE3FB782C0600004082FFD02C9C0000418601D84BDC5355E84100287BBF002083027FA87B9A002048000014600000007BA300204BDC4005E84100287FE3FB784BDC5ED9E8410028547E063E7FE3FB782F1E0000419A011C4BDC4EA1E8410028786A0020880A000C2F800000419EFFC480EA00047C7E1B782F070535409AFFB4810A00182F88FFFF550B3830550320367C835A14419E0184819800007C8462142C04000041820174813A00147884002039490030794300204BDC2B71E84100282C8300004186FF6C813B00207F89F000419E01C02C0900004182001C793800203B5B00247B430020809800104BDC464DE84100287BCA002080A27FAC93DB0020806A00101D6360DC3CEB000138C715907CC407B47FE42A148BBF00142C9D000040860144808A00147F23CB7838A0020038C0000038E000004BFFFC3183BB002080027FAC38A000C87FA4EB78835D00101F1A60DC3D3800017D490214386A14D8786300204BDC4B15E8410028480000083BC00000813B00202F090000419A006C2F9E0000419E0064793F0020801F00182C00FFFF4182008C80C27FA8540B3830540720367C875A1480A600007C042A142C8000004186006C7B9F00207804002083DF00143B9E00307B8300204BDC2A5DE84100282F030000409A0074807B00204800078960000000EB2100D0EB0100807F2803A6EB410090EB210088EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E800020808A00004BFFFE8C7B9F00207BC8002083DF0014800800003B9E0030780400207B8300204BDC29EDE84100282F030000419AFF94819F00147F23CB78E8AC0030E8CC00384BFFF82D4BFFFF7C399B002478630020798400204BDC24B9E84100283900FFFF7F23CB7838A00000790400204BFFF9414BFFFEE87D3E4B784BFFFEEC"
+      },
+      {
+        "va": "0x25bf68",
+        "bytes": "F821FEA17C0802A6DA0100E0DA4100F0DA6100F8DA810100DAA10108FB210098FB4100A0FB6100A8FBC100C0FBE100C8D9C100D03F40BBBBD9E100D87C7F1B78DA2100E8635ABBFFDAC101103BC36360DAE101183B600000DB010120DB210128DB410130DB610138DB810140DBA10148DBC10150DBE10158FB8100B0FBA100B8F8010170C20283F0C1E367F4C22367FCC1C367F8ECEF8828C10367F0ECC87028C242843CFD803A10FCA03210EE702824C0628440C0436800C0836804832283CCC222844CC2A28408EC1300F2EE906024EC3404B2EDA00132ED230028ED4100B2ED720828EDED682AD1210074EDCA502AD1610078480000143B7B00013BDE00AC2C3B00074182029C7BC900207F7CDB78806900002F830000419EFFE05766183880FF0B08576A2834C1A28444C16284483BA100707D065050C0E10078C0C10074EF07702838A80020EEC678287CA407B47D2722148009000C8169000480690008F8010080C8A10080F9610080FD802E9CC8010080F8610080FC60069CC9210080FC404E9CFC806018FC201818FD401018EFB40132EFE10372EFCA02F2FEE0E81EEF9407F2EF7307B27EE0EFAE81810070EF5CE02A7D8007B4EF3BD82A7C0AAE767806056038AA0001388607FF282500027C8B0378EEFAC02A796B0524EF19B02A408000087C0B037838A80030C3E28444F96100807CA407B4C9610080FD405E9C392100707C07202EF8010080CBA10080FF80EE9CFFC05018FF60E018EEDE07F2EF3306F2EF56B02AFD00C81EEED7D02A7D004FAE816100707D6007B47C03AE76781D056039830001391D07FF28AC00027D07037878EB0524408400087C0B0378F9610080EDB7B028C981008038800001FC80669CC00284481FBC00ACFC77A828FC58A828FF63ADEEFF82AE2EFD368828FFA9B46EFF402018397D63207C7F5A14398300103903000C798A002079030020EF3A0032D36A0000D38A0004D3AA0008EC39C82AFF206A10EFF8082AFD7F9028FFCBFCAED3CA000CED58F828FF4052104BFF6611E8410028ED16E828ECDFF028FCE04210FCA03210ED25D0247CFDFA143940000038C7639878DD0020B15D0014ED9BB828EC9CC028EC67C824FDA06210FC002210EC40D024EC301828D05D000CEEF04828EF0DC824D03D0008D2FD0010D31D0004817F0B082F0B0000419A00CC796C0020810C00101CE860DC7CC7E2143CA60001388575A07C8007B47D20CA148B89000C2F9C0000419E00A03B7B0001B15D00162C3B0007935D0024935D0020935D001C935D00183BDE00AC4082FD6CEB210170EB4100A07F2803A6EB6100A8EB210098EB8100B0EBA100B8EBC100C0EBE100C8C9C100D0C9E100D8CA0100E0CA2100E8CA4100F0CA6100F8CA810100CAA10108CAC10110CAE10118CB010120CB210128CB410130CB610138CB810140CBA10148CBC10150CBE10158382101604E80002060000000801F67E8388000005405801E5409C00E5403402E7D3C2B78B09D0016638B00FF7C6A5B78915D0018915D0024915D0020915D001C4BFFFCAC"
+      },
+      {
+        "va": "0x25c0bc",
+        "bytes": "8009000C"
+      },
+      {
+        "va": "0x25c0c0",
+        "bytes": "81690004"
+      },
+      {
+        "va": "0x25c0c4",
+        "bytes": "80690008"
+      },
+      {
+        "va": "0x25c16c",
+        "bytes": "7C07202E"
+      },
+      {
+        "va": "0x897ea8",
+        "bytes": "3A800000"
+      },
+      {
+        "va": "0x897eac",
+        "bytes": "44000000"
+      },
+      {
+        "va": "0x897eb0",
+        "bytes": "448AE000"
+      },
+      {
+        "va": "0x897eb4",
+        "bytes": "44800000"
+      },
+      {
+        "va": "0x897eb8",
+        "bytes": "3F000000"
+      },
+      {
+        "va": "0x897ebc",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x897ec8",
+        "bytes": "10060DE8"
+      },
+      {
+        "va": "0x898310",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x898328",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x89835c",
+        "bytes": "43C80000"
+      },
+      {
+        "va": "0x898360",
+        "bytes": "43480000"
+      },
+      {
+        "va": "0x898364",
+        "bytes": "3F480000"
+      },
+      {
+        "va": "0x898368",
+        "bytes": "3EC80000"
+      },
+      {
+        "va": "0x89836c",
+        "bytes": "44480000"
+      },
+      {
+        "va": "0x10060de8",
+        "bytes": "00000000FFFFFFFFFF0000000000000000FFFFFFFFFFFFFF000000000000FFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFFFF000000000000FFFFFFFFFFFFFF0000000000000000FFFFFFFFFF00000000000000000000000000000000000000"
+      }
+    ]
+  },
+  "settings_menu": {
+    "confidence": "asset-backed",
+    "warning": "Exact shipped USA v02.00 pause-menu metadata, not runtime execution, in-game edit acceptance or a name for saved114C0.",
+    "asset": {
+      "archive_entry": "/built/anark/pause/built.dat",
+      "size": 1152780,
+      "sha256": "26FC24DD3564FDF94F0F6278FC0F0BC5578FE73C6813D3F39CD113FD22CF761B",
+      "chunk_offset": "0xf38fc",
+      "chunk_end_exclusive": "0xf715e",
+      "source": "controlHandler",
+      "bytecode_endianness": "little"
+    },
+    "descriptors": [
+      {
+        "descriptor_index": 1,
+        "label_tag_or_literal": 73.0,
+        "type": "list",
+        "enabled_literal": true,
+        "getter": "nothing",
+        "setter": "nothing"
+      },
+      {
+        "descriptor_index": 2,
+        "label_tag_or_literal": 75.0,
+        "type": "percentage",
+        "enabled_literal": false,
+        "getter": "get_music_vol",
+        "setter": "set_music_vol"
+      },
+      {
+        "descriptor_index": 3,
+        "label_tag_or_literal": 77.0,
+        "type": "percentage",
+        "enabled_literal": false,
+        "getter": "get_voice_vol",
+        "setter": "set_voice_vol"
+      },
+      {
+        "descriptor_index": 4,
+        "label_tag_or_literal": 79.0,
+        "type": "percentage",
+        "enabled_literal": true,
+        "getter": "get_camera_speed",
+        "setter": "set_camera_speed"
+      },
+      {
+        "descriptor_index": 5,
+        "label_tag_or_literal": 81.0,
+        "type": "boolean",
+        "enabled_literal": false,
+        "getter": "is_help_text_on",
+        "setter": "set_help_text_on"
+      },
+      {
+        "descriptor_index": 6,
+        "label_tag_or_literal": 83.0,
+        "type": "boolean",
+        "enabled_literal": false,
+        "getter": "is_subtitles_on",
+        "setter": "set_subtitles_on"
+      },
+      {
+        "descriptor_index": 7,
+        "label_tag_or_literal": 85.0,
+        "type": "boolean",
+        "enabled_literal": true,
+        "getter": "is_quick_select_pause_on",
+        "setter": "set_quick_select_pause_on"
+      },
+      {
+        "descriptor_index": 8,
+        "label_tag_or_literal": "INVERT-X (LOOK MODE):",
+        "type": "axis",
+        "enabled_literal": false,
+        "getter": "is_look_x_inverted",
+        "setter": "set_look_x_inverted"
+      },
+      {
+        "descriptor_index": 9,
+        "label_tag_or_literal": "INVERT-Y (LOOK MODE):",
+        "type": "axis",
+        "enabled_literal": false,
+        "getter": "is_look_y_inverted",
+        "setter": "set_look_y_inverted"
+      },
+      {
+        "descriptor_index": 10,
+        "label_tag_or_literal": 87.0,
+        "type": "axis",
+        "enabled_literal": true,
+        "getter": {
+          "1.0": "is_look_x_inverted",
+          "0.0": "is_x_inverted"
+        },
+        "setter": {
+          "1.0": "set_look_x_inverted",
+          "0.0": "set_x_inverted"
+        }
+      },
+      {
+        "descriptor_index": 11,
+        "label_tag_or_literal": 89.0,
+        "type": "axis",
+        "enabled_literal": true,
+        "getter": {
+          "1.0": "is_look_y_inverted",
+          "0.0": "is_y_inverted"
+        },
+        "setter": {
+          "1.0": "set_look_y_inverted",
+          "0.0": "set_y_inverted"
+        }
+      },
+      {
+        "descriptor_index": 12,
+        "label_tag_or_literal": 91.0,
+        "type": "boolean",
+        "enabled_literal": true,
+        "getter": "get_six_axis_controls",
+        "setter": "set_six_axis_controls"
+      }
+    ],
+    "visible_descriptor_indices": [
+      1,
+      4,
+      7,
+      10,
+      11,
+      12
+    ],
+    "axis_dispatch": {
+      "scheme_0": {
+        "x_getter": "is_x_inverted",
+        "y_getter": "is_y_inverted",
+        "meaning": "normal camera inversion APIs"
+      },
+      "scheme_1": {
+        "x_getter": "is_look_x_inverted",
+        "y_getter": "is_look_y_inverted",
+        "meaning": "look/first-person inversion APIs"
+      },
+      "read_and_write": "Both value display and axis adjustment index the descriptor API table by get_cur_control_scheme(). This is API selection, not reversal of a saved flag's polarity.",
+      "space_combat": "Initializer displays control scheme2 for a space-combat level; the axis tables have entries0/1 only. Do not infer valid scheme2 axis dispatch from this initializer."
+    },
+    "value_display_tags": {
+      "boolean": {
+        "true": 93.0,
+        "false": 94.0
+      },
+      "axis": {
+        "true": 95.0,
+        "false": 96.0
+      },
+      "warning": "These are local text tag IDs, not native enum IDs or proven English label strings. Native getters expose boolean results; raw saved bytes remain unchanged."
+    },
+    "actions": {
+      "boolean_and_axis": "Read the chosen native API boolean and pass its logical opposite to the corresponding setter.",
+      "percentage": "Adjustment delta is divided by10 before adding to native getter value and invoking setter; signed delta1/-1 therefore requests steps0.1/-0.1. Existing native setters clamp ordinary finite input0..1.",
+      "activation_filter": "onActivate inserts only enabled descriptors into its option list. Literal disabled descriptors are not evidence of current menu visibility.",
+      "global_event": "onActivate checks and, if clear, sets independently named HERO_SAW_CONTROL_MENU."
+    },
+    "unresolved": [
+      "No menu binding establishes the name or polarity of saved114C0.",
+      "Saved114D6/114D7 and906E4 still lack semantic confirmation.",
+      "Do not assign NORMAL/INVERTED text to tag95/96 without resolving the separate localization-tag lookup.",
+      "Control scheme display names and runtime input behavior remain independent of these descriptor tables."
+    ],
+    "bytecode_digests": [
+      {
+        "function": "onInitialize",
+        "offset": "0xf482c",
+        "instruction_count": 372,
+        "sha256": "BC63CF700C94B19FBF693046DEE10FF4C03E012EEE7E6F27456161598A1BBFA9"
+      },
+      {
+        "function": "onActivate",
+        "offset": "0xf52e2",
+        "instruction_count": 126,
+        "sha256": "DED16A860B2482C53D042CB0E4080803BD98C1A585722D7A6B29B42E691EABB1"
+      },
+      {
+        "function": "updateItemData",
+        "offset": "0xf5f59",
+        "instruction_count": 122,
+        "sha256": "4F14FCAA27BBA7B1BAB8F37B318D27BD1D6D95D7024ABC3966958B55BE673051"
+      },
+      {
+        "function": "adjustOption",
+        "offset": "0xf649b",
+        "instruction_count": 122,
+        "sha256": "DDD22420B52D56AF3332F3A5CEE5E19A527CF0479E3977C621747C93BB7F55A0"
+      }
+    ],
+    "asset_byte_guards": [
+      {
+        "function": "onInitialize",
+        "pc": 48,
+        "offset": "0xf48ec",
+        "decoded_word": "0083C2C9",
+        "bytes": "C9C28300"
+      },
+      {
+        "function": "onInitialize",
+        "pc": 173,
+        "offset": "0xf4ae0",
+        "decoded_word": "01830089",
+        "bytes": "89008301"
+      },
+      {
+        "function": "onInitialize",
+        "pc": 178,
+        "offset": "0xf4af4",
+        "decoded_word": "01A18089",
+        "bytes": "8980A101"
+      },
+      {
+        "function": "onInitialize",
+        "pc": 209,
+        "offset": "0xf4b70",
+        "decoded_word": "01830089",
+        "bytes": "89008301"
+      },
+      {
+        "function": "onInitialize",
+        "pc": 214,
+        "offset": "0xf4b84",
+        "decoded_word": "01A18089",
+        "bytes": "8980A101"
+      },
+      {
+        "function": "onInitialize",
+        "pc": 250,
+        "offset": "0xf4c14",
+        "decoded_word": "01A8D589",
+        "bytes": "89D5A801"
+      },
+      {
+        "function": "onInitialize",
+        "pc": 252,
+        "offset": "0xf4c1c",
+        "decoded_word": "01A9D5C9",
+        "bytes": "C9D5A901"
+      },
+      {
+        "function": "onActivate",
+        "pc": 18,
+        "offset": "0xf532a",
+        "decoded_word": "040240C6",
+        "bytes": "C6400204"
+      },
+      {
+        "function": "onActivate",
+        "pc": 26,
+        "offset": "0xf534a",
+        "decoded_word": "04018059",
+        "bytes": "59800104"
+      },
+      {
+        "function": "onActivate",
+        "pc": 122,
+        "offset": "0xf54ca",
+        "decoded_word": "01000945",
+        "bytes": "45090001"
+      },
+      {
+        "function": "updateItemData",
+        "pc": 99,
+        "offset": "0xf60e5",
+        "decoded_word": "0C000745",
+        "bytes": "4507000C"
+      },
+      {
+        "function": "updateItemData",
+        "pc": 101,
+        "offset": "0xf60ed",
+        "decoded_word": "0B058306",
+        "bytes": "0683050B"
+      },
+      {
+        "function": "adjustOption",
+        "pc": 66,
+        "offset": "0xf65a3",
+        "decoded_word": "0100C24F",
+        "bytes": "4FC20001"
+      },
+      {
+        "function": "adjustOption",
+        "pc": 94,
+        "offset": "0xf6613",
+        "decoded_word": "03008099",
+        "bytes": "99800003"
+      },
+      {
+        "function": "adjustOption",
+        "pc": 95,
+        "offset": "0xf6617",
+        "decoded_word": "020100C6",
+        "bytes": "C6000102"
+      },
+      {
+        "function": "adjustOption",
+        "pc": 106,
+        "offset": "0xf6643",
+        "decoded_word": "03000002",
+        "bytes": "02000003"
+      },
+      {
+        "function": "adjustOption",
+        "pc": 116,
+        "offset": "0xf666b",
+        "decoded_word": "03008002",
+        "bytes": "02800003"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -22793,6 +23807,15 @@
     ]
   },
   "annotations": [
+    {"va":"0x0024D9C0","name":"TOD_grid_update_from_hero_projection","kind":"function","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"Projects hero transform30/38, forwards38-derived grid coordinate first and30-derived second; copied runtime geometry required.","evidence":"grid_geometry exact native assembly, descriptor TOCs, constants and copied-header consumers. No runtime geometry dereferenced from saved pointer bits."},
+    {"va":"0x0025BF68","name":"TOD_map_group_rectangle_and_uv_layout","kind":"function","confidence":"confirmed","bytes":"F821FEA17C0802A6","comment":"Copied group04/08 map rectangle origins,0C/10 extents; clips display endpoints and adjusts UVs. First extent also gates visibility.","evidence":"grid_geometry exact native assembly, descriptor TOCs, constants and copied-header consumers. No runtime geometry dereferenced from saved pointer bits."},
+    {"va":"0x10060DE8","name":"TOD_grid_clearing_brush_14x14","kind":"data","confidence":"confirmed","bytes":"00000000FFFFFFFFFF0000000000000000FFFFFFFFFFFFFF000000000000FFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFFFF000000000000FFFFFFFFFFFFFF0000000000000000FFFFFFFFFF00000000000000000000000000000000000000","comment":"196 mask bytes,129FF/6700; clear when(center_class & mask)==candidate_class. Zero mask is not unconditional skip.","evidence":"grid_geometry exact native assembly, descriptor TOCs, constants and copied-header consumers. No runtime geometry dereferenced from saved pointer bits."},
+    {"va":"0x0024E398","name":"TOD_grid_slot_to_browse_ordinal","kind":"function","confidence":"confirmed","bytes":"2B83001438000015","comment":"21-slot permutation to menu position; unsigned out-of-range returns21, not a level ID.","evidence":"grid_routing exact-build native switches, guarded menu consumers, TOC thunks and saved accumulator arithmetic; no edited-save gameplay acceptance."},
+    {"va":"0x0024E4C0","name":"TOD_grid_browse_ordinal_to_slot","kind":"function","confidence":"confirmed","bytes":"2B8300143800FFFF","comment":"Inverse menu permutation; unsigned out-of-range returnsFFFFFFFF, not a valid saved slot.","evidence":"grid_routing exact-build native switches, guarded menu consumers, TOC thunks and saved accumulator arithmetic; no edited-save gameplay acceptance."},
+    {"va":"0x0024E5E8","name":"TOD_grid_slot_to_image_index","kind":"function","confidence":"confirmed","bytes":"2B830014419D0074","comment":"Shared map image resource selector21..36; distinct saved grid slots may share image index. Out-of-range returns21.","evidence":"grid_routing exact-build native switches, guarded menu consumers, TOC thunks and saved accumulator arithmetic; no edited-save gameplay acceptance."},
+    {"va":"0x0024E7E8","name":"TOD_grid_accumulator_threshold_predicate","kind":"function","confidence":"confirmed","bytes":"81027FD039200000","comment":"Reads21 saved BE32 accumulators at115A0+slot60DC; counts unsigned >=36666, returns count>15, no readiness gate. No confirmed gameplay caller.","evidence":"grid_routing exact-build native switches, guarded menu consumers, TOC thunks and saved accumulator arithmetic; no edited-save gameplay acceptance."},
+    {"va":"0x0025D1D0","name":"TOD_map_menu_browse_ready_grids","kind":"function","confidence":"confirmed","bytes":"F821FEC17C0802A6","comment":"Converts selected slot to browse ordinal; directional21-position wrap searches skip ready byte0. Runtime+AD0/+B08 selection is not saved.","evidence":"grid_routing exact-build native switches, guarded menu consumers, TOC thunks and saved accumulator arithmetic; no edited-save gameplay acceptance."},
+    {"va":"0x0025BBF0","name":"TOD_map_menu_initial_grid_image_setup","kind":"function","confidence":"confirmed","bytes":"38E000007D4802A6","comment":"Initial map-menu image consumer; separate saved-slot grid and shared resource-image index calls. No image filename/palette interpretation.","evidence":"grid_routing exact-build native switches, guarded menu consumers, TOC thunks and saved accumulator arithmetic; no edited-save gameplay acceptance."},
     {
       "va": "0x0024D570",
       "name": "TOD_grid_world_to_coordinates",
@@ -31322,6 +32345,7 @@
     }
   ],
   "structures": [
+    {"name":"TOD_SaveGridRectangleGroup_verified","size":"0x18","comment":"Refines original raw group type without replacing it: copied map rectangle and image/volume references, seven at header20. Unsigned words, unknown gameplay meaning retained.","fields":[{"offset":"0x0","name":"volume_list_reference","type":"u32","comment":"Runtime volume-list index; FFFFFFFF skips containment check, not portable pointer."},{"offset":"0x4","name":"map_origin_axis_1","type":"u32","comment":"Unsigned copied map rectangle origin, not world coordinate."},{"offset":"0x8","name":"map_origin_axis_2","type":"u32","comment":"Unsigned copied map rectangle origin, not world coordinate."},{"offset":"0xc","name":"map_extent_axis_1","type":"u32","comment":"Unsigned extent; nonzero gates group containment recording and image visibility, not standalone boolean."},{"offset":"0x10","name":"map_extent_axis_2","type":"u32","comment":"Unsigned second extent in25BF68 display rectangle consumer."},{"offset":"0x14","name":"image_index","type":"u32","comment":"Native image/resource index; localized name not established."}]},
     {
       "name": "TOD_SaveGridVolumeHeader_verified",
       "size": "0xc8",
@@ -31401,7 +32425,7 @@
     {
       "name": "TOD_SaveGridGroup_verified",
       "size": "0x18",
-      "comment": "Copied per-grid definition group, seven at header20. Reference/image/activation roles established; other words deliberately opaque.",
+      "comment": "Original raw group type retained for existing analysis databases. Refine with TOD_SaveGridRectangleGroup_verified: reference, two origins, two extents and image index now have guarded consumers.",
       "fields": [
         {
           "offset": "0x0",
@@ -31413,20 +32437,20 @@
           "offset": "0x4",
           "name": "unknown_04_08",
           "type": "u32",
-          "comment": "Copied words; not inferred coordinates.",
+          "comment": "Original field name/layout retained;25BF68 establishes these as map rectangle origin words. See TOD_SaveGridRectangleGroup_verified.",
           "count": 2
         },
         {
           "offset": "0xc",
           "name": "activation_word",
           "type": "u32",
-          "comment": "Nonzero gates containment recording and group image display."
+          "comment": "Original field name retained;25BF68 establishes first rectangle extent. Its nonzero value also gates containment recording and group image display."
         },
         {
           "offset": "0x10",
           "name": "unknown_10",
           "type": "u32",
-          "comment": "Copied opaque word."
+          "comment": "Original field name retained;25BF68 establishes second rectangle extent. See TOD_SaveGridRectangleGroup_verified."
         },
         {
           "offset": "0x14",
