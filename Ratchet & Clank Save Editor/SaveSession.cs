@@ -16,6 +16,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public SfoMetadata Metadata { get; private set; }
         public SaveProfile Profile { get; private set; }
         private int[] boltsValues;
+        private byte[] plaintextData;
+        // Detached current baseline, not unsaved UI values or encrypted source bytes.
+        public byte[] ReadInspectionData() => (byte[])plaintextData.Clone();
         public int Bolts => boltsValues[0];
         public IReadOnlyList<int> CharacterBolts => Array.AsReadOnly(boltsValues);
         public bool IsEncrypted { get; private set; }
@@ -69,6 +72,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             byte[] data = File.ReadAllBytes(Path.Combine(WorkingFolder, Profile.FileName));
             boltsValues = SaveData.ReadBolts(data, Profile);
             Raritanium = SaveData.ReadRaritanium(data, Profile);
+            plaintextData = data;
         }
 
         public string Save(int bolts, int raritanium, string backupRoot = null)
@@ -142,6 +146,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             // Keep the decrypted working copy intact; only source files are encrypted.
             MetadataChanged = false;
             originalHashes = nextHashes;
+            plaintextData = expected;
             return backup;
         }
 

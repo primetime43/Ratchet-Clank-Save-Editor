@@ -1,0 +1,5188 @@
+{
+  "reference_build": "BCUS98127 v02.00",
+  "reference_assets_match": true,
+  "assets": {
+    "weapon.csv": {
+      "bytes": 14298,
+      "sha256": "2E9D75D6509F35E75B27626D1D777F4D5414FCBAA1AC553D36AE9D9F4A728F7A",
+      "reference_matches": true
+    },
+    "weapon.lua": {
+      "bytes": 1751,
+      "sha256": "DECDC62DF183E47640E8B05D137E2A3C1F3C6929C55A81CB9C60BDB7694F0F85",
+      "reference_matches": true
+    },
+    "mods.csv": {
+      "bytes": 18551,
+      "sha256": "0A01163D76189C7AB532345C22B5355290E3D1170E76672F0309F888EC5A68EE",
+      "reference_matches": true
+    },
+    "mods.lua": {
+      "bytes": 2683,
+      "sha256": "5007B0FDDD3F8D46BFE22DCBE9ABB06E679CA6993149F26D9EA75BCE81C464FF",
+      "reference_matches": true
+    },
+    "vendor.csv": {
+      "bytes": 2268,
+      "sha256": "E5163C6E8195EBAF761B2B9FD4F96BCFE227A902454AC1323EDE720ED1DB639D",
+      "reference_matches": true
+    },
+    "vendor.lua": {
+      "bytes": 2925,
+      "sha256": "E9C1E5500FA6B690EA8FA4C82B373A2C69AE5C192D5381C3BF9EA92679786B20",
+      "reference_matches": true
+    }
+  },
+  "weapon_count": 28,
+  "modifier_count": 204,
+  "weapons": {
+    "Wrench": {
+      "num_levels": 0,
+      "variables": {
+        "Damage": [
+          35
+        ],
+        "AltDamage": [
+          50
+        ],
+        "Knockback": [
+          2
+        ],
+        "XP": [
+          0
+        ],
+        "Range": [
+          0.35
+        ],
+        "AOE": [
+          1
+        ],
+        "Misc": [
+          8
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 0,
+        "MegaPrice": 0
+      }
+    },
+    "Combuster": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          3.6,
+          4.3,
+          5.2,
+          6.2,
+          3.1,
+          30,
+          39,
+          50.7,
+          65.9,
+          85.7
+        ],
+        "AltDamage": [
+          1.2,
+          1.4,
+          1.7,
+          2.1,
+          1,
+          10,
+          13,
+          16.9,
+          22,
+          28.6
+        ],
+        "AOE": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Duration": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Range": [
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20
+        ],
+        "Knockback": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "AutoAim": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RateOfFire": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "XP": [
+          0,
+          1000,
+          2200,
+          3640,
+          5368,
+          5500,
+          20000,
+          37400,
+          58280,
+          83336
+        ],
+        "MaxAmmo": [
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100
+        ],
+        "CrateAmmo": [
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15
+        ],
+        "SpawnCount": [
+          1,
+          1,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_RANGE",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 50,
+          "name_tag": "GEN_TXT_MENU_UPGLONGRANGMC",
+          "description_tag": "GEN_TXT_MENU_UPGLONGRANGINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 50,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_RANGE",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 50,
+          "name_tag": "GEN_TXT_MENU_UPGLONGRANGMC",
+          "description_tag": "GEN_TXT_MENU_UPGLONGRANGINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_RANGE",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 50,
+          "name_tag": "GEN_TXT_MENU_UPGLONGRANGMC",
+          "description_tag": "GEN_TXT_MENU_UPGLONGRANGINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 50,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_DURATION",
+          "is_percent": false,
+          "value": 4,
+          "runtime_value": 4,
+          "cost": 300,
+          "name_tag": "GEN_TXT_WEAP_COMBUSTSPEC",
+          "description_tag": "GEN_TXT_WEAP_COMBUSTSPECDESC"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 75,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 69,
+        "AmmoPrice": 1,
+        "MegaPrice": 5500000
+      }
+    },
+    "Grenade": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          15,
+          17.3,
+          19.8,
+          22.8,
+          26.2,
+          225,
+          292.5,
+          380.3,
+          494.3,
+          642.6
+        ],
+        "Knockback": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "AutoAim": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RateOfFire": [
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5
+        ],
+        "SpawnCount": [
+          0,
+          0,
+          0,
+          0,
+          6,
+          6,
+          7,
+          7,
+          8,
+          8
+        ],
+        "AltDamage": [
+          0,
+          0,
+          0,
+          0,
+          4.4,
+          37.5,
+          48.8,
+          63.4,
+          82.4,
+          107.1
+        ],
+        "XP": [
+          0,
+          1000,
+          2200,
+          3640,
+          5368,
+          5500,
+          20000,
+          37400,
+          58280,
+          83336
+        ],
+        "MaxAmmo": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "CrateAmmo": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "Range": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "AOE": [
+          5,
+          5,
+          5,
+          5,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        "Misc": [
+          25,
+          25,
+          25,
+          25,
+          25,
+          25,
+          25,
+          25,
+          25,
+          25
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_KNOCKBACK",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 300,
+          "name_tag": "GEN_TXT_WEAP_FUSIONSPEC",
+          "description_tag": "GEN_TXT_WEAP_FUSIONSPECDESC"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 15,
+          "runtime_value": 0.15,
+          "cost": 400,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 15,
+          "runtime_value": 0.15,
+          "cost": 400,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 69,
+        "AmmoPrice": 50,
+        "MegaPrice": 6500000
+      }
+    },
+    "GoopMine": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          24,
+          27.6,
+          31.7,
+          36.5,
+          42,
+          300,
+          390,
+          507,
+          659.1,
+          856.8
+        ],
+        "AOE": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "Knockback": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "AutoAim": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RateOfFire": [
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5
+        ],
+        "XP": [
+          0,
+          600,
+          1320,
+          2184,
+          3221,
+          6500,
+          14000,
+          23000,
+          33800,
+          46760
+        ],
+        "MaxAmmo": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "CrateAmmo": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "Range": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        "SpawnCount": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "Duration": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60,
+          60
+        ],
+        "Misc": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 75,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 75,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_MISC",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 350,
+          "name_tag": "GEN_TXT_WEAP_PLASMABEASTSPEC",
+          "description_tag": "GEN_TXT_WEAP_PLASMABEASTSPECDESC"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 15000,
+        "AmmoPrice": 75,
+        "MegaPrice": 3000000,
+        "UnlockLevel": "cobalia"
+      }
+    },
+    "Tornado": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          37.3,
+          44.8,
+          53.7,
+          64.5,
+          77.4,
+          225,
+          292.5,
+          380.3,
+          494.3,
+          642.6
+        ],
+        "AltDamage": [
+          0,
+          0,
+          0,
+          0,
+          38.7,
+          112.5,
+          146.3,
+          190.1,
+          247.2,
+          321.3
+        ],
+        "AOE": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        "AutoAim": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "RateOfFire": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "SpawnCount": [
+          0,
+          0,
+          0,
+          0,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5
+        ],
+        "Knockback": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "XP": [
+          0,
+          1000,
+          2200,
+          3640,
+          5368,
+          6500,
+          14000,
+          23000,
+          33800,
+          46760
+        ],
+        "MaxAmmo": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "CrateAmmo": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Duration": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "Misc": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 400,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 20,
+          "runtime_value": 0.2,
+          "cost": 300,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 350,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 700,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 700,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 300,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_DURATION",
+          "is_percent": false,
+          "value": 5,
+          "runtime_value": 5,
+          "cost": 1200,
+          "name_tag": "GEN_TXT_WEAP_TORNADOSPEC",
+          "description_tag": "GEN_TXT_WEAP_TORNADOSPECDESC"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 350,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 350,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 30,
+          "runtime_value": 0.3,
+          "cost": 600,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 40000,
+        "AmmoPrice": 100,
+        "MegaPrice": 5000000,
+        "UnlockLevel": "cobalia"
+      }
+    },
+    "Predator": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          14.4,
+          16.6,
+          19,
+          21.9,
+          25.2,
+          150,
+          195,
+          253.5,
+          329.6,
+          428.4
+        ],
+        "AOE": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "Knockback": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "AutoAim": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "RateOfFire": [
+          0.3,
+          0.3,
+          0.3,
+          0.3,
+          0.3,
+          0.3,
+          0.3,
+          0.3,
+          0.3,
+          0.3
+        ],
+        "XP": [
+          0,
+          1500,
+          3300,
+          5460,
+          8052,
+          8100,
+          23000,
+          40880,
+          62336,
+          88083
+        ],
+        "MaxAmmo": [
+          25,
+          25,
+          25,
+          25,
+          25,
+          25,
+          25,
+          25,
+          25,
+          25
+        ],
+        "CrateAmmo": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "SpawnCount": [
+          3,
+          3,
+          4,
+          4,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "Range": [
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32
+        ],
+        "Misc": [
+          0,
+          0,
+          0,
+          0,
+          6,
+          6,
+          7,
+          7,
+          8,
+          9
+        ],
+        "AltDamage": [
+          0,
+          0,
+          0,
+          0,
+          7.6,
+          45,
+          58.5,
+          76.1,
+          98.9,
+          128.5
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 125,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_SPAWNCOUNT",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREMISSMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREMISSINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 125,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 125,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_SPECIAL",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": 500,
+          "name_tag": "GEN_TXT_WEAP_PREDATORSPEC",
+          "description_tag": "GEN_TXT_WEAP_PREDATORSPECDESC"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_SPAWNCOUNT",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREMISSMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREMISSINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 125,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_SPAWNCOUNT",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREMISSMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREMISSINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 125,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": -10,
+          "runtime_value": -0.1,
+          "cost": 400,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 14,
+          "mask": "0x00004000",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": -5,
+          "runtime_value": -0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 15,
+          "mask": "0x00008000",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": -5,
+          "runtime_value": -0.05,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 25000,
+        "AmmoPrice": 30,
+        "MegaPrice": 7000000,
+        "UnlockLevel": "stratus"
+      }
+    },
+    "Ravager": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          13.8,
+          15.9,
+          18.3,
+          21,
+          24.2,
+          120,
+          156,
+          202.8,
+          263.6,
+          342.7
+        ],
+        "AltDamage": [
+          13.8,
+          15.9,
+          18.3,
+          21,
+          24.2,
+          120,
+          156,
+          202.8,
+          263.6,
+          342.7
+        ],
+        "Range": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "AOE": [
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5,
+          2.5
+        ],
+        "Knockback": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "RateOfFire": [
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "XP": [
+          0,
+          800,
+          1760,
+          2912,
+          4294,
+          8500,
+          16000,
+          25000,
+          35800,
+          48760
+        ],
+        "MaxAmmo": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "CrateAmmo": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 100,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 150,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 150,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 15,
+          "runtime_value": 0.15,
+          "cost": 800,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 150,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 150,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 150,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 150,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_AOE",
+          "is_percent": false,
+          "value": 1.5,
+          "runtime_value": 1.5,
+          "cost": 400,
+          "name_tag": "GEN_TXT_WEAP_SHOCKRAVSPEC",
+          "description_tag": "GEN_TXT_WEAP_SHOCKRAVSPECDESC"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 150,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 150,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 69,
+        "AmmoPrice": 2,
+        "MegaPrice": 4000000,
+        "UnlockLevel": "XXXXXXXXXX"
+      }
+    },
+    "Reaper": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          16.6,
+          19.9,
+          23.9,
+          28.7,
+          34.4,
+          120,
+          156,
+          202.8,
+          263.6,
+          342.7
+        ],
+        "Misc": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "SpawnCount": [
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50
+        ],
+        "Knockback": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RateOfFire": [
+          1.25,
+          1.25,
+          1.25,
+          1.25,
+          1.25,
+          1.25,
+          1.25,
+          1.25,
+          1.25,
+          1.25
+        ],
+        "XP": [
+          0,
+          2000,
+          4400,
+          7280,
+          10736,
+          11000,
+          33500,
+          60500,
+          92900,
+          131780
+        ],
+        "MaxAmmo": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "CrateAmmo": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "Range": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16
+        ],
+        "Duration": [
+          0,
+          0,
+          0,
+          0,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "AltDamage": [
+          4.1,
+          5,
+          6,
+          7.2,
+          8.6,
+          30,
+          39,
+          50.7,
+          65.9,
+          85.7
+        ],
+        "AOE": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "AutoAim": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 5,
+          "runtime_value": 5,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_MISC",
+          "is_percent": true,
+          "value": 15,
+          "runtime_value": 0.15,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGWIDESHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGWIDESHOTINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_MISC",
+          "is_percent": true,
+          "value": 15,
+          "runtime_value": 0.15,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGWIDESHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGWIDESHOTINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 5,
+          "runtime_value": 5,
+          "cost": 200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 250,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_SPECIAL",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": 800,
+          "name_tag": "GEN_TXT_WEAP_REAPERSPEC",
+          "description_tag": "GEN_TXT_WEAP_REAPERSPECDESC"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 35000,
+        "AmmoPrice": 40,
+        "MegaPrice": 7500000,
+        "UnlockLevel": "imperial"
+      }
+    },
+    "BuzzBlade": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          4.5,
+          5.4,
+          6.4,
+          7.7,
+          9.3,
+          22.5,
+          29.3,
+          38,
+          49.4,
+          64.3
+        ],
+        "Knockback": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Range": [
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32
+        ],
+        "AltDamage": [
+          9,
+          10.7,
+          12.9,
+          15.5,
+          18.6,
+          22.3,
+          26.7,
+          32.1,
+          38.5,
+          46.2
+        ],
+        "AOE": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "Duration": [
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5
+        ],
+        "AutoAim": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RateOfFire": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        "XP": [
+          0,
+          2500,
+          5500,
+          9100,
+          13420,
+          16500,
+          39000,
+          66000,
+          98400,
+          137280
+        ],
+        "MaxAmmo": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "CrateAmmo": [
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20
+        ],
+        "Misc": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 20,
+          "runtime_value": 20,
+          "cost": 350,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_MISC",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMORERICOS",
+          "description_tag": "GEN_TXT_MENU_UPGMORERICOSINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 20,
+          "runtime_value": 20,
+          "cost": 350,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_MISC",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMORERICOS",
+          "description_tag": "GEN_TXT_MENU_UPGMORERICOSINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_SPECIAL",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": 1200,
+          "name_tag": "GEN_TXT_WEAP_BUZZSPEC",
+          "description_tag": "GEN_TXT_WEAP_BUZZSPECDESC"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_MISC",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMORERICOS",
+          "description_tag": "GEN_TXT_MENU_UPGMORERICOSINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 800,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 20,
+          "runtime_value": 20,
+          "cost": 350,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 400,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 400,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 40000,
+        "AmmoPrice": 8,
+        "MegaPrice": 8000000,
+        "UnlockLevel": "pirate base"
+      }
+    },
+    "EnergyClaws": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          89.2,
+          107,
+          128.4,
+          154.1,
+          184.9,
+          195,
+          253.5,
+          329.6,
+          428.4,
+          556.9
+        ],
+        "AltDamage": [
+          133.7,
+          160.5,
+          192.6,
+          231.1,
+          277.3,
+          292.5,
+          380.3,
+          494.3,
+          642.6,
+          835.4
+        ],
+        "Knockback": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "Misc": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "SpawnCount": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "XP": [
+          0,
+          5000,
+          11000,
+          18200,
+          26840,
+          40000,
+          55000,
+          73000,
+          94600,
+          120520
+        ],
+        "MaxAmmo": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "CrateAmmo": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 5,
+          "runtime_value": 5,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 20,
+          "runtime_value": 0.2,
+          "cost": 2500,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 5,
+          "runtime_value": 5,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 5,
+          "runtime_value": 5,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_ALT_DAMAGE",
+          "is_percent": true,
+          "value": 35,
+          "runtime_value": 0.35000000000000003,
+          "cost": 4000,
+          "name_tag": "GEN_TXT_WEAP_ENERGYCLAWSPEC",
+          "description_tag": "GEN_TXT_WEAP_ENERGYCLAWSPECDESC"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 20,
+          "runtime_value": 0.2,
+          "cost": 3000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 5,
+          "runtime_value": 5,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 125000,
+        "AmmoPrice": 25,
+        "MegaPrice": 3500000,
+        "UnlockLevel": "kerchu"
+      }
+    },
+    "AlphaNova": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          430,
+          516,
+          619.2,
+          743,
+          891.6,
+          1500,
+          1950,
+          2535,
+          3295.5,
+          4284.2
+        ],
+        "AltDamage": [
+          107.5,
+          129,
+          154.8,
+          185.8,
+          222.9,
+          375,
+          487.5,
+          633.8,
+          823.9,
+          1071
+        ],
+        "AOE": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "Knockback": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "AutoAim": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "XP": [
+          0,
+          3500,
+          7700,
+          12740,
+          18788,
+          22500,
+          30000,
+          39000,
+          49800,
+          62760
+        ],
+        "MaxAmmo": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "CrateAmmo": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Duration": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "Range": [
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_DURATION",
+          "is_percent": true,
+          "value": -25,
+          "runtime_value": -0.25,
+          "cost": 1400,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 1800,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_DURATION",
+          "is_percent": true,
+          "value": -25,
+          "runtime_value": -0.25,
+          "cost": 1400,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_DURATION",
+          "is_percent": true,
+          "value": -25,
+          "runtime_value": -0.25,
+          "cost": 1400,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_SPECIAL",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_WEAP_ALPHANOVASPEC",
+          "description_tag": "GEN_TXT_WEAP_ALPHANOVASPECDESC"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 69,
+        "AmmoPrice": 250,
+        "MegaPrice": 8500000,
+        "UnlockLevel": "XXXXXXXXXX"
+      }
+    },
+    "RoboHive": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          14.3,
+          17.2,
+          20.6,
+          24.8,
+          29.7,
+          60,
+          78,
+          101.4,
+          131.8,
+          171.4
+        ],
+        "AltDamage": [
+          0,
+          0,
+          0,
+          0,
+          5.9,
+          12,
+          15.6,
+          20.3,
+          26.4,
+          34.3
+        ],
+        "Misc": [
+          0,
+          0,
+          0,
+          0,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "AOE": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16
+        ],
+        "Range": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "Knockback": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "AutoAim": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Duration": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "RateOfFire": [
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2,
+          0.2
+        ],
+        "XP": [
+          0,
+          1500,
+          3300,
+          5460,
+          8052,
+          11000,
+          26000,
+          44000,
+          65600,
+          91520
+        ],
+        "MaxAmmo": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "CrateAmmo": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "SpawnCount": [
+          40,
+          40,
+          40,
+          40,
+          40,
+          40,
+          40,
+          40,
+          40,
+          40
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 1800,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 900,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_AOE",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 650,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 700,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_AOE",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 650,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 700,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_AOE",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 650,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_AOE",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 650,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_SPECIAL",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": 2500,
+          "name_tag": "GEN_TXT_WEAP_ROBOHIVESPEC",
+          "description_tag": "GEN_TXT_WEAP_ROBOHIVESPECDESC"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 600,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 900,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 600,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 1200,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 14,
+          "mask": "0x00004000",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 600,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 65000,
+        "AmmoPrice": 150,
+        "MegaPrice": 9000000,
+        "UnlockLevel": "pirate base"
+      }
+    },
+    "Rocket": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          154.8,
+          185.8,
+          222.9,
+          267.5,
+          321,
+          375,
+          487.5,
+          633.8,
+          823.9,
+          1071
+        ],
+        "AOE": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "AltDamage": [
+          31,
+          37.2,
+          44.6,
+          53.5,
+          64.2,
+          75,
+          97.5,
+          126.8,
+          164.8,
+          214.2
+        ],
+        "AutoAim": [
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5
+        ],
+        "Range": [
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48
+        ],
+        "Knockback": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "RateOfFire": [
+          1.2,
+          1.2,
+          1.2,
+          1.2,
+          1.2,
+          1.2,
+          1.2,
+          1.2,
+          1.2,
+          1.2
+        ],
+        "XP": [
+          0,
+          6000,
+          13200,
+          21840,
+          32208,
+          40500,
+          63000,
+          90000,
+          122400,
+          161280
+        ],
+        "MaxAmmo": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "CrateAmmo": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "SpawnCount": [
+          4,
+          4,
+          5,
+          5,
+          6,
+          6,
+          7,
+          7,
+          8,
+          9
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 20,
+          "runtime_value": 0.2,
+          "cost": 3000,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_SPECIAL",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": 2500,
+          "name_tag": "GEN_TXT_WEAP_ROCKETSPEC",
+          "description_tag": "GEN_TXT_WEAP_ROCKETSPECDESC"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 1400,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 1400,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 1400,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 25,
+          "runtime_value": 0.25,
+          "cost": 1500,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_AOE",
+          "is_percent": true,
+          "value": 25,
+          "runtime_value": 0.25,
+          "cost": 1500,
+          "name_tag": "GEN_TXT_MENU_UPGBIGAREA",
+          "description_tag": "GEN_TXT_MENU_UPGBIGAREAINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 200000,
+        "AmmoPrice": 150,
+        "MegaPrice": 9500000,
+        "UnlockLevel": "zordoom"
+      }
+    },
+    "FlameThrower": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          51.6,
+          61.9,
+          74.3,
+          89.2,
+          107,
+          150,
+          195,
+          253.5,
+          329.6,
+          428.4
+        ],
+        "Knockback": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2
+        ],
+        "AutoAim": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "XP": [
+          0,
+          4000,
+          8800,
+          14560,
+          21472,
+          33000,
+          48000,
+          66000,
+          87600,
+          113520
+        ],
+        "MaxAmmo": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "CrateAmmo": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "Range": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "Misc": [
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 2,
+          "runtime_value": 2,
+          "cost": 500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_RANGE",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 600,
+          "name_tag": "GEN_TXT_MENU_UPGLONGRANGMC",
+          "description_tag": "GEN_TXT_MENU_UPGLONGRANGINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 700,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_SPECIAL",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": 1500,
+          "name_tag": "GEN_TXT_WEAP_FLAMESPEC",
+          "description_tag": "GEN_TXT_WEAP_FLAMESPECDESC"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_RANGE",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 600,
+          "name_tag": "GEN_TXT_MENU_UPGLONGRANGMC",
+          "description_tag": "GEN_TXT_MENU_UPGLONGRANGINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 700,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_RANGE",
+          "is_percent": false,
+          "value": 1,
+          "runtime_value": 1,
+          "cost": 600,
+          "name_tag": "GEN_TXT_MENU_UPGLONGRANGMC",
+          "description_tag": "GEN_TXT_MENU_UPGLONGRANGINFO"
+        },
+        {
+          "index": 14,
+          "mask": "0x00004000",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 700,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 100000,
+        "AmmoPrice": 50,
+        "MegaPrice": 4500000,
+        "UnlockLevel": "iris"
+      }
+    },
+    "MagNet": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          89.2,
+          107,
+          128.4,
+          154.1,
+          184.9,
+          210,
+          273,
+          354.9,
+          461.4,
+          599.8
+        ],
+        "AltDamage": [
+          35.7,
+          42.8,
+          51.4,
+          61.6,
+          74,
+          84,
+          109.2,
+          142,
+          184.5,
+          239.9
+        ],
+        "Knockback": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "AutoAim": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RateOfFire": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "XP": [
+          0,
+          3000,
+          6600,
+          10920,
+          16104,
+          32500,
+          40000,
+          49000,
+          59800,
+          72760
+        ],
+        "MaxAmmo": [
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "CrateAmmo": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "Duration": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "Range": [
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_DURATION",
+          "is_percent": false,
+          "value": 3,
+          "runtime_value": 3,
+          "cost": 3500,
+          "name_tag": "GEN_TXT_WEAP_MAGNETSPEC",
+          "description_tag": "GEN_TXT_WEAP_MAGNETSPECDESC"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1400,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1400,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_SPEED",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 2500,
+          "name_tag": "GEN_TXT_MENU_UPGFASTSHOTMC",
+          "description_tag": "GEN_TXT_MENU_UPGFASTSHOTINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_MINERALS",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1000,
+          "name_tag": "GEN_TXT_MENU_UPGMORERARMC",
+          "description_tag": "GEN_TXT_MENU_UPGMORERARINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 4,
+          "runtime_value": 4,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1600,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 14,
+          "mask": "0x00004000",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 1600,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 15,
+          "mask": "0x00008000",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 3000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 250000,
+        "AmmoPrice": 250,
+        "MegaPrice": 6000000,
+        "UnlockLevel": "slag"
+      }
+    },
+    "Ryno": {
+      "num_levels": 9,
+      "variables": {
+        "Damage": [
+          67.8,
+          81.3,
+          97.6,
+          117.1,
+          140.6,
+          150,
+          195,
+          253.5,
+          329.6,
+          428.4
+        ],
+        "AOE": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "Knockback": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "AutoAim": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "RateOfFire": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "Duration": [
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "XP": [
+          0,
+          15000,
+          33000,
+          54600,
+          80520,
+          81000,
+          111000,
+          147000,
+          190200,
+          242040
+        ],
+        "MaxAmmo": [
+          300,
+          300,
+          300,
+          300,
+          300,
+          750,
+          750,
+          750,
+          750,
+          750
+        ],
+        "CrateAmmo": [
+          60,
+          60,
+          60,
+          60,
+          60,
+          100,
+          100,
+          100,
+          100,
+          100
+        ],
+        "Range": [
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48,
+          48
+        ],
+        "SpawnChance": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "modifiers": [
+        {
+          "index": 0,
+          "mask": "0x00000001",
+          "type": "MOD_START",
+          "is_percent": false,
+          "value": null,
+          "runtime_value": null,
+          "cost": null,
+          "name_tag": null,
+          "description_tag": null
+        },
+        {
+          "index": 1,
+          "mask": "0x00000002",
+          "type": "MOD_DURATION",
+          "is_percent": true,
+          "value": -25,
+          "runtime_value": -0.25,
+          "cost": 2500,
+          "name_tag": "GEN_TXT_MENU_UPGFASTPRIME",
+          "description_tag": "GEN_TXT_MENU_UPGFASTPRIMEINFO"
+        },
+        {
+          "index": 2,
+          "mask": "0x00000004",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 30,
+          "runtime_value": 30,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 3,
+          "mask": "0x00000008",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 2500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 4,
+          "mask": "0x00000010",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 3000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 5,
+          "mask": "0x00000020",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 3000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 6,
+          "mask": "0x00000040",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 30,
+          "runtime_value": 30,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 7,
+          "mask": "0x00000080",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 30,
+          "runtime_value": 30,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 8,
+          "mask": "0x00000100",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 30,
+          "runtime_value": 30,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 9,
+          "mask": "0x00000200",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 2500,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 10,
+          "mask": "0x00000400",
+          "type": "MOD_AMMO",
+          "is_percent": false,
+          "value": 30,
+          "runtime_value": 30,
+          "cost": 2000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREAMMOMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREAMMOINFO"
+        },
+        {
+          "index": 11,
+          "mask": "0x00000800",
+          "type": "MOD_BOLTS",
+          "is_percent": true,
+          "value": 10,
+          "runtime_value": 0.1,
+          "cost": 5000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREBOLTS",
+          "description_tag": "GEN_TXT_MENU_UPGMOREBOLTSINFO"
+        },
+        {
+          "index": 12,
+          "mask": "0x00001000",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 3000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 13,
+          "mask": "0x00002000",
+          "type": "MOD_DAMAGE",
+          "is_percent": true,
+          "value": 5,
+          "runtime_value": 0.05,
+          "cost": 3000,
+          "name_tag": "GEN_TXT_MENU_UPGMOREDMGMC",
+          "description_tag": "GEN_TXT_MENU_UPGMOREDMGINFO"
+        },
+        {
+          "index": 14,
+          "mask": "0x00004000",
+          "type": "MOD_DURATION",
+          "is_percent": true,
+          "value": -25,
+          "runtime_value": -0.25,
+          "cost": 2500,
+          "name_tag": "GEN_TXT_MENU_UPGFASTPRIME",
+          "description_tag": "GEN_TXT_MENU_UPGFASTPRIMEINFO"
+        }
+      ],
+      "vendor": {
+        "BasePrice": 69,
+        "AmmoPrice": 20,
+        "MegaPrice": 50000000,
+        "UnlockLevel": "XXXXXXXXXX"
+      }
+    },
+    "Groovitron": {
+      "num_levels": 0,
+      "variables": {
+        "Damage": [
+          0
+        ],
+        "AOE": [
+          12
+        ],
+        "Knockback": [
+          0
+        ],
+        "AutoAim": [
+          0
+        ],
+        "RateOfFire": [
+          0.25
+        ],
+        "XP": [
+          0
+        ],
+        "MaxAmmo": [
+          3
+        ],
+        "CrateAmmo": [
+          1
+        ],
+        "Range": [
+          8
+        ],
+        "Duration": [
+          12
+        ],
+        "SpawnChance": [
+          0.2
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 500,
+        "MegaPrice": 0,
+        "UnlockLevel": "cobalia"
+      }
+    },
+    "MiniLeech": {
+      "num_levels": 0,
+      "variables": {
+        "Damage": [
+          10
+        ],
+        "SpawnCount": [
+          3
+        ],
+        "AOE": [
+          6
+        ],
+        "AutoAim": [
+          1
+        ],
+        "Range": [
+          12
+        ],
+        "Misc": [
+          25
+        ],
+        "Knockback": [
+          2
+        ],
+        "RateOfFire": [
+          1.2
+        ],
+        "XP": [
+          0
+        ],
+        "MaxAmmo": [
+          2
+        ],
+        "CrateAmmo": [
+          1
+        ],
+        "SpawnChance": [
+          1
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 1000,
+        "MegaPrice": 0,
+        "UnlockLevel": "cobalia"
+      }
+    },
+    "ConfusionGas": {
+      "num_levels": 0,
+      "variables": {
+        "AOE": [
+          8
+        ],
+        "AltDamage": [
+          10
+        ],
+        "AutoAim": [
+          0
+        ],
+        "RateOfFire": [
+          1
+        ],
+        "XP": [
+          0
+        ],
+        "MaxAmmo": [
+          2
+        ],
+        "CrateAmmo": [
+          1
+        ],
+        "Range": [
+          12
+        ],
+        "Duration": [
+          8
+        ],
+        "Misc": [
+          15
+        ],
+        "SpawnChance": [
+          1
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 1500,
+        "MegaPrice": 0,
+        "UnlockLevel": "stratus"
+      }
+    },
+    "Zurkon": {
+      "num_levels": 0,
+      "variables": {
+        "Damage": [
+          33
+        ],
+        "Range": [
+          16
+        ],
+        "AOE": [
+          0.5
+        ],
+        "Knockback": [
+          1
+        ],
+        "RateOfFire": [
+          1
+        ],
+        "XP": [
+          0
+        ],
+        "MaxAmmo": [
+          4
+        ],
+        "CrateAmmo": [
+          1
+        ],
+        "SpawnCount": [
+          24
+        ],
+        "Misc": [
+          3
+        ],
+        "SpawnChance": [
+          1
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 5000,
+        "MegaPrice": 0,
+        "UnlockLevel": "rykan"
+      }
+    },
+    "MaxiLeech": {
+      "num_levels": 0,
+      "variables": {
+        "Damage": [
+          100
+        ],
+        "SpawnCount": [
+          5
+        ],
+        "AOE": [
+          8
+        ],
+        "AutoAim": [
+          1
+        ],
+        "Range": [
+          16
+        ],
+        "Misc": [
+          25
+        ],
+        "Knockback": [
+          2
+        ],
+        "RateOfFire": [
+          1.2
+        ],
+        "XP": [
+          0
+        ],
+        "MaxAmmo": [
+          1
+        ],
+        "CrateAmmo": [
+          1
+        ],
+        "SpawnChance": [
+          1
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 6000,
+        "MegaPrice": 0,
+        "UnlockLevel": "kerchu"
+      }
+    },
+    "Copter": {
+      "num_levels": 0,
+      "variables": {
+        "Damage": [
+          50
+        ],
+        "AltDamage": [
+          100
+        ],
+        "AOE": [
+          3
+        ],
+        "RateOfFire": [
+          2
+        ],
+        "Range": [
+          20
+        ],
+        "Knockback": [
+          2
+        ],
+        "AutoAim": [
+          2
+        ],
+        "XP": [
+          0
+        ],
+        "MaxAmmo": [
+          3
+        ],
+        "CrateAmmo": [
+          1
+        ],
+        "SpawnCount": [
+          40
+        ],
+        "Duration": [
+          30
+        ],
+        "SpawnChance": [
+          1
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 10000,
+        "MegaPrice": 0,
+        "UnlockLevel": "zordoom"
+      }
+    },
+    "Morph": {
+      "num_levels": 0,
+      "variables": {
+        "Damage": [
+          10000
+        ],
+        "AOE": [
+          6
+        ],
+        "AltDamage": [
+          1000
+        ],
+        "AutoAim": [
+          1
+        ],
+        "Range": [
+          16
+        ],
+        "Knockback": [
+          2
+        ],
+        "RateOfFire": [
+          1.2
+        ],
+        "Duration": [
+          15
+        ],
+        "XP": [
+          0
+        ],
+        "MaxAmmo": [
+          3
+        ],
+        "CrateAmmo": [
+          1
+        ],
+        "SpawnChance": [
+          1
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 8000,
+        "MegaPrice": 0,
+        "UnlockLevel": "kerchu"
+      }
+    },
+    "Slinkonator": {
+      "num_levels": 0,
+      "variables": {
+        "Damage": [
+          100
+        ],
+        "AOE": [
+          8
+        ],
+        "Knockback": [
+          0
+        ],
+        "AutoAim": [
+          0
+        ],
+        "RateOfFire": [
+          0.5
+        ],
+        "XP": [
+          0
+        ],
+        "MaxAmmo": [
+          3
+        ],
+        "CrateAmmo": [
+          1
+        ],
+        "SpawnCount": [
+          16
+        ],
+        "Duration": [
+          60
+        ],
+        "Range": [
+          12
+        ],
+        "SpawnChance": [
+          1
+        ]
+      },
+      "modifiers": [],
+      "vendor": {
+        "BasePrice": 0,
+        "AmmoPrice": 15000,
+        "MegaPrice": 0,
+        "UnlockLevel": "meridian"
+      }
+    },
+    "SwingShot": {
+      "num_levels": 1,
+      "variables": {
+        "Damage": [
+          0
+        ],
+        "AOE": [
+          0
+        ],
+        "Knockback": [
+          0
+        ],
+        "AutoAim": [
+          0
+        ],
+        "RateOfFire": [
+          5
+        ],
+        "XP": [
+          0,
+          5000
+        ],
+        "MaxAmmo": [
+          0
+        ],
+        "CrateAmmo": [
+          0
+        ],
+        "Range": [
+          15
+        ],
+        "Duration": [
+          0
+        ]
+      },
+      "modifiers": [],
+      "vendor": null
+    },
+    "Inflatopod": {
+      "num_levels": 1,
+      "variables": {
+        "Damage": [
+          0
+        ],
+        "AutoAim": [
+          1.5
+        ],
+        "RateOfFire": [
+          1
+        ],
+        "XP": [
+          0,
+          5000
+        ],
+        "MaxAmmo": [
+          10
+        ],
+        "CrateAmmo": [
+          5
+        ],
+        "Range": [
+          16
+        ]
+      },
+      "modifiers": [],
+      "vendor": null
+    },
+    "Gelanator": {
+      "num_levels": 1,
+      "variables": {
+        "Damage": [
+          0
+        ],
+        "Knockback": [
+          0
+        ],
+        "AutoAim": [
+          0
+        ],
+        "RateOfFire": [
+          1.5
+        ],
+        "XP": [
+          0,
+          5000
+        ],
+        "MaxAmmo": [
+          1
+        ],
+        "CrateAmmo": [
+          0
+        ],
+        "Range": [
+          8
+        ]
+      },
+      "modifiers": [],
+      "vendor": null
+    },
+    "Decryptor": {
+      "num_levels": 1,
+      "variables": {
+        "Damage": [
+          0
+        ],
+        "RateOfFire": [
+          1
+        ],
+        "Range": [
+          1
+        ],
+        "MaxAmmo": [
+          0
+        ],
+        "XP": [
+          0,
+          5000
+        ]
+      },
+      "modifiers": [],
+      "vendor": null
+    }
+  },
+  "armor_vendor": {
+    "ARMOR_NONE": {
+      "BasePrice": 0
+    },
+    "ARMOR_DURAFIBER": {
+      "BasePrice": 30000,
+      "UnlockLevel": "cobalia"
+    },
+    "ARMOR_HYPERPLATE": {
+      "BasePrice": 100000,
+      "UnlockLevel": "rykan"
+    },
+    "ARMOR_TETRAMESH": {
+      "BasePrice": 300000,
+      "UnlockLevel": "cragmite"
+    },
+    "ARMOR_QUANTONIUM": {
+      "BasePrice": 10000000,
+      "UnlockLevel": "XXXXXXXXXX"
+    }
+  },
+  "unmatched_modifier_names": [],
+  "unmatched_vendor_names": [],
+  "warnings": [
+    "CSV order is not a save-record ID mapping.",
+    "NumLevels is the highest populated zero-based column, not a count.",
+    "Shipped asset definitions are not proof of runtime values or safe edit bounds.",
+    "Lua and all other archive payloads are inspected only; never executed.",
+    "Vendor grids and UI checks are documented separately in the native map; edited-save gameplay validation remains outstanding."
+  ],
+  "provenance": "Derived numeric/configuration research only; no original CSV/Lua payloads, game executable or bytecode bundled."
+}

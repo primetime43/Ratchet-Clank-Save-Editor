@@ -1,6 +1,7 @@
 """Configuration parser fixtures; optional fingerprinted original-asset checks."""
 import argparse
 import hashlib
+import json
 from pathlib import Path
 import runpy
 import sys
@@ -51,6 +52,9 @@ class ConfigChecks(unittest.TestCase):
             self.skipTest("Pass --assets for explicitly extracted original configurations")
         before = {p.name: hashlib.sha256(p.read_bytes()).digest() for p in ASSETS.iterdir() if p.is_file()}
         report = PARSER["inspect"](ASSETS)
+        bundled = json.loads((ROOT / "docs/maps/ToolsOfDestruction.BCUS98127.v02.00.WeaponConfigs.json").read_text(encoding="utf-8"))
+        for key in ("assets", "weapons", "armor_vendor", "weapon_count", "modifier_count"):
+            self.assertEqual(bundled[key], report[key], "Bundled research drift: " + key)
         self.assertTrue(report["reference_assets_match"])
         self.assertEqual(report["weapon_count"], 28)
         self.assertEqual(report["modifier_count"], 204)

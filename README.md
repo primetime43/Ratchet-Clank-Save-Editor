@@ -2,6 +2,8 @@
 
 A Windows desktop editor for PS3 Ratchet & Clank saves. Edit bolts and, where supported, raritanium; inspect save metadata; export artwork; and back up the original save.
 
+The **Save inspector** and **Research** tabs provide read-only access to the Tools of Destruction findings without enabling weapon or unknown-field editing.
+
 ## Run and build
 
 Requires Windows and the .NET 10 SDK to build. A framework-dependent build requires the .NET 10 Desktop Runtime to run.
@@ -18,6 +20,14 @@ For a standalone Windows x64 folder that includes the runtime:
 ```powershell
 dotnet publish "Ratchet & Clank Save Editor/Ratchet & Clank Save Editor.csproj" -c Release -r win-x64 --self-contained true -o artifacts/publish
 ```
+
+## View save data and research
+
+**Research** works before opening a save. Search the embedded native map, all 32 inventory ID bindings, 28 weapon/gadget definitions, 204 upgrade entries (including starts), 15 vendor grids, six structure definitions, 337 executable annotations, PS3 imports, and the full save-format/executable notes. Non-save findings such as scripting, physics, rendering/SPU, audio and memory are included. No Python, IDA, Ghidra, game executable or game archive is required; only derived definitions and research notes are bundled.
+
+**Save inspector** reads a detached plaintext session snapshot, excluding unsaved currency edits. For the observed BCUS98127/BCES00052 ToD layout it shows all weapon/gadget records, stored zero-based levels, XP/ammo and raw bits, modifier masks, ownership and separate unlock bytes, opaque record bytes, counters, candidate nearby fields, gameplay names/tails, save regions, prefix words and bounded hex pages. **Upgrade nodes** pairs saved bits with shipped types/values/costs and grid neighbors; it does not declare nodes safe or eligible to purchase. Double-click a weapon for its full reference definition on the Research tab. Unexpected values are shown without clamping or repair. Other games, different sizes and mismatched inventory IDs are not decoded using this mapping; existing currency editing remains available.
+
+**Files & headers** inspects working-copy file sizes/hashes, SFO fields, PFD tables and PNG chunks for any loaded game. Ownership/binary metadata and PFD keys/signatures are redacted. Header parsing does not verify cryptographic integrity or PNG CRCs. Resize the window for more room; the original compact layout remains the default. Browse the static research for field confidence, native addresses, asset defaults and remaining runtime/cross-region limits.
 
 ## Edit a save
 
@@ -65,6 +75,8 @@ dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release
 ```
 
 This dependency-free runner checks every listed region, binary reads, relocated metadata, remaster player blocks, independent character edits, named float records, backups, repeated saves, failed encryption, rollback, external changes and the compact UI. It also uses the **actual bundled encryption tool** with synthetic PFD v3 and v4 fixtures for all ten games, checks original metadata-binding preservation, and rejects tampered ciphertext and invalid databases. Rendered UI previews are saved in `artifacts/`.
+
+Research checks cover embedded definitions, detached snapshots, big-endian fields, unusual raw values, layout rejection, header bounds/redaction, game switching, searching and weapon-reference navigation. To also load an existing plaintext ToD save read-only (without altering the source), pass `-- --tod-save "path/to/save-folder"` to the runner. Test backups and generated fixtures use a temporary directory.
 
 Optional real-save integration tests:
 

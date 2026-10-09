@@ -10,7 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using primetime43_Ratchet_Clank_Save_Editor;
 
-internal static class Program
+internal static partial class Program
 {
     private static int passed;
 
@@ -221,8 +221,10 @@ internal static class Program
                 Throws<InvalidOperationException>(() => tools.Update(folder, "NPUA80643"));
                 Same(original, Snapshot(folder));
             });
+            ResearchChecks(root);
             Check("Compact UI loads, switches games and renders at higher scale", () => UiChecks(root));
             if (args.Length == 2 && args[0] == "--samples") SampleChecks(root, Path.GetFullPath(args[1]));
+            if (args.Length == 2 && args[0] == "--tod-save") ReferenceResearchChecks(root, Path.GetFullPath(args[1]));
             Console.WriteLine($"All {passed} regression checks passed.");
             return 0;
         }
@@ -489,7 +491,8 @@ internal static class Program
         form.Show();
         string artifacts = Path.GetFullPath("artifacts");
         Directory.CreateDirectory(artifacts);
-        True(tabs.Visible && !tabs.Enabled, "The original tabs should be visible and disabled until a save is opened.");
+        True(tabs.Visible && tabs.Enabled && !tabs.TabPages[0].Enabled && !tabs.TabPages[1].Enabled,
+            "The original save tabs should stay disabled before opening; reference research must remain accessible.");
         True(tabs.TabPages[0].Text == "Game Save Information" && tabs.TabPages[1].Text == "Game Save Editing",
             "Keep the original tab order and names.");
         Capture(form, Path.Combine(artifacts, "ui-compact-empty.png"));

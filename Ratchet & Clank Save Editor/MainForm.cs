@@ -26,6 +26,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public MainForm()
         {
             InitializeComponent();
+            InitializeResearchViews();
             SetBusy(false);
             UpdateTitle();
         }
@@ -70,6 +71,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 GameVersionTextBox.Text = session.Metadata.Region;
                 GameSaveKeyTextBox.Text = session.Profile.Key;
                 PlanetTextBox.Text = session.Metadata.Planet;
+                saveInspector.LoadSession(session);
                 MoneyNumericUpDown.Maximum = session.Profile.MaximumBolts;
                 MoneyNumericUpDown.Value = session.Bolts;
                 CasinoChipsNumericUpDown.Value = session.Raritanium;
@@ -107,6 +109,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 string backup = await Task.Run(() => session.Save(bolts, raritanium));
                 pendingBolts = session.CharacterBolts.ToArray();
+                saveInspector.LoadSession(session);
                 UpdateTitle();
                 StatusLabel.Text = "Saved successfully · Original backed up";
                 string format = session.IsEncrypted ? "encrypted PS3" : "decrypted/RPCS3";
@@ -139,7 +142,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             UpdateAccountIDButton.Enabled = session?.IsEncrypted == true && !value;
             BackupButton.Enabled = session != null && !value;
             RefreshSaveActions();
-            TabControl.Enabled = session != null && !value;
+            TabControl.Enabled = !value;
+            GameSaveInformationTabPage.Enabled = GameSaveEditingTabPage.Enabled = session != null && !value;
+            inspectionTab.Enabled = !value;
+            researchTab.Enabled = !value;
             SaveImageButton.Enabled = ViewImageButton.Enabled = SaveGameImagePictureBox.Image != null;
             OpenBackupButton.Enabled = session?.LastBackup != null;
         }
@@ -207,6 +213,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 await Task.Run(session.PatchMetadata);
                 AccountIDTextBox.Text = session.Metadata.AccountId;
+                saveInspector.LoadSession(session);
                 UpdateTitle();
                 StatusLabel.Text = "Copy protection removed from working copy · Save to apply";
             });
@@ -218,6 +225,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             await RunOperation("Updating save integrity…", async () =>
             {
                 await Task.Run(session.UpdateIntegrity);
+                saveInspector.LoadSession(session);
                 UpdateTitle();
                 StatusLabel.Text = "Integrity updated in working copy · Save to apply";
             });
