@@ -337,6 +337,33 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
                 return new(new[] { "ID", "Native object", "Current count", "Unsigned high-water", "Positive additions", "Present", "Count offset", "Peak offset", "Additions offset" }, rows.AsReadOnly());
             }
+            if (view == "Gameplay segments")
+            {
+                var mapping = TodResearch.Map.GetProperty("gameplay_segments").GetProperty("segments");
+                var levels = TodResearch.Map.GetProperty("world_state").GetProperty("worlds").GetProperty("catalog").EnumerateArray().ToArray();
+                for (int level = 0; level < mapping.GetProperty("initialized_world_slots").GetInt32(); level++)
+                {
+                    for (int slot = 0; slot < mapping.GetProperty("slots_per_world").GetInt32(); slot++)
+                    {
+                        int offset = TodResearch.Offset(mapping.GetProperty("record_base")) + level * TodResearch.Offset(mapping.GetProperty("world_stride")) + slot * TodResearch.Offset(mapping.GetProperty("record_stride"));
+                        byte complete = data[offset + TodResearch.Offset(mapping.GetProperty("complete_offset"))];
+                        string detail = $"Physical segment slot {slot} at {TodResearch.Hex(offset)}; completion byte 0x{complete:X2}. Named complete_segment / is_segment_complete use this byte.\r\n" +
+                            "Not a mission-list entry or a current completion percentage. Segment names/slot association require loaded game configuration; no names guessed from log order. Timer units and exact reset-event cause remain unverified.\r\n" +
+                            "Reward accumulators are not wallet balances; cached totals are not current payouts. Completion can set the flag without appending a log during replay.\r\n" +
+                            string.Join("\r\n", mapping.GetProperty("fields").EnumerateArray().Select(field =>
+                            {
+                                int address = offset + TodResearch.Offset(field.GetProperty("offset"));
+                                uint bits = U32(address);
+                                string value = field.GetProperty("type").GetString() == "f32" ? Number(bits) : bits.ToString(CultureInfo.InvariantCulture);
+                                return $"{field.GetProperty("name").GetString()}: {value}; bits {bits:X8} at {TodResearch.Hex(address)}. {field.GetProperty("comment").GetString()}";
+                            })) + $"\r\nUnknown bytes2D..2F: {Convert.ToHexString(data.AsSpan(offset + 0x2D, 3))}; preserved, not proven padding.";
+                        rows.Add(new(new[] { level.ToString(CultureInfo.InvariantCulture), level < levels.Length ? levels[level].GetProperty("enum").GetString() : "Unmapped physical level slot19",
+                            slot.ToString(CultureInfo.InvariantCulture), complete != 0 ? "Recorded" : "Not recorded", U32(offset + 8).ToString(CultureInfo.InvariantCulture),
+                            Number(U32(offset)), Number(U32(offset + 4)), TodResearch.Hex(offset) }, detail));
+                    }
+                }
+                return new(new[] { "Level ID", "Native level", "Physical segment slot", "Complete flag", "Reset-event count", "Adjusted elapsed (units unverified)", "Current-attempt elapsed", "Offset" }, rows.AsReadOnly());
+            }
             if (view == "World progress")
             {
                 foreach (var level in TodResearch.Map.GetProperty("world_state").GetProperty("worlds").GetProperty("catalog").EnumerateArray())
@@ -347,7 +374,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     string detail = $"Native level {id}; unlocked byte 0x{data[unlockedOffset]:X2} at {TodResearch.Hex(unlockedOffset)}, visited/seen byte 0x{data[visitedOffset]:X2} at {TodResearch.Hex(visitedOffset)}. Both use nonzero predicates.\r\n" +
                         $"Saved mission counter {U32(missionsOffset)} at {TodResearch.Hex(missionsOffset)}; menu exclusion byte 0x{data[excludedOffset]:X2} at {TodResearch.Hex(excludedOffset)}.\r\n" +
                         "These are saved values, not a completion percentage or current travel eligibility. Your runtime menu may differ. Menu requires a nonzero level ID, unlocked and clear exclusion; level3 is suppressed/remapped when level18 qualifies.\r\n" +
-                        "Rows show unremapped native storage; initialized slot19 is excluded. Other world-record bytes remain unmapped.\r\n" + MissionDetails(id) + TodResearch.Pretty(level);
+                        "Rows show unremapped native storage; initialized slot19 is excluded. Ten gameplay segment records are available separately.\r\n" +
+                        $"Reward-cache ready byte: 0x{data[excludedOffset + 1]:X2} at {TodResearch.Hex(excludedOffset + 1)} (nonzero reuses cached reward totals; not a mission flag). Two256-byte world arrays remain opaque.\r\n" + MissionDetails(id) + TodResearch.Pretty(level);
                     rows.Add(new(new[] { id.ToString(), level.GetProperty("enum").GetString(), data[unlockedOffset] != 0 ? "Yes" : "No",
                         data[visitedOffset] != 0 ? "Yes" : "No", U32(missionsOffset).ToString(CultureInfo.InvariantCulture), $"0x{data[excludedOffset]:X2}",
                         TodResearch.Hex(unlockedOffset), TodResearch.Hex(visitedOffset), TodResearch.Hex(missionsOffset) }, detail));
@@ -475,18 +503,31 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
             if (view == "Gameplay records")
             {
-                for (int index = 0; index < 27; index++)
+                var mapping = TodResearch.Map.GetProperty("gameplay_segments").GetProperty("log");
+                uint count = U32(TodResearch.Offset(mapping.GetProperty("count_offset")));
+                int capacity = mapping.GetProperty("bounded_physical_slots").GetInt32();
+                for (int index = 0; index < capacity; index++)
                 {
-                    int offset = 0x8764 + index * 0x9C;
+                    int offset = TodResearch.Offset(mapping.GetProperty("offset")) + index * TodResearch.Offset(mapping.GetProperty("record_stride"));
                     string location = Text(offset, 64), scenario = Text(offset + 64, 64);
                     bool recognized = location.Length > 0 && location.All(c => c is >= 'a' and <= 'z' or >= '0' and <= '9' or '_' or ' ') &&
                         scenario.StartsWith("gameplay_", StringComparison.Ordinal) && scenario.All(c => c is >= 'a' and <= 'z' or >= '0' and <= '9' or '_');
                     string tail = Convert.ToHexString(data, offset + 0x80, 28);
-                    string detail = "Observed named-record structure; names do not establish completion or checkpoint flags. Tail semantics are unknown.\r\n" +
-                        string.Join("\r\n", Enumerable.Range(0, 7).Select(i => $"{TodResearch.Hex(offset + 0x80 + i * 4)}: {U32(offset + 0x80 + i * 4):X8} · uint {U32(offset + 0x80 + i * 4)} · float {Number(U32(offset + 0x80 + i * 4))}"));
-                    rows.Add(new(new[] { TodResearch.Hex(offset), recognized ? location : "[unrecognized]", recognized ? scenario : "[unrecognized]", tail }, detail));
+                    bool nonzero = data.AsSpan(offset, 0x9C).IndexOfAnyExcept((byte)0) >= 0;
+                    string status = index < count ? "Within saved count" : nonzero ? "Retained beyond saved count" : "Unused / zero";
+                    string detail = $"Physical log slot {index}; {status}. Saved count {count} at0x10144; bounded buffer {capacity} entries." +
+                        (count > capacity ? " Count exceeds buffer; reads clipped only, value not repaired." : "") +
+                        "\r\nInitialization clears the count without clearing these entries. Retained entries are not active progress. Names do not establish mission completion or checkpoint flags.\r\n" +
+                        string.Join("\r\n", mapping.GetProperty("fields").EnumerateArray().Select(field =>
+                        {
+                            int address = offset + TodResearch.Offset(field.GetProperty("offset"));
+                            uint bits = U32(address);
+                            string value = field.GetProperty("type").GetString() == "f32" ? Number(bits) : bits.ToString(CultureInfo.InvariantCulture);
+                            return $"{field.GetProperty("name").GetString()}: {value}; bits {bits:X8} at {TodResearch.Hex(address)}. {field.GetProperty("comment").GetString()}";
+                        }));
+                    rows.Add(new(new[] { TodResearch.Hex(offset), recognized ? location : "[unrecognized]", recognized ? scenario : "[unrecognized]", tail, status }, detail));
                 }
-                return new(new[] { "Offset", "Location", "Scenario", "Unknown 28-byte tail" }, rows.AsReadOnly());
+                return new(new[] { "Offset", "Location", "Scenario", "Numeric fields (raw28 bytes)", "Storage status" }, rows.AsReadOnly());
             }
             if (view == "Save regions")
             {

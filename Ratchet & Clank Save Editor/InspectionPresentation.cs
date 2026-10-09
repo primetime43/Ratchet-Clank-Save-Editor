@@ -26,7 +26,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             int expected = view switch
             {
                 "Weapons & gadgets" => 10, "Skill points" => 8, "Armor" => 7,
-                "Counters & nearby fields" => 6, "Gameplay records" => 4,
+                "Counters & nearby fields" => 6, "Gameplay records" => 5, "Gameplay segments" => 8,
                 "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
                 "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9,
                 "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 8,
@@ -51,7 +51,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Game settings" => new[] { "Setting", "Value" },
                 "Arena challenges" => new[] { "Challenge (config description)", "Recorded wins", "Base bolts (shipped)" },
                 "Global event flags" => new[] { "Group", "Event flag (native name)", "Recorded bit" },
-                "Gameplay records" => new[] { "Location", "Saved record" },
+                "Gameplay records" => new[] { "Location", "Saved record", "Storage status" },
+                "Gameplay segments" => new[] { "Level", "Segment slot", "Complete flag", "Reset events", "Elapsed (units unverified)" },
                 "Save regions" => new[] { "Section", "Size", "Understanding" },
                 _ => new[] { "File", "Information", "Value" }
             };
@@ -75,7 +76,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "World progress" => "Saved flags/counters only, not a completion percentage or current travel eligibility. Labels are formatted native identifiers.",
                     "Quick select" => "Stored indices, not a proven wheel order. Automatic insertion searches only the first24 of32 slots.",
                     "Objects & equipment" => "Native object counters, not weapon IDs. Select a row for its high-water count and positive-addition counter; timer/arena units are unverified.",
-                    "Gameplay records" => "These are saved location/scenario identifiers, not proof that a mission is complete. Record tail meanings remain unknown.",
+                    "Gameplay records" => "Retained entries beyond the saved count are not active progress. Select a row for six timing/runtime floats and the integer reset-event count. Technical retains all200 physical slots.",
+                    "Gameplay segments" => "Physical per-level slots, not recovered segment names or mission counts. Timer units and reset-event cause remain unverified; reward accumulators are not balances. Technical includes initialized unmapped level slot19.",
                     "Save regions" => "This is a structural overview. Technical shows the original research map; selected-row details retain its offsets and limitations.",
                     _ => "Technical shows all decoded fields, including unknowns. This view does not validate save integrity."
                 };
@@ -95,6 +97,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (view == "Game settings") return !c[3].StartsWith("unmapped", StringComparison.Ordinal);
             if (view == "Arena challenges") return c[0] != "0";
             if (view == "Global event flags") return c[2] != "Unmapped";
+            if (view == "Gameplay segments") return c[0] != "19";
+            if (view == "Gameplay records") return c[4] != "Unused / zero";
             if (view == "Blueprints") return c[1] == "Yes" || c[2] == "Yes";
             if (view != "Files & headers") return true;
             return c[2] is "Length" or "Dimensions" or "Inspection unavailable" ||
@@ -120,7 +124,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Game settings" => new[] { c[0], c[1] },
             "Arena challenges" => new[] { c[2], c[3], c[4] },
             "Global event flags" => new[] { c[2], Label(c[1], c[1].StartsWith("LVL_", StringComparison.Ordinal) ? "LVL_" : c[1].StartsWith("HERO_", StringComparison.Ordinal) ? "HERO_" : c[1].StartsWith("MOVIE_", StringComparison.Ordinal) ? "MOVIE_" : ""), c[3] },
-            "Gameplay records" => new[] { Label(c[1]), Label(c[2], "gameplay_") },
+            "Gameplay records" => new[] { Label(c[1]), Label(c[2], "gameplay_"), c[4] },
+            "Gameplay segments" => new[] { Label(c[1], "LEVEL_"), c[2], c[3], c[4], Number(c[5]) },
             "Save regions" => Region(c),
             _ => new[] { c[0], MetadataLabel(c[2]), c[2] == "Length" ? c[3].Split(" (0x", StringSplitOptions.None)[0] : c[3] }
         };
@@ -175,7 +180,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 0x41C => ("Bolts", "Mapped"), 0x420 => ("Raritanium", "Mapped"),
                 0x424 => ("Special bolts spent", "Code-backed field"), 0x428 => ("Bolt multiplier", "Code-backed field"),
                 0x42C => ("Other game state", "Partially mapped: equipment, bonuses and progression"),
-                0x8764 => ("Saved locations", "Record structure mapped; tail fields unknown"),
+                0x8764 => ("Saved locations", "Timing/runtime fields mapped; retained entries may be stale"),
+                0x10144 => ("Log count, missions & world state", "Log count and mission structures mapped; RLE meanings partly unknown"),
                 _ => ("World state", "RLE mapped; values unknown")
             };
             return new[] { name, (end - start).ToString("N0", CultureInfo.InvariantCulture) + " bytes", understanding };

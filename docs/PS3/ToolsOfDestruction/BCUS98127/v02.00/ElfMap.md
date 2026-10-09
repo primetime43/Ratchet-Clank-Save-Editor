@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1137 annotations, 118 imports, evidence, byte signatures and 24 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1152 annotations, 118 imports, evidence, byte signatures and 26 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -182,7 +182,7 @@ XP setter `0x4660A8` writes float `+0x04`, recomputes stored level from weapon-d
 
 Modifier helper `0x465D00` ORs a selected bit into record `+0x0C` and refills ammo if maximum changes. Calculation `0x466258` walks weapon-data entries at `+0x464`, stride `0x18`, count at `+0x6A4`; enabled bits select entries matching an attribute ID. Kind zero adds a float, other kinds accumulate a multiplier. Maximum ammo chooses attribute 9 and a base value at weapon-data `+0x280 + 4*level`. The packed assets provide node indices, label tags, costs and XP/ammo tables. Native bindings now link all 32 inventory IDs to named configurations, and vendor bytecode supplies upgrade grids and UI checks below. **Runtime overrides, safe edited-save masks and gameplay-validated bounds remain unresolved.** This modifier helper alone does not describe a complete upgrade purchase.
 
-The JSON `serialization` section records the state/copy chain, field offsets and exact instruction guards. The `TOD_SaveInventoryRecord_verified` type supersedes candidate field names without overwriting an existing analyst's `TOD_SaveInventoryRecord_observed` type. Both remain available because importers preserve existing types. Armor and skill-point structures are now mapped below; health and gameplay-record tail meanings remain unresolved. No new editable fields were enabled, and a matching layout is not a cross-region load test.
+The JSON `serialization` section records the state/copy chain, field offsets and exact instruction guards. The `TOD_SaveInventoryRecord_verified` type supersedes candidate field names without overwriting an existing analyst's `TOD_SaveInventoryRecord_observed` type. Both remain available because importers preserve existing types. Armor, skill points and gameplay-record tail provenance are mapped below; saved health remains unresolved. No new editable fields were enabled, and a matching layout is not a cross-region load test.
 
 ### Ownership unlocks and acquisition
 
@@ -718,9 +718,64 @@ python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodArenaChalleng
 python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodArenaChallenges.py --elf artifacts/ghidra/BCUS98127-02.00/EBOOT.ELF --assets artifacts/tod-assets-v02.00 --save artifacts/tod-research-capture/USA-GAME.plaintext.bin
 ```
 
+## Gameplay segments, timers, reward accumulators and retained log
+
+The `gameplay_segments` section reproduces **58 exact byte guards** using [Inspect-TodGameplaySegments.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGameplaySegments.py). The executable identity is checked before decoding. These are static storage/operation confirmations checked against the actual plaintext snapshot, not in-game validation of arbitrary edits.
+
+### Ten segment records per world
+
+Initializer `35DFA8` calls `35DD98` ten times with stride `(1<<6)-(1<<4) = 0x30`. Save selector `2D14E0` computes **`488 + saved_load_level*408 + physical_segment_slot*30`**. Twenty world slots are initialized (`35E110`); only nineteen have native level names. Each world's first `0x1E0` bytes contain ten records, followed by two opaque256-byte arrays at `+1E0` and `+2E0`.
+
+| Segment member | Type | Confirmed role |
+| --- | --- | --- |
+| `+00` | BE float32 | Adjusted elapsed accumulator; tick adds runtime delta; reset event additionally adds `+04 * config10FC8` |
+| `+04` | BE float32 | Current-attempt elapsed accumulator; tick adds the same delta, reset/finalization clears it |
+| `+08` | BE uint32 | Reset-event counter; `2CE518` uses `lwz/addi/stw`, not float arithmetic |
+| `+0C` | BE float32 | Finalizer stores `max(0, runtime baseline + runtime modifier)` |
+| `+10` | BE float32 | Reward channel A accumulator; player-facing channel name unresolved |
+| `+14` | BE float32 | Bolt reward accumulator, not bolt wallet balance |
+| `+18` | BE float32 | Raritanium reward accumulator, not raritanium wallet balance |
+| `+1C/+20/+24` | Three BE float32 | Cached per-segment reward totals from `2CF4C8`; channel names not assigned |
+| `+28` | BE word | Zeroed by initializer, meaning unresolved |
+| `+2C` | Byte, nonzero predicate | Named gameplay-segment completion flag |
+| `+2D..+2F` | Three opaque bytes | Preserved; initializer does not prove padding |
+
+Registrations **`89D960: complete_segment → 2C8A18 → 2782E8 → 2D15C8`** and **`89D968: is_segment_complete → 2C8950 → 2782B0 → 2D1538`** establish the flag's name. Runtime string lookup resolves segment names to slots; the retained log's name order is not a static slot catalog. These records are separate from the active/completed mission lists at10148/10AF8.
+
+`2D15C8` calls `2CE328` only for a previously clear flag, then stores1 at `+2C`. Finalizer/tick/reset paths skip saved segment operations when replay predicate `2D1860` is true; completion still sets the flag after invoking the skipped finalizer. Therefore a set flag alone does not prove a log append. Runtime checkpoint mask at10330610+44 is separate, outside the saved block.
+
+Reward consumers confirm `2CEF70 → 3842B8 → 369AA8` delivers bolts to hero state+41C, while `2CEBC0 → 3842B8 → 36A458` delivers raritanium to+420. Their segment accumulators are+14/+18. No current payout or safe edited balance is calculated. Cache byte **world+403** is read/set by `2CF4C8`, which also stores world reward totals at3E0/3E4/3E8. Its nonzero state reuses cached totals; it is not another mission-completion flag.
+
+### Log count and six floats plus one integer
+
+Finalizer `2CE328` increments saved **BE32 count at10144**, writes a `0x9C` record at **`8764 + old_count*9C`**, and copies level/loaded-segment names into the two64-byte fields. The span8764..10144 contains **200 physical slots**, not27. This is a structural read bound: a safe native writer capacity check has not been established.
+
+| Log member | Type | Native source |
+| --- | --- | --- |
+| `+80` | BE float32 | Runtime101E8D70+0 baseline after recalculation |
+| `+84` | BE float32 | Timing modifier from `2CDD20` with elapsed reset to zero and config24/28/2C |
+| `+88` | BE float32 | Segment+00 adjusted elapsed before clearing |
+| `+8C` | BE float32 | Loaded segment config+20 reference time |
+| `+90` | BE float32 | Runtime `2CDBF8` result+0, accumulated adjusted time |
+| `+94` | BE float32 | Runtime `2CDBF8` result+4, accumulated reference time |
+| `+98` | BE uint32 | Segment+08 reset-event counter, copied with `lwz/stw` |
+
+**Assembly is essential here:** the decompiler incorrectly represents the counter as a float. Actual log entries contain raw00000001/00000002/00000003, which are integer counts, not tiny denormal time values. Exact time units, difficulty terminology and reset-event cause remain unverified; the inspector applies no time conversion or percentage label.
+
+Initialization `35E110` passes save+5528 to `35D9A0`; its store at `35DBB8` clears relativeAC1C, hence saved10144. It does **not** clear the preceding log buffer. The supplied plaintext SHA-256 `F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463` has count0, all200 segment records zero, and27 retained nonzero log entries. These are **retained beyond saved count**, not active progress or a completion count. For example retained record0 has adjusted elapsed1145.373779296875, configured reference1000 and reset-event count1. The zeroed current segment state and retained log can coexist; no repair is appropriate from this snapshot alone.
+
+The app adds read-only **Gameplay segments** (190 named-world rows by default;200 physical records in Technical). **Saved locations** shows storage status, keeps nonzero retained entries, and bounds Technical reads to200 slots. Details explain all mapped fields and preserve raw bytes/nonfinite values. `TOD_SaveGameplaySegment_verified` and `TOD_SaveGameplayLog_verified` supplement, rather than overwrite, the earlier observed types. No new editing controls are enabled.
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGameplaySegments.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodGameplaySegments.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
+The five native tests cover bundled-map/type reproduction, nonboolean flags, integer/float distinction, unusual/nonfinite bits, unknown bytes, last physical slots, stale entries, malformed count clipping, invalid inputs and unchanged sources. App fixtures independently exercise scalar types, retained-entry presentation and detached snapshots; actual-save checks compare the new views against decrypted working-copy bytes.
+
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes world-record subrecords/bitmaps, equipment callback/reset dependencies, runtime arena menu table/order, the separate eight words at5734, any persisted checkpoint/health dependencies, scenario tails, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. Direct arena IDs/counters/configuration, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes the two world-record256-byte arrays, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, the separate eight words at5734, any persisted checkpoint/health dependencies, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. The5734 array now has an identified incrementing writer in2CE518, indexed by a nonzero runtime category; its category catalog and bounds are unresolved, so it is not labeled challenge failures. Direct arena IDs/counters/configuration, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -730,7 +785,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1136 mapped annotations (the third TOC reference base is unmapped), 24 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1151 mapped annotations (the third TOC reference base is unmapped), 26 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

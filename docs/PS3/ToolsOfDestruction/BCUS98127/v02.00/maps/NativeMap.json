@@ -3726,7 +3726,7 @@
   "world_state": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static code; storage values are not an in-game completion or travel-eligibility verdict. No editing permissions inferred.",
-    "worlds": {"record_base":"0x488","record_stride":"0x408","native_level_count":19,"unlocked_offset":"0x888","visited_offset":"0x889","menu_exclusion_offset":"0x88a","flag_type":"uint8, nonzero predicate","menu_rule":"36A10 requires a nonzero level ID, unlocked byte nonzero and exclusion byte zero. Level3 is suppressed when recursive level18 eligibility is true; visible36AC8 delegates to this rule. Seen37460 reads the same saved byte as visited279F8.","warning":"Byte402 has a proven exclusion role, not a recovered gameplay name. Byte403 and other record members remain unknown. Initialized slot19 is not a native level.","catalog":[{"id":0,"enum":"LEVEL_METROPOLIS","unlocked_offset":"0x888","visited_offset":"0x889","menu_exclusion_offset":"0x88a","missions_completed_offset":"0x10b70"},{"id":1,"enum":"LEVEL_COBALIA","unlocked_offset":"0xc90","visited_offset":"0xc91","menu_exclusion_offset":"0xc92","missions_completed_offset":"0x10bec"},{"id":2,"enum":"LEVEL_STRATUS_CITY","unlocked_offset":"0x1098","visited_offset":"0x1099","menu_exclusion_offset":"0x109a","missions_completed_offset":"0x10c68"},{"id":3,"enum":"LEVEL_FASTOON","unlocked_offset":"0x14a0","visited_offset":"0x14a1","menu_exclusion_offset":"0x14a2","missions_completed_offset":"0x10ce4"},{"id":4,"enum":"LEVEL_SPACE_COMBAT_I","unlocked_offset":"0x18a8","visited_offset":"0x18a9","menu_exclusion_offset":"0x18aa","missions_completed_offset":"0x10d60"},{"id":5,"enum":"LEVEL_IMPERIAL_FIGHT_FEST","unlocked_offset":"0x1cb0","visited_offset":"0x1cb1","menu_exclusion_offset":"0x1cb2","missions_completed_offset":"0x10ddc"},{"id":6,"enum":"LEVEL_APOGEE_SPACE_STATION","unlocked_offset":"0x20b8","visited_offset":"0x20b9","menu_exclusion_offset":"0x20ba","missions_completed_offset":"0x10e58"},{"id":7,"enum":"LEVEL_PIRATE_BASE","unlocked_offset":"0x24c0","visited_offset":"0x24c1","menu_exclusion_offset":"0x24c2","missions_completed_offset":"0x10ed4"},{"id":8,"enum":"LEVEL_SPACE_COMBAT_II","unlocked_offset":"0x28c8","visited_offset":"0x28c9","menu_exclusion_offset":"0x28ca","missions_completed_offset":"0x10f50"},{"id":9,"enum":"LEVEL_RYKAN_V","unlocked_offset":"0x2cd0","visited_offset":"0x2cd1","menu_exclusion_offset":"0x2cd2","missions_completed_offset":"0x10fcc"},{"id":10,"enum":"LEVEL_SARGASSO","unlocked_offset":"0x30d8","visited_offset":"0x30d9","menu_exclusion_offset":"0x30da","missions_completed_offset":"0x11048"},{"id":11,"enum":"LEVEL_IRIS","unlocked_offset":"0x34e0","visited_offset":"0x34e1","menu_exclusion_offset":"0x34e2","missions_completed_offset":"0x110c4"},{"id":12,"enum":"LEVEL_ZORDOOM_PRISON","unlocked_offset":"0x38e8","visited_offset":"0x38e9","menu_exclusion_offset":"0x38ea","missions_completed_offset":"0x11140"},{"id":13,"enum":"LEVEL_SPACE_COMBAT_III","unlocked_offset":"0x3cf0","visited_offset":"0x3cf1","menu_exclusion_offset":"0x3cf2","missions_completed_offset":"0x111bc"},{"id":14,"enum":"LEVEL_KERCHU_CITY","unlocked_offset":"0x40f8","visited_offset":"0x40f9","menu_exclusion_offset":"0x40fa","missions_completed_offset":"0x11238"},{"id":15,"enum":"LEVEL_SLAGS_FLEET","unlocked_offset":"0x4500","visited_offset":"0x4501","menu_exclusion_offset":"0x4502","missions_completed_offset":"0x112b4"},{"id":16,"enum":"LEVEL_CRAGMITE_RUINS","unlocked_offset":"0x4908","visited_offset":"0x4909","menu_exclusion_offset":"0x490a","missions_completed_offset":"0x11330"},{"id":17,"enum":"LEVEL_MERIDIAN_CITY","unlocked_offset":"0x4d10","visited_offset":"0x4d11","menu_exclusion_offset":"0x4d12","missions_completed_offset":"0x113ac"},{"id":18,"enum":"LEVEL_FASTOON_II","unlocked_offset":"0x5118","visited_offset":"0x5119","menu_exclusion_offset":"0x511a","missions_completed_offset":"0x11428"}]},
+    "worlds": {"record_base":"0x488","record_stride":"0x408","native_level_count":19,"unlocked_offset":"0x888","visited_offset":"0x889","menu_exclusion_offset":"0x88a","flag_type":"uint8, nonzero predicate","menu_rule":"36A10 requires a nonzero level ID, unlocked byte nonzero and exclusion byte zero. Level3 is suppressed when recursive level18 eligibility is true; visible36AC8 delegates to this rule. Seen37460 reads the same saved byte as visited279F8.","warning":"Byte402 has a proven exclusion role, not a recovered gameplay name. Byte403 is the reward-cache-ready flag; ten segment records are mapped separately by gameplay_segments. Other members remain partly unknown. Initialized slot19 is not a native level.","catalog":[{"id":0,"enum":"LEVEL_METROPOLIS","unlocked_offset":"0x888","visited_offset":"0x889","menu_exclusion_offset":"0x88a","missions_completed_offset":"0x10b70"},{"id":1,"enum":"LEVEL_COBALIA","unlocked_offset":"0xc90","visited_offset":"0xc91","menu_exclusion_offset":"0xc92","missions_completed_offset":"0x10bec"},{"id":2,"enum":"LEVEL_STRATUS_CITY","unlocked_offset":"0x1098","visited_offset":"0x1099","menu_exclusion_offset":"0x109a","missions_completed_offset":"0x10c68"},{"id":3,"enum":"LEVEL_FASTOON","unlocked_offset":"0x14a0","visited_offset":"0x14a1","menu_exclusion_offset":"0x14a2","missions_completed_offset":"0x10ce4"},{"id":4,"enum":"LEVEL_SPACE_COMBAT_I","unlocked_offset":"0x18a8","visited_offset":"0x18a9","menu_exclusion_offset":"0x18aa","missions_completed_offset":"0x10d60"},{"id":5,"enum":"LEVEL_IMPERIAL_FIGHT_FEST","unlocked_offset":"0x1cb0","visited_offset":"0x1cb1","menu_exclusion_offset":"0x1cb2","missions_completed_offset":"0x10ddc"},{"id":6,"enum":"LEVEL_APOGEE_SPACE_STATION","unlocked_offset":"0x20b8","visited_offset":"0x20b9","menu_exclusion_offset":"0x20ba","missions_completed_offset":"0x10e58"},{"id":7,"enum":"LEVEL_PIRATE_BASE","unlocked_offset":"0x24c0","visited_offset":"0x24c1","menu_exclusion_offset":"0x24c2","missions_completed_offset":"0x10ed4"},{"id":8,"enum":"LEVEL_SPACE_COMBAT_II","unlocked_offset":"0x28c8","visited_offset":"0x28c9","menu_exclusion_offset":"0x28ca","missions_completed_offset":"0x10f50"},{"id":9,"enum":"LEVEL_RYKAN_V","unlocked_offset":"0x2cd0","visited_offset":"0x2cd1","menu_exclusion_offset":"0x2cd2","missions_completed_offset":"0x10fcc"},{"id":10,"enum":"LEVEL_SARGASSO","unlocked_offset":"0x30d8","visited_offset":"0x30d9","menu_exclusion_offset":"0x30da","missions_completed_offset":"0x11048"},{"id":11,"enum":"LEVEL_IRIS","unlocked_offset":"0x34e0","visited_offset":"0x34e1","menu_exclusion_offset":"0x34e2","missions_completed_offset":"0x110c4"},{"id":12,"enum":"LEVEL_ZORDOOM_PRISON","unlocked_offset":"0x38e8","visited_offset":"0x38e9","menu_exclusion_offset":"0x38ea","missions_completed_offset":"0x11140"},{"id":13,"enum":"LEVEL_SPACE_COMBAT_III","unlocked_offset":"0x3cf0","visited_offset":"0x3cf1","menu_exclusion_offset":"0x3cf2","missions_completed_offset":"0x111bc"},{"id":14,"enum":"LEVEL_KERCHU_CITY","unlocked_offset":"0x40f8","visited_offset":"0x40f9","menu_exclusion_offset":"0x40fa","missions_completed_offset":"0x11238"},{"id":15,"enum":"LEVEL_SLAGS_FLEET","unlocked_offset":"0x4500","visited_offset":"0x4501","menu_exclusion_offset":"0x4502","missions_completed_offset":"0x112b4"},{"id":16,"enum":"LEVEL_CRAGMITE_RUINS","unlocked_offset":"0x4908","visited_offset":"0x4909","menu_exclusion_offset":"0x490a","missions_completed_offset":"0x11330"},{"id":17,"enum":"LEVEL_MERIDIAN_CITY","unlocked_offset":"0x4d10","visited_offset":"0x4d11","menu_exclusion_offset":"0x4d12","missions_completed_offset":"0x113ac"},{"id":18,"enum":"LEVEL_FASTOON_II","unlocked_offset":"0x5118","visited_offset":"0x5119","menu_exclusion_offset":"0x511a","missions_completed_offset":"0x11428"}]},
     "missions": {"record_base":"0x10af8","record_stride":"0x7c","completed_member":"0x78","completed_offset":"0x10b70","type":"uint32 BE","named_chain":["0x395a0","0x36fc0","0x12470","0x2d0ef0","0x2d0df0"],"warning":"Menu getter remaps level3 to18 when native level18 visibility is true. Rows expose unremapped storage for IDs0..18. Entry fields are documented separately in mission_lists; this count alone does not resolve runtime titles or a trustworthy completion percentage."},
     "quick_select": {"offset":"0x284","word_count":32,"word_stride":4,"type":"int32 BE item IDs; -1 is empty","automatic_insert_slots":24,"player_state_stride":"0x484","add_chain":["0x2b8780","0x288988","0x252b08","0x1e26f0"],"remove_chain":["0x2b8650","0x288888","0x252ed8","0x1e22a8"],"warning":"Membership/removal search all32 words, while insertion accepts/searches slots0..23 and filters item config flags0x1040. These are stored slot indices, not a proven UI wheel order. Player0 block only; additional player-index validity not inferred."},
     "named_bindings": [{"name":"is_level_unlocked","registration_slot_va":"0x8894c4","wrapper_va":"0x30768"},{"name":"is_level_visited","registration_slot_va":"0x8894cc","wrapper_va":"0x30690"},{"name":"is_level_visitable","registration_slot_va":"0x889c90","wrapper_va":"0x39ba0"},{"name":"is_level_visible","registration_slot_va":"0x889c98","wrapper_va":"0x39ac8"},{"name":"is_level_seen","registration_slot_va":"0x889ca0","wrapper_va":"0x399f0"},{"name":"get_level_missions_completed","registration_slot_va":"0x889cc8","wrapper_va":"0x395a0"},{"name":"hero_add_quick_select","registration_slot_va":"0x89dfcc","wrapper_va":"0x2b8780"},{"name":"hero_remove_quick_select","registration_slot_va":"0x89dfd4","wrapper_va":"0x2b8650"}],
@@ -21353,7 +21353,545 @@
       }
     ]
   },
+  "gameplay_segments": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 static evidence; no new editable fields or runtime compatibility claims. Segment names/slot association require loaded configuration; slot order is not a planet mission list.",
+    "segments": {
+      "record_base": "0x488",
+      "world_stride": "0x408",
+      "native_level_count": 19,
+      "initialized_world_slots": 20,
+      "slots_per_world": 10,
+      "record_stride": "0x30",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "adjusted_elapsed",
+          "type": "f32",
+          "comment": "Tick adds runtime delta; reset event adds current_attempt * config10FC8; finalization copies to log88 then clears."
+        },
+        {
+          "offset": "0x4",
+          "name": "current_attempt_elapsed",
+          "type": "f32",
+          "comment": "Same tick delta as adjusted_elapsed; reset and finalization clear it. Time units not independently confirmed."
+        },
+        {
+          "offset": "0x8",
+          "name": "reset_events",
+          "type": "u32",
+          "comment": "2CE518 increments with lwz/addi/stw, modulo32; finalization copies bits to log98. Not float despite decompiler output."
+        },
+        {
+          "offset": "0xc",
+          "name": "finalized_runtime_score",
+          "type": "f32",
+          "comment": "Finalizer stores max(0, runtime baseline + runtime modifier). Not a completion percentage."
+        },
+        {
+          "offset": "0x10",
+          "name": "reward_channel_a_accumulated",
+          "type": "f32",
+          "comment": "2CF218/2CFAB8 reward scaling; player-facing channel name unresolved."
+        },
+        {
+          "offset": "0x14",
+          "name": "bolts_reward_accumulated",
+          "type": "f32",
+          "comment": "2CEF70 accumulates at14; consumer3842B8 calls369AA8, whose hero state store is41C (bolts). Not wallet balance."
+        },
+        {
+          "offset": "0x18",
+          "name": "raritanium_reward_accumulated",
+          "type": "f32",
+          "comment": "2CEBC0 accumulates at18; consumer3842B8 calls36A458, whose hero state store is420 (raritanium). Not wallet balance."
+        },
+        {
+          "offset": "0x1c",
+          "name": "cached_reward_total_a",
+          "type": "f32",
+          "comment": "2CF4C8 computes and reloads this per-segment reward total."
+        },
+        {
+          "offset": "0x20",
+          "name": "cached_reward_total_b",
+          "type": "f32",
+          "comment": "2CF4C8 computes and reloads this per-segment reward total."
+        },
+        {
+          "offset": "0x24",
+          "name": "cached_reward_total_c",
+          "type": "f32",
+          "comment": "2CF4C8 computes and reloads this per-segment reward total."
+        },
+        {
+          "offset": "0x28",
+          "name": "unknown_28",
+          "type": "u32",
+          "comment": "Initializer zeroes this word; gameplay meaning unresolved."
+        }
+      ],
+      "complete_offset": "0x2c",
+      "complete_chain": [
+        "0x2c8a18",
+        "0x2782e8",
+        "0x2d15c8",
+        "0x2ce328"
+      ],
+      "check_chain": [
+        "0x2c8950",
+        "0x2782b0",
+        "0x2d1538",
+        "0x2d14e0"
+      ],
+      "unknown_tail": "Bytes2D..2F are preserved, not proven padding; word28 remains unknown. Twenty physical worlds initialized, only19 named native levels.",
+      "replay_rule": "Tick/reset/finalizer paths skip segment updates when2D1860 is true. complete_segment still writes2C after calling finalizer; flag alone does not prove a log append.",
+      "world_reward_cache_ready_member": "0x403",
+      "opaque_arrays": [
+        {
+          "offset": "0x1e0",
+          "size": "0x100"
+        },
+        {
+          "offset": "0x2e0",
+          "size": "0x100"
+        }
+      ]
+    },
+    "log": {
+      "offset": "0x8764",
+      "record_stride": "0x9c",
+      "count_offset": "0x10144",
+      "bounded_physical_slots": 200,
+      "fields": [
+        {
+          "offset": "0x80",
+          "name": "runtime_baseline",
+          "type": "f32",
+          "comment": "2CE328 copies runtime101E8D70+0 after recalculation."
+        },
+        {
+          "offset": "0x84",
+          "name": "post_reset_timing_modifier",
+          "type": "f32",
+          "comment": "2CDD20 result using zeroed elapsed time and configuration24/28/2C."
+        },
+        {
+          "offset": "0x88",
+          "name": "adjusted_elapsed",
+          "type": "f32",
+          "comment": "Copies segment+0 before reset; no time-unit conversion applied."
+        },
+        {
+          "offset": "0x8c",
+          "name": "configured_reference_time",
+          "type": "f32",
+          "comment": "Copies runtime segment configuration+20, not save data."
+        },
+        {
+          "offset": "0x90",
+          "name": "runtime_accumulated_time",
+          "type": "f32",
+          "comment": "Runtime2CDBF8+0 after adding this segment's threshold-adjusted time."
+        },
+        {
+          "offset": "0x94",
+          "name": "runtime_accumulated_reference",
+          "type": "f32",
+          "comment": "Runtime2CDBF8+4 after adding configuration+20."
+        },
+        {
+          "offset": "0x98",
+          "name": "reset_events",
+          "type": "u32",
+          "comment": "Raw copy of segment+8 via lwz/stw; integer counter, not seventh float."
+        }
+      ],
+      "warning": "200 slots are the structural span up to saved count, not an established writer bounds check. Native finalizer increments count before writing. Initialization resets count but does not clear log entries: retained bytes beyond count are not active progress. Malformed counts clipped for reading only."
+    },
+    "named_bindings": [
+      {
+        "name": "complete_segment",
+        "registration_slot_va": "0x89d960",
+        "wrapper_va": "0x2c8a18"
+      },
+      {
+        "name": "is_segment_complete",
+        "registration_slot_va": "0x89d968",
+        "wrapper_va": "0x2c8950"
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x2782b0",
+        "bytes": "F821FF917C8802A6F88100804805966D60000000786300204805927160000000E8010080786306207C0803A6382100704E80002060000000"
+      },
+      {
+        "va": "0x2782e8",
+        "bytes": "F821FF817C0802A6FBE100787C9F2378F80100904805962D60000000786300207BE40620480592BD600000002F1F00005463063E2F830000419E000C38800004409A0018E8810090EBE10078382100807C8803A64E80002081229070806900004BFD8C61E8410028E8810090EBE100787C8803A6382100804E80002060000000"
+      },
+      {
+        "va": "0x2c8950",
+        "bytes": "F821FF717C8802A638010070FBE10088781F0020F88100A038A00000388000017FE6FB78FBC100807C7E1B784BF8990DE84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F3788082F0647FE5FB784BF88A65E841002838600000E8A100A07C6307B4EBC10080EBE100887CA803A6382100904E800020600000004BF8A219E8410028388000012C03000038A000007FC3F3784182FFB04BF870CDE8410028786300204BFAF8B960000000786406207FC3F3784BF87A31E8410028386000014BFFFF9C"
+      },
+      {
+        "va": "0x2c8a18",
+        "bytes": "F821FF617C0802A6FBC100903BC10070FBA100887BDD0020388000017FA6EB7838A00000FBE10098F80100B07C7F1B784BF89841E84100282F8300007FA6EB783880000238A000017FE3FB78409E003C7FE3FB788082F0687FC5F3784BF88995E8410028E8E100B038600000EBA10088EBC100907CE803A6EBE10098382100A04E800020600000004BF88DB9E84100287FA5EB782C030000388000037FE3FB784182FFB04BF8A12DE8410028388000012C83000038A000007FE3FB784186FF944BF86FE1E8410028388000027C7D1B7838A000017FE3FB784BF87D29E84100287C66FE707CC51A787BA300207C85305078840FE24BFAF7DD600000004BFFFF68"
+      },
+      {
+        "va": "0x2cdec0",
+        "bytes": "5464103A8122F158F821FF817CA802A638040020FBE100787C0307B4F8A10090396000007FE9182E2F9FFFFF419E0038480035A16000000057E930328162F16057E420365460482C547F28347D4448507D9F00507D0A62143CE800017CC75A143966EA24E8A1009079630020EBE10078382100807CA803A64E80002060000000"
+      },
+      {
+        "va": "0x2cdf40",
+        "bytes": "F821FF817C0802A6FBE10078F80100904BFFFC71380000002F83FFFF7C7F1B78419E00344800352D6000000057E8303280A2F178546B502A57EA2036546718387CCA40507C675A147C861A147D242A1438090488E981009078030020EBE10078382100807D8803A64E80002060000000"
+      },
+      {
+        "va": "0x2ce328",
+        "bytes": "F821FF617C8802A6FBA10080FBE100907C7D1B78DBE10098FB610070FB810078FBC10088F88100B048003511600000005460063E7BBF00202F8000007FE3FB78419E0030EBC100B0EB6100707FC803A6EB810078EBA10080EBC10088EBE10090CBE10098382100A04E800020600000004BFFFBA92C0300007C7E1B784182FFC88863002CC3E2F1702C8300004086FFB88122F1788162F1783D490001806A0144398300011C83009C3D040001918A014438C887507FA65A14480030B1600000003B9D0014786300207B9C00204800248D600000008362F188786600207F84E3787F65DB78386000014BF82DA9E84100287FE3FB78480035ED6000000038FD0054786600207F65DB7878E40020386000014BF82D81E84100284BFFF7B97C7B1B787FE3FB784BFFFA75C082F18CC1A30020FC20F890C13B0000EC6D0132C19E0000FC4C1828FC026B2EED69002AC0FB0004D17B0000C1030020ED47402AD15B0004C0DE0000D0DC0088C0A30020D0BC008CC09B0000D09C0090C07B0004D07C009480BE000890BC0098D3FE0004D3FE0000C0430024C083002CC06300284BFFF85DD03C00844BFFFAE58122F158C0490000D05C0080C1890004EDA2602AFC3F6828FC016FEED01E000CEBC100B0EB6100707FC803A6EB810078EBA10080EBC10088EBE10090CBE10098382100A04E800020"
+      },
+      {
+        "va": "0x2ce3c4",
+        "bytes": "806A0144"
+      },
+      {
+        "va": "0x2ce3cc",
+        "bytes": "1C83009C"
+      },
+      {
+        "va": "0x2ce3d4",
+        "bytes": "918A0144"
+      },
+      {
+        "va": "0x2ce3d8",
+        "bytes": "38C88750"
+      },
+      {
+        "va": "0x2ce3e8",
+        "bytes": "3B9D0014"
+      },
+      {
+        "va": "0x2ce424",
+        "bytes": "38FD0054"
+      },
+      {
+        "va": "0x2ce4ac",
+        "bytes": "90BC0098"
+      },
+      {
+        "va": "0x2ce518",
+        "bytes": "8162F1587C8802A6F821FF91F8810080800B00485403103A2F800000392357207D2907B4419E00188102F1787CA9421480E5001438C7000190C500144800330D60000000546A063E2C0A000041820014E8610080382100707C6803A64E8000208182F17C806C00004BFFF9C12C8300004186FFE080A2F16039200000C02300043D650001C18300008083000838040001C00B0FC8EDA1603A9003000891230004D1A30000E8610080382100707C6803A64E80002060000000"
+      },
+      {
+        "va": "0x2ce5a0",
+        "bytes": "80830008"
+      },
+      {
+        "va": "0x2ce5b0",
+        "bytes": "90030008"
+      },
+      {
+        "va": "0x2ce5b4",
+        "bytes": "91230004"
+      },
+      {
+        "va": "0x2ce620",
+        "bytes": "F821FF717C0802A6DBE10088F80100A0FBA10070FBC10078FBE100804BFFFF9548003221600000005463063E2F830000419E0028EBE100A0EBA100707FE803A6EBC10078EBE10080CBE10088382100904E800020600000004BFFF581C3E2F168FC20F89038A3000C83A2F1907C7F1B7878A400207FA3EB784BF80621E8410028FC20F890389F00087FA3EB78788400204BF80609E8410028C01F000CC1A2F170FC0068004C4013824182FF8CC03F0008FC8168004CC433824186FF7C8122F17C83A900007FA3EB784BFFF8592F0300007C7F1B78419A009483C2F158815E00502C0A00004182007C897F002C2C8B00004086FF448182F1947FA3EB78C19F0000C09F0004C06C00A4EDA3202AEC43602AD1BF0004D05F00004BFFF789C03F0000C083002CC0430024C0630028C3FE00044BFFF5D1FF1F0800D03E0004419AFEF8EBC100A0EBA100707FC803A6EBE10080EBC10078CBE10088382100904BFFF65C4BFFF6594BFFFF8480E2F15880C700502F860000419EFEC0E90100A0EBA10070EBC100787D0803A6EBE10080CBE10088382100904BFFF594"
+      },
+      {
+        "va": "0x2ce730",
+        "bytes": "D1BF0004"
+      },
+      {
+        "va": "0x2ce734",
+        "bytes": "D05F0000"
+      },
+      {
+        "va": "0x2cebc0",
+        "bytes": "2F8300007C0802A6F821FF31DBA100B8FFA00890DBE100C8FBA100A0FBE100B0DBC100C07C7F1B78FB410088FB610090FB810098FBC100A8F80100E07CBD2B78C3E2F198419E00F480630040388000B34BF83389E84100282C030000418200DC787E00204800286D600000008342F1B45469502A54661838817E00007C864A14556505AC7C64D2142C8500003B630488418600E08342F19C7B6B0020C03E001057BD063E8142F1B03B800000C05A033C818B03F4EDA100B25588103A7D0707B47C0A3C2EEFED00322F9D0000409E006C817E0000557D05AC2C1D00004182021C8082F19C7B63002083E2F1B083440328810303F4FB410070C8E100705500103AFCC03E9CC0A303FC7C1B07B4EC1F282A7C9FDC2EFC603018D00303FCED830132FC8C00004CC4338241860220839E0000638C0100919E0000EBC100E0FC20F890EB4100887FC803A6EB610090EB810098EBA100A0EBC100A8EBE100B0CBA100B8CBC100C0CBE100C8382100D04E800020557C077A2F1C0000419A01A8C1BE00108382F1CC3C000003C3C2F1D0600B43FD819C00007D0C59D63D48002738EA9EC378E6C22254E9F87E913C0000F8C10070C9210070FD804E9CC03E0014FD006018ECE807B2FC0708004C401382418201BC57BD063E2C9D0000418601A8C142F198FF0150004099019CEFED0824807F00402F830000419E009478630020388000E94BF80449E84100285463063E2C030000418200783D800003815C0000618843FD7CEA41D63D27002738C99EC378C4C22254C5F87E90BC0000F8810070C8210070FDA00E9CFC006818ED6007B2FC8BE800408400388082F1D8816400002F8B0000409E0144C1A2F1DC8162F19C838B0328FB810070C8410070FFC0169CFFA0F018EFEDFF7A600000007BE300203B8000004BFFFB292F03FFFF7C7F1B78419AFE2C480026316000000057EA2036FC20F8908002F1A0547C502A546C183857E830327CECE2147D2A405057E5103A7CC93A147CA307B47C86D2147FE302143B8404887B9A0020C07F0008C05A00184BFFFB55FFE008904BFFFDD42F1C0000419AFE307B830020C1230018ED9F482AD1830018839E0000638C0100919E00004BFFFE1C807F0068546003DE2F800000419E00648082F1C8C07E0010C0840000EDA301324BFFFE406000000038C80001ED00602878CA0020212A00047D28FE767D0748387CA63A14D10303FC90A303F4839E0000638C0100919E00004BFFFDC060000000C3E2F1984BFFFE6857BD063E4BFFFE5C80A2F19CC0BE0010C0C5033CEDA601724BFFFDE0C1A2F1D44BFFFEC060000000"
+      },
+      {
+        "va": "0x2cef70",
+        "bytes": "2F8300007C0802A6F821FF41FBA100A0FBE100B0DBE100B87C7F1B78FB410088FB610090FB810098FBC100A8F80100D07C9D2378419E016C806300402C0300004182016078630020388000B34BF82FDDE84100282C83000041860148787E0020C002F198C1BE000CFF0D00004F58D382419A0130480024AD60000000817E00008362F1B45466502A54651838556905AC7C8532142F8900007C64DA143B430488419E01308362F19C7B4B0020C07E000C3B8000008142F1B0C09B0338818B03F0EC4301325588103A7D0707B47C2A3C2EEFE200722F9D0000C142F1E0FD3F5028FC2957EE409E00C0837E0000577D05AC2C1D00004182015C80E2F19C7B43002083E2F1B080A70324810303F0F8A10070C9A100705506103AFC006E9CC3E303F87CDA07B47D7FD42EFD800018EC01F82AED8C02F2D00303F8FC8C00004CC433824086002839880001EC40602879840020238400047F8BFE767D68E0387D4C4214D04303F8914303F0801E000060030020907E0000EBC100D0EB4100887FC803A6EB610090EB810098EBA100A0EBC100A8EBE100B0CBE100B8382100C04E800020C022F198EBC100D0EB4100887FC803A6EB610090EB810098EBA100A0EBC100A8EBE100B0CBE100B8382100C04E800020557C07BC2C1C000041820098C3FE000C7BE300203B8000004BFFF8212F03FFFF7C7F1B78419AFEE0480023296000000057E92036FC20F89080E2F1A05460502A57E43032546318387D6920507F83021457E8103A7D8BE2147D0607B47D4CDA147FE63A143B8A04887B850020C07F0030C04500144BFFF84DFFE008904BFFFE882F1C0000419AFF147B890020C0890014EC61202AD06900144BFFFF0060000000807F0068546003DE2C800000418600188082F1C8C0DE000CC0A40004EFE601724BFFFF508122F19CC0FE000CC1090338EFE801F24BFFFF3C"
+      },
+      {
+        "va": "0x2cf1d4",
+        "bytes": "D0690014"
+      },
+      {
+        "va": "0x2cf4c8",
+        "bytes": "8122F1EC7C0802A6F821FEB1DBC10140DBE10148FB010100FB210108FB410110FB610118FB810120FBA10128FBC10130FBE10138F80101608082F1F0806900004BF80BF1E84100282F83000038600000409E0040E88101607C6307B4EB010100EB2101087C8803A6EB410110EB610118EB810120EBA10128EBC10130EBE10138CBC10140CBE10148382101504E80002039810080394100C03B2100D03B010070100004C4396000007C0061CE7C00C9CE7C00C1CE7C0051CEF96100E0F9610090F9610098F96100A0F96100A8F96100B0F96100B848001EF56000000080C2F1B45468502A546718387CA742147C8532143BA404887BBC0020887C04032C03000041820238837C03E838C00000C3FC03E038E00000C3DC03E43B80000A386100983B4100707F8903A6388100C06000000054D9203654D830327D871A147D79C0507D47D2147D3D5A1479880020793F00207C07221479450020781E002038C60001C03F001C38E70004D0280000C01F0020D0050000C1BF0024D1BE00004200FFB4FD00F0903B80000AFD40F890936100F039000000C12100F07F8903A6600000007D68D2147F281A147CA82214796600207B27002078BB002039080004C0A60000C3E70000ED08282AC3DB0000ED4AF82AED29F02A4200FFCC8182F19C3940000A80A2F1F438C00000C0E2F1987D4903A63BE50028FC804050800C0324812C032083CC0328F80100F8C82100F83805FFD8F92100F8FC000E9CC9A100F8FD806E9CFBC100F8C96100F8FCC05E9CFCA04850FC200018FC606018FC403018FCC050507D26D2147D861A147D462214793E0020798B0020795900207CE62A147F66FA14C3DE00007F860214C16B0000EDA107B2C1990000ED6302F2EFC2033278E800207B7800207B9D002038C60004EFED4024FC08F9EEFC04F82ED0080000EFEB5024ED9E4824FFCAF9EEFDA961EEFFC6FFAEFDA5636ED3D80000D1BD00004200FF848342F1C8EFE35024C062F1E038600001FC0AF8EEFC06F82E7C6307B4D01A0008ECC24824FD4930EEFD4532AED15A0000ED214024FCE848EEFCE449EED0FA0004E8810160EB010100EB2101087C8803A6EB410110EB610118EB810120EBA10128EBC10130EBE10138CBC10140CBE10148382101504E8000208302F1A4817800102C8B00004184004C83780000386000003BE000007B7E0020607AFFFF395B0180A13E00507F09D000419A00144800027CA08300507F844800409E00AC3BFF0001794300207C1F5800394A01804081FFE43B6000003B410070936100F0C3C100F0C3E100F03B00000AD3FC03E038C00000D3DC03E438E000007F0903A638610098388100C0937C03E854D8203654DF30327D071A147D98F8507FC7D2147D3D6214790A0020792500207C0722147BCB002078190020C08A000038C60001D085001C38E70004C06B0000D0650020C0590000D04500244200FFB43BA000019BBC04034BFFFD607C7E1B783B6000003B410070936100F0C3C100F0C3E100F080BE0068807E004054A703DE2C870000418600B82F030000419A00B078630020388000B34BF82671E84100282F8300007C791B78419E00947FC3F3784BFFF0392C03FFFF418201107B2A0020816A0000557E07BC2C9E0000408600205469103AC08A000C7D2007B47D010214C0680070EC43202AD0480070556C07FE2F0C0000409A00205466103AC0EA00047CC407B47F3A2214C0D90028ECA6382AD0B900285567077A2F870000409E00205465103AC14A00107CAB07B47D5A5A14C12A0050ED09502AD10A005038FF000180B800107F872800419DFE9454FE482C8338000054E83830394000007C68F05057E638307D791A1457E4482C797E0020614CFFFF7D26205038DF00027FE9CA14A01E0050393F03007C0060007C0A037840820030600000007F0628007CC733787923002038C60001392901804199FE30A18300507C8C50004186FFE07C7E1B787CFF3B784BFFFEB07B2B0020812B0000552307BC2C0300004082000CC16B000CEFDE582A553E07FE2C9E00004086000CC18B0004EFFF602A5528077A2F080000409AFF3CC00B0010936100F0C02100F0EDA1002AD1A100F0836100F04BFFFF203BE000004BFFFE3C"
+      },
+      {
+        "va": "0x2cf5c0",
+        "bytes": "887C0403"
+      },
+      {
+        "va": "0x2cf8e4",
+        "bytes": "9BBC0403"
+      },
+      {
+        "va": "0x2d14e0",
+        "bytes": "F821FF717D6802A654683032546A2036FBA10078F96100A07FAA40504BFFFF955467502A8122F26854661838E80100A07CA63A147C0803A67C9D2A147C644A143BA304887BA30020EBA10078382100904E80002060000000"
+      },
+      {
+        "va": "0x2d14e8",
+        "bytes": "54683032"
+      },
+      {
+        "va": "0x2d14ec",
+        "bytes": "546A2036"
+      },
+      {
+        "va": "0x2d1520",
+        "bytes": "3BA30488"
+      },
+      {
+        "va": "0x2d1538",
+        "bytes": "F821FF917C8802A6F88100804BFFFF9DE80100808863002C382100707C0803A64E80002060000000"
+      },
+      {
+        "va": "0x2d154c",
+        "bytes": "8863002C"
+      },
+      {
+        "va": "0x2d15c8",
+        "bytes": "8162F2707D0802A6F821FF71FB8100703B800001FBA10078FBC10080FBE10088F90100A07F89183080CB0044787D00207C9E23787CC54B787FA3EB7890AB00444BFFFED9392000007C7F1B787FA3EB78881F002C2F800000419E0028E88100A07D2307B4EB810070EBA100787C8803A6EBC10080EBE10088382100904E8000204BFFCCE1600000002C1E0000388000049B9F002C392000014182FFC48142F274806A00004BF7F93DE8410028E88100A0EB81007039200001EBA10078EBC100807C8803A67D2307B4EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x2d1658",
+        "bytes": "9B9F002C"
+      },
+      {
+        "va": "0x35d9a0",
+        "bytes": "F821FF717C8802A63800000039200017FBE10088396000007D2903A67C7F1B7839400000FB810070FBA10078F88100A0F8030020F8030000F8030008F8030010F8030018600000007CBF5A14396B000478A30020914301B04200FFF038C0000839600000380000007CC903A6600000007D1F5A14396B0004790700209007020C4200FFF03940002039600000380000007D4903A6600000007F8BFA14396B00017B8C0020980C022C4200FFF038BF02543880000078A3002038A00C003BA000004BEF4ED9E8410028387F0E563880FFFF38A01000786300204BEF4EC1E8410028393F1E563880FFFF7923002038A002804BEF4EA9E8410028397F20D63880FFFF7963002038A010004BEF4E91E841002838000028396000007C0903A639400000B3BF0E54600000007CDF5A14396B000478C40020914430D84200FFF038E0001439600000390000007CE903A6915F31787D9F5A14396B0004798A0020910A317C4200FFF03B80000E39600000380000007F8903A6911F31CC7FBF5A14396B00017BA80020980831D04200FFF0392000003860000738000000396000007C6903A639400000901F31E0F93F31F0F93F31E87C9F5A14396B000178850020994532114200FFF0393F321CC0021A247BE50020792800203D8500013F9F00013BA00000387CAC20394000003800FFFF3880000038A009B078630020901F3218FBBF31F893BF320093A8001493A80018D008001C914800049148000093ACAC1C4BEF4D7DE841002838FCB5D03880000078E3002038A009B04BEF4D65E841002838DCBF8078C300204800125D600000003960000093BF320C997F3210EBE100A0EB8100707FE803A6EBA10078EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x35dbb8",
+        "bytes": "93ACAC1C"
+      },
+      {
+        "va": "0x35dd98",
+        "bytes": "3800000039200000900300289923002C9003000090030004912300089003000C9003001090030014900300189003001C90030020900300244E80002060000000"
+      },
+      {
+        "va": "0x35dfa8",
+        "bytes": "F821FF717C0802A6FBA10078FBE100883BA000007C7F1B78F80100A06000000057A6203657A530323BBD00017C8628507C7F2214786300204BFFFDB92FBD000A409EFFE0395F01E03BA00000794300203880000038A0010093BF03E093BF03E493BF03E84BEF492DE8410028393F02E0388000007923002038A001004BEF4915E84100283900000093BF03FC991F0403911F03EC911F03F0911F03F493BF03F8991F0400991F0401991F0402E8E100A0EBA10078EBE100887CE803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x35dfe4",
+        "bytes": "2FBD000A"
+      },
+      {
+        "va": "0x35e110",
+        "bytes": "F821FF717C0802A6FBA10078787D0020FBC100807C7E1B787FA3EB78FBE10088F80100A03BE000004BFFFB496000000057E6183857E7502A3BFF00017CA63A147C85F21438640488786300204BFFFE4D600000002FBF0014409EFFD83BE000001D7F60DC3D4B00013BFF00017D2AF214390914D8790300204BFFFEE9600000002C3F00154082FFDC381E55283FDD00093BE000003BA00000780300204BFFF7F56000000093FE06EC93BE06E4E98100A0EBA10078EBC100807D8803A6EBE10088382100904E800020"
+      },
+      {
+        "va": "0x35e164",
+        "bytes": "2FBF0014"
+      },
+      {
+        "va": "0x369aa8",
+        "bytes": "81621D0480CB01247CA4321490AB0124812300308009041C7C8402149089041C4E80002060000000"
+      },
+      {
+        "va": "0x369abc",
+        "bytes": "8009041C"
+      },
+      {
+        "va": "0x369ac4",
+        "bytes": "9089041C"
+      },
+      {
+        "va": "0x36a458",
+        "bytes": "81621D0480CB01287CA4321490AB012881230030800904207C840214908904204E80002060000000"
+      },
+      {
+        "va": "0x36a46c",
+        "bytes": "80090420"
+      },
+      {
+        "va": "0x36a474",
+        "bytes": "90890420"
+      },
+      {
+        "va": "0x3842b8",
+        "bytes": "F821FED17C8802A6FBA10118FBC10120FBE10128F8810140FB8101107C7E1B7880630014388000004BF4AC916000000038A00000FC400890C022227C807E0014FC00165ED8010100EBA101004BF4A8BD60000000FC200E5ED8210100EBE101007FA0FB782F800000409E00803901008038800031791D00207FA3EB784BECEAF5E841002880FE00147FA4EB783861007038C0000190E1008090C100E44BECAD95E8410028813E00007BC300208169001880AB0000F84100287CA903A6804B00044E800421E8410028E8610140EB8101107C6803A6EBA10118EBC10120EBE10128382101304E800020806222784BECEA75E84100282C1D00007C7C1B787FA407B478630020408200242C9F00007B8300207FE407B44186FF584BFE6089600000004BFFFF4C600000004BFE56C9600000004BFFFFD860000000"
+      },
+      {
+        "va": "0x86c470",
+        "bytes": "002C89500089FF20"
+      },
+      {
+        "va": "0x86c478",
+        "bytes": "002C8A180089FF20"
+      },
+      {
+        "va": "0x89d960",
+        "bytes": "1001F6180086C478"
+      },
+      {
+        "va": "0x89d968",
+        "bytes": "1001F6300086C470"
+      },
+      {
+        "va": "0x89f098",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f190",
+        "bytes": "10330610"
+      },
+      {
+        "va": "0x1001f618",
+        "bytes": "636F6D706C6574655F7365676D656E7400"
+      },
+      {
+        "va": "0x1001f630",
+        "bytes": "69735F7365676D656E745F636F6D706C65746500"
+      }
+    ]
+  },
   "annotations": [
+    {
+      "va": "0x0035DD98",
+      "name": "TOD_segment_initialize",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "3800000039200000900300289923002C",
+      "comment": "Zeros all11 words and the complete byte;2D..2F not explicitly cleared.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x0035DFA8",
+      "name": "TOD_world_segments_initialize",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717C0802A6FBA10078FBE10088",
+      "comment": "Initializes ten30-byte segment records, two100-byte arrays and world tail/cache flag.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002D14E0",
+      "name": "TOD_saved_segment_select",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717D6802A654683032546A2036",
+      "comment": "Saved load destination selects world408 stride; segment30 stride at488.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002D1538",
+      "name": "TOD_segment_complete_get",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF917C8802A6F88100804BFFFF9D",
+      "comment": "Named is_segment_complete chain reads saved byte2C.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002D15C8",
+      "name": "TOD_segment_complete_set",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "8162F2707D0802A6F821FF71FB810070",
+      "comment": "Named complete_segment chain finalizes once then writes saved byte2C; runtime checkpoint44 is separate.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002CE328",
+      "name": "TOD_segment_log_finalize",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C8802A6FBA10080FBE10090",
+      "comment": "Appends9C log at8764 via saved count10144; six float32 provenance fields plus integer reset count98. Clears timers; no proven capacity check.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002CE518",
+      "name": "TOD_segment_reset_event",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "8162F1587C8802A6F821FF91F8810080",
+      "comment": "Increments segment+8 using integer operations; adjusts timer0 and clears4. Also increments5734+4*runtime category if nonzero; category meaning/bounds unresolved.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002CE620",
+      "name": "TOD_segment_elapsed_tick",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717C0802A6DBE10088F80100A0",
+      "comment": "Adds same runtime delta to segment0/4 until complete; time units not independently confirmed.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002CF4C8",
+      "name": "TOD_segment_reward_totals_cache",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "8122F1EC7C0802A6F821FEB1DBC10140",
+      "comment": "Caches per-segment reward totals1C/20/24 and world totals3E0/3E4/3E8, guarded by world byte403.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002C8950",
+      "name": "TOD_lua_is_segment_complete",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF717C8802A638010070FBE10088",
+      "comment": "Named Lua wrapper for per-level segment completion flag, not mission-list completion.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x002C8A18",
+      "name": "TOD_lua_complete_segment",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C0802A6FBC100903BC10070",
+      "comment": "Named Lua wrapper finalizes segment then records completion; loaded config resolves string to index.",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x00369AA8",
+      "name": "TOD_hero_bolts_reward_add",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "81621D0480CB01247CA4321490AB0124",
+      "comment": "Adds integer reward to runtime tally and hero-state+41C (bolts).",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x0036A458",
+      "name": "TOD_hero_raritanium_reward_add",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "81621D0480CB01287CA4321490AB0128",
+      "comment": "Adds integer reward to runtime tally and hero-state+420 (raritanium).",
+      "evidence": "Exact USA v02.00 assembly and named completion/reward consumer chains; reproducible gameplay_segments instruction guards. No binary edits or in-game edit safety inferred."
+    },
+    {
+      "va": "0x0089D960",
+      "name": "TOD_binding_complete_segment",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "1001F6180086C478",
+      "comment": "ASCII name pointer and descriptor for complete_segment wrapper 0x2c8a18.",
+      "evidence": "Registration literal/descriptor bytes and saved segment+2C access chain."
+    },
+    {
+      "va": "0x0089D968",
+      "name": "TOD_binding_is_segment_complete",
+      "kind": "data",
+      "confidence": "confirmed",
+      "bytes": "1001F6300086C470",
+      "comment": "ASCII name pointer and descriptor for is_segment_complete wrapper 0x2c8950.",
+      "evidence": "Registration literal/descriptor bytes and saved segment+2C access chain."
+    },
     {
       "va": "0x10000918",
       "name": "TOD_str_globalflag_GLOBAL_FLAG_TEST",
@@ -29488,6 +30026,155 @@
   ],
   "structures": [
     {
+      "name": "TOD_SaveGameplaySegment_verified",
+      "size": "0x30",
+      "comment": "Exact USA per-level gameplay segment. Ten records at world+0; no automatic ELF-global application. Names require runtime config; not mission-list entries.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "adjusted_elapsed",
+          "type": "f32",
+          "comment": "Tick adds runtime delta; reset event adds current_attempt * config10FC8; finalization copies to log88 then clears."
+        },
+        {
+          "offset": "0x4",
+          "name": "current_attempt_elapsed",
+          "type": "f32",
+          "comment": "Same tick delta as adjusted_elapsed; reset and finalization clear it. Time units not independently confirmed."
+        },
+        {
+          "offset": "0x8",
+          "name": "reset_events",
+          "type": "u32",
+          "comment": "2CE518 increments with lwz/addi/stw, modulo32; finalization copies bits to log98. Not float despite decompiler output."
+        },
+        {
+          "offset": "0xc",
+          "name": "finalized_runtime_score",
+          "type": "f32",
+          "comment": "Finalizer stores max(0, runtime baseline + runtime modifier). Not a completion percentage."
+        },
+        {
+          "offset": "0x10",
+          "name": "reward_channel_a_accumulated",
+          "type": "f32",
+          "comment": "2CF218/2CFAB8 reward scaling; player-facing channel name unresolved."
+        },
+        {
+          "offset": "0x14",
+          "name": "bolts_reward_accumulated",
+          "type": "f32",
+          "comment": "2CEF70 accumulates at14; consumer3842B8 calls369AA8, whose hero state store is41C (bolts). Not wallet balance."
+        },
+        {
+          "offset": "0x18",
+          "name": "raritanium_reward_accumulated",
+          "type": "f32",
+          "comment": "2CEBC0 accumulates at18; consumer3842B8 calls36A458, whose hero state store is420 (raritanium). Not wallet balance."
+        },
+        {
+          "offset": "0x1c",
+          "name": "cached_reward_total_a",
+          "type": "f32",
+          "comment": "2CF4C8 computes and reloads this per-segment reward total."
+        },
+        {
+          "offset": "0x20",
+          "name": "cached_reward_total_b",
+          "type": "f32",
+          "comment": "2CF4C8 computes and reloads this per-segment reward total."
+        },
+        {
+          "offset": "0x24",
+          "name": "cached_reward_total_c",
+          "type": "f32",
+          "comment": "2CF4C8 computes and reloads this per-segment reward total."
+        },
+        {
+          "offset": "0x28",
+          "name": "unknown_28",
+          "type": "u32",
+          "comment": "Initializer zeroes this word; gameplay meaning unresolved."
+        },
+        {
+          "offset": "0x2c",
+          "name": "complete_segment_byte",
+          "type": "u8",
+          "comment": "Named complete_segment/is_segment_complete; nonzero predicate. Replay may set without log append."
+        },
+        {
+          "offset": "0x2d",
+          "name": "unknown_tail",
+          "type": "u8",
+          "count": 3,
+          "comment": "Preserved unknown bytes; not proven padding."
+        }
+      ]
+    },
+    {
+      "name": "TOD_SaveGameplayLog_verified",
+      "size": "0x9c",
+      "comment": "Refines observed9C type without overwriting it.200 bounded physical slots at8764 precede count10144; entries beyond saved count can be stale.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "location_ascii",
+          "type": "u8",
+          "count": 64,
+          "comment": "Native level name written during finalization; stale bytes may remain beyond saved count."
+        },
+        {
+          "offset": "0x40",
+          "name": "segment_ascii",
+          "type": "u8",
+          "count": 64,
+          "comment": "Loaded gameplay segment name; no static world/slot catalog inferred."
+        },
+        {
+          "offset": "0x80",
+          "name": "runtime_baseline",
+          "type": "f32",
+          "comment": "2CE328 copies runtime101E8D70+0 after recalculation."
+        },
+        {
+          "offset": "0x84",
+          "name": "post_reset_timing_modifier",
+          "type": "f32",
+          "comment": "2CDD20 result using zeroed elapsed time and configuration24/28/2C."
+        },
+        {
+          "offset": "0x88",
+          "name": "adjusted_elapsed",
+          "type": "f32",
+          "comment": "Copies segment+0 before reset; no time-unit conversion applied."
+        },
+        {
+          "offset": "0x8c",
+          "name": "configured_reference_time",
+          "type": "f32",
+          "comment": "Copies runtime segment configuration+20, not save data."
+        },
+        {
+          "offset": "0x90",
+          "name": "runtime_accumulated_time",
+          "type": "f32",
+          "comment": "Runtime2CDBF8+0 after adding this segment's threshold-adjusted time."
+        },
+        {
+          "offset": "0x94",
+          "name": "runtime_accumulated_reference",
+          "type": "f32",
+          "comment": "Runtime2CDBF8+4 after adding configuration+20."
+        },
+        {
+          "offset": "0x98",
+          "name": "reset_events",
+          "type": "u32",
+          "comment": "Raw copy of segment+8 via lwz/stw; integer counter, not seventh float."
+        }
+      ]
+    },
+    {
       "name": "TOD_SaveGlobalFlags_verified",
       "size": "0x28",
       "comment": "At save5528: five BE64 words,292 named enum bits and28 unmapped tail bits. Represented as bytes for portable importer compatibility. No automatic application or gameplay edit safety.",
@@ -30065,15 +30752,15 @@
     },
     {
       "start": "0x8764",
-      "end_exclusive": "0x97D8",
-      "confidence": "observed",
-      "comment": "27 named gameplay records, stride 0x9C."
+      "end_exclusive": "0x10144",
+      "confidence": "code-backed",
+      "comment": "200 bounded gameplay log records, stride9C; count at10144. Six floats and integer reset counter mapped by gameplay_segments; retained bytes beyond count are not active progress."
     },
     {
-      "start": "0x97D8",
+      "start": "0x10144",
       "end_exclusive": "0x906F0",
       "confidence": "observed",
-      "comment": "Mixed mission/world state; fifteen named options at114A8..114D7 are mapped by settings, then21 RLE blocks at114D8 stride60DC decoded structurally by state_storage. Saved load destination906E8 is confirmed;906E4, logical RLE values, prefixes and other tails remain partly opaque, not padding."
+      "comment": "Gameplay log count10144; active/completed mission lists10148/10AF8. Fifteen named options114A8..114D7, then21 RLE blocks114D8 stride60DC. Saved destination906E8 confirmed; other meanings partly opaque."
     }
   ],
   "library_imports": [

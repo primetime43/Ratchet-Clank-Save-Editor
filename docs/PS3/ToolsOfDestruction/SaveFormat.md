@@ -42,8 +42,8 @@ These ranges cover the entire sample, including unknown areas. The whole-buffer 
 | `0x00424–0x00428` | 4 | Special bolts spent; both samples 32 | Code-backed balance getter and skin purchase |
 | `0x00428–0x0042C` | 4 | Bolt multiplier; EU 8.0, USA 1.0 | Code-backed getter and update |
 | `0x0042C–0x08764` | `0x8338` | Armor, skins, per-level collectible records, skill points and other state | Partially mapped; preserve unknown portions |
-| `0x08764–0x097D8` | `0x1074` | 27 named gameplay records, stride `0x9C` | Observed |
-| `0x097D8–0x10148` | `0x6970` | Further world/binary state | Partly opaque; not proven padding |
+| `0x08764–0x10144` | `0x79E0` | 200 physical gameplay log slots, stride `0x9C`; USA snapshot has27 retained nonzero entries | Code-backed boundaries and scalar provenance |
+| `0x10144–0x10148` | 4 | Gameplay log count, BE32; supplied USA snapshot0 | Code-backed finalizer and initializer |
 | `0x10148–0x10AF8` | `0x9B0` | Twenty active mission lists, stride `0x7C` | Code-backed structure |
 | `0x10AF8–0x114A8` | `0x9B0` | Twenty completed mission lists, stride `0x7C` | Code-backed structure |
 | `0x114A8–0x114D8` | `0x30` | Fifteen named options, one unknown word, two unknown bytes | Code-backed settings APIs |
@@ -148,7 +148,7 @@ Armor IDs are 0 `ARMOR_NONE`, 1 `ARMOR_DURAFIBER`, 2 `ARMOR_HYPERPLATE`, 3 `ARMO
 
 The multiplier getter can reset the saved float to 1 depending on runtime state; its update path adds 1 and clamps to 1..20. This is observed **code behavior**, not permission to expose arbitrary multiplier edits. No new editable fields were added: the program's **Skill points**, **Armor**, **Counters & nearby fields** and **Research** views are read-only.
 
-The USA value at `0x418` is 2,315,144 hero XP, now confirmed by the named setter chain below. The saved integer is not current health, maximum health, or a directly stored hero level. Word `0x906EC` is 3; its nonzero predicate gates multiplier updates and final-armor availability, and the restart routine increments/clamps it. Its exact challenge-mode/playthrough interpretation remains a candidate. Health fields, general world flags and named gameplay-record tails remain unresolved.
+The USA value at `0x418` is 2,315,144 hero XP, now confirmed by the named setter chain below. The saved integer is not current health, maximum health, or a directly stored hero level. Word `0x906EC` is 3; its nonzero predicate gates multiplier updates and final-armor availability, and the restart routine increments/clamps it. Its exact challenge-mode/playthrough interpretation remains a candidate. Saved health remains unresolved; global flags and gameplay-record tail provenance are mapped separately below.
 
 Reproduce from a working-copy plaintext capture:
 
@@ -204,15 +204,17 @@ python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodCollectibles.py -
 
 ### Named gameplay records
 
-Record `j` begins at `0x8764 + j * 0x9C`, for `j = 0..26`. Each has a 64-byte NUL-terminated location name, a 64-byte NUL-terminated `gameplay_...` name and a 28-byte numeric tail. Names identify locations/scenarios; they do **not** establish completion, unlock or checkpoint flags.
+Physical log record `j` begins at `0x8764 + j * 0x9C`, bounded to `j = 0..199`; the supplied snapshot has retained names in slots0..26. Each has two64-byte location/segment-name fields and28 numeric bytes. Names identify retained locations/scenarios; they do **not** establish active progress, unlock or checkpoint flags. Runtime capacity enforcement and arbitrary edited values are not verified.
 
 | Relative offset | Size | Observed contents |
 | --- | ---: | --- |
 | `+0x00` | `0x40` | Location name and zero fill |
 | `+0x40` | `0x40` | Scenario name and zero fill |
-| `+0x80` | 8 | Numeric bytes; could be float64 or two words |
-| `+0x88` | 16 | Four float-like words, semantics unknown |
-| `+0x98` | 4 | Small integer, semantics unknown |
+| `+0x80` | 8 | Two BE float32: runtime baseline and post-reset timing modifier |
+| `+0x88` | 16 | Four BE float32: adjusted elapsed, configured reference, cumulative time and cumulative reference |
+| `+0x98` | 4 | BE uint32 reset-event count, not a float |
+
+Exact USA code now establishes the physical log span **8764..10144**, with200 slots of9C bytes and a saved BE32 count at10144. The27 named entries below are retained contents of the supplied snapshot, **not the buffer capacity or active count**. Its count is0. Initialization clears count without clearing prior log bytes; the inspector now labels these entries **Retained beyond saved count**. Field provenance and named completion bindings are documented in the [gameplay segment/log evidence](BCUS98127/v02.00/ElfMap.md#gameplay-segments-timers-reward-accumulators-and-retained-log). Time units and exact reset-event cause remain unverified.
 
 | Base | Location | Scenario |
 | --- | --- | --- |
@@ -473,7 +475,7 @@ Collect paired saves with exactly one intentional change, using copies rather th
 | Buy or equip armor | `0x444–0x45C`, `0x5774–0x5779` | Verify ownership, equipped ID, currency and unlock changes together |
 | Earn one skill point | `0x8708`, `0x8710–0x8718` | Verify weighted score, bit order and automatic HARDCORE award |
 | Change health | Unmapped state; `0x418` is confirmed XP | Locate current/max health without conflating them with progression XP |
-| Complete one scenario | `0x8764–0x97D8` and later state | Distinguish statistics from actual progression |
+| Complete one gameplay segment | `0x488+level*0x408+slot*0x30`, log `0x8764–0x10144`, count `0x10144` | Verify flag2C, timer/reset behavior and active versus retained log records separately from mission lists |
 | Change only one option | `0x114A8–0x114D8` | Verify persisted options and reset/restore timing; retain unknown word/tail |
 | Win one named arena challenge | `0x56D8+4*nativeId`, `0x41C`, inventory/quick-select state | Verify the direct counter and currency/weapon transaction together; runtime menu order is not native ID order |
 | Trigger one named tutorial/story/equipment event | Five BE64 words `0x5528–0x5550` | Verify the corresponding global flag and its script/reset dependencies independently of inventory, arena counters and per-level flags |

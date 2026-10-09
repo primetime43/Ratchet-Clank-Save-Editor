@@ -36,6 +36,51 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Gameplay segments preserve completion bytes, scalar types, unknown tails and physical bounds", () =>
+        {
+            byte[] bytes = ResearchFixture(), before = bytes.ToArray();
+            int offset = 0x488 + 19 * 0x408 + 9 * 0x30;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset, 4), 0x7FC12345);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 8, 4), uint.MaxValue);
+            bytes[offset + 0x2C] = 7;
+            bytes[offset + 0x2D] = 0xAB;
+            bytes[offset + 0x2E] = 0xCD;
+            bytes[offset + 0x2F] = 0xEF;
+            before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var raw = inspection.Table("Gameplay segments");
+            Equal(200, raw.Rows.Count);
+            Equal(8, raw.Columns.Length);
+            var last = raw.Rows[^1];
+            Equal("19", last.Cells[0]); Equal("9", last.Cells[2]);
+            Equal("Recorded", last.Cells[3]); Equal("4294967295", last.Cells[4]);
+            True(last.Details.Contains("7FC12345") && last.Details.Contains("ABCDEF"), "Raw nonfinite bits and unknown bytes must survive.");
+            var friendly = InspectionPresentation.Simplify("Gameplay segments", raw);
+            Equal(190, friendly.Rows.Count); Equal(5, friendly.Columns.Length);
+            True(friendly.Rows[0].Details.Contains("not wallet balances"), "Accumulators must not become currency balances.");
+            True(bytes.SequenceEqual(before), "Segment inspection modified input.");
+            Array.Clear(bytes);
+            Equal("4294967295", inspection.Table("Gameplay segments").Rows[^1].Cells[4]);
+        });
+        Check("Gameplay log distinguishes stale buffer entries, integer reset counts and malformed saved counts", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            int last = 0x8764 + 199 * 0x9C;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(last + 0x98, 4), 2);
+            var raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Gameplay records");
+            Equal(200, raw.Rows.Count); Equal(5, raw.Columns.Length);
+            Equal("Retained beyond saved count", raw.Rows[0].Cells[4]);
+            Equal("Unused / zero", raw.Rows[1].Cells[4]);
+            True(raw.Rows[^1].Details.Contains("reset_events: 2; bits 00000002"), "Counter must be an integer, not a denormal float.");
+            Equal(2, InspectionPresentation.Simplify("Gameplay records", raw).Rows.Count);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10144, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Gameplay records");
+            Equal(200, raw.Rows.Count);
+            True(raw.Rows[^1].Details.Contains("Count exceeds buffer"), "Malformed count must remain visible while reads are bounded.");
+            Equal("Within saved count", raw.Rows[^1].Cells[4]);
+            True(bytes.SequenceEqual(before), "Log inspection modified input.");
+        });
         Check("Global event flags preserve BE64 ordering, all320 physical bits and detached input", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -142,7 +187,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1137, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1152, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -184,7 +229,7 @@ internal static partial class Program
             Equal((ushort)0xABCD, item.UnknownTail);
             Equal((byte)1, item.Unlock);
             Equal(46u, inspection.AcquisitionCounter);
-            Equal(27, inspection.Table("Gameplay records").Rows.Count);
+            Equal(200, inspection.Table("Gameplay records").Rows.Count);
             Equal("metropolis", inspection.Table("Gameplay records").Rows[0].Cells[1]);
             Equal(1024, inspection.Table("Prefix words").Rows.Count);
             var upgrades = inspection.Table("Upgrade nodes");
@@ -570,7 +615,7 @@ internal static partial class Program
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
             tabs.SelectedIndex = 2;
             foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
-                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 8), ("World progress", 4, 9), ("Quick select", 2, 6), ("Saved locations", 2, 4), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
+                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 8), ("World progress", 4, 9), ("Gameplay segments", 5, 8), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
                 views.SelectedItem = expected.Item1;
                 Equal(expected.Item2, grid.Columns.Count);
@@ -679,8 +724,27 @@ internal static partial class Program
                 ulong word = BinaryPrimitives.ReadUInt64BigEndian(bytes.AsSpan(0x5528 + id / 64 * 8, 8));
                 Equal((word & (1UL << (id % 64))) != 0 ? "Set" : "Clear", events.Rows[id].Cells[3]);
             }
+            var segments = inspection.Table("Gameplay segments");
+            Equal(200, segments.Rows.Count);
+            for (int level = 0; level < 20; level++)
+            {
+                for (int slot = 0; slot < 10; slot++)
+                {
+                    int offset = 0x488 + level * 0x408 + slot * 0x30;
+                    Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(offset + 8, 4)).ToString(), segments.Rows[level * 10 + slot].Cells[4]);
+                    Equal(bytes[offset + 0x2C] != 0 ? "Recorded" : "Not recorded", segments.Rows[level * 10 + slot].Cells[3]);
+                }
+            }
+            var logs = inspection.Table("Gameplay records");
+            uint logCount = BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x10144, 4));
+            Equal(200, logs.Rows.Count);
+            Equal(Math.Min(logCount, 200u), (uint)logs.Rows.Count(r => r.Cells[4] == "Within saved count"));
             if (Convert.ToHexString(SHA256.HashData(bytes)) == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463")
             {
+                Equal(0u, logCount);
+                Equal(27, logs.Rows.Count(r => r.Cells[4] == "Retained beyond saved count"));
+                True(logs.Rows[0].Details.Contains("reset_events: 1; bits 00000001"), "Actual log counter must agree with native integer store.");
+                True(segments.Rows.All(r => r.Cells[3] == "Not recorded" && r.Cells[4] == "0"), "Retained logs do not imply populated current segment records.");
                 Equal(19, blocks.Rows.Count(row => row.Cells[1] == "Yes"));
                 True(blocks.Rows.Where(row => row.Cells[1] == "Yes").All(row => row.Cells[3] == "262144" && row.Details.Contains("matches saved: Yes")), "All populated actual blocks must decode and reproduce encoder accumulators.");
                 True(blocks.Rows[0].Details.Contains("2CE4BB0E543C205E2524A6AA309B008F6824695EEAC68040847393F598EF9CD8"), "C# and independent Python decoder must agree on actual output bytes.");
@@ -726,7 +790,7 @@ internal static partial class Program
             form.ClientSize = new Size(900, 620);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-minimum-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Global event flags", "Arena challenges", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Gameplay segments", "Global event flags", "Arena challenges", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));

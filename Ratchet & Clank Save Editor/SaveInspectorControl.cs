@@ -53,6 +53,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             views.Items.Insert(views.Items.IndexOf("Player summary") + 1, "Game settings");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Arena challenges");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Global event flags");
+            views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Gameplay segments");
             toolbar.Controls.Add(views);
             toolbar.Controls.Add(upgradeWeapon);
             toolbar.Controls.Add(hexOffset);

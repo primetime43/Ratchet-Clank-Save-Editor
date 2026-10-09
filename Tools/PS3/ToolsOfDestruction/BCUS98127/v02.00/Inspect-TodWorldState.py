@@ -90,7 +90,7 @@ def inspect(elf_path, save_path=None):
             "unlocked_offset": hex(unlocked), "visited_offset": hex(visited), "menu_exclusion_offset": hex(excluded),
             "flag_type": "uint8, nonzero predicate",
             "menu_rule": "36A10 requires a nonzero level ID, unlocked byte nonzero and exclusion byte zero. Level3 is suppressed when recursive level18 eligibility is true; visible36AC8 delegates to this rule. Seen37460 reads the same saved byte as visited279F8.",
-            "warning": "Byte402 has a proven exclusion role, not a recovered gameplay name. Byte403 and other record members remain unknown. Initialized slot19 is not a native level.", "catalog": catalog},
+            "warning": "Byte402 has a proven exclusion role, not a recovered gameplay name. Byte403 is the reward-cache-ready flag; ten segment records are mapped separately by gameplay_segments. Other members remain partly unknown. Initialized slot19 is not a native level.", "catalog": catalog},
         "missions": {"record_base": hex(mission_base), "record_stride": hex(mission_stride), "completed_member": hex(completed_member),
             "completed_offset": hex(mission_base + completed_member), "type": "uint32 BE",
             "named_chain": ["0x395a0", "0x36fc0", "0x12470", "0x2d0ef0", "0x2d0df0"],
