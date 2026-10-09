@@ -41,7 +41,10 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(530, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(595, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
+            Equal(13, TodResearch.Map.GetProperty("bonuses").GetProperty("blueprints").GetProperty("all_grant_ids").GetArrayLength());
+            Equal(14, TodResearch.Map.GetProperty("bonuses").GetProperty("cheats").GetProperty("catalog").GetArrayLength());
             Equal(10, TodResearch.Map.GetProperty("mission_lists").GetProperty("capacity_per_list").GetInt32());
             Equal(23, TodResearch.Map.GetProperty("objects").GetProperty("catalog").GetArrayLength());
             Equal(19, TodResearch.Map.GetProperty("world_state").GetProperty("worlds").GetProperty("catalog").GetArrayLength());
@@ -226,6 +229,64 @@ internal static partial class Program
             True(detail.Contains("Slot 9:") && !detail.Contains("Slot 10:"), "Do not read beyond the ten physical entries.");
             True(original.SequenceEqual(bytes), "Mission details must never repair counts or clear flags.");
         });
+        Check("Blueprint and bonus inspection preserves unknown bits and distinguishes state from unlocks", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x86F4, 4), 0x8007DEE4);
+            bytes[0x86F9] = 255;
+            bytes[0x8706] = 0xAB;
+            byte[] original = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var raw = inspection.Table("Blueprints");
+            Equal(32, raw.Rows.Count);
+            Equal("Yes", raw.Rows[31].Cells[1]);
+            Equal("No", raw.Rows[31].Cells[2]);
+            var friendly = InspectionPresentation.Simplify("Blueprints", raw);
+            Equal(2, friendly.Columns.Length);
+            Equal(14, friendly.Rows.Count);
+            True(friendly.Rows.Any(row => row.Cells[0] == "Blueprint ID 31 (unmapped)" && row.Cells[1] == "Yes"), "Unexpected set bits must remain visible.");
+            True(raw.Rows[0].Details.Contains("count: 14") && raw.Rows[0].Details.Contains("80000000"), "Native count includes all set bits, not only known IDs.");
+            var bonuses = inspection.Table("Bonuses & cheats");
+            Equal(14, bonuses.Rows.Count);
+            Equal("255", bonuses.Rows[1].Cells[2]);
+            True(bonuses.Rows[1].Details.Contains("value preserved") && bonuses.Rows[0].Details.Contains("does not mean locked"), "State bytes must not be normalized or mislabeled as unlocks.");
+            Equal(3, InspectionPresentation.Simplify("Bonuses & cheats", bonuses).Columns.Length);
+            True(original.SequenceEqual(bytes), "Blueprint/bonus views changed bytes.");
+        });
+        Check("Native RLE inspection bounds runs and retains equipment history and malformed block headers", () =>
+        {
+            byte[] stream = Enumerable.Range(0, 4).SelectMany(_ => new byte[] { 0, 0, 255, 255 }).Concat(new byte[] { 5 }).ToArray();
+            var decoded = TodRleInspection.Decode(stream);
+            Equal(0x40000, decoded.DecodedSize);
+            Equal(4, decoded.ClippedBytes);
+            Equal(1, decoded.TrailingBytes);
+            Equal(4 * 65535, decoded.EncoderAccumulator);
+            Equal(0x40000, decoded.Histogram[0]);
+            Equal(Convert.ToHexString(SHA256.HashData(new byte[0x40000])), decoded.Sha256);
+            foreach (byte[] invalid in new[] { new byte[] { 0, 0 }, new byte[] { 0, 0, 1 }, new byte[0x6000] })
+            {
+                bool refused = false;
+                try { TodRleInspection.Decode(invalid); } catch (ArgumentException) { refused = true; }
+                True(refused, "Malformed RLE must be bounded and refused without native overreads.");
+            }
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x42C, 4), 15);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x430, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x434, 4), 999);
+            bytes[0x114D8 + 0xCC] = 255;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114D8 + 0x60D0, 4), uint.MaxValue);
+            byte[] original = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var table = inspection.Table("Stored state blocks");
+            Equal(21, table.Rows.Count);
+            Equal("4294967295", table.Rows[0].Cells[2]);
+            True(table.Rows[0].Details.Contains("exceeds native"), "Invalid lengths must remain visible without allocating unbounded output.");
+            var summary = InspectionPresentation.Simplify("Counters & nearby fields", inspection.Table("Counters & nearby fields"));
+            Equal("Ryno", summary.Rows.Single(row => row.Cells[0] == "Last recorded equipped item").Cells[1]);
+            Equal("Unspecified (-1)", summary.Rows.Single(row => row.Cells[0] == "Previously recorded equipped item").Cells[1]);
+            Equal("Unknown item ID 999", summary.Rows.Single(row => row.Cells[0] == "Older recorded equipped item").Cells[1]);
+            True(original.SequenceEqual(bytes), "RLE and history inspection must not rewrite data.");
+        });
         Check("Research refuses other games, sizes and mismatched IDs without guessing", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -406,7 +467,7 @@ internal static partial class Program
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
             tabs.SelectedIndex = 2;
             foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
-                ("Objects & equipment", 2, 9), ("World progress", 4, 9), ("Quick select", 2, 6), ("Saved locations", 2, 4), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
+                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 8), ("World progress", 4, 9), ("Quick select", 2, 6), ("Saved locations", 2, 4), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
                 views.SelectedItem = expected.Item1;
                 Equal(expected.Item2, grid.Columns.Count);
@@ -417,7 +478,7 @@ internal static partial class Program
                 Equal(expected.Item2, grid.Columns.Count);
             }
             views.SelectedItem = "Player summary";
-            Equal(9, grid.Rows.Count);
+            Equal(12, grid.Rows.Count);
             True(!grid.Rows.Cast<DataGridViewRow>().Any(row => row.Cells[0].Value.ToString().Contains("Unknown")), "Unknown and candidate fields belong in Technical, not the player summary.");
             views.SelectedItem = "Upgrade nodes";
             var weaponFilter = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");
@@ -502,6 +563,20 @@ internal static partial class Program
             Equal(32, quick.Rows.Count);
             for (int slot = 0; slot < 32; slot++)
                 Equal(BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(0x284 + slot * 4, 4)).ToString(), quick.Rows[slot].Cells[1]);
+            var blocks = inspection.Table("Stored state blocks");
+            Equal(21, blocks.Rows.Count);
+            if (Convert.ToHexString(SHA256.HashData(bytes)) == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463")
+            {
+                Equal(19, blocks.Rows.Count(row => row.Cells[1] == "Yes"));
+                True(blocks.Rows.Where(row => row.Cells[1] == "Yes").All(row => row.Cells[3] == "262144" && row.Details.Contains("matches saved: Yes")), "All populated actual blocks must decode and reproduce encoder accumulators.");
+                True(blocks.Rows[0].Details.Contains("2CE4BB0E543C205E2524A6AA309B008F6824695EEAC68040847393F598EF9CD8"), "C# and independent Python decoder must agree on actual output bytes.");
+                True(blocks.Rows[11].Details.Contains("9CD7A4BF562AB098D75C0FF51BDFD7625D9F68DADECA96BB9CC6A5D85795004E"), "Decoders must preserve multi-valued state bytes, not coerce to booleans.");
+            }
+            var blueprints = inspection.Table("Blueprints");
+            uint blueprintMask = BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x86F4, 4));
+            for (int id = 0; id < 32; id++) Equal((blueprintMask & (1u << id)) != 0 ? "Yes" : "No", blueprints.Rows[id].Cells[1]);
+            var bonuses = inspection.Table("Bonuses & cheats");
+            for (int id = 0; id < 14; id++) Equal(bytes[0x86F8 + id].ToString(), bonuses.Rows[id].Cells[2]);
             var objects = inspection.Table("Objects & equipment");
             Equal(23, objects.Rows.Count);
             for (int id = 0; id < 23; id++)
@@ -537,7 +612,7 @@ internal static partial class Program
             form.ClientSize = new Size(499, 248);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-compact-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Objects & equipment", "World progress", "Quick select", "Player summary", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Quick select", "Player summary", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));

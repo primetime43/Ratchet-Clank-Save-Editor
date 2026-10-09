@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 530 annotations, 118 imports, evidence, byte signatures and sixteen structure definitions.
+- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 595 annotations, 118 imports, evidence, byte signatures and twenty structure definitions.
 - [Ghidra importer](../Tools/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../Tools/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](ToolsOfDestructionSaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -451,7 +451,7 @@ The USA snapshot has all32 quick-select slots empty, all19 mission counters/unlo
 
 `get_times_challenge_completed` registration at `0x88944C` reaches wrapper `0x315A8`, native `0x279B8`, then TOC thunk `0x110B0 → 0x2756F8`. It reads `save+0x56D8+4*resolvedIndex`, but the resolver consults a runtime Lua table and applies an upper index cap23. This is **not** a proven direct challenge-ID array; negative/out-of-range script inputs and the challenge definition-to-index catalog have not been validated. The supplied snapshot has zero words in the observed 24-word range. No editable challenge controls or guessed names are added.
 
-`get_current_level` leads to runtime pointer access (`0x30840 → 0x25C30 → 0x109E0`), not a demonstrated saved planet field. `hero_get_equipped` (`0x2B7F70 → 0x288060 → 0x466EC0`) traverses a runtime inventory object; the link to nearby saved words `0x42C/0x430/0x434` is unresolved. The three initialized 23-word arrays at `0x304/0x360/0x3BC` are now mapped below through named object APIs. A numeric resemblance or initializer alone is insufficient proof.
+`get_current_level` leads to runtime pointer access (`0x30840 → 0x25C30 → 0x109E0`), not a demonstrated saved planet field. `hero_get_equipped` (`0x2B7F70 → 0x288060 → 0x466EC0`) traverses a runtime inventory object; the equipment-history section below establishes its link to saved `0x42C/0x430/0x434`. The three initialized 23-word arrays at `0x304/0x360/0x3BC` are mapped below through named object APIs. A numeric resemblance or initializer alone is insufficient proof.
 
 ## Native object counters and equipment
 
@@ -485,9 +485,90 @@ The `mission_lists` section is independently reproduced by [Inspect-TodMissions.
 
 All getter paths use `0x11D30 → 0x2D0E18`: one-based script indices become zero-based, active entries precede completed entries. The native getter is not an independently safe bounds checker; inspection never invokes it. Unknown flag bits and malformed counts remain visible. The transaction code does not prove a safe edit sequence, valid arbitrary title IDs, or console acceptance. The supplied save has no occupied mission entries, so controlled gameplay captures are still needed to observe a nonempty example and its reset behavior.
 
+### Blueprints and bonus/cheat states
+
+The named APIs independently establish the next serialized fields. [Inspect-TodBonuses.py](../Tools/Inspect-TodBonuses.py) reproduces the bundled `bonuses` section with 231 byte guards, full original ELF hash verification and bounded plaintext inspection. It reports to stdout only. [TestTodBonuses.py](../Tests/TestTodBonuses.py) tests unknown bits, unusual states, malformed inputs, exact catalog reproduction and original-input preservation; generated fixtures are not in-game captures.
+
+| Save offset | Code-backed meaning | Evidence |
+| --- | --- | --- |
+| `0x86F4`, BE32 | Blueprint ownership mask, integer bit = native ID | Named `has_blueprint`: `2F330 → 27370`; hero predicate `2BA520 → 27A5D8`; menu predicate `38140 → 37580` |
+| `0x86F8–0x8705`, 14 bytes | Physical native bonus/cheat selected states | Named `get_cheat_state`: `2D378 → 27098`; named setters `2D260 → 27008` and `2BBB78 → 27A648` |
+| `0x8706–0x8707` | Still opaque | Zero in supplied USA save; no semantic claim |
+| `0x8708`, BE32 | Shared weighted skill-point score used by bonus availability | `is_cheat_unlocked`: `2D858 → 27108`; `set_cheat_points`: `2BBAB8 → 27A638` |
+
+`hero_give_blueprint` (`2BA3F8 → 27AF90`) ORs one shifted bit into the mask. `hero_give_all_blueprints` (`2BA318 → 27AFB0`) ORs `0x0007DEE4`, preserving every other bit. Its thirteen IDs are **2, 5, 6, 7, 9, 10, 11, 12, 14, 15, 16, 17, 18**. Their physical locations and correspondence to planet IDs are not established by these functions, so the inspector labels them by blueprint ID, not planet. Native `slw` behavior is not bounds validation: the low six shift bits are used; 32–63 yield zero, 64 aliases zero. Inspection never invokes the game setters.
+
+Both named blueprint count APIs lead to `35D450`: menu `2F408 → 273A0 → 12D50 → 35D450`, hero `2BA668 → 27A608 → 35D450`. Their object pointer is `0x101F5048`; member `0x31CC` is absolute `0x101F8214`, which is serialized base `0x101EFB20 + 0x86F4`. The helper popcounts **all 32 bits**, including bits outside the native all-grant mask. The supplied plaintext contains `0x0007DEE4`, so count 13 and no outside bits; this is a save observation, not proof of obtaining the blueprints normally.
+
+Fourteen `CHEAT_*` identifiers are exported with exact IDs in both registration modules. The native definition table is `0x10026384`, fourteen records of `0x30` bytes. Named value/count/title/description/state-name getters establish words `+0` title lookup ID, `+4` description lookup ID, `+8` unsigned score requirement, `+C` state-name count, and eight physical state-name lookup words at `+10`. Localized names are runtime lookups, not recovered text.
+
+| Physical ID | Native identifier | Shipped score | State-name count |
+| --- | --- | --- | --- |
+| 0 | E3TRAILER | 25 | 1 |
+| 1 | HERO_BIGHEAD | 50 | 4 |
+| 2 | CONCEPT_CHAR | 75 | 1 |
+| 3 | ENEMY_BIGHEAD | 100 | 3 |
+| 4 | TRAILER01 | 150 | 1 |
+| 5 | DEV_COMMENTS | 200 | 2 |
+| 6 | CONCEPT_ENV | 250 | 1 |
+| 7 | WRENCH_REPLACE | 300 | 5 |
+| 8 | HOW_TO_DRAW | 350 | 1 |
+| 9 | JAMES_ZURKON | 400 | 2 |
+| 10 | CONCEPT_WEAP | 450 | 1 |
+| 11 | MIRROR_LEVEL | 500 | 2 |
+| 12 | SCRIPTSCREEN | 600 | 1 |
+| 13 | CONCEPT_PAINT | 750 | 1 |
+
+These are **physical native slots**, not unconditional menu indices. When runtime getter `5BFE08() != 1`, menu count is 13 instead of 14 and IDs greater than 4 are incremented before storage/definition lookup. Availability has additional threshold-index adjustments for resulting IDs 7, 11 and 14. The runtime getter reads a word through a TOC pointer to `0x100D6478`; its gameplay meaning is unresolved and is not taken from this save. No current menu availability is inferred in the inspector. Availability compares the saved score unsigned to the adjusted threshold; it does **not** test the saved state byte.
+
+Menu setter `27008` first takes the low eight state bits, then accepts 1–8 or stores zero; raw setter `27A648` also accepts 1–8 or zero without an observed explicit ID bounds check. This global setter range is not each bonus's valid state-name range. Neither routine supplies safe editing permissions. All fourteen state bytes are zero in the supplied save despite score 750; zero alone does not mean locked, and nonzero is not enough to assert an active/on label.
+
+Named `enable_all_cheats` (`2BBC90 → 27A678 → 35D480`) writes **840** to score `0x8708`, changes only zero state bytes to one, and preserves nonzero states. It does not update earned skill bits `0x8710`; therefore it must not be represented as “award all skill points.” New verified types `TOD_BonusDefinition_verified` and `TOD_SaveBonusState_verified` capture only these proven layouts, retaining opaque padding. Simple read-only Blueprints and Bonuses & cheats inspector views retain all raw evidence under Technical/details; unexpected set blueprint bits remain visible.
+
+### Saved equipment history and compressed state blocks
+
+[Inspect-TodStateStorage.py](../Tools/Inspect-TodStateStorage.py) reproduces the shared `state_storage` section with 50 byte guards, full ELF hash verification, three historical equipment words and a bounded native-format RLE decoder. [TestTodStateStorage.py](../Tests/TestTodStateStorage.py) tests token truncation, native output boundaries, run clipping, malicious lengths, map reproduction and unchanged actual inputs. No decoded payload or game binary is embedded in the application; it computes only live read-only summaries from the session snapshot.
+
+#### Equipment history, not dual-wield slots
+
+Native callback `0x1F5570` reads inventory member `+0x188`, then hero member `+0x1A68` to reach serialized state. Initializer `0x1F5DB8` stores the hero argument at inventory `+0x188`; the already mapped hero initializer links `+0x1A68` to `0x101EFB20`. The callback's descriptor `0x8666D8` is referenced at table slot `0x84A4E0` for indirect dispatch; exact callback timing remains unverified.
+
+The callback performs these operations, in order:
+
+1. Copy old saved `0x430` to `0x434`.
+2. Copy old saved `0x42C` to `0x430`.
+3. Call `0x11810 → 0x466EC0`, the same native equipped-item getter reached by named `hero_get_equipped`, and store its result at `0x42C`.
+
+Therefore these are **last recorded, previously recorded and older recorded equipped item IDs**, not primary/secondary weapon slots. The native getter returns config ID or `-1` when no runtime equipment object exists; initializer `35DC80` stores `FFFFFFFF` in all three words. Restore `1E33C8` consumes `42C/430` with fallback logic. Menu consumer `26CE30` consults all three history words and also applies fallback logic. Duplicate history values, callback frequency, reset rules, currently active runtime equipment and safe edits cannot be inferred from one snapshot.
+
+The supplied USA save contains IDs **15, 25, 0**, corresponding to the independently mapped native item names **Ryno, SwingShot, Wrench**. These labels now appear in the read-only player summary; unknown IDs and `-1` remain visible without repair. `TOD_SaveEquipmentHistory_verified` describes the three raw signed-ID words.
+
+#### Native RLE storage
+
+Initializer `35E110` creates **21 physical blocks** starting at save `0x114D8`, stride `0x60DC`, ending at `0x906E4`. These slots are not a confirmed planet catalog. The following block members are proven by encoder `35C5B8`, decoder `35C460` and initializer `35E070`:
+
+| Block member | Meaning |
+| --- | --- |
+| `+0x00–0xC7` | Opaque prefix, not assumed padding |
+| `+0xC8`, BE32 | Native encoder accumulator; formula below, not checksum/completion |
+| `+0xCC`, byte | Encoder writes 1; initializer clears it; readiness, not visit/completion |
+| `+0xCD–0x60CF` | Physical RLE storage, `0x6003` bytes; writer asserts encoded length no greater than `0x5FFF` |
+| `+0x60D0`, BE32 | Declared encoded byte count |
+| `+0x60D4–0x60DB` | Eight opaque tail bytes; initializer explicitly clears only the first seven |
+
+RLE grammar is a literal byte when it differs from the next byte, or a four-byte token **value, value, BE16 extra-repeat count** when two bytes match. A run contains `extra + 2` copies. Native restore caps output at **`0x40000` / 262,144 bytes** and stops pair recognition after output offset `0x3FFFB`. Its final run may exceed this output cap and is clipped. The safe Python and C# research decoders additionally refuse truncated tokens and oversized declared input; they do not emulate native out-of-range reads or normalize malformed streams. Empty/not-ready slots are not interpreted as zero-filled logical state.
+
+Encoder accumulator `+C8` adds one for each zero literal or the **extra-repeat count** for each zero run; the first two bytes of each repeated run are excluded. Consequently it is not the exact number of zero bytes, a checksum or a completion count. The native writer's terminal runs may incorporate bytes beyond the intended logical input boundary; the research decoder reports clipping and never rewrites those original tokens.
+
+The supplied USA save has **19 ready blocks**, with slots **3 and 4 not marked ready**. Every ready block consumes exactly its declared encoded size, restores exactly 262,144 bytes, clips four bytes from its final run and reproduces its saved encoder accumulator. Byte values are usually 0/1; slot 11 also contains **297 bytes with value 2**, so they must not be coerced to booleans. Individual logical indices and values remain unnamed.
+
+Independent Python and C# decoders agree on the actual output hashes, including slot 0 `2CE4BB0E543C205E2524A6AA309B008F6824695EEAC68040847393F598EF9CD8` and slot 11 `9CD7A4BF562AB098D75C0FF51BDFD7625D9F68DADECA96BB9CC6A5D85795004E`. Their agreement and accumulator checks confirm encoding/storage interpretation, not gameplay meanings.
+
+The native **pre-snapshot synchronization chain** is `35E710 → 250758 → 24EAC8 → 24DAB8 → 12670 → 35C5B8`. `24DAB8` only invokes encoding when runtime member `+20` is nonnull; it passes runtime `+24` as source and loaded-object member `+10` as block slot. This identifies a synchronization step before the bulk save copy, not every synchronization dependency. `TOD_SaveRleBlock_verified` and the read-only Stored state blocks view retain opaque prefix/tails, raw readiness, sizes, hashes, value histograms and clipping details. No new editing controls are introduced.
+
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes world-record subrecords/bitmaps, equipment-state dependencies, challenge definition/index resolution, checkpoint/position/runtime-health linkage, scenario tails, synchronization before snapshot and the large save-state blocks. Initializer `0x35E110` establishes twenty world records and twenty-one opaque blocks at `save+0x114D8`, stride `0x60DC`, ending at `0x906E4`; `0x35E070` initializes selected members but does not name their meanings. This geometry must not be advertised as fully understood planet or mission state. Tail `0x906E4/0x906E8` remains unresolved, and the final restart word's exact gameplay terminology remains a candidate.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes world-record subrecords/bitmaps, equipment callback/reset dependencies, challenge definition/index resolution, checkpoint/position/runtime-health linkage, scenario tails, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. RLE grammar and equipment history are now established above; that does not make the twenty-one block slots fully understood planet or mission state. Tail `0x906E4/0x906E8` remains unresolved, and the final restart word's exact gameplay terminology remains a candidate.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -497,7 +578,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 529 mapped annotations (the third TOC reference base is unmapped), sixteen structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list instruction guards and ownership/acquisition relationships. Progression, collectible, world-state, object and mission-list decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 594 mapped annotations (the third TOC reference base is unmapped), twenty structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

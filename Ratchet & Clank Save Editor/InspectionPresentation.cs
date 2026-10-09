@@ -28,7 +28,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Weapons & gadgets" => 10, "Skill points" => 8, "Armor" => 7,
                 "Counters & nearby fields" => 6, "Gameplay records" => 4,
                 "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
-                "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9, _ => 0
+                "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9,
+                "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 8, _ => 0
             };
             if (expected == 0 || source.Columns.Length != expected) return source;
 
@@ -38,6 +39,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Skill points" => new[] { "Skill point", "Complete", "Points" },
                 "Armor" => new[] { "Armor", "Owned", "Equipped" },
                 "Special bolts" => new[] { "Level", "Collected", "Total" },
+                "Blueprints" => new[] { "Blueprint", "Collected" },
+                "Bonuses & cheats" => new[] { "Bonus", "Stored state", "Shipped score" },
+                "Stored state blocks" => new[] { "Stored slot", "Stored", "Encoded bytes", "Decoded bytes" },
                 "Skins" => new[] { "Skin", "Owned", "Selected", "Bolt cost" },
                 "World progress" => new[] { "Level", "Unlocked", "Visited", "Saved missions" },
                 "Quick select" => new[] { "Stored slot", "Item" },
@@ -58,6 +62,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Armor" => "Ownership, equipped ID and the saved unlock byte are independent. Raw flags and native availability caveats are below.",
                     "Special bolts" => "Counts are from native per-level masks; labels are internal level identifiers. Select a row for overall collected/spent balance and exact bits.",
                     "Skins" => "Labels are formatted native identifiers. Shipped prices use special bolts; ownership and selected ID are saved separately.",
+                    "Blueprints" => "Shows native all-grant IDs plus any unexpected set bits. Pickup/planet names are not confirmed; Technical retains all32 bits.",
+                    "Bonuses & cheats" => "Physical saved states and shipped score requirements; not current menu availability or confirmed on/off labels. Runtime mode can remap menu indices.",
+                    "Stored state blocks" => "Bounded native-format RLE inspection, not a planet/completion map. Select a row for decoded hash, byte histogram, clipping and header evidence.",
                     "World progress" => "Saved flags/counters only, not a completion percentage or current travel eligibility. Labels are formatted native identifiers.",
                     "Quick select" => "Stored indices, not a proven wheel order. Automatic insertion searches only the first24 of32 slots.",
                     "Objects & equipment" => "Native object counters, not weapon IDs. Select a row for its high-water count and positive-addition counter; timer/arena units are unverified.",
@@ -77,7 +84,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private static bool Include(string view, string[] c)
         {
             if (view == "Counters & nearby fields")
-                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x458 or 0x480 or 0x8708;
+                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x458 or 0x480 or 0x8708;
+            if (view == "Blueprints") return c[1] == "Yes" || c[2] == "Yes";
             if (view != "Files & headers") return true;
             return c[2] is "Length" or "Dimensions" or "Inspection unavailable" ||
                 (c[0].Equals("PARAM.SFO", StringComparison.OrdinalIgnoreCase) &&
@@ -92,6 +100,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Armor" => new[] { c[1] == "ARMOR_NONE" ? "No armor" : Label(c[1], "ARMOR_"), c[2], c[4] },
             "Special bolts" => new[] { Label(c[1], "LEVEL_"), c[2], c[3] },
             "Skins" => new[] { c[1] == "SKIN_NONE" ? "Default" : Label(c[1], "SKIN_"), c[2], c[3], c[4] },
+            "Blueprints" => new[] { "Blueprint ID " + c[0] + (c[2] == "Yes" ? "" : " (unmapped)"), c[1] },
+            "Bonuses & cheats" => new[] { Label(c[1], "CHEAT_"), c[2], c[3] },
+            "Stored state blocks" => new[] { c[0], c[1], c[2], c[3] },
             "World progress" => new[] { Label(c[1], "LEVEL_"), c[2], c[3], c[4] },
             "Quick select" => new[] { c[0], c[2] },
             "Objects & equipment" => new[] { Label(c[1], "OBJ_"), c[2] },
@@ -128,6 +139,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 value = Number(c[3]) is var multiplier && multiplier != "Invalid value" ? multiplier + "×" : multiplier;
             if (Offset(c[0]) == 0x458 && uint.TryParse(value, out uint armor) && armor < 5)
                 value = new[] { "No armor", "Durafiber", "Hyperplate", "Tetramesh", "Quantonium" }[armor];
+            if (Offset(c[0]) is 0x42C or 0x430 or 0x434 && uint.TryParse(value, out uint item))
+                value = item < 32 ? TodResearch.Inventory[(int)item].GetProperty("config_name").GetString() : item == uint.MaxValue ? "Unspecified (-1)" : "Unknown item ID " + unchecked((int)item);
             if (Offset(c[0]) == 0x480 && uint.TryParse(value, out uint skin) && skin < 9)
                 value = skin == 0 ? "Default" : Label(TodResearch.Map.GetProperty("collectibles").GetProperty("skins").GetProperty("catalog")[(int)skin].GetProperty("enum").GetString(), "SKIN_");
             return new[] { name, value };
@@ -143,9 +156,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 0x284 => ("Other player data", "Partially mapped: quick select and hero XP"),
                 0x41C => ("Bolts", "Mapped"), 0x420 => ("Raritanium", "Mapped"),
                 0x424 => ("Special bolts spent", "Code-backed field"), 0x428 => ("Bolt multiplier", "Code-backed field"),
-                0x42C => ("Other game state", "Partially mapped: armor, skins, collectibles and skill points"),
+                0x42C => ("Other game state", "Partially mapped: equipment, bonuses and progression"),
                 0x8764 => ("Saved locations", "Record structure mapped; tail fields unknown"),
-                _ => ("World state", "Mostly unknown")
+                _ => ("World state", "RLE mapped; values unknown")
             };
             return new[] { name, (end - start).ToString("N0", CultureInfo.InvariantCulture) + " bytes", understanding };
         }

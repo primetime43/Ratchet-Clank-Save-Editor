@@ -128,7 +128,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x41C, "Bolts", "confirmed", "uint32 big endian."), (0x420, "Raritanium", "confirmed", "uint32 big endian."),
                     (0x424, "Special bolts spent", "code-backed", "Owned balance getter 25DB8 subtracts this word from collected bit counts. Skin purchase 27AA0 increments it by the definition cost. Do not normalize it to owned-skin count."),
                     (0x428, "Bolt multiplier", "code-backed", "Float32 BE. Native getter/update 1E2568 / 1E25F0; code clamps updates to 1..20, not a validated edit range."),
-                    (0x42C, "Unknown", "unknown", "Unmapped state."), (0x430, "Unknown", "unknown", "Unmapped state."),
+                    (0x42C, "Last recorded equipped item", "code-backed", "History updater1F5570 shifts old430 to434, old42C to430, then records native equipped getter11810/466EC0 at42C. Historical snapshot, not necessarily current runtime equipment; no safe editing range inferred."),
+                    (0x430, "Previously recorded equipped item", "code-backed", "Previous42C value, not a dual-wield secondary slot. Restore and menu consumers use fallback logic; callback timing and reset behavior remain unverified."),
+                    (0x434, "Older recorded equipped item", "code-backed", "Previous430 value; consulted by menu26CE30. Raw item ID and history order retained; unknown IDs are not repaired."),
                     (0x458, "Equipped armor ID", "code-backed", "Native IDs 0..4; ownership and unlock availability are separate."),
                     (0x480, "Selected skin ID", "code-backed", "Native IDs 0..8. Select 26FC0 requires ownership; purchase 27AA0 also writes this ID."),
                     (0x8708, "Weighted skill-point total", "code-backed", "Not completion count. Native setter adds the shipped definition value for a newly earned bit."),
@@ -138,6 +140,81 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 }, field.Item4));
                 }
                 return new(new[] { "Offset", "Field", "uint32 BE", "float32 BE", "Raw bits", "Confidence" }, rows.AsReadOnly());
+            }
+            if (view == "Stored state blocks")
+            {
+                var definition = TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks");
+                int baseOffset = TodResearch.Offset(definition.GetProperty("base")), stride = TodResearch.Offset(definition.GetProperty("stride"));
+                for (int slot = 0; slot < definition.GetProperty("count").GetInt32(); slot++)
+                {
+                    int offset = baseOffset + stride * slot;
+                    uint length = U32(offset + 0x60D0), savedAccumulator = U32(offset + 0xC8);
+                    byte ready = data[offset + 0xCC];
+                    string decodedSize = "—", status = "Not marked ready; payload not interpreted", result = "";
+                    if (ready != 0)
+                    {
+                        if (length > 0x5FFF) status = "Length exceeds native encoder cap; payload not interpreted";
+                        else
+                        {
+                            try
+                            {
+                                var decoded = TodRleInspection.Decode(data.AsSpan(offset + 0xCD, (int)length));
+                                decodedSize = decoded.DecodedSize.ToString(CultureInfo.InvariantCulture);
+                                status = decoded.Complete ? "Decoded to native output cap" : "Short output; no padding or repair";
+                                result = $"Decoded SHA-256: {decoded.Sha256}\r\nConsumed {decoded.Consumed} encoded bytes; trailing {decoded.TrailingBytes}; clipped run bytes {decoded.ClippedBytes}.\r\n" +
+                                    $"Recomputed encoder accumulator {decoded.EncoderAccumulator}; matches saved: {(savedAccumulator == (uint)decoded.EncoderAccumulator ? "Yes" : "No")}. Not exact zero-byte count or a checksum.\r\n" +
+                                    "Decoded byte histogram: " + string.Join(", ", decoded.Histogram.Select(pair => $"0x{pair.Key:X2}: {pair.Value}"));
+                            }
+                            catch (ArgumentException error) { status = error.Message; }
+                        }
+                    }
+                    string details = $"Physical stored block {slot} at {TodResearch.Hex(offset)}; ready byte0x{ready:X2}; declared encoded size {length}; saved accumulator {savedAccumulator}.\r\n" +
+                        $"Opaque tail60D4..60DB: {Convert.ToHexString(data.AsSpan(offset + 0x60D4, 8))}.\r\n" + status + "\r\n" + result + "\r\n" +
+                        "Twenty-one physical slots are not a confirmed planet catalog. Readiness is not visit/completion status; decoded byte meanings remain unknown. Safe decoding bounds both input and output; native final runs may be clipped. Original compressed bytes are never rewritten.";
+                    rows.Add(new(new[] { slot.ToString(), ready != 0 ? "Yes" : "No", length.ToString(CultureInfo.InvariantCulture), decodedSize,
+                        savedAccumulator.ToString(CultureInfo.InvariantCulture), $"0x{ready:X2}", TodResearch.Hex(offset), status }, details));
+                }
+                return new(new[] { "Slot", "Stored", "Encoded bytes", "Decoded bytes", "Saved accumulator", "Ready byte", "Offset", "Status" }, rows.AsReadOnly());
+            }
+            if (view == "Blueprints")
+            {
+                var definition = TodResearch.Map.GetProperty("bonuses").GetProperty("blueprints");
+                int offset = TodResearch.Offset(definition.GetProperty("mask_offset"));
+                uint mask = U32(offset), known = Convert.ToUInt32(definition.GetProperty("all_grant_mask").GetString()[2..], 16);
+                string summary = $"Native blueprint count: {System.Numerics.BitOperations.PopCount(mask)}; raw mask0x{mask:X8}; outside native all-grant mask0x{mask & ~known:X8}.";
+                for (int id = 0; id < 32; id++)
+                {
+                    uint bit = 1u << id;
+                    bool mapped = (known & bit) != 0;
+                    string note = mapped ? "ID included in the native all-grant mask." : "ID outside the native all-grant mask; meaning not mapped.";
+                    rows.Add(new(new[] { id.ToString(), (mask & bit) != 0 ? "Yes" : "No", mapped ? "Yes" : "No",
+                        $"0x{bit:X8}", $"0x{mask:X8}", TodResearch.Hex(offset), note },
+                        summary + $"\r\nBlueprint ID {id}: integer bit {id}, file byte {TodResearch.Hex(offset + 3 - id / 8)}, byte mask0x{1 << (id % 8):X2}.\r\n" +
+                        note + " Physical pickup/planet names are not confirmed. Native count includes all32 bits; grant-all ORs its mask and preserves other bits. This is read-only inspection, not gameplay-validated editing."));
+                }
+                return new(new[] { "ID", "Collected", "In all-grant mask", "Bit", "Raw mask", "Offset", "Notes" }, rows.AsReadOnly());
+            }
+            if (view == "Bonuses & cheats")
+            {
+                var definition = TodResearch.Map.GetProperty("bonuses").GetProperty("cheats");
+                uint score = U32(TodResearch.Offset(definition.GetProperty("score_offset")));
+                foreach (var item in definition.GetProperty("catalog").EnumerateArray())
+                {
+                    int id = item.GetProperty("id").GetInt32(), offset = TodResearch.Offset(item.GetProperty("state_offset"));
+                    byte state = data[offset];
+                    int stateCount = item.GetProperty("state_count").GetInt32();
+                    string note = state >= stateCount ? "Stored state is outside the shipped state-name count; value preserved." : "Physical saved slot, not a remapped menu index.";
+                    rows.Add(new(new[] { id.ToString(), item.GetProperty("enum").GetString(), state.ToString(),
+                        item.GetProperty("score_requirement").ToString(), stateCount.ToString(), TodResearch.Hex(offset),
+                        item.GetProperty("definition_va").GetString(), note },
+                        $"Weighted skill-point score: {score}. Physical native bonus ID {id}, stored state0x{state:X2} at {TodResearch.Hex(offset)}.\r\n" +
+                        "State0 alone does not mean locked; nonzero is not a confirmed active/on label. Localized state names are not recovered.\r\n" +
+                        $"Title lookup ID {item.GetProperty("title_lookup_id")}; description lookup ID {item.GetProperty("description_lookup_id")}. " +
+                        $"Shipped state-name lookup IDs: {item.GetProperty("state_name_lookup_ids")}.\r\n" +
+                        "Menu indices and unlock thresholds can be remapped by a runtime mode not captured in the save; this table does not assert current menu availability. " +
+                        "Enable-all writes score840 and replaces zero states with1, preserving nonzero states and earned skill bits. " + note));
+                }
+                return new(new[] { "ID", "Bonus", "Stored state", "Shipped score", "State-name count", "State offset", "Definition VA", "Notes" }, rows.AsReadOnly());
             }
             if (view == "Special bolts")
             {

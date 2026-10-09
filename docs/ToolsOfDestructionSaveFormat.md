@@ -119,8 +119,8 @@ The `hero_give_weapon` binding reaches `0x28B4E8`, which validates the hero and 
 | `0x420` | `0092B08E` | 9,613,454 raritanium | Documented offset; observed value |
 | `0x424` | `00000020` | uint32 32 special bolts spent | Code-backed balance getter and skin purchase |
 | `0x428` | `41000000` | float32 8.0 | Code-backed multiplier; EU sample value |
-| `0x42C` | `00000018` | uint32 24 | Unknown |
-| `0x430` | `0000000F` | uint32 15 | Unknown |
+| `0x42C` | `00000018` | Last recorded equipped item ID 24 | USA native history updater; EU observation |
+| `0x430` | `0000000F` | Previously recorded equipped item ID 15 | USA native history updater; EU observation |
 
 ### Code-backed progression and armor
 
@@ -390,6 +390,34 @@ The USA snapshot has zero counts in all19 active and completed lists. Unused ent
 ```powershell
 python -B Tools/Inspect-TodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
 python -B Tests/TestTodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
+## Confirmed blueprint and bonus state
+
+The exact USA ELF's named blueprint and cheat APIs establish `0x86F4` as a BE32 blueprint bitmask and `0x86F8–0x8705` as fourteen native bonus-state bytes. `0x8706–0x8707` remains unknown; `0x8708` is the shared weighted skill-point score used for bonus availability, not a count of earned bits. Full call chains, definition/state catalogs and runtime-index caveats are in the [ELF research](ToolsOfDestructionElfMap.md#blueprints-and-bonuscheat-states).
+
+The supplied USA plaintext has blueprint mask `0x0007DEE4`: all thirteen bits in the native grant-all mask and no additional bits. All fourteen bonus-state bytes are zero and score is 750. State zero does not prove locked. Menu indices can be remapped by a runtime mode that is not inferred from the save; shipped definition thresholds are not a current-availability verdict. The native enable-all routine writes score840 and changes only zero states to1, without awarding earned skill bits. Unknown bytes and unexpected bit/state values must remain unchanged.
+
+Reproduce without modifying either input:
+
+```powershell
+python -B Tools/Inspect-TodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/TestTodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
+The program exposes this as simple read-only Blueprints and Bonuses & cheats views. Physical pickup/planet names and localized bonus/state labels have not been recovered; no new editable fields or gameplay-compatibility claim is introduced.
+
+## Confirmed equipment history and compressed blocks
+
+Saved BE32 words `0x42C`, `0x430`, `0x434` are last/previous/older recorded equipped item IDs. Native updater `1F5570` shifts the history and records the same getter used by named `hero_get_equipped`; they are not dual-wield slots. The USA save contains IDs15/25/0 (Ryno/SwingShot/Wrench). Current runtime state, callback timing, fallback/reset behavior and safe history edits remain unverified.
+
+The twenty-one blocks at `0x114D8`, stride `0x60DC`, contain native RLE storage. Per block: `+C8` encoder accumulator, `+CC` readiness byte, `+CD` compressed payload, `+60D0` declared encoded length, and opaque prefix/tail. Two equal bytes introduce a BE16 additional-repeat count; other bytes are literals. Output is capped at `0x40000` bytes; preserve original compressed tokens, including clipped final runs. The accumulator excludes the first two zero bytes of each zero run; it is neither exact zero count nor checksum.
+
+Nineteen blocks in the USA save are ready and all decode to262144 bytes with matching accumulators; slots3/4 are not ready. Each populated final run is clipped by four bytes. Logical meanings of decoded indices/values and slot-to-planet mapping remain unknown. The [full ELF notes](ToolsOfDestructionElfMap.md#saved-equipment-history-and-compressed-state-blocks) describe proof, layouts and cross-decoder hashes. Stored state blocks and player summary show these facts read-only; no bytes are rewritten or normalized.
+
+```powershell
+python -B Tools/Inspect-TodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/TestTodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
 ## Runtime validation and remaining fields
