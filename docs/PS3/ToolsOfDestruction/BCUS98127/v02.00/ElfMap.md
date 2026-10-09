@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 778 annotations, 118 imports, evidence, byte signatures and 21 structure definitions.
+- [Shared address map](maps/NativeMap.json): 829 annotations, 118 imports, evidence, byte signatures and 23 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -449,7 +449,7 @@ The USA snapshot has all32 quick-select slots empty, all19 mission counters/unlo
 
 ### Remaining native leads, not promoted to saved-field names
 
-`get_times_challenge_completed` registration at `0x88944C` reaches wrapper `0x315A8`, native `0x279B8`, then TOC thunk `0x110B0 → 0x2756F8`. It reads `save+0x56D8+4*resolvedIndex`, but the resolver consults a runtime Lua table and applies an upper index cap23. This is **not** a proven direct challenge-ID array; negative/out-of-range script inputs and the challenge definition-to-index catalog have not been validated. The supplied snapshot has zero words in the observed 24-word range. No editable challenge controls or guessed names are added.
+`get_times_challenge_completed` registration at `0x88944C` reaches wrapper `0x315A8`, native `0x279B8`, then TOC thunk `0x110B0 → 0x2756F8`. This menu resolver reads `ARENA_CHALLENGE_DATA[argument].id`, caps the resolved index at23 and reads `save+0x56D8+4*resolvedIndex`. Its table/order and lower-bound safety remain unresolved. Independent direct-ID API and initializer evidence now establish **23 counters, not24**, as documented below. Index23 would alias the separate unknown array at5734; the menu cap is not a valid-counter count.
 
 `get_current_level` leads to runtime pointer access (`0x30840 → 0x25C30 → 0x109E0`), not a demonstrated saved planet field. `hero_get_equipped` (`0x2B7F70 → 0x288060 → 0x466EC0`) traverses a runtime inventory object; the equipment-history section below establishes its link to saved `0x42C/0x430/0x434`. The three initialized 23-word arrays at `0x304/0x360/0x3BC` are mapped below through named object APIs. A numeric resemblance or initializer alone is insufficient proof.
 
@@ -615,9 +615,69 @@ Named checkpoint bindings lead to a separate runtime object at **`0x10330610`**,
 
 Named `hero_get_health` wrapper `2B93F0` calls `289358`, resolves an object via `276D48`, validates class `B9` via `24F208`, then requests **float attribute ID `6C`** through `251F98` and reads the returned attribute's `+4` float. This confirms a runtime health accessor; no link to a dedicated serialized health word has been proven. Saved hero XP `418` is independently mapped and is not relabeled as health.
 
+### Arena challenges: direct IDs, saved wins and shipped definitions
+
+[Inspect-TodArenaChallenges.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodArenaChallenges.py) independently reproduces `arena_challenges` from the exact ELF and fingerprinted `arena.csv`, `arena.lua`, `arena.lc` extracted from `packed/game/global_cached.psarc`. It parses CSV literals only, never executes scripts, and carries **259 byte guards**. [TestTodArenaChallenges.py](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodArenaChallenges.py) checks catalog reproduction, bounds, signed/raw values, asset identity, invalid inputs and unchanged sources. Both portable structures are available to IDA/Ghidra; neither is automatically applied.
+
+Named slot `89D8F4` (`get_challenge_successes`) reaches wrapper `2C9AE0 → 27A958`. The native getter checks unsigned ID against22, loads state through TOC slot `898F50 → 101EFB20`, indexes `56D0+4*id`, then loads member+8 and sign-extends. This establishes **BE32 at `56D8+4*id`**, independently of the runtime menu resolver. Initializer `35D9A0` clears23 words at subobject `5528+1B0 = 56D8`, ending exclusively at **5734**. A subsequent loop clears **eight separate words at `5528+20C = 5734`**, ending at5754 before weapon unlock bytes. Their meaning is unknown; they are not proven failure counters. Invalid-ID error paths are not a separately proven safe range guard.
+
+Enum exports from `294E90 → 252EB8` establish INVALID0, the22 `IFF_` IDs below, and COUNT23. CSV rows have a different order and are joined by native enum name, not line number. **Descriptions are the CSV Comment column, explicitly not parsed by arena.lua; localized challenge titles have not been recovered.** Blank fields remain unspecified rather than guessed native defaults.
+
+| Native ID / enum | Save offset | Shipped config description | Base bolts |
+| --- | --- | --- | --- |
+| 1 / IFF_A_1 | 56DC | Rookie Korner | 3000 |
+| 2 / IFF_A_2 | 56E0 | Time Is Not On Your Side | 4000 |
+| 3 / IFF_A_3 | 56E4 | Breath of Death | 6000 |
+| 4 / IFF_A_4 | 56E8 | Introducing Crushto | 5000 |
+| 5 / IFF_A_5 | 56EC | Crash The Party | 5000 |
+| 6 / IFF_A_6 | 56F0 | Well Done Mustacio | 5000 |
+| 7 / IFF_A_7 | 56F4 | Whip It Good | 8000 |
+| 8 / IFF_A_8 | 56F8 | Return of Crushto | 10000 |
+| 9 / IFF_A_ALT1 | 56FC | Noxious Another Arena Challenge | 12000 |
+| 10 / IFF_A_ALT2 | 5700 | Get Your Dang Hands Off | 9000 |
+| 11 / IFF_B_9 | 5704 | Heavy Weapons | 5000 |
+| 12 / IFF_B_10 | 5708 | Zaptor In Da House | 6000 |
+| 13 / IFF_B_11 | 570C | Slaying the Slots | 6000 |
+| 14 / IFF_B_12 | 5710 | And The Bots Keep on Coming | 7000 |
+| 15 / IFF_B_13 | 5714 | Challenge 13 | 7000 |
+| 16 / IFF_B_14 | 5718 | Take To The Skies | 9000 |
+| 17 / IFF_B_15 | 571C | Untouchable | 10000 |
+| 18 / IFF_B_16 | 5720 | It Takes Two | 11000 |
+| 19 / IFF_B_17 | 5724 | Smashing Good Time | 8000 |
+| 20 / IFF_B_18 | 5728 | Zaptors Revenge | 13000 |
+| 21 / IFF_B_19 | 572C | Bombbot-ocalypse | 14000 |
+| 22 / IFF_B_20 | 5730 | The Ultimate Showdown | 15000 |
+
+The USA snapshot has **all23 counter words zero**, including INVALID0 at56D8; the separate eight words are also zero. This is an observation, not evidence that all challenges are available or a calculated completion percentage. The read-only app **Arena challenges** view shows22 descriptions, recorded wins and shipped base bolts; Technical includes the reserved slot, offsets and raw bits. Unexpected negative values are retained, not converted into zero wins.
+
+Native `ArenaConfig` indexer `B6FA8` checks ID0..22 and returns parent+`1177C+34*id`. Six named property triplets at `88FA5C` establish the entire52-byte record layout below (opaque bytes remain unnamed). These records are **runtime configuration, not fields in GAME.SAV**.
+
+| Offset / type | Native property | Getter / setter |
+| --- | --- | --- |
+| +00 / byte | IsBoss | B6AE0 / B6A00 |
+| +01..03 / opaque | Unknown, not asserted padding | — |
+| +04 / float32 | Time | A8BA0 / 9A148 |
+| +08 / signed32 | Weapon | A8AE8 / 9A078 |
+| +0C / unsigned32 | BoltReward | A8A18 / 99FA0 |
+| +10 / signed32 | WpnReward | A8960 / 99ED0 |
+| +14..33 /32-byte storage | ImageName | B6800 / B64C8 |
+
+ImageName setter passes a31-byte copy bound to12840; unconditional termination is not established. Shipped scripts populate nonblank fields through these properties. Time values are120 seconds for IFF_A_2 and60 for IFF_A_8. Restrictions are WRENCH0 for IFF_A_5, RAVAGER3 for IFF_A_7, ALPHA_NOVA7 for IFF_B_9, and INVALID otherwise. Weapon rewards are INFLATOPOD24 for IFF_A_4 and PIRATEGUISE30 for IFF_B_10; blank reward cells are left unspecified. These enum IDs come from native weapon exports, not CSV order. Asset sizes/hashes are recorded in the JSON section.
+
+Named `start_challenge → 278DB0` starts runtime challenge state. `set_challenge_failure → 278D48` performs runtime cleanup and ID bookkeeping without writing a saved failure-count array. `set_challenge_success → 27A9C8` clears runtime IDs at `101AF0D0 /101AEFF8`, calculates/adds bolts, conditionally grants the configured weapon through466B70 and quick-select integration252B08, and increments the saved win counter once on either branch. Both runtime IDs are outside the serialized interval. A counter-only file edit does not reproduce this transaction; no challenge editing controls are enabled.
+
+Reward routine `2CEAB0` reads the raw BE32 count and subtracts1 modulo32 bits when `unsigned32(WpnReward+1)>1`, then compares the adjusted low32 bits as signed32. Negative adjusted count gives0 bolts; zero gives base bolts; one uses float32 scale `3EA8F5C3` (approximately0.33); higher counts use `3DCCCCCD` (approximately0.1). Repeat payouts use PPC fused single-precision multiply/add with25, division by50, truncation and multiplication by50. Predicate `2D1860` can multiply the result by100 with32-bit arithmetic; the return converts unsigned32 to float32. Runtime config, floating-point rounding and grant timing are not captured in a static save, so the app does not present a computed current payout as confirmed.
+
+To reproduce against plaintext working copies (never point a decoder at encrypted GAME.SAV):
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodArenaChallenges.py --elf artifacts/ghidra/BCUS98127-02.00/EBOOT.ELF --assets artifacts/tod-assets-v02.00 --save artifacts/tod-research-capture/USA-GAME.plaintext.bin
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodArenaChallenges.py --elf artifacts/ghidra/BCUS98127-02.00/EBOOT.ELF --assets artifacts/tod-assets-v02.00 --save artifacts/tod-research-capture/USA-GAME.plaintext.bin
+```
+
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes world-record subrecords/bitmaps, equipment callback/reset dependencies, challenge definition/index resolution, any persisted checkpoint/health dependencies, scenario tails, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes world-record subrecords/bitmaps, equipment callback/reset dependencies, runtime arena menu table/order, the separate eight words at5734, any persisted checkpoint/health dependencies, scenario tails, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. Direct arena IDs/counters/configuration, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -627,7 +687,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 777 mapped annotations (the third TOC reference base is unmapped), 21 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 828 mapped annotations (the third TOC reference base is unmapped), 23 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

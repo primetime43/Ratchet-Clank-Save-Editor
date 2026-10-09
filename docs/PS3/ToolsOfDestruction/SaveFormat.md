@@ -444,6 +444,12 @@ python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodSettings.py --elf
 
 ## Runtime validation and remaining fields
 
+### Arena challenge counters
+
+Exact USA ELF evidence establishes **23 BE32 words at `0x56D8–0x5734` (end exclusive)**, indexed by direct native ID. ID0 is INVALID; IDs1..22 are the named `IFF_` challenges. Getter sign-extension and wrapping increments are preserved; unusual negative values are not normalized. The following **eight words `0x5734–0x5754` are a separate unknown array**, not a24th challenge or proven failure counts. All31 words are zero in the supplied USA snapshot.
+
+The [arena executable mapping](BCUS98127/v02.00/ElfMap.md#arena-challenges-direct-ids-saved-wins-and-shipped-definitions) joins all22 IDs to shipped config descriptions, restrictions and base rewards; CSV order is not native ID order. Runtime ArenaConfig records are not save records, and the runtime menu table/index order remains unresolved. Success additionally changes currency and potentially inventory/quick-select state. No challenge editing controls or live payout guarantee are enabled; the app provides a read-only **Arena challenges** view.
+
 Executable research is recorded separately in the [Tools of Destruction ELF map](BCUS98127/v02.00/ElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
 
 Packed-asset research supplies [weapon XP/ammo tables and upgrade-node catalogs](BCUS98127/v02.00/ElfMap.md#packed-weapon-configuration-and-native-field-bindings). The [native ID catalog](BCUS98127/v02.00/ElfMap.md#native-inventory-id-catalog) now independently links all 32 save records to enum/config names through exports, constructors and named getters; CSV order is **not** the ID map. The read-only asset report covers 28 internal configurations and 204 entries including start nodes. All 15 [vendor upgrade grids and their UI checks](BCUS98127/v02.00/ElfMap.md#vendor-upgrade-grids-and-purchasing) are mapped separately from the native purchasing transaction. The native ammo array has 20 slots and the modifier array 24; neither array capacity nor a 32-bit mask establishes playable levels or valid arbitrary upgrades. Asset values, node masks and calculated capacities remain research facts, not gameplay-validated edit limits.
@@ -463,6 +469,7 @@ Collect paired saves with exactly one intentional change, using copies rather th
 | Change health | Unmapped state; `0x418` is confirmed XP | Locate current/max health without conflating them with progression XP |
 | Complete one scenario | `0x8764–0x97D8` and later state | Distinguish statistics from actual progression |
 | Change only one option | `0x114A8–0x114D8` | Verify persisted options and reset/restore timing; retain unknown word/tail |
+| Win one named arena challenge | `0x56D8+4*nativeId`, `0x41C`, inventory/quick-select state | Verify the direct counter and currency/weapon transaction together; runtime menu order is not native ID order |
 | Move, save, reload | `0x906E8`, `0x8740` and unmapped persisted state | Verify load-selection updates; find any persisted checkpoint/position linkage separately from runtime object |
 
 Do not expose speculative fields in the editor until their meaning, bounds, dependencies and in-game load behavior are verified. No internal game checksum algorithm has been established for this sample.

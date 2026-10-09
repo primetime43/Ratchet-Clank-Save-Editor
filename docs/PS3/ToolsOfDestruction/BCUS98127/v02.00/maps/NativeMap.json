@@ -7549,7 +7549,2207 @@
       }
     ]
   },
+  "arena_challenges": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 static code and shipped definitions; not gameplay-tested editing permissions or localized titles.",
+    "storage": {
+      "base": "0x56d8",
+      "stride": 4,
+      "count": 23,
+      "end_exclusive": "0x5734",
+      "getter_va": "0x27a958",
+      "initializer_va": "0x35d9a0",
+      "semantics": "BE32 counters; direct getter sign-extends. Success increments modulo32 bits. ID0 is INVALID, not a playable challenge. No cap or repair inferred.",
+      "following_unknown": {
+        "base": "0x5734",
+        "words": 8,
+        "end_exclusive": "0x5754",
+        "meaning": "Separate initializer-cleared array; not a 24th challenge counter or proven failure counts."
+      }
+    },
+    "catalog": [
+      {
+        "id": 1,
+        "enum": "IFF_A_1",
+        "name_va": "0x10006808",
+        "name_slot_va": "0x89a3d0",
+        "name_load_va": "0x297ccc",
+        "value_slot_va": "0x89967c",
+        "value_load_va": "0x297cc4",
+        "value_move_va": "0x297cc8",
+        "export_call_va": "0x297cd4",
+        "save_offset": "0x56dc",
+        "shipped": {
+          "comment": "Rookie Korner",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 3000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_01"
+        }
+      },
+      {
+        "id": 2,
+        "enum": "IFF_A_2",
+        "name_va": "0x10006810",
+        "name_slot_va": "0x89a3d4",
+        "name_load_va": "0x297ce4",
+        "value_slot_va": "0x899684",
+        "value_load_va": "0x297cdc",
+        "value_move_va": "0x297ce0",
+        "export_call_va": "0x297cec",
+        "save_offset": "0x56e0",
+        "shipped": {
+          "comment": "Time Is Not On Your Side",
+          "is_boss": false,
+          "time_seconds": 120,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 4000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_03"
+        }
+      },
+      {
+        "id": 3,
+        "enum": "IFF_A_3",
+        "name_va": "0x10006818",
+        "name_slot_va": "0x89a3d8",
+        "name_load_va": "0x297cfc",
+        "value_slot_va": "0x89968c",
+        "value_load_va": "0x297cf4",
+        "value_move_va": "0x297cf8",
+        "export_call_va": "0x297d04",
+        "save_offset": "0x56e4",
+        "shipped": {
+          "comment": "Breath of Death",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 6000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_05"
+        }
+      },
+      {
+        "id": 4,
+        "enum": "IFF_A_4",
+        "name_va": "0x10006820",
+        "name_slot_va": "0x89a3dc",
+        "name_load_va": "0x297d14",
+        "value_slot_va": "0x899694",
+        "value_load_va": "0x297d0c",
+        "value_move_va": "0x297d10",
+        "export_call_va": "0x297d1c",
+        "save_offset": "0x56e8",
+        "shipped": {
+          "comment": "Introducing Crushto",
+          "is_boss": true,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 5000,
+          "weapon_reward": "WPN_INFLATOPOD",
+          "weapon_reward_id": 24,
+          "image_name": "a_image_02"
+        }
+      },
+      {
+        "id": 5,
+        "enum": "IFF_A_5",
+        "name_va": "0x10006828",
+        "name_slot_va": "0x89a3e0",
+        "name_load_va": "0x297d2c",
+        "value_slot_va": "0x89969c",
+        "value_load_va": "0x297d24",
+        "value_move_va": "0x297d28",
+        "export_call_va": "0x297d34",
+        "save_offset": "0x56ec",
+        "shipped": {
+          "comment": "Crash The Party",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_WRENCH",
+          "weapon_restriction_id": 0,
+          "base_bolts": 5000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_04"
+        }
+      },
+      {
+        "id": 6,
+        "enum": "IFF_A_6",
+        "name_va": "0x10006830",
+        "name_slot_va": "0x89a3e4",
+        "name_load_va": "0x297d44",
+        "value_slot_va": "0x8996a4",
+        "value_load_va": "0x297d3c",
+        "value_move_va": "0x297d40",
+        "export_call_va": "0x297d4c",
+        "save_offset": "0x56f0",
+        "shipped": {
+          "comment": "Well Done Mustacio",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 5000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_21"
+        }
+      },
+      {
+        "id": 7,
+        "enum": "IFF_A_7",
+        "name_va": "0x10006838",
+        "name_slot_va": "0x89a3e8",
+        "name_load_va": "0x297d5c",
+        "value_slot_va": "0x8996ac",
+        "value_load_va": "0x297d54",
+        "value_move_va": "0x297d58",
+        "export_call_va": "0x297d64",
+        "save_offset": "0x56f4",
+        "shipped": {
+          "comment": "Whip It Good",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_RAVAGER",
+          "weapon_restriction_id": 3,
+          "base_bolts": 8000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_13"
+        }
+      },
+      {
+        "id": 8,
+        "enum": "IFF_A_8",
+        "name_va": "0x10006840",
+        "name_slot_va": "0x89a3ec",
+        "name_load_va": "0x297d74",
+        "value_slot_va": "0x8996b4",
+        "value_load_va": "0x297d6c",
+        "value_move_va": "0x297d70",
+        "export_call_va": "0x297d7c",
+        "save_offset": "0x56f8",
+        "shipped": {
+          "comment": "Return of Crushto",
+          "is_boss": true,
+          "time_seconds": 60,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 10000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_08"
+        }
+      },
+      {
+        "id": 9,
+        "enum": "IFF_A_ALT1",
+        "name_va": "0x10006848",
+        "name_slot_va": "0x89a3f0",
+        "name_load_va": "0x297d88",
+        "value_slot_va": "0x8996bc",
+        "value_load_va": "0x297d8c",
+        "value_move_va": "0x297d8c",
+        "export_call_va": "0x297d90",
+        "save_offset": "0x56fc",
+        "shipped": {
+          "comment": "Noxious Another Arena Challenge",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 12000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_17"
+        }
+      },
+      {
+        "id": 10,
+        "enum": "IFF_A_ALT2",
+        "name_va": "0x10006858",
+        "name_slot_va": "0x89a3f4",
+        "name_load_va": "0x297d9c",
+        "value_slot_va": "0x8996c4",
+        "value_load_va": "0x297da0",
+        "value_move_va": "0x297da0",
+        "export_call_va": "0x297da4",
+        "save_offset": "0x5700",
+        "shipped": {
+          "comment": "Get Your Dang Hands Off",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 9000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_07"
+        }
+      },
+      {
+        "id": 11,
+        "enum": "IFF_B_9",
+        "name_va": "0x10006868",
+        "name_slot_va": "0x89a3f8",
+        "name_load_va": "0x297db0",
+        "value_slot_va": "0x8996cc",
+        "value_load_va": "0x297db4",
+        "value_move_va": "0x297db4",
+        "export_call_va": "0x297db8",
+        "save_offset": "0x5704",
+        "shipped": {
+          "comment": "Heavy Weapons",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_ALPHA_NOVA",
+          "weapon_restriction_id": 7,
+          "base_bolts": 5000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_09"
+        }
+      },
+      {
+        "id": 12,
+        "enum": "IFF_B_10",
+        "name_va": "0x10006870",
+        "name_slot_va": "0x89a3fc",
+        "name_load_va": "0x297dc8",
+        "value_slot_va": "0x8996d4",
+        "value_load_va": "0x297dc0",
+        "value_move_va": "0x297dc4",
+        "export_call_va": "0x297dd0",
+        "save_offset": "0x5708",
+        "shipped": {
+          "comment": "Zaptor In Da House",
+          "is_boss": true,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 6000,
+          "weapon_reward": "WPN_PIRATEGUISE",
+          "weapon_reward_id": 30,
+          "image_name": "a_image_10"
+        }
+      },
+      {
+        "id": 13,
+        "enum": "IFF_B_11",
+        "name_va": "0x10006880",
+        "name_slot_va": "0x89a400",
+        "name_load_va": "0x297de0",
+        "value_slot_va": "0x8996dc",
+        "value_load_va": "0x297dd8",
+        "value_move_va": "0x297ddc",
+        "export_call_va": "0x297de8",
+        "save_offset": "0x570c",
+        "shipped": {
+          "comment": "Slaying the Slots",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 6000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_11"
+        }
+      },
+      {
+        "id": 14,
+        "enum": "IFF_B_12",
+        "name_va": "0x10006890",
+        "name_slot_va": "0x89a404",
+        "name_load_va": "0x297df4",
+        "value_slot_va": "0x8996e4",
+        "value_load_va": "0x297df8",
+        "value_move_va": "0x297df8",
+        "export_call_va": "0x297dfc",
+        "save_offset": "0x5710",
+        "shipped": {
+          "comment": "And The Bots Keep on Coming",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 7000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_12"
+        }
+      },
+      {
+        "id": 15,
+        "enum": "IFF_B_13",
+        "name_va": "0x100068a0",
+        "name_slot_va": "0x89a408",
+        "name_load_va": "0x297e0c",
+        "value_slot_va": "0x8996ec",
+        "value_load_va": "0x297e04",
+        "value_move_va": "0x297e08",
+        "export_call_va": "0x297e14",
+        "save_offset": "0x5714",
+        "shipped": {
+          "comment": "Challenge 13",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 7000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_22"
+        }
+      },
+      {
+        "id": 16,
+        "enum": "IFF_B_14",
+        "name_va": "0x100068b0",
+        "name_slot_va": "0x89a40c",
+        "name_load_va": "0x297e24",
+        "value_slot_va": "0x8996f4",
+        "value_load_va": "0x297e1c",
+        "value_move_va": "0x297e20",
+        "export_call_va": "0x297e2c",
+        "save_offset": "0x5718",
+        "shipped": {
+          "comment": "Take To The Skies",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 9000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_14"
+        }
+      },
+      {
+        "id": 17,
+        "enum": "IFF_B_15",
+        "name_va": "0x100068c0",
+        "name_slot_va": "0x89a410",
+        "name_load_va": "0x297e38",
+        "value_slot_va": "0x8996fc",
+        "value_load_va": "0x297e3c",
+        "value_move_va": "0x297e3c",
+        "export_call_va": "0x297e40",
+        "save_offset": "0x571c",
+        "shipped": {
+          "comment": "Untouchable",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 10000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_15"
+        }
+      },
+      {
+        "id": 18,
+        "enum": "IFF_B_16",
+        "name_va": "0x100068d0",
+        "name_slot_va": "0x89a414",
+        "name_load_va": "0x297e4c",
+        "value_slot_va": "0x899704",
+        "value_load_va": "0x297e50",
+        "value_move_va": "0x297e50",
+        "export_call_va": "0x297e54",
+        "save_offset": "0x5720",
+        "shipped": {
+          "comment": "It Takes Two",
+          "is_boss": true,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 11000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_16"
+        }
+      },
+      {
+        "id": 19,
+        "enum": "IFF_B_17",
+        "name_va": "0x100068e0",
+        "name_slot_va": "0x89a418",
+        "name_load_va": "0x297e64",
+        "value_slot_va": "0x89970c",
+        "value_load_va": "0x297e5c",
+        "value_move_va": "0x297e60",
+        "export_call_va": "0x297e6c",
+        "save_offset": "0x5724",
+        "shipped": {
+          "comment": "Smashing Good Time",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 8000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_06"
+        }
+      },
+      {
+        "id": 20,
+        "enum": "IFF_B_18",
+        "name_va": "0x100068f0",
+        "name_slot_va": "0x89a41c",
+        "name_load_va": "0x297e7c",
+        "value_slot_va": "0x899714",
+        "value_load_va": "0x297e74",
+        "value_move_va": "0x297e78",
+        "export_call_va": "0x297e84",
+        "save_offset": "0x5728",
+        "shipped": {
+          "comment": "Zaptors Revenge",
+          "is_boss": true,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 13000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_18"
+        }
+      },
+      {
+        "id": 21,
+        "enum": "IFF_B_19",
+        "name_va": "0x10006900",
+        "name_slot_va": "0x89a420",
+        "name_load_va": "0x297e94",
+        "value_slot_va": "0x89971c",
+        "value_load_va": "0x297e8c",
+        "value_move_va": "0x297e90",
+        "export_call_va": "0x297e9c",
+        "save_offset": "0x572c",
+        "shipped": {
+          "comment": "Bombbot-ocalypse",
+          "is_boss": false,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 14000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_19"
+        }
+      },
+      {
+        "id": 22,
+        "enum": "IFF_B_20",
+        "name_va": "0x10006910",
+        "name_slot_va": "0x89a424",
+        "name_load_va": "0x297eac",
+        "value_slot_va": "0x899724",
+        "value_load_va": "0x297ea4",
+        "value_move_va": "0x297ea8",
+        "export_call_va": "0x297eb4",
+        "save_offset": "0x5730",
+        "shipped": {
+          "comment": "The Ultimate Showdown",
+          "is_boss": true,
+          "time_seconds": null,
+          "weapon_restriction": "WPN_INVALID",
+          "weapon_restriction_id": -1,
+          "base_bolts": 15000,
+          "weapon_reward": null,
+          "weapon_reward_id": null,
+          "image_name": "a_image_20"
+        }
+      }
+    ],
+    "sentinels": [
+      {
+        "id": 0,
+        "enum": "ARENA_CHALLENGE_INVALID",
+        "name_va": "0x100067f0",
+        "name_slot_va": "0x89a3cc",
+        "name_load_va": "0x297cb4",
+        "value_slot_va": "0x89e830",
+        "value_load_va": "0x297cb8",
+        "value_move_va": "0x297cb8",
+        "export_call_va": "0x297cbc"
+      },
+      {
+        "id": 23,
+        "enum": "ARENA_CHALLENGE_COUNT",
+        "name_va": "0x10006920",
+        "name_slot_va": "0x89a428",
+        "name_load_va": "0x297ec4",
+        "value_slot_va": "0x89972c",
+        "value_load_va": "0x297ebc",
+        "value_move_va": "0x297ec0",
+        "export_call_va": "0x297ecc"
+      }
+    ],
+    "assets": [
+      {
+        "name": "arena.csv",
+        "sha256": "EB806E8146747AD448EEE69F11B71E83A511102A0558E583E3AAA56797C3C002",
+        "size": 2133
+      },
+      {
+        "name": "arena.lua",
+        "sha256": "4E41A9B5C0A97B7BE70500EF82487030807919E81F5B37EC89996F8919539054",
+        "size": 1189
+      },
+      {
+        "name": "arena.lc",
+        "sha256": "65F93FF2771F2EE9CEAF06CB418911E35FA34FC9B3C8641B02529B4CA2E903D3",
+        "size": 644
+      }
+    ],
+    "configuration": {
+      "class": "ArenaConfig",
+      "parent_offset": "0x1177c",
+      "stride": "0x34",
+      "native_indexer_va": "0xb6fa8",
+      "properties": [
+        {
+          "name": "IsBoss",
+          "offset": "0x0",
+          "type": "u8",
+          "registration_va": "0x88fa5c",
+          "name_va": "0x100146d0",
+          "getter_va": "0xb6ae0",
+          "setter_va": "0xb6a00"
+        },
+        {
+          "name": "Time",
+          "offset": "0x4",
+          "type": "f32",
+          "registration_va": "0x88fa68",
+          "name_va": "0x10012ea0",
+          "getter_va": "0xa8ba0",
+          "setter_va": "0x9a148"
+        },
+        {
+          "name": "Weapon",
+          "offset": "0x8",
+          "type": "i32",
+          "registration_va": "0x88fa74",
+          "name_va": "0x100146d8",
+          "getter_va": "0xa8ae8",
+          "setter_va": "0x9a078"
+        },
+        {
+          "name": "BoltReward",
+          "offset": "0xc",
+          "type": "u32",
+          "registration_va": "0x88fa80",
+          "name_va": "0x100146e0",
+          "getter_va": "0xa8a18",
+          "setter_va": "0x99fa0"
+        },
+        {
+          "name": "WpnReward",
+          "offset": "0x10",
+          "type": "i32",
+          "registration_va": "0x88fa8c",
+          "name_va": "0x100146f0",
+          "getter_va": "0xa8960",
+          "setter_va": "0x99ed0"
+        },
+        {
+          "name": "ImageName",
+          "offset": "0x14",
+          "type": "bytes32",
+          "registration_va": "0x88fa98",
+          "name_va": "0x10014700",
+          "getter_va": "0xb6800",
+          "setter_va": "0xb64c8"
+        }
+      ],
+      "warning": "Runtime configuration, not saved records. CSV Comment is not parsed by arena.lua. Blank fields remain unspecified, not guessed defaults. ImageName has32-byte storage and a31-byte copy bound; termination and bytes1..3 remain unconfirmed."
+    },
+    "transactions": {
+      "start_va": "0x278db0",
+      "failure_va": "0x278d48",
+      "success_va": "0x27a9c8",
+      "reward_va": "0x2ceab0",
+      "runtime_id_vas": [
+        "0x101af0d0",
+        "0x101aeff8"
+      ],
+      "success": "Cleans runtime challenge state, adds calculated bolts, conditionally grants configured weapon/quick-select state, then increments the direct saved counter once. Counter-only edits do not reproduce this transaction.",
+      "failure": "Runtime cleanup and ID bookkeeping, not a write to a saved failure-counter array.",
+      "reward": "Read raw BE32 count; subtract1 modulo32 bits when unsigned32(rewardWeapon+1)>1, then compare the adjusted low32 bits as signed32. Negative adjusted count yields0; zero yields base bolts; one uses float32 scale0.33; larger counts use0.1. Repeat reward is truncate((fusedFloat32(base*scale+25))/50)*50. Nonzero predicate2D1860 multiplies by100 with32-bit arithmetic; return converts unsigned32 to float32. Runtime config/rounding are not captured; no live quote is computed.",
+      "float_constants": [
+        {
+          "va": "0x89f0d8",
+          "bits": "3EA8F5C3",
+          "float": 0.33000001311302185
+        },
+        {
+          "va": "0x89f0dc",
+          "bits": "41C80000",
+          "float": 25.0
+        },
+        {
+          "va": "0x89f0e0",
+          "bits": "42480000",
+          "float": 50.0
+        },
+        {
+          "va": "0x89f0e4",
+          "bits": "3DCCCCCD",
+          "float": 0.10000000149011612
+        }
+      ]
+    },
+    "menu_resolver": {
+      "va": "0x2756f8",
+      "table": "ARENA_CHALLENGE_DATA",
+      "field": "id",
+      "upper_cap": 23,
+      "warning": "get_times_challenge_completed resolves a runtime Lua table index, unlike direct get_challenge_successes. Runtime table/order and lower-bound safety are unresolved. Cap23 can alias the following unknown array; not proof of24 valid counters."
+    },
+    "named_bindings": [
+      {
+        "name": "start_challenge",
+        "name_va": "0x1001f540",
+        "registration_slot_va": "0x89d8dc",
+        "wrapper_va": "0x2c9d60",
+        "native_va": "0x278db0"
+      },
+      {
+        "name": "set_challenge_success",
+        "name_va": "0x10019e68",
+        "registration_slot_va": "0x89d8e4",
+        "wrapper_va": "0x2c9ca8",
+        "native_va": "0x27a9c8"
+      },
+      {
+        "name": "set_challenge_failure",
+        "name_va": "0x1001f550",
+        "registration_slot_va": "0x89d8ec",
+        "wrapper_va": "0x2c9bf0",
+        "native_va": "0x278d48"
+      },
+      {
+        "name": "get_challenge_successes",
+        "name_va": "0x1001a058",
+        "registration_slot_va": "0x89d8f4",
+        "wrapper_va": "0x2c9ae0",
+        "native_va": "0x27a958"
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x279b8",
+        "bytes": "F821FF917D2802A6F92100804BFE96EDE841002880C286EC5468103AE80100803821007038E856D07C0803A67CE507B47C853214806400087C6307B44E800020"
+      },
+      {
+        "va": "0x315a8",
+        "bytes": "F821FF517C8802A638010070FBE100A8781F0020F88100C038A00000388000017FE6FB78FBC100A07C7E1B784BFE1A1DE84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F37880829A687FE5FB784BFDFC85E841002838600000E94100C07C6307B4EBC100A0EBE100A87D4803A6382100B04E800020600000004BFE1259E841002838800001C02298A42C0300007FC3F3784182FFB04BFE1A3DE841002839010080FC20081E7C2047AE806100807C6307B44BFF6359600000007C6007B47FC3F3787C07AE76780605603927000138A607FF28A900027CAB0378796B052441840024F9610090C8410090FC00169CFC2000184BFE2B11E8410028386000014BFFFF5C7C0B03784BFFFFDC"
+      },
+      {
+        "va": "0x8bd98",
+        "bytes": "81E2B3608382E77880E2FB207DE57B787F86E378E86100A07DE47B784BF86C4DE84100287DE47B78E86100A04BF851FDE8410028E86100A08082FB2480A2FB2880C2FB2C4BF874D5E8410028E86100A08082FB3080A2FB3480C2FB384BF874BDE8410028E86100A08082FB3C80A2FB4080C2FB444BF874A5E8410028E86100A08082FB4880A2FB4C80C2FB504BF8748DE8410028E86100A08082FB5480A2FB5880C2FB5C4BF87475E84100288082FB6080A2FB6480C2FB68E86100A04BF8745DE8410028E86100A04BF86931"
+      },
+      {
+        "va": "0x99ed0",
+        "bytes": "38A000007C0802A638800001F821FF61FBC10090FBE10098FBA100887C7F1B78F80100B04BF7802DE84100282F8300007C7E1B7838A000007FE3FB78419E008438C1007038A0000078DD0020388000027FE3FB787FA6EB784BF790C9E84100287FA5EB782C0300007FE3FB78408200108082FBC04BF7733DE84100287FE3FB78C022FBBC388000024BF79129E84100287BC50020FC20081E39250010386000007C204FAEE88100B0EBA10088EBC100907C8803A6EBE10098382100A04E8000208082FDC44BF772EDE84100284BFFFF74"
+      },
+      {
+        "va": "0x99fa0",
+        "bytes": "38A000007C0802A638800001F821FF51FBC100A0FBE100A8FBA100987C7F1B78F80100C04BF77F5DE84100282F8300007C7E1B7838A000007FE3FB78419E008838C1007038A0000078DD0020388000027FE3FB787FA6EB784BF78FF9E84100287FA5EB782C0300007FE3FB78408200108082FBC04BF7726DE84100287FE3FB78C022FBBC388000024BF79059E84100287BC90020FC200E5E38600000D8210080E8A1008090A9000CE88100C0EBA10098EBC100A07C8803A6EBE100A8382100B04E8000208082FDC84BF77219E84100284BFFFF7060000000"
+      },
+      {
+        "va": "0x9a078",
+        "bytes": "38A000007C0802A638800001F821FF61FBC10090FBE10098FBA100887C7F1B78F80100B04BF77E85E84100282F8300007C7E1B7838A000007FE3FB78419E008438C1007038A0000078DD0020388000027FE3FB787FA6EB784BF78F21E84100287FA5EB782C0300007FE3FB78408200108082FBC04BF77195E84100287FE3FB78C022FBBC388000024BF78F81E84100287BC50020FC20081E39250008386000007C204FAEE88100B0EBA10088EBC100907C8803A6EBE10098382100A04E8000208082FDCC4BF77145E84100284BFFFF74"
+      },
+      {
+        "va": "0x9a148",
+        "bytes": "38A000007C0802A638800001F821FF61FBC10090FBE10098FBA100887C7F1B78F80100B04BF77DB5E84100282F8300007C7E1B7838A000007FE3FB78419E007C38C1007038A0000078DD0020388000027FE3FB787FA6EB784BF78E51E84100287FA5EB782C0300007FE3FB78408200108082FBC04BF770C5E84100287FE3FB78C022FBBC388000024BF78EB1E84100287BC9002038600000D0290004E88100B0EBA10088EBC100907C8803A6EBE10098382100A04E8000208082FDD04BF7707DE84100284BFFFF7C"
+      },
+      {
+        "va": "0xa8960",
+        "bytes": "38A000007C0802A638800001F821FF71FBC10080FBE10088F80100A07C7F1B784BF695A1E84100282F8300007C7E1B7838A000007FE3FB78419E00707BC800207FE3FB7880E800107CE007B47C06AE767805056039260001388507FF282900027C8B0378796B0524408000087C0B0378F9610070C8210070FC000E9CFC2000184BF6B7D1E8410028E94100A0EBC1008038600001EBE100887D4803A6382100904E800020600000008082FDC44BF68875E84100284BFFFF88"
+      },
+      {
+        "va": "0xa89a4",
+        "bytes": "80E80010"
+      },
+      {
+        "va": "0xa8a18",
+        "bytes": "38A000007C0802A638800001F821FF71FBC10080FBE10088F80100A07C7F1B784BF694E9E84100282F8300007C7E1B7838A000007FE3FB78419E00487BC900207FE3FB7880A9000CF8A10070C8210070FC000E9CFC2000184BF6B741E8410028E88100A0EBC1008038600001EBE100887C8803A6382100904E800020600000008082FDC84BF687E5E84100287BC900207FE3FB7880A9000CF8A10070C8210070FC000E9CFC2000184BF6B6F1E8410028E88100A0EBC1008038600001EBE100887C8803A6382100904E80002060000000"
+      },
+      {
+        "va": "0xa8a5c",
+        "bytes": "80A9000C"
+      },
+      {
+        "va": "0xa8ae8",
+        "bytes": "38A000007C0802A638800001F821FF71FBC10080FBE10088F80100A07C7F1B784BF69419E84100282F8300007C7E1B7838A000007FE3FB78419E00707BC800207FE3FB7880E800087CE007B47C06AE767805056039260001388507FF282900027C8B0378796B0524408000087C0B0378F9610070C8210070FC000E9CFC2000184BF6B649E8410028E94100A0EBC1008038600001EBE100887D4803A6382100904E800020600000008082FDCC4BF686EDE84100284BFFFF88"
+      },
+      {
+        "va": "0xa8b2c",
+        "bytes": "80E80008"
+      },
+      {
+        "va": "0xa8ba0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF69361E84100282F8300007C7E1B7838A000007FE3FB78419E00387BC900207FE3FB78C02900044BF6B5C9E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020600000008082FDD04BF6866DE84100287BC900207FE3FB78C02900044BF6B589E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E80002060000000"
+      },
+      {
+        "va": "0xa8be4",
+        "bytes": "C0290004"
+      },
+      {
+        "va": "0xb64c8",
+        "bytes": "38A000007C0802A638800001F821FF61FBC10090FBE10098FBA100887C7F1B78F80100B04BF5BA35E84100282F8300007C7E1B7838A000007FE3FB78419E008C38C1007038A0000078DD0020388000027FE3FB787FA6EB784BF5DC21E84100287FA5EB782C0300007FE3FB78408200108082FBC04BF5AD45E84100287FE3FB783880000238A000004BF5B671E841002838A0001F78640020387E0014786300204BF5C2D9E8410028E88100B0EBA1008838600000EBC10090EBE100987C8803A6382100A04E800020808201444BF5ACEDE84100284BFFFF6C"
+      },
+      {
+        "va": "0xb6558",
+        "bytes": "38A0001F"
+      },
+      {
+        "va": "0xb6560",
+        "bytes": "387E0014"
+      },
+      {
+        "va": "0xb6800",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF5B701E84100282F8300007C7E1B7838A000007FE3FB78419E003838BE00147FE3FB7878A400204BF5D6F9E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E80002060000000808201444BF5AA0DE841002838BE00147FE3FB7878A400204BF5D6B9E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E80002060000000"
+      },
+      {
+        "va": "0xb683c",
+        "bytes": "38BE0014"
+      },
+      {
+        "va": "0xb6a00",
+        "bytes": "38A000007C0802A638800001F821FF61FBC10090FBE10098FBA100887C7F1B78F80100B04BF5B4FDE84100282F8300007C7E1B7838A000007FE3FB78419E009038C1007038A0000078DD0020388000027FE3FB787FA6EB784BF5B4F9E84100287FA5EB782C0300007FE3FB78408200108082FBC04BF5A80DE8410028388000027FE3FB7838A000004BF5A409E84100287BC900202C8300003880000038600000988900004186000C38A0000198A90000E8E100B0EBA10088EBC100907CE803A6EBE10098382100A04E8000208082014C4BF5A7B1E84100284BFFFF6860000000"
+      },
+      {
+        "va": "0xb6ae0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF5B421E84100282F8300007C7E1B7838A000007FE3FB78419E00387BC900207FE3FB78888900004BF59B79E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020600000008082014C4BF5A72DE84100287BC900207FE3FB78888900004BF59B39E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E80002060000000"
+      },
+      {
+        "va": "0xb6b24",
+        "bytes": "88890000"
+      },
+      {
+        "va": "0xb6fa8",
+        "bytes": "F821FF517C8802A6FBE100A87C7F1B78F88100C080820150FBA10098FBC100A04BF5AD79E84100287FE3FB78388000014BF59B99E84100283880FFFF7FE3FB784BF5BEC9E841002838010070781D002038A000007C7E1B78388000027FA6EB787FE3FB784BF5BFE5E84100287FA5EB782F8300007FE3FB78419E00887FE3FB78C022FBBC388000024BF5C051E841002839210080FC20081E7FE3FB7838A000007C204FAE83A10080281D001640810010808201584BF5A225E84100287FE3FB7880A2B3601D5D00343D0A00017CE8F21438C7177C78C400204BF59451E8410028E8A100C0EBA1009838600001EBC100A0EBE100A87CA803A6382100B04E800020808201544BF5A1D5E84100284BFFFF70"
+      },
+      {
+        "va": "0xb706c",
+        "bytes": "1D5D0034"
+      },
+      {
+        "va": "0xb7070",
+        "bytes": "3D0A0001"
+      },
+      {
+        "va": "0xb7078",
+        "bytes": "38C7177C"
+      },
+      {
+        "va": "0x2756f8",
+        "bytes": "81228F987C0802A6F821FF61F80100B0FB810080FBE10098FBA1008883A900047C7C1B784BFDCE7DE84100287C7F1B7880628F9C4BFD9B8DE841002880828FA07FA3EB784BFDAFDDE84100287FA3EB783880D8EF4BFDB12DE84100287FA3EB787F8507B43880FFFF4BFDA329E84100283880FFFF7FA3EB784BFDC149E84100283880FFFD2F8300057FA3EB78419E003C4BFDB041E84100287BE300204BFD9B25E8410028E8C100B0EB81008038600000EBA10088EBE100987CC803A678630020382100A04E80002080828FAC4BFDAF55E84100287FA3EB783880FFFE4BFDB0A5E84100287FA3EB783880FFFF4BFDD0C5E84100287FA3EB78FC200E5E3880FFFCD8210070EBA100704BFDAFC9E84100287BE300204BFD9AADE8410028207D0017E8C100B07C65FE70EB810080EBE100987CC803A67C6428387C7D2214EBA10088382100A0786300204E80002060000000"
+      },
+      {
+        "va": "0x278d48",
+        "bytes": "2B8300167C0802A6F821FF91F801008038C0000038E00016409D001C81229080808290BC80A290C0806900044BFD6C65E8410028386000014812557160000000808290C8814290C438A000008164000090A40000916A0000E8610080382100707C6803A64E800020"
+      },
+      {
+        "va": "0x278db0",
+        "bytes": "2B8300167C0802A6F821FF81FBE10078F80100907C7F1B7838C0000038E00016409D001C81229080808290BC80A290C0806900044BFD6BF5E84100284812567560000000808290C4816290C893E4000093EB00004BFD6D85E8410028C00290CCD003178CE8610090EBE10078382100807C6803A64E800020"
+      },
+      {
+        "va": "0x27a958",
+        "bytes": "2B8300167C0802A6F821FF81FBE10078F80100907C7F1B7838C0000038E00016409D001C81229080808290BC80A29150806900044BFD504DE841002857EA103A80E29030E8810090390A56D0EBE100787C8803A6382100807D0607B47CA63A14806500087C6307B44E80002060000000"
+      },
+      {
+        "va": "0x27a994",
+        "bytes": "57EA103A"
+      },
+      {
+        "va": "0x27a998",
+        "bytes": "80E29030"
+      },
+      {
+        "va": "0x27a9a0",
+        "bytes": "390A56D0"
+      },
+      {
+        "va": "0x27a9b8",
+        "bytes": "80650008"
+      },
+      {
+        "va": "0x27a9bc",
+        "bytes": "7C6307B4"
+      },
+      {
+        "va": "0x27a9c8",
+        "bytes": "2B8300167C0802A6F821FF61FBC10090FB810080FBA10088FBE10098F80100B07C7E1B7838C0000038E00016419D0104386000003B800000481238F16000000083A290C4806290C8939D0000938300004BFD5171E84100287C6C1B787BC30020799C002083AC1A684805408160000000FC200E5E80E291547F83E3781D7E00343D4B0001D8210070E8810070390A17807C8407B47D0607B47CA63A1483E5000C4BFD5251E84100282C1FFFFF2F1D00004182003C57E9103A57E020367BAB00207D290214419A002838A900107FFF07B47CA707B47D635B7838A000017FE4FB787CCB38AE2C8600004186006857C3103A81629030398356D07D8A07B47FEA5A14811F000838880001909F0008EBC100B0EB8100807FC803A6EBA10088EBC10090EBE10098382100A04E800020600000008122908080A290C0808290BC806900044BFD4ED1E84100284BFFFEE860000000481EC059600000007F83E3787FE4FB7838A0FFFF4BFD7FDDE841002857C3103A81629030398356D07D8A07B47FEA5A14811F000838880001909F0008EBC100B0EB8100807FC803A6EBA10088EBC10090EBE10098382100A04E80002060000000"
+      },
+      {
+        "va": "0x297cb4",
+        "bytes": "8082A4AC"
+      },
+      {
+        "va": "0x297cb8",
+        "bytes": "C022E910"
+      },
+      {
+        "va": "0x297cbc",
+        "bytes": "4BFBB1FD"
+      },
+      {
+        "va": "0x297cc4",
+        "bytes": "C362975C"
+      },
+      {
+        "va": "0x297cc8",
+        "bytes": "FC20D890"
+      },
+      {
+        "va": "0x297ccc",
+        "bytes": "8082A4B0"
+      },
+      {
+        "va": "0x297cd4",
+        "bytes": "4BFBB1E5"
+      },
+      {
+        "va": "0x297cdc",
+        "bytes": "C3829764"
+      },
+      {
+        "va": "0x297ce0",
+        "bytes": "FC20E090"
+      },
+      {
+        "va": "0x297ce4",
+        "bytes": "8082A4B4"
+      },
+      {
+        "va": "0x297cec",
+        "bytes": "4BFBB1CD"
+      },
+      {
+        "va": "0x297cf4",
+        "bytes": "C3A2976C"
+      },
+      {
+        "va": "0x297cf8",
+        "bytes": "FC20E890"
+      },
+      {
+        "va": "0x297cfc",
+        "bytes": "8082A4B8"
+      },
+      {
+        "va": "0x297d04",
+        "bytes": "4BFBB1B5"
+      },
+      {
+        "va": "0x297d0c",
+        "bytes": "C3C29774"
+      },
+      {
+        "va": "0x297d10",
+        "bytes": "FC20F090"
+      },
+      {
+        "va": "0x297d14",
+        "bytes": "8082A4BC"
+      },
+      {
+        "va": "0x297d1c",
+        "bytes": "4BFBB19D"
+      },
+      {
+        "va": "0x297d24",
+        "bytes": "C3E2977C"
+      },
+      {
+        "va": "0x297d28",
+        "bytes": "FC20F890"
+      },
+      {
+        "va": "0x297d2c",
+        "bytes": "8082A4C0"
+      },
+      {
+        "va": "0x297d34",
+        "bytes": "4BFBB185"
+      },
+      {
+        "va": "0x297d3c",
+        "bytes": "C3029784"
+      },
+      {
+        "va": "0x297d40",
+        "bytes": "FC20C090"
+      },
+      {
+        "va": "0x297d44",
+        "bytes": "8082A4C4"
+      },
+      {
+        "va": "0x297d4c",
+        "bytes": "4BFBB16D"
+      },
+      {
+        "va": "0x297d54",
+        "bytes": "C322978C"
+      },
+      {
+        "va": "0x297d58",
+        "bytes": "FC20C890"
+      },
+      {
+        "va": "0x297d5c",
+        "bytes": "8082A4C8"
+      },
+      {
+        "va": "0x297d64",
+        "bytes": "4BFBB155"
+      },
+      {
+        "va": "0x297d6c",
+        "bytes": "C3429794"
+      },
+      {
+        "va": "0x297d70",
+        "bytes": "FC20D090"
+      },
+      {
+        "va": "0x297d74",
+        "bytes": "8082A4CC"
+      },
+      {
+        "va": "0x297d7c",
+        "bytes": "4BFBB13D"
+      },
+      {
+        "va": "0x297d88",
+        "bytes": "8082A4D0"
+      },
+      {
+        "va": "0x297d8c",
+        "bytes": "C022979C"
+      },
+      {
+        "va": "0x297d90",
+        "bytes": "4BFBB129"
+      },
+      {
+        "va": "0x297d9c",
+        "bytes": "8082A4D4"
+      },
+      {
+        "va": "0x297da0",
+        "bytes": "C02297A4"
+      },
+      {
+        "va": "0x297da4",
+        "bytes": "4BFBB115"
+      },
+      {
+        "va": "0x297db0",
+        "bytes": "8082A4D8"
+      },
+      {
+        "va": "0x297db4",
+        "bytes": "C02297AC"
+      },
+      {
+        "va": "0x297db8",
+        "bytes": "4BFBB101"
+      },
+      {
+        "va": "0x297dc0",
+        "bytes": "C20297B4"
+      },
+      {
+        "va": "0x297dc4",
+        "bytes": "FC208090"
+      },
+      {
+        "va": "0x297dc8",
+        "bytes": "8082A4DC"
+      },
+      {
+        "va": "0x297dd0",
+        "bytes": "4BFBB0E9"
+      },
+      {
+        "va": "0x297dd8",
+        "bytes": "C1E297BC"
+      },
+      {
+        "va": "0x297ddc",
+        "bytes": "FC207890"
+      },
+      {
+        "va": "0x297de0",
+        "bytes": "8082A4E0"
+      },
+      {
+        "va": "0x297de8",
+        "bytes": "4BFBB0D1"
+      },
+      {
+        "va": "0x297df4",
+        "bytes": "8082A4E4"
+      },
+      {
+        "va": "0x297df8",
+        "bytes": "C02297C4"
+      },
+      {
+        "va": "0x297dfc",
+        "bytes": "4BFBB0BD"
+      },
+      {
+        "va": "0x297e04",
+        "bytes": "C2E297CC"
+      },
+      {
+        "va": "0x297e08",
+        "bytes": "FC20B890"
+      },
+      {
+        "va": "0x297e0c",
+        "bytes": "8082A4E8"
+      },
+      {
+        "va": "0x297e14",
+        "bytes": "4BFBB0A5"
+      },
+      {
+        "va": "0x297e1c",
+        "bytes": "C22297D4"
+      },
+      {
+        "va": "0x297e20",
+        "bytes": "FC208890"
+      },
+      {
+        "va": "0x297e24",
+        "bytes": "8082A4EC"
+      },
+      {
+        "va": "0x297e2c",
+        "bytes": "4BFBB08D"
+      },
+      {
+        "va": "0x297e38",
+        "bytes": "8082A4F0"
+      },
+      {
+        "va": "0x297e3c",
+        "bytes": "C02297DC"
+      },
+      {
+        "va": "0x297e40",
+        "bytes": "4BFBB079"
+      },
+      {
+        "va": "0x297e4c",
+        "bytes": "8082A4F4"
+      },
+      {
+        "va": "0x297e50",
+        "bytes": "C02297E4"
+      },
+      {
+        "va": "0x297e54",
+        "bytes": "4BFBB065"
+      },
+      {
+        "va": "0x297e5c",
+        "bytes": "C24297EC"
+      },
+      {
+        "va": "0x297e60",
+        "bytes": "FC209090"
+      },
+      {
+        "va": "0x297e64",
+        "bytes": "8082A4F8"
+      },
+      {
+        "va": "0x297e6c",
+        "bytes": "4BFBB04D"
+      },
+      {
+        "va": "0x297e74",
+        "bytes": "C2A297F4"
+      },
+      {
+        "va": "0x297e78",
+        "bytes": "FC20A890"
+      },
+      {
+        "va": "0x297e7c",
+        "bytes": "8082A4FC"
+      },
+      {
+        "va": "0x297e84",
+        "bytes": "4BFBB035"
+      },
+      {
+        "va": "0x297e8c",
+        "bytes": "C28297FC"
+      },
+      {
+        "va": "0x297e90",
+        "bytes": "FC20A090"
+      },
+      {
+        "va": "0x297e94",
+        "bytes": "8082A500"
+      },
+      {
+        "va": "0x297e9c",
+        "bytes": "4BFBB01D"
+      },
+      {
+        "va": "0x297ea4",
+        "bytes": "C1C29804"
+      },
+      {
+        "va": "0x297ea8",
+        "bytes": "FC207090"
+      },
+      {
+        "va": "0x297eac",
+        "bytes": "8082A504"
+      },
+      {
+        "va": "0x297eb4",
+        "bytes": "4BFBB005"
+      },
+      {
+        "va": "0x297ebc",
+        "bytes": "C2C2980C"
+      },
+      {
+        "va": "0x297ec0",
+        "bytes": "FC20B090"
+      },
+      {
+        "va": "0x297ec4",
+        "bytes": "8082A508"
+      },
+      {
+        "va": "0x297ecc",
+        "bytes": "4BFBAFED"
+      },
+      {
+        "va": "0x2c9ae0",
+        "bytes": "F821FF517C8802A638010070FBE100A8781F0020F88100C038A00000388000017FE6FB78FBC100A07C7E1B784BF8919DE84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F3788082F09C7FE5FB784BF878D5E841002838600000E90100C07C6307B4EBC100A0EBE100A87D0803A6382100B04E800020600000004BF89089E841002838800001C022E9102C0300007FC3F3784182FFB04BF880FDE841002838610080FC20081E7C201FAE806100804BFB0DC5600000007C6007B47FC3F3787C07AE76780605603927000138A607FF28A900027CAB0378796B052441840024F9610090C8410090FC00169CFC2000184BF88B65E8410028386000014BFFFF607C0B03784BFFFFDC60000000"
+      },
+      {
+        "va": "0x2c9bf0",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BF8908DE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082F0A07FC5F3784BF877C5E8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BF88F81E841002838800001C022E9102C0300007FE3FB784182FFB84BF87FF5E841002839210080FC20081E7C204FAE806100804BFAF0AD600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c9ca8",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BF88FD5E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082F0A47FC5F3784BF8770DE8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BF88EC9E841002838800001C022E9102C0300007FE3FB784182FFB84BF87F3DE841002839210080FC20081E7C204FAE806100804BFB0C75600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c9d60",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BF88F1DE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082F0A87FC5F3784BF87655E8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BF88E11E841002838800001C022E9102C0300007FE3FB784182FFB84BF87E85E841002839210080FC20081E7C204FAE806100804BFAEFA5600000004BFFFFA8"
+      },
+      {
+        "va": "0x2ceab0",
+        "bytes": "546A103A8002F19CF821FF717D6802A6FBE10088F96100A0388A56D080E2F1B41C6300343D2300017C8607B43BE91780398917707FE807B47D8507B47D6802147D463A147C650214808B000C816A00083924000183E300182B890001409D0008396BFFFF2F8B0000419C0090409E004448002D41600000005460063E2C800000418600081FFF00647BE70020E8C100A0EBE10088F8E100707CC803A6C8E1007038210090FCC03E9CFC2030184E8000202C0B00014182004C7BE00020C162F1C4F8010070C8A10070FC802E9CC182F1BCC1A2F1C0FC602018EC4362FAEC226824FC000E5ED8010070E8A100701FE500324BFFFF80600000003BE000004BFFFF747BE00020C162F1B84BFFFFB860000000"
+      },
+      {
+        "va": "0x2d1860",
+        "bytes": "8082F268386000003D240009800906EC2F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x35d9a0",
+        "bytes": "F821FF717C8802A63800000039200017FBE10088396000007D2903A67C7F1B7839400000FB810070FBA10078F88100A0F8030020F8030000F8030008F8030010F8030018600000007CBF5A14396B000478A30020914301B04200FFF038C0000839600000380000007CC903A6600000007D1F5A14396B0004790700209007020C4200FFF03940002039600000380000007D4903A6600000007F8BFA14396B00017B8C0020980C022C4200FFF038BF02543880000078A3002038A00C003BA000004BEF4ED9E8410028387F0E563880FFFF38A01000786300204BEF4EC1E8410028393F1E563880FFFF7923002038A002804BEF4EA9E8410028397F20D63880FFFF7963002038A010004BEF4E91E841002838000028396000007C0903A639400000B3BF0E54600000007CDF5A14396B000478C40020914430D84200FFF038E0001439600000390000007CE903A6915F31787D9F5A14396B0004798A0020910A317C4200FFF03B80000E39600000380000007F8903A6911F31CC7FBF5A14396B00017BA80020980831D04200FFF0392000003860000738000000396000007C6903A639400000901F31E0F93F31F0F93F31E87C9F5A14396B000178850020994532114200FFF0393F321CC0021A247BE50020792800203D8500013F9F00013BA00000387CAC20394000003800FFFF3880000038A009B078630020901F3218FBBF31F893BF320093A8001493A80018D008001C914800049148000093ACAC1C4BEF4D7DE841002838FCB5D03880000078E3002038A009B04BEF4D65E841002838DCBF8078C300204800125D600000003960000093BF320C997F3210EBE100A0EB8100707FE803A6EBA10078EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x35d9ac",
+        "bytes": "39200017"
+      },
+      {
+        "va": "0x35d9f4",
+        "bytes": "914301B0"
+      },
+      {
+        "va": "0x35d9fc",
+        "bytes": "38C00008"
+      },
+      {
+        "va": "0x35da1c",
+        "bytes": "9007020C"
+      },
+      {
+        "va": "0x85d568",
+        "bytes": "00099ED00088FF38"
+      },
+      {
+        "va": "0x85d570",
+        "bytes": "00099FA00088FF38"
+      },
+      {
+        "va": "0x85d578",
+        "bytes": "0009A0780088FF38"
+      },
+      {
+        "va": "0x85d580",
+        "bytes": "0009A1480088FF38"
+      },
+      {
+        "va": "0x85dea0",
+        "bytes": "000A89600088FF38"
+      },
+      {
+        "va": "0x85dea8",
+        "bytes": "000A8A180088FF38"
+      },
+      {
+        "va": "0x85deb0",
+        "bytes": "000A8AE80088FF38"
+      },
+      {
+        "va": "0x85deb8",
+        "bytes": "000A8BA00088FF38"
+      },
+      {
+        "va": "0x85e880",
+        "bytes": "000B64C80088FF38"
+      },
+      {
+        "va": "0x85e8a0",
+        "bytes": "000B68000088FF38"
+      },
+      {
+        "va": "0x85e8b8",
+        "bytes": "000B6A000088FF38"
+      },
+      {
+        "va": "0x85e8c0",
+        "bytes": "000B6AE00088FF38"
+      },
+      {
+        "va": "0x86c4e8",
+        "bytes": "002C9AE00089FF20"
+      },
+      {
+        "va": "0x86c4f0",
+        "bytes": "002C9BF00089FF20"
+      },
+      {
+        "va": "0x86c4f8",
+        "bytes": "002C9CA80089FF20"
+      },
+      {
+        "va": "0x86c500",
+        "bytes": "002C9D600089FF20"
+      },
+      {
+        "va": "0x88fa5c",
+        "bytes": "100146D00085E8C00085E8B8"
+      },
+      {
+        "va": "0x88fa68",
+        "bytes": "10012EA00085DEB80085D580"
+      },
+      {
+        "va": "0x88fa74",
+        "bytes": "100146D80085DEB00085D578"
+      },
+      {
+        "va": "0x88fa80",
+        "bytes": "100146E00085DEA80085D570"
+      },
+      {
+        "va": "0x88fa8c",
+        "bytes": "100146F00085DEA00085D568"
+      },
+      {
+        "va": "0x88fa98",
+        "bytes": "100147000085E8A00085E880"
+      },
+      {
+        "va": "0x898ec0",
+        "bytes": "10019CA0"
+      },
+      {
+        "va": "0x898ecc",
+        "bytes": "10019CD0"
+      },
+      {
+        "va": "0x898f50",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x898fe4",
+        "bytes": "101AF0D0"
+      },
+      {
+        "va": "0x898fe8",
+        "bytes": "101AEFF8"
+      },
+      {
+        "va": "0x899074",
+        "bytes": "101B9EE8"
+      },
+      {
+        "va": "0x89967c",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x899684",
+        "bytes": "40000000"
+      },
+      {
+        "va": "0x89968c",
+        "bytes": "40400000"
+      },
+      {
+        "va": "0x899694",
+        "bytes": "40800000"
+      },
+      {
+        "va": "0x89969c",
+        "bytes": "40A00000"
+      },
+      {
+        "va": "0x8996a4",
+        "bytes": "40C00000"
+      },
+      {
+        "va": "0x8996ac",
+        "bytes": "40E00000"
+      },
+      {
+        "va": "0x8996b4",
+        "bytes": "41000000"
+      },
+      {
+        "va": "0x8996bc",
+        "bytes": "41100000"
+      },
+      {
+        "va": "0x8996c4",
+        "bytes": "41200000"
+      },
+      {
+        "va": "0x8996cc",
+        "bytes": "41300000"
+      },
+      {
+        "va": "0x8996d4",
+        "bytes": "41400000"
+      },
+      {
+        "va": "0x8996dc",
+        "bytes": "41500000"
+      },
+      {
+        "va": "0x8996e4",
+        "bytes": "41600000"
+      },
+      {
+        "va": "0x8996ec",
+        "bytes": "41700000"
+      },
+      {
+        "va": "0x8996f4",
+        "bytes": "41800000"
+      },
+      {
+        "va": "0x8996fc",
+        "bytes": "41880000"
+      },
+      {
+        "va": "0x899704",
+        "bytes": "41900000"
+      },
+      {
+        "va": "0x89970c",
+        "bytes": "41980000"
+      },
+      {
+        "va": "0x899714",
+        "bytes": "41A00000"
+      },
+      {
+        "va": "0x89971c",
+        "bytes": "41A80000"
+      },
+      {
+        "va": "0x899724",
+        "bytes": "41B00000"
+      },
+      {
+        "va": "0x89972c",
+        "bytes": "41B80000"
+      },
+      {
+        "va": "0x89a3cc",
+        "bytes": "100067F0"
+      },
+      {
+        "va": "0x89a3d0",
+        "bytes": "10006808"
+      },
+      {
+        "va": "0x89a3d4",
+        "bytes": "10006810"
+      },
+      {
+        "va": "0x89a3d8",
+        "bytes": "10006818"
+      },
+      {
+        "va": "0x89a3dc",
+        "bytes": "10006820"
+      },
+      {
+        "va": "0x89a3e0",
+        "bytes": "10006828"
+      },
+      {
+        "va": "0x89a3e4",
+        "bytes": "10006830"
+      },
+      {
+        "va": "0x89a3e8",
+        "bytes": "10006838"
+      },
+      {
+        "va": "0x89a3ec",
+        "bytes": "10006840"
+      },
+      {
+        "va": "0x89a3f0",
+        "bytes": "10006848"
+      },
+      {
+        "va": "0x89a3f4",
+        "bytes": "10006858"
+      },
+      {
+        "va": "0x89a3f8",
+        "bytes": "10006868"
+      },
+      {
+        "va": "0x89a3fc",
+        "bytes": "10006870"
+      },
+      {
+        "va": "0x89a400",
+        "bytes": "10006880"
+      },
+      {
+        "va": "0x89a404",
+        "bytes": "10006890"
+      },
+      {
+        "va": "0x89a408",
+        "bytes": "100068A0"
+      },
+      {
+        "va": "0x89a40c",
+        "bytes": "100068B0"
+      },
+      {
+        "va": "0x89a410",
+        "bytes": "100068C0"
+      },
+      {
+        "va": "0x89a414",
+        "bytes": "100068D0"
+      },
+      {
+        "va": "0x89a418",
+        "bytes": "100068E0"
+      },
+      {
+        "va": "0x89a41c",
+        "bytes": "100068F0"
+      },
+      {
+        "va": "0x89a420",
+        "bytes": "10006900"
+      },
+      {
+        "va": "0x89a424",
+        "bytes": "10006910"
+      },
+      {
+        "va": "0x89a428",
+        "bytes": "10006920"
+      },
+      {
+        "va": "0x89d8dc",
+        "bytes": "1001F5400086C500"
+      },
+      {
+        "va": "0x89d8e4",
+        "bytes": "10019E680086C4F8"
+      },
+      {
+        "va": "0x89d8ec",
+        "bytes": "1001F5500086C4F0"
+      },
+      {
+        "va": "0x89d8f4",
+        "bytes": "1001A0580086C4E8"
+      },
+      {
+        "va": "0x89e830",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x89f0bc",
+        "bytes": "101B9EE8"
+      },
+      {
+        "va": "0x89f0d4",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f0d8",
+        "bytes": "3EA8F5C3"
+      },
+      {
+        "va": "0x89f0dc",
+        "bytes": "41C80000"
+      },
+      {
+        "va": "0x89f0e0",
+        "bytes": "42480000"
+      },
+      {
+        "va": "0x89f0e4",
+        "bytes": "3DCCCCCD"
+      },
+      {
+        "va": "0x100067f0",
+        "bytes": "4152454E415F4348414C4C454E47455F494E56414C494400"
+      },
+      {
+        "va": "0x10006808",
+        "bytes": "4946465F415F3100"
+      },
+      {
+        "va": "0x10006810",
+        "bytes": "4946465F415F3200"
+      },
+      {
+        "va": "0x10006818",
+        "bytes": "4946465F415F3300"
+      },
+      {
+        "va": "0x10006820",
+        "bytes": "4946465F415F3400"
+      },
+      {
+        "va": "0x10006828",
+        "bytes": "4946465F415F3500"
+      },
+      {
+        "va": "0x10006830",
+        "bytes": "4946465F415F3600"
+      },
+      {
+        "va": "0x10006838",
+        "bytes": "4946465F415F3700"
+      },
+      {
+        "va": "0x10006840",
+        "bytes": "4946465F415F3800"
+      },
+      {
+        "va": "0x10006848",
+        "bytes": "4946465F415F414C543100"
+      },
+      {
+        "va": "0x10006858",
+        "bytes": "4946465F415F414C543200"
+      },
+      {
+        "va": "0x10006868",
+        "bytes": "4946465F425F3900"
+      },
+      {
+        "va": "0x10006870",
+        "bytes": "4946465F425F313000"
+      },
+      {
+        "va": "0x10006880",
+        "bytes": "4946465F425F313100"
+      },
+      {
+        "va": "0x10006890",
+        "bytes": "4946465F425F313200"
+      },
+      {
+        "va": "0x100068a0",
+        "bytes": "4946465F425F313300"
+      },
+      {
+        "va": "0x100068b0",
+        "bytes": "4946465F425F313400"
+      },
+      {
+        "va": "0x100068c0",
+        "bytes": "4946465F425F313500"
+      },
+      {
+        "va": "0x100068d0",
+        "bytes": "4946465F425F313600"
+      },
+      {
+        "va": "0x100068e0",
+        "bytes": "4946465F425F313700"
+      },
+      {
+        "va": "0x100068f0",
+        "bytes": "4946465F425F313800"
+      },
+      {
+        "va": "0x10006900",
+        "bytes": "4946465F425F313900"
+      },
+      {
+        "va": "0x10006910",
+        "bytes": "4946465F425F323000"
+      },
+      {
+        "va": "0x10006920",
+        "bytes": "4152454E415F4348414C4C454E47455F434F554E5400"
+      },
+      {
+        "va": "0x10012ea0",
+        "bytes": "54696D6500"
+      },
+      {
+        "va": "0x100146d0",
+        "bytes": "4973426F737300"
+      },
+      {
+        "va": "0x100146d8",
+        "bytes": "576561706F6E00"
+      },
+      {
+        "va": "0x100146e0",
+        "bytes": "426F6C7452657761726400"
+      },
+      {
+        "va": "0x100146f0",
+        "bytes": "57706E52657761726400"
+      },
+      {
+        "va": "0x10014700",
+        "bytes": "496D6167654E616D6500"
+      },
+      {
+        "va": "0x10019ca0",
+        "bytes": "4152454E415F4348414C4C454E47455F4441544100"
+      },
+      {
+        "va": "0x10019cd0",
+        "bytes": "696400"
+      },
+      {
+        "va": "0x10019e68",
+        "bytes": "7365745F6368616C6C656E67655F7375636365737300"
+      },
+      {
+        "va": "0x1001a058",
+        "bytes": "6765745F6368616C6C656E67655F73756363657373657300"
+      },
+      {
+        "va": "0x1001f540",
+        "bytes": "73746172745F6368616C6C656E676500"
+      },
+      {
+        "va": "0x1001f550",
+        "bytes": "7365745F6368616C6C656E67655F6661696C75726500"
+      }
+    ]
+  },
   "annotations": [
+    {
+      "va": "0x00278DB0",
+      "name": "TOD_start_challenge_direct",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2B8300167C0802A6",
+      "comment": "Named arena native implementation; direct IDs0..22. Read-only evidence, not edit authorization.",
+      "evidence": "arena_challenges named_bindings; wrapper call and native instruction guards."
+    },
+    {
+      "va": "0x002C9D60",
+      "name": "TOD_Lua_start_challenge",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C8802A6",
+      "comment": "Named Lua arena binding; not the runtime menu-index resolver.",
+      "evidence": "Named registration slot 0x89d8dc"
+    },
+    {
+      "va": "0x1001F540",
+      "name": "TOD_str_start_challenge",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "73746172745F6368616C6C656E676500",
+      "comment": "Arena Lua API name.",
+      "evidence": "Named slot 0x89d8dc"
+    },
+    {
+      "va": "0x0027A9C8",
+      "name": "TOD_set_challenge_success_direct",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2B8300167C0802A6",
+      "comment": "Named arena native implementation; direct IDs0..22. Read-only evidence, not edit authorization.",
+      "evidence": "arena_challenges named_bindings; wrapper call and native instruction guards."
+    },
+    {
+      "va": "0x002C9CA8",
+      "name": "TOD_Lua_set_challenge_success",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C8802A6",
+      "comment": "Named Lua arena binding; not the runtime menu-index resolver.",
+      "evidence": "Named registration slot 0x89d8e4"
+    },
+    {
+      "va": "0x10019E68",
+      "name": "TOD_str_set_challenge_success",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "7365745F6368616C6C656E67655F7375636365737300",
+      "comment": "Arena Lua API name.",
+      "evidence": "Named slot 0x89d8e4"
+    },
+    {
+      "va": "0x00278D48",
+      "name": "TOD_set_challenge_failure_direct",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2B8300167C0802A6",
+      "comment": "Named arena native implementation; direct IDs0..22. Read-only evidence, not edit authorization.",
+      "evidence": "arena_challenges named_bindings; wrapper call and native instruction guards."
+    },
+    {
+      "va": "0x002C9BF0",
+      "name": "TOD_Lua_set_challenge_failure",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF617C8802A6",
+      "comment": "Named Lua arena binding; not the runtime menu-index resolver.",
+      "evidence": "Named registration slot 0x89d8ec"
+    },
+    {
+      "va": "0x1001F550",
+      "name": "TOD_str_set_challenge_failure",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "7365745F6368616C6C656E67655F6661696C75726500",
+      "comment": "Arena Lua API name.",
+      "evidence": "Named slot 0x89d8ec"
+    },
+    {
+      "va": "0x0027A958",
+      "name": "TOD_get_challenge_successes_direct",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2B8300167C0802A6",
+      "comment": "Named arena native implementation; direct IDs0..22. Read-only evidence, not edit authorization.",
+      "evidence": "arena_challenges named_bindings; wrapper call and native instruction guards."
+    },
+    {
+      "va": "0x002C9AE0",
+      "name": "TOD_Lua_get_challenge_successes",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF517C8802A6",
+      "comment": "Named Lua arena binding; not the runtime menu-index resolver.",
+      "evidence": "Named registration slot 0x89d8f4"
+    },
+    {
+      "va": "0x1001A058",
+      "name": "TOD_str_get_challenge_successes",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "6765745F6368616C6C656E67655F73756363657373657300",
+      "comment": "Arena Lua API name.",
+      "evidence": "Named slot 0x89d8f4"
+    },
+    {
+      "va": "0x10006808",
+      "name": "TOD_str_IFF_A_1",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F3100",
+      "comment": "Native arena enum IFF_A_1 = 1. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297cd4 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006810",
+      "name": "TOD_str_IFF_A_2",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F3200",
+      "comment": "Native arena enum IFF_A_2 = 2. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297cec with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006818",
+      "name": "TOD_str_IFF_A_3",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F3300",
+      "comment": "Native arena enum IFF_A_3 = 3. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297d04 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006820",
+      "name": "TOD_str_IFF_A_4",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F3400",
+      "comment": "Native arena enum IFF_A_4 = 4. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297d1c with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006828",
+      "name": "TOD_str_IFF_A_5",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F3500",
+      "comment": "Native arena enum IFF_A_5 = 5. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297d34 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006830",
+      "name": "TOD_str_IFF_A_6",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F3600",
+      "comment": "Native arena enum IFF_A_6 = 6. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297d4c with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006838",
+      "name": "TOD_str_IFF_A_7",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F3700",
+      "comment": "Native arena enum IFF_A_7 = 7. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297d64 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006840",
+      "name": "TOD_str_IFF_A_8",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F3800",
+      "comment": "Native arena enum IFF_A_8 = 8. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297d7c with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006848",
+      "name": "TOD_str_IFF_A_ALT1",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F414C543100",
+      "comment": "Native arena enum IFF_A_ALT1 = 9. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297d90 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006858",
+      "name": "TOD_str_IFF_A_ALT2",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F415F414C543200",
+      "comment": "Native arena enum IFF_A_ALT2 = 10. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297da4 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006868",
+      "name": "TOD_str_IFF_B_9",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F3900",
+      "comment": "Native arena enum IFF_B_9 = 11. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297db8 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006870",
+      "name": "TOD_str_IFF_B_10",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313000",
+      "comment": "Native arena enum IFF_B_10 = 12. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297dd0 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006880",
+      "name": "TOD_str_IFF_B_11",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313100",
+      "comment": "Native arena enum IFF_B_11 = 13. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297de8 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006890",
+      "name": "TOD_str_IFF_B_12",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313200",
+      "comment": "Native arena enum IFF_B_12 = 14. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297dfc with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x100068A0",
+      "name": "TOD_str_IFF_B_13",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313300",
+      "comment": "Native arena enum IFF_B_13 = 15. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297e14 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x100068B0",
+      "name": "TOD_str_IFF_B_14",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313400",
+      "comment": "Native arena enum IFF_B_14 = 16. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297e2c with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x100068C0",
+      "name": "TOD_str_IFF_B_15",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313500",
+      "comment": "Native arena enum IFF_B_15 = 17. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297e40 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x100068D0",
+      "name": "TOD_str_IFF_B_16",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313600",
+      "comment": "Native arena enum IFF_B_16 = 18. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297e54 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x100068E0",
+      "name": "TOD_str_IFF_B_17",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313700",
+      "comment": "Native arena enum IFF_B_17 = 19. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297e6c with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x100068F0",
+      "name": "TOD_str_IFF_B_18",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313800",
+      "comment": "Native arena enum IFF_B_18 = 20. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297e84 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006900",
+      "name": "TOD_str_IFF_B_19",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F313900",
+      "comment": "Native arena enum IFF_B_19 = 21. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297e9c with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006910",
+      "name": "TOD_str_IFF_B_20",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4946465F425F323000",
+      "comment": "Native arena enum IFF_B_20 = 22. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297eb4 with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x100067F0",
+      "name": "TOD_str_ARENA_CHALLENGE_INVALID",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4152454E415F4348414C4C454E47455F494E56414C494400",
+      "comment": "Native arena enum ARENA_CHALLENGE_INVALID = 0. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297cbc with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x10006920",
+      "name": "TOD_str_ARENA_CHALLENGE_COUNT",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4152454E415F4348414C4C454E47455F434F554E5400",
+      "comment": "Native arena enum ARENA_CHALLENGE_COUNT = 23. IDs1..22 index saved wins at56D8+4*id; ID0 invalid; COUNT23 is not a valid counter.",
+      "evidence": "Enum export 0x297ecc with independent float-value/name TOC loads."
+    },
+    {
+      "va": "0x000B6AE0",
+      "name": "TOD_ArenaConfig_get_IsBoss",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig get accessor at record+0x0. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa5c and guarded field-access instructions."
+    },
+    {
+      "va": "0x000B6A00",
+      "name": "TOD_ArenaConfig_set_IsBoss",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig set accessor at record+0x0. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa5c and guarded field-access instructions."
+    },
+    {
+      "va": "0x000A8BA0",
+      "name": "TOD_ArenaConfig_get_Time",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig get accessor at record+0x4. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa68 and guarded field-access instructions."
+    },
+    {
+      "va": "0x0009A148",
+      "name": "TOD_ArenaConfig_set_Time",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig set accessor at record+0x4. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa68 and guarded field-access instructions."
+    },
+    {
+      "va": "0x000A8AE8",
+      "name": "TOD_ArenaConfig_get_Weapon",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig get accessor at record+0x8. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa74 and guarded field-access instructions."
+    },
+    {
+      "va": "0x0009A078",
+      "name": "TOD_ArenaConfig_set_Weapon",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig set accessor at record+0x8. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa74 and guarded field-access instructions."
+    },
+    {
+      "va": "0x000A8A18",
+      "name": "TOD_ArenaConfig_get_BoltReward",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig get accessor at record+0xc. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa80 and guarded field-access instructions."
+    },
+    {
+      "va": "0x00099FA0",
+      "name": "TOD_ArenaConfig_set_BoltReward",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig set accessor at record+0xc. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa80 and guarded field-access instructions."
+    },
+    {
+      "va": "0x000A8960",
+      "name": "TOD_ArenaConfig_get_WpnReward",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig get accessor at record+0x10. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa8c and guarded field-access instructions."
+    },
+    {
+      "va": "0x00099ED0",
+      "name": "TOD_ArenaConfig_set_WpnReward",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig set accessor at record+0x10. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa8c and guarded field-access instructions."
+    },
+    {
+      "va": "0x000B6800",
+      "name": "TOD_ArenaConfig_get_ImageName",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig get accessor at record+0x14. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa98 and guarded field-access instructions."
+    },
+    {
+      "va": "0x000B64C8",
+      "name": "TOD_ArenaConfig_set_ImageName",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "38A000007C0802A6",
+      "comment": "Named ArenaConfig set accessor at record+0x14. Runtime config, not serialized save data.",
+      "evidence": "Native property triplet 0x88fa98 and guarded field-access instructions."
+    },
+    {
+      "va": "0x000B6FA8",
+      "name": "TOD_ArenaConfig_index",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF517C8802A6",
+      "comment": "Indexes23 ArenaConfig records at parent+1177C+34*id; IDs0..22. Not saved data.",
+      "evidence": "Range/index instructions B7050/B706C/B7070/B7078."
+    },
+    {
+      "va": "0x002CEAB0",
+      "name": "TOD_Arena_calculate_bolt_reward",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "546A103A8002F19C",
+      "comment": "Counter-dependent bolt reward; weapon adjustment, repeat scales,50-bolt quantization and replay predicate. PPC float/32-bit behavior; not a current payout quote.",
+      "evidence": "arena_challenges transactions and guarded constants89F0D8..89F0E4."
+    },
+    {
+      "va": "0x10019CA0",
+      "name": "TOD_str_ARENA_CHALLENGE_DATA",
+      "kind": "string",
+      "confidence": "confirmed",
+      "bytes": "4152454E415F4348414C4C454E47455F4441544100",
+      "comment": "Runtime Lua table used by menu resolver2756F8; table/order not recovered.",
+      "evidence": "TOC898EC0 and native lookup2756F8."
+    },
     {
       "va": "0x0020F3F0",
       "name": "TOD_unnamed_option_114C0_consumer_a",
@@ -12453,6 +14653,71 @@
   ],
   "structures": [
     {
+      "name": "TOD_SaveArenaSuccesses_verified",
+      "size": "0x5C",
+      "comment": "At save56D8;23 direct-ID BE32 counters. Getter sign-extends; ID0 INVALID. Following eight-word array is separate and unknown. No automatic application or edit safety.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "success_count_raw",
+          "type": "u32",
+          "count": 23,
+          "comment": "IDs0..22; native signed getter and wrapping increment. Not24 counters."
+        }
+      ]
+    },
+    {
+      "name": "TOD_ArenaConfig_verified",
+      "size": "0x34",
+      "comment": "Runtime ArenaConfig at parent1177C+34*id, not saved records. Native named getter/setter proof; opaque bytes retained.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "is_boss",
+          "type": "u8",
+          "comment": "Named IsBoss byte getter/setter; raw byte retained."
+        },
+        {
+          "offset": "0x1",
+          "name": "unknown_01_03",
+          "type": "u8",
+          "count": 3,
+          "comment": "Opaque bytes; not established padding."
+        },
+        {
+          "offset": "0x4",
+          "name": "time",
+          "type": "f32",
+          "comment": "Named Time float32 accessor; shipped CSV describes seconds."
+        },
+        {
+          "offset": "0x8",
+          "name": "weapon_raw_signed",
+          "type": "u32",
+          "comment": "Named Weapon signed32 getter; raw bits retained, not a save weapon record."
+        },
+        {
+          "offset": "0xC",
+          "name": "base_bolt_reward",
+          "type": "u32",
+          "comment": "Named BoltReward unsigned32 getter; shipped base, not current payout."
+        },
+        {
+          "offset": "0x10",
+          "name": "weapon_reward_raw_signed",
+          "type": "u32",
+          "comment": "Named WpnReward signed32 getter; blank CSV does not establish native default."
+        },
+        {
+          "offset": "0x14",
+          "name": "image_name_storage",
+          "type": "u8",
+          "count": 32,
+          "comment": "Bounded31-byte copy; NUL termination not established."
+        }
+      ]
+    },
+    {
       "name": "TOD_SaveSettings_verified",
       "size": "0x30",
       "comment": "Saved options at114A8..114D7, exact USA code-backed mapping; read-only, not applied to ELF globals.",
@@ -12919,7 +15184,7 @@
       "start": "0x42C",
       "end_exclusive": "0x8764",
       "confidence": "observed",
-      "comment": "Partially mapped armor, skins, per-level special-bolt masks and skill points; remaining game state is unknown, not padding."
+      "comment": "Partially mapped armor, skins, per-level special-bolt masks, skill points and23 direct-ID arena win words56D8..5734. Following eight words5734..5754 are separately initialized and unknown; remaining state is not padding."
     },
     {
       "start": "0x8764",

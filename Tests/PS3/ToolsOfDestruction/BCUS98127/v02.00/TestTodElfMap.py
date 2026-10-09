@@ -182,7 +182,7 @@ class MapChecks(unittest.TestCase):
         invalid["annotations"].append(invalid["annotations"][0])
         with self.assertRaises(ValueError): IMPORTER.validate_map(invalid)
         invalid = copy.deepcopy(MAPPING)
-        invalid["structures"][0]["fields"][1]["offset"] = "0x0"
+        next(s for s in invalid["structures"] if len(s["fields"]) > 1)["fields"][1]["offset"] = "0x0"
         with self.assertRaises(ValueError): IMPORTER.validate_map(invalid)
 
     def test_reference_elf_bytes(self):
@@ -202,7 +202,8 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["mission_lists"]["instruction_guards"]
                 + MAPPING["bonuses"]["instruction_guards"]
                 + MAPPING["state_storage"]["instruction_guards"]
-                + MAPPING["settings"]["instruction_guards"]):
+                + MAPPING["settings"]["instruction_guards"]
+                + MAPPING["arena_challenges"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

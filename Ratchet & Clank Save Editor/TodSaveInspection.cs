@@ -143,6 +143,29 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
                 return new(new[] { "Offset", "Field", "uint32 BE", "float32 BE", "Raw bits", "Confidence" }, rows.AsReadOnly());
             }
+            if (view == "Arena challenges")
+            {
+                var map = TodResearch.Map.GetProperty("arena_challenges");
+                for (int id = 0; id < 23; id++)
+                {
+                    int offset = 0x56D8 + id * 4;
+                    uint raw = U32(offset);
+                    var entry = map.GetProperty("catalog").EnumerateArray().FirstOrDefault(e => e.GetProperty("id").GetInt32() == id);
+                    bool mapped = entry.ValueKind != System.Text.Json.JsonValueKind.Undefined;
+                    string name = mapped ? entry.GetProperty("enum").GetString() : "ARENA_CHALLENGE_INVALID";
+                    string label = mapped ? entry.GetProperty("shipped").GetProperty("comment").GetString() : "Invalid / reserved ID";
+                    string bolts = mapped ? entry.GetProperty("shipped").GetProperty("base_bolts").ToString() : "—";
+                    string count = unchecked((int)raw).ToString(CultureInfo.InvariantCulture);
+                    string details = "Recorded successes for a direct native ID, not a runtime menu index or completion percentage. " +
+                        "The description is a shipped config comment, not a confirmed localized title. Base bolts are not the current payout: repeat wins and weapon rewards affect it.\r\n" +
+                        "Counter reads are signed32; raw bits are preserved. Incrementing a counter alone does not grant currency or weapon/quick-select state.\r\n" +
+                        "Separate unknown eight-word array at 0x5734–0x5754 (not challenge counters): " + Convert.ToHexString(data.AsSpan(0x5734, 32)) + "\r\n" +
+                        (mapped ? TodResearch.Pretty(entry) : "ID0 is the native INVALID sentinel, not a playable challenge.");
+                    rows.Add(new(new[] { id.ToString(CultureInfo.InvariantCulture), name, label, count, bolts,
+                        TodResearch.Hex(offset), $"{raw:X8}" }, details));
+                }
+                return new(new[] { "ID", "Native enum", "Config description", "Recorded wins (signed)", "Base bolts (shipped)", "Offset", "Raw bits" }, rows.AsReadOnly());
+            }
             if (view == "Game settings")
             {
                 var block = TodResearch.Map.GetProperty("settings").GetProperty("block");

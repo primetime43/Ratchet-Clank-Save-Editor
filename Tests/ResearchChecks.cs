@@ -36,6 +36,34 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Arena successes use23 direct-ID counters, not24 menu slots, and preserve signed raw values", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x56D8, 4), 0xDEADBEEF);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x56F4, 4), 0x80000000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x5730, 4), uint.MaxValue);
+            for (int i = 0; i < 32; i++) bytes[0x5734 + i] = (byte)i;
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var raw = inspection.Table("Arena challenges");
+            Equal(23, raw.Rows.Count);
+            Equal(7, raw.Columns.Length);
+            Equal("DEADBEEF", raw.Rows[0].Cells[6]);
+            Equal("IFF_A_7", raw.Rows[7].Cells[1]);
+            Equal("-2147483648", raw.Rows[7].Cells[3]);
+            Equal("0x56F4", raw.Rows[7].Cells[5]);
+            Equal("-1", raw.Rows[22].Cells[3]);
+            Equal("0x5730", raw.Rows[22].Cells[5]);
+            True(raw.Rows[7].Details.Contains(Convert.ToHexString(bytes.AsSpan(0x5734, 32))), "Adjacent unknown bytes must be retained separately.");
+            var friendly = InspectionPresentation.Simplify("Arena challenges", raw);
+            Equal(22, friendly.Rows.Count);
+            Equal(3, friendly.Columns.Length);
+            Equal("Whip It Good", friendly.Rows[6].Cells[0]);
+            True(friendly.Rows[6].Details.Contains("not a live payout"), "Base rewards must not be presented as current payout.");
+            True(bytes.SequenceEqual(before), "Viewing arena counters must not change the save.");
+            Array.Clear(bytes);
+            Equal("80000000", inspection.Table("Arena challenges").Rows[7].Cells[6]);
+        });
         Check("Saved settings preserve raw flags, nonfinite floats, unknown bytes and detached input", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -82,7 +110,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(778, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(829, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
             Equal(13, TodResearch.Map.GetProperty("bonuses").GetProperty("blueprints").GetProperty("all_grant_ids").GetArrayLength());
@@ -607,6 +635,10 @@ internal static partial class Program
                 Equal(BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(0x284 + slot * 4, 4)).ToString(), quick.Rows[slot].Cells[1]);
             var blocks = inspection.Table("Stored state blocks");
             Equal(21, blocks.Rows.Count);
+            var arena = inspection.Table("Arena challenges");
+            Equal(23, arena.Rows.Count);
+            for (int id = 0; id < 23; id++)
+                Equal(BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(0x56D8 + id * 4, 4)).ToString(), arena.Rows[id].Cells[3]);
             if (Convert.ToHexString(SHA256.HashData(bytes)) == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463")
             {
                 Equal(19, blocks.Rows.Count(row => row.Cells[1] == "Yes"));
@@ -654,7 +686,7 @@ internal static partial class Program
             form.ClientSize = new Size(900, 620);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-minimum-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "Arena challenges", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));
