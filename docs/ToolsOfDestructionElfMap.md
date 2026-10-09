@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 425 annotations, 118 imports, evidence, byte signatures and eight structure definitions.
+- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 442 annotations, 118 imports, evidence, byte signatures and ten structure definitions.
 - [Ghidra importer](../Tools/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../Tools/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](ToolsOfDestructionSaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -233,7 +233,7 @@ The shared `progression` section contains **478** additional original-ELF byte g
 
 Multiplier use is traced through cross-TOC thunk `0x251518 → 0x1E2568`; `0x2D073C` calls it, `0x2D0744` retains its float result in f31, and `0x2D02F8` multiplies it in the consumer. Do not treat this as a complete reconstruction of that consumer's reward/side-effect logic. Raw PPC instructions remain authoritative: the decompiler can omit TOC-restoration and float semantics.
 
-Additional leads remain deliberately unnamed: save `0x418` is passed to progression routine `0x23E090`, which calculates runtime level byte `+0x1B61`; exact health/XP semantics are not established. The tail word `0x906EC` is a restart/playthrough-count candidate despite its confirmed nonzero predicate and reset/increment paths. Neither field gained an editable control.
+Save `0x418` is now confirmed as serialized integer hero XP by the named setter chain below, not current health or a directly stored level. The tail word `0x906EC` remains a restart/playthrough-count candidate despite its confirmed nonzero predicate and reset/increment paths. Neither field gained an editable control.
 
 ### Packed weapon configuration and native field bindings
 
@@ -404,13 +404,36 @@ The user-supplied [rac-savegame-editor definitions](https://github.com/maikelwev
 
 The project's README points to [Slim's Editor](https://github.com/RatchetModding/slimseditor), now under RatchetModding. At commit `e4cd47d2bb65566dca66799669f2672fd7a5f395`, its [ToD JSON](https://github.com/RatchetModding/slimseditor/blob/e4cd47d2bb65566dca66799669f2672fd7a5f395/slimseditor/game/tod.json) also contains only the two currency definitions. Neither source supplies the missing ToD XP thresholds, upgrade-node catalog or in-game validation. These are corroborating references; no third-party implementation code was copied or executed.
 
+## Hero XP special bolts and skins
+
+The `collectibles` section records 267 original-byte guards, native script registrations, all19 level IDs and all9 skin IDs. [Inspect-TodCollectibles.py](../Tools/Inspect-TodCollectibles.py) independently reproduces it from the exact reference ELF and optionally observes a plaintext save without writing either input. Complete native function bytes and TOC-changing thunks are retained, including the collectible setter's automatic skill-point award.
+
+| Verified chain or routine | Result |
+| --- | --- |
+| Named `hero_set_xp`, `0x2BAED0 → 0x28A9B0 → 0x252C78 → 0x23E090` | Saved uint32 XP at `0x418`; store at `0x23E0F4`; hero saved-block member `+0x1A68` |
+| `get_special_bolts_collected`, `0x30AE8 → 0x25CF0 → 0x119B0 → 0x35DDD8` | Popcount saved BE32 mask `0x874 + level*0x408`; argument19 sums19 levels |
+| `get_special_bolts_total`, `0x309D8 → 0x25C60 → 0x10D70 → 0x2D0898` | Definition table `0x10062E4C`, 19 uint32 totals, sum32 |
+| `get_special_bolts_owned`, `0x308F8 → 0x25DB8` | Collected sum minus saved spent word `0x424`, signed32 |
+| Bit test `0x35DE08`, setter `0x35DEB0` | Local ID0..31 selects integer bitID in record member `+0x3EC`; completing all per-level totals awards skill46 `GOLDEN` |
+| `is_skin_owned`, `0x30180 → 0x24B08` | Nonzero saved uint32 `0x45C + ID*4`, nine IDs |
+| `select_skin`, `0x300A8 → 0x26FC0` | Ownership gate, then saved selected ID `0x480` |
+| `purchase_skin`, `0x30330 → 0x27AA0` | Checks balance/cost; updates ownership, selection and spent word, then sends runtime notification |
+| `is_skin_available`, `0x30258 → 0x24B38` | True except ID7 whose ownership determines availability |
+| Cost leaf `0x1F0D60` | uint32 at `0x840B00 + ID*0x10`; nine static prices `(0,6,3,6,6,4,4,0,3)` |
+
+State pointer `0x888624` is `0x101EFB20`; collectible getter arithmetic uses shifts10 and3, establishing stride `0x400+8`, then adds `0x488`. Popcount helper loads record member `+0x3EC`, giving saved mask base `0x874`. Twenty records initialized by `0x35E110` cover `0x488–0x5528`; native level exports stop at ID18, with `LEVEL_COUNT=19`. Do not conflate the sum selector with the initialized extra slot. Remaining record contents are not assigned guessed meanings. Added analysis types are `TOD_SaveLevelCollectibleState_verified` and `TOD_SaveSkinState_verified`; types preserve all opaque bytes.
+
+The USA plaintext working copy has XP2,315,144; collected32, spent32, balance0; selected skin0; ownership set for all skins except ID7. Static owned prices sum32 in this sample but are not enforced as a save invariant. Neither the observation nor the mapped transactions proves safe edits or console acceptance. Runtime `hero_get_health` does not identify a saved health word through this research.
+
+The original `TOD_hero_progression_restore_candidate` label is retained at `0x23E090` for existing analysis databases, but its confidence/comment now establish XP via the named binding. No executable or original save bytes were patched.
+
 ## Import and reproduce
 
 ### Ghidra
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 424 mapped annotations (the third TOC reference base is unmapped), eight structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression instruction guards and ownership/acquisition relationships. The progression decoder reproduces the bundled catalog independently from the original ELF and checks the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 441 mapped annotations (the third TOC reference base is unmapped), ten structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible instruction guards and ownership/acquisition relationships. Both progression and collectible decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

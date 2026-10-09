@@ -105,7 +105,7 @@ def inspect(elf_path, save_path=None):
             "observed_update_min": 1, "observed_update_max": 20, "step": 1,
             "warning": "Update path clamps to1..20 and getter can reset to1 based on runtime state. This is not a validated editable-save range.",
             "consumer_va": "0x002D0058", "consumer_call_va": "0x002D073C", "consumer_multiply_va": "0x002D02F8"},
-        "additional_leads": {"offset_418": "uint32 loaded into hero progression routine23E090, which restores/calculates a level byte. Exact health/XP semantics remain a candidate.",
+        "additional_leads": {"offset_418": "Named hero_set_xp binding confirms serialized integer hero XP; full chain and byte evidence are in collectibles.hero_xp. Runtime health and level are distinct.",
             "offset_906ec": "Nonzero predicate2D1860 gates multiplier updates and final-armor availability; restart3CED40 increments/clamps it. Named challenge/playthrough count remains a candidate."},
         "instruction_guards": [{"va": hex(a), "bytes": b.hex().upper()} for a, b in sorted(guards.items())]}
     if save_path is not None:

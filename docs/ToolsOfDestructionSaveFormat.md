@@ -36,12 +36,12 @@ These ranges cover the entire sample, including unknown areas. The whole-buffer 
 | --- | ---: | --- | --- |
 | `0x00000–0x00280` | `0x280` | 32 item/weapon records with IDs 0–31, stride `0x14` | Count, stride and several fields code-backed |
 | `0x00280–0x00284` | 4 | Acquisition/removal counter, sample 46 | Code-backed updates; not equated to flagged-record count |
-| `0x00284–0x0041C` | `0x198` | Integer lists, `FFFFFFFF` sentinels, repeated small values | Unknown; possible inventory ordering/unlock arrays |
+| `0x00284–0x0041C` | `0x198` | Integer lists and flags; hero XP word at `0x418` | XP code-backed; other meanings unknown |
 | `0x0041C–0x00420` | 4 | Bolts, uint32 BE | Documented |
 | `0x00420–0x00424` | 4 | Raritanium, uint32 BE | Documented |
-| `0x00424–0x00428` | 4 | `00000020` (32) | Unknown |
+| `0x00424–0x00428` | 4 | Special bolts spent; both samples 32 | Code-backed balance getter and skin purchase |
 | `0x00428–0x0042C` | 4 | Bolt multiplier; EU 8.0, USA 1.0 | Code-backed getter and update |
-| `0x0042C–0x08764` | `0x8338` | Flags, floats, arrays and sparse binary state | Unknown |
+| `0x0042C–0x08764` | `0x8338` | Armor, skins, per-level collectible records, skill points and other state | Partially mapped; preserve unknown portions |
 | `0x08764–0x097D8` | `0x1074` | 27 named gameplay records, stride `0x9C` | Observed |
 | `0x097D8–0x906F0` | `0x86F18` | Large sparse regions and further binary state | Unknown; not proven padding |
 
@@ -114,10 +114,10 @@ The `hero_give_weapon` binding reaches `0x28B4E8`, which validates the hero and 
 
 | Offset | Bytes | Interpretation | Evidence |
 | --- | --- | --- | --- |
-| `0x418` | `0022FC63` | uint32 2,292,835 | Hero progression input; exact health/XP naming remains candidate |
+| `0x418` | `0022FC63` | uint32 2,292,835 hero XP | Code-backed named `hero_set_xp` chain |
 | `0x41C` | `153814E4` | 355,996,900 bolts | Documented offset; observed value |
 | `0x420` | `0092B08E` | 9,613,454 raritanium | Documented offset; observed value |
-| `0x424` | `00000020` | uint32 32 | Unknown |
+| `0x424` | `00000020` | uint32 32 special bolts spent | Code-backed balance getter and skin purchase |
 | `0x428` | `41000000` | float32 8.0 | Code-backed multiplier; EU sample value |
 | `0x42C` | `00000018` | uint32 24 | Unknown |
 | `0x430` | `0000000F` | uint32 15 | Unknown |
@@ -141,13 +141,58 @@ Armor IDs are 0 `ARMOR_NONE`, 1 `ARMOR_DURAFIBER`, 2 `ARMOR_HYPERPLATE`, 3 `ARMO
 
 The multiplier getter can reset the saved float to 1 depending on runtime state; its update path adds 1 and clamps to 1..20. This is observed **code behavior**, not permission to expose arbitrary multiplier edits. No new editable fields were added: the program's **Skill points**, **Armor**, **Counters & nearby fields** and **Research** views are read-only.
 
-The USA value at `0x418` is 2,315,144: initialization sends it to a hero progression routine which calculates a runtime level byte. Exact XP/nanotech/health naming remains a candidate. Word `0x906EC` is 3; its nonzero predicate gates multiplier updates and final-armor availability, and the restart routine increments/clamps it. Its exact challenge-mode/playthrough interpretation remains a candidate. Health, current/max health, world flags and named gameplay-record tails are not confirmed by these findings.
+The USA value at `0x418` is 2,315,144 hero XP, now confirmed by the named setter chain below. The saved integer is not current health, maximum health, or a directly stored hero level. Word `0x906EC` is 3; its nonzero predicate gates multiplier updates and final-armor availability, and the restart routine increments/clamps it. Its exact challenge-mode/playthrough interpretation remains a candidate. Health fields, general world flags and named gameplay-record tails remain unresolved.
 
 Reproduce from a working-copy plaintext capture:
 
 ```powershell
 python Tools/Inspect-TodProgression.py --elf $ElfPath --save $PlaintextSavePath
 python Tests/TestTodProgression.py --elf $ElfPath --save $PlaintextSavePath
+```
+
+### Confirmed hero XP and collectibles
+
+The shared map's `collectibles` section is reproduced by [Inspect-TodCollectibles.py](../Tools/Inspect-TodCollectibles.py) from the hash-guarded USA ELF. It contains 19 native level IDs, nine skin IDs, static prices, per-level totals and 267 byte guards. These are static meanings checked against an actual plaintext working copy, not in-game edit/load tests. Original ELF and save files remain unchanged.
+
+| Save offset | Type | Meaning | USA save |
+| --- | --- | --- | --- |
+| `0x418` | uint32 BE | Serialized integer hero XP | 2,315,144 |
+| `0x424` | uint32 BE | Special bolts spent | 32 |
+| `0x45C + 4*i`, `i=0..8` | uint32 BE | Skin ownership, nonzero predicate | Eight owned, ID7 not owned |
+| `0x480` | uint32 BE | Selected skin ID | 0, `SKIN_NONE` |
+| `0x874 + 0x408*i`, `i=0..18` | uint32 BE | Per-native-level special-bolt mask | Counts match all shipped totals, sum 32 |
+
+Named `hero_set_xp` registration resolves to `0x2BAED0 → 0x28A9B0 → 0x252C78 → 0x23E090`. The thunk restores the appropriate TOC; the leaf writes the saved integer at `+0x418`. A separate runtime fractional accumulator and calculated level byte participate in XP updates. No safe editor bounds or serialized health fields follow from this chain. Legacy JSON observation keys containing `unknown_progression_418` are retained for compatibility; the field meaning is now established.
+
+Per-level records begin at `0x488 + 0x408*i`. Initializer `0x35E110` initializes **20 slots**, ending at `0x5528`; only IDs0..18 are native levels. The mask is record member `+0x3EC`, giving save offset `0x874 + 0x408*i`. Count helper `0x35DDD8` counts all 32 set bits; test `0x35DE08` and setter `0x35DEB0` use local collectible IDs0..31 as BE32 integer bit indices. File byte is `maskOffset + 3 - floor(id/8)`, byte mask `1 << (id % 8)`. Physical pickup locations and the other record contents are not mapped.
+
+Native `get_special_bolts_collected` reaches `0x25CF0`; argument19 (`LEVEL_COUNT`) requests a sum over levels0..18, **not a read of slot19**. That initialized slot's mask at `0x550C` remains uninterpreted. Native totals table `0x10062E4C` contains `(0,1,2,0,1,4,1,3,1,2,4,1,2,1,2,2,2,2,1)`, indexed by the decoded level catalog. The USA masks' popcounts match that vector exactly. The setter awards skill ID46 `SKILLPOINT_GOLDEN` when every count meets or exceeds its respective total. The menu has a conditional level3→18 remap; inspector rows show unremapped storage.
+
+`get_special_bolts_owned` reaches `0x25DB8` and returns **collected minus spent** using native signed-32 subtraction. The USA observation is `32 - 32 = 0`. Extra mask bits, excessive counts, negative balances, and unfamiliar IDs are preserved and displayed, never repaired.
+
+### Confirmed skins
+
+Skin ownership words and selected ID are independent. `is_skin_owned` reaches `0x24B08` and tests any nonzero word; `select_skin` reaches `0x26FC0`, requires ownership, and writes `0x480`. `purchase_skin` reaches `0x27AA0`, checks special-bolt balance against definition cost, marks ownership, selects the skin, increments spent word `0x424`, and notifies runtime systems. Repeated purchases and malformed IDs are not established as safe operations. Availability `0x24B38` returns true except ID7, which requires ownership; a zero price is not proof of unlock eligibility.
+
+| ID | Native identifier | Shipped special-bolt cost | USA owned |
+| ---: | --- | ---: | --- |
+| 0 | `SKIN_NONE` | 0 | Yes, selected |
+| 1 | `SKIN_DAN` | 6 | Yes |
+| 2 | `SKIN_SNOWMAN` | 3 | Yes |
+| 3 | `SKIN_CRAGMITE` | 6 | Yes |
+| 4 | `SKIN_PETE` | 6 | Yes |
+| 5 | `SKIN_CRONK` | 4 | Yes |
+| 6 | `SKIN_ZEPHYR` | 4 | Yes |
+| 7 | `SKIN_JAILBIRD` | 0 | No |
+| 8 | `SKIN_FURIOSO` | 3 | Yes |
+
+Cost getter `0x1F0D60` reads the first uint32 of nine 16-byte definitions at `0x840B00`. Remaining definition words are preserved without guessed tag meanings. Owned-skin costs sum to32 in this save and match its spent word; that observation is **not a universal invariant to enforce**, since the purchase routine is a transaction with its own behavior.
+
+The editor's **Hero XP** and **Special bolts spent** summary rows, **Special bolts**, **Skins**, and bundled **Research** topics are read-only. Reproduce the research and input-preservation checks with:
+
+```powershell
+python -B Tools/Inspect-TodCollectibles.py --elf $ElfPath --save $PlaintextSavePath
+python -B Tests/TestTodCollectibles.py --elf $ElfPath --save $PlaintextSavePath -v
 ```
 
 ### Named gameplay records
@@ -294,7 +339,7 @@ Collect paired saves with exactly one intentional change, using copies rather th
 | Acquire or unlock one mapped item | `i*0x14+0x10`, `0x280`, `0x5754+i` and other inventory state | Verify acquisition versus availability and counter/list updates |
 | Buy or equip armor | `0x444–0x45C`, `0x5774–0x5779` | Verify ownership, equipped ID, currency and unlock changes together |
 | Earn one skill point | `0x8708`, `0x8710–0x8718` | Verify weighted score, bit order and automatic HARDCORE award |
-| Change health | `0x418` candidate and unmapped state | Separate current health, max health and progression XP |
+| Change health | Unmapped state; `0x418` is confirmed XP | Locate current/max health without conflating them with progression XP |
 | Complete one scenario | `0x8764–0x97D8` and later state | Distinguish statistics from actual progression |
 | Move, save, reload | Unmapped state | Locate checkpoint, planet ID and position fields |
 

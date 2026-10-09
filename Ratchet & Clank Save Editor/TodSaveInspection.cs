@@ -102,12 +102,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (view == "Counters & nearby fields")
             {
                 foreach (var field in new[] { (0x280, "Acquisition/removal counter", "confirmed", "Not asserted equal to the owned-item count."),
-                    (0x418, "Hero progression input", "candidate", "Restored by 23E650 into 23E090; exact health/XP meaning remains unconfirmed."),
+                    (0x418, "Hero XP", "code-backed", "Named hero_set_xp chain 2BAED0 -> 28A9B0 -> 252C78 -> 23E090 writes integer XP. Runtime fractional XP and level are not this field; no safe editing range inferred."),
                     (0x41C, "Bolts", "confirmed", "uint32 big endian."), (0x420, "Raritanium", "confirmed", "uint32 big endian."),
-                    (0x424, "Unknown", "observed", "Sample value 32 does not establish a count invariant."),
+                    (0x424, "Special bolts spent", "code-backed", "Owned balance getter 25DB8 subtracts this word from collected bit counts. Skin purchase 27AA0 increments it by the definition cost. Do not normalize it to owned-skin count."),
                     (0x428, "Bolt multiplier", "code-backed", "Float32 BE. Native getter/update 1E2568 / 1E25F0; code clamps updates to 1..20, not a validated edit range."),
                     (0x42C, "Unknown", "unknown", "Unmapped state."), (0x430, "Unknown", "unknown", "Unmapped state."),
                     (0x458, "Equipped armor ID", "code-backed", "Native IDs 0..4; ownership and unlock availability are separate."),
+                    (0x480, "Selected skin ID", "code-backed", "Native IDs 0..8. Select 26FC0 requires ownership; purchase 27AA0 also writes this ID."),
                     (0x8708, "Weighted skill-point total", "code-backed", "Not completion count. Native setter adds the shipped definition value for a newly earned bit."),
                     (0x906EC, "Restart/playthrough counter", "candidate", "Nonzero predicate gates multiplier and final armor availability; exact gameplay naming remains candidate.") })
                 {
@@ -115,6 +116,44 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 }, field.Item4));
                 }
                 return new(new[] { "Offset", "Field", "uint32 BE", "float32 BE", "Raw bits", "Confidence" }, rows.AsReadOnly());
+            }
+            if (view == "Special bolts")
+            {
+                var definition = TodResearch.Map.GetProperty("collectibles").GetProperty("special_bolts");
+                int collected = definition.GetProperty("catalog").EnumerateArray().Sum(level => System.Numerics.BitOperations.PopCount(U32(TodResearch.Offset(level.GetProperty("mask_offset")))));
+                uint spent = U32(0x424);
+                int balance = unchecked((int)((uint)collected - spent));
+                foreach (var level in definition.GetProperty("catalog").EnumerateArray())
+                {
+                    int id = level.GetProperty("id").GetInt32(), offset = TodResearch.Offset(level.GetProperty("mask_offset"));
+                    uint mask = U32(offset);
+                    int count = System.Numerics.BitOperations.PopCount(mask), total = level.GetProperty("total").GetInt32();
+                    string warning = count > total ? "Count exceeds shipped total; preserved, not repaired." : "";
+                    string detail = $"Special bolts: {collected} collected; {spent} spent; remaining balance {balance}.\r\n" +
+                        $"Native level {id}; mask 0x{mask:X8} at {TodResearch.Hex(offset)}. Set local IDs: [" +
+                        string.Join(", ", Enumerable.Range(0, 32).Where(bit => (mask & (1u << bit)) != 0)) + "].\r\n" +
+                        $"BE32 integer bits; bit i is file byte {TodResearch.Hex(offset)} + 3 - i/8, mask 1<<(i%8). {warning}\r\n" +
+                        $"Initialized slot19 mask at 0x550C: 0x{U32(0x550C):X8}, uninterpreted and excluded from native totals.\r\n" +
+                        "No physical pickup positions or mission completion inferred. Menu can remap native level3 to18; these rows show unremapped storage.\r\n" + TodResearch.Pretty(level);
+                    rows.Add(new(new[] { id.ToString(), level.GetProperty("enum").GetString(), count.ToString(), total.ToString(), $"0x{mask:X8}", TodResearch.Hex(offset), warning }, detail));
+                }
+                return new(new[] { "ID", "Native level", "Collected", "Shipped total", "Mask", "Offset", "Notes" }, rows.AsReadOnly());
+            }
+            if (view == "Skins")
+            {
+                uint selected = U32(0x480);
+                foreach (var skin in TodResearch.Map.GetProperty("collectibles").GetProperty("skins").GetProperty("catalog").EnumerateArray())
+                {
+                    int id = skin.GetProperty("id").GetInt32(), offset = 0x45C + 4 * id;
+                    uint owned = U32(offset);
+                    string detail = $"Ownership word 0x{owned:X8} at {TodResearch.Hex(offset)}; nonzero predicate. Selected ID {selected} at 0x480" +
+                        (selected >= 9 ? " (outside the mapped catalog; preserved)" : "") + ".\r\n" +
+                        "Cost is a shipped special-bolt price, not a saved value. Availability is true except Jailbird ID7, which requires ownership. Cost0 does not prove unlock eligibility.\r\n" +
+                        "Purchase also increases spent word424 and notifies runtime; selecting requires ownership. This view never performs those operations.\r\n" + TodResearch.Pretty(skin);
+                    rows.Add(new(new[] { id.ToString(), skin.GetProperty("enum").GetString(), owned != 0 ? "Yes" : "No",
+                        selected == id ? "Yes" : "No", skin.GetProperty("cost").ToString(), $"0x{owned:X8}", TodResearch.Hex(offset) }, detail));
+                }
+                return new(new[] { "ID", "Native name", "Owned", "Selected", "Shipped cost", "Ownership word", "Offset" }, rows.AsReadOnly());
             }
             if (view == "Skill points")
             {
