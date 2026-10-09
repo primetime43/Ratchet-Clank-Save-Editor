@@ -47,7 +47,7 @@ These ranges cover the entire sample, including unknown areas. The whole-buffer 
 | `0x10148–0x10AF8` | `0x9B0` | Twenty active mission lists, stride `0x7C` | Code-backed structure |
 | `0x10AF8–0x114A8` | `0x9B0` | Twenty completed mission lists, stride `0x7C` | Code-backed structure |
 | `0x114A8–0x114D8` | `0x30` | Fifteen named options, one unknown word, two unknown bytes | Code-backed settings APIs |
-| `0x114D8–0x906E4` | `0x7F20C` | 21 native RLE blocks, stride `0x60DC` | Encoding/storage confirmed, logical payload meanings unknown |
+| `0x114D8–0x906E4` | `0x7F20C` | 21 native512×512 RLE grids, stride `0x60DC` | Copied volume headers, seven group flags and native map-label associations; pixel meanings partly unresolved |
 | `0x906E4–0x906E8` | 4 | Unresolved tail word | Unknown |
 | `0x906E8–0x906EC` | 4 | Saved load-level ID | Code-backed, not necessarily current runtime planet |
 | `0x906EC–0x906F0` | 4 | Restart/playthrough-related word | Exact gameplay terminology remains candidate |
@@ -420,13 +420,18 @@ The program exposes this as simple read-only Blueprints and Bonuses & cheats vie
 
 Saved BE32 words `0x42C`, `0x430`, `0x434` are last/previous/older recorded equipped item IDs. Native updater `1F5570` shifts the history and records the same getter used by named `hero_get_equipped`; they are not dual-wield slots. The USA save contains IDs15/25/0 (Ryno/SwingShot/Wrench). Current runtime state, callback timing, fallback/reset behavior and safe history edits remain unverified.
 
-The twenty-one blocks at `0x114D8`, stride `0x60DC`, contain native RLE storage. Per block: `+C8` encoder accumulator, `+CC` readiness byte, `+CD` compressed payload, `+60D0` declared encoded length, and opaque prefix/tail. Two equal bytes introduce a BE16 additional-repeat count; other bytes are literals. Output is capped at `0x40000` bytes; preserve original compressed tokens, including clipped final runs. The accumulator excludes the first two zero bytes of each zero run; it is neither exact zero count nor checksum.
+The twenty-one blocks at `0x114D8`, stride `0x60DC`, contain native512×512 RLE grid storage. Per block: `+00..C7` copied volume definition, `+C8` encoder accumulator, `+CC` readiness byte, `+CD` compressed payload, `+60D0` declared encoded length, `+60D4..60DA` seven group flags and unknown last byte `+60DB`. Two equal bytes introduce a BE16 additional-repeat count; other bytes are literals. Output is capped at `0x40000` bytes; preserve original compressed tokens, including clipped final runs. The accumulator excludes the first two zero bytes of each zero run; it is neither exact zero count nor checksum.
 
-Nineteen blocks in the USA save are ready and all decode to262144 bytes with matching accumulators; slots3/4 are not ready. Each populated final run is clipped by four bytes. Logical meanings of decoded indices/values and slot-to-planet mapping remain unknown. The [full ELF notes](BCUS98127/v02.00/ElfMap.md#saved-equipment-history-and-compressed-state-blocks) describe proof, layouts and cross-decoder hashes. Stored state blocks and player summary show these facts read-only; no bytes are rewritten or normalized.
+Nineteen blocks in the USA save are ready and all decode to262144 bytes with matching accumulators; slots3/4 are not ready. Each populated final run is clipped by four bytes. The [RLE evidence](BCUS98127/v02.00/ElfMap.md#saved-equipment-history-and-compressed-state-blocks) describes token proof and cross-decoder hashes. The [native grid/header evidence](BCUS98127/v02.00/ElfMap.md#persistent-grid-volume-headers-map-labels-and-group-flags) confirms all21 map-label associations,512×512 layout, state0/1/2 conversion and conditional group flags. These are not one-block-per-planet completion records. Stored state blocks and player summary show facts read-only; no bytes are rewritten or normalized.
+
+The copied header contains runtime geometry pointer bits (`+00`, never dereferenced), class535 (`+04`), enabled byte (`+0C`), physical slot (`+10`), baked layer index (`+14`), optional runtime-volume index (`+18`, `FFFFFFFF` sentinel), coordinate-sign byte (`+1C`) and seven24-byte groups (`+20`). Group fields are reference `+00`, activation word `+0C`, image index `+14`; other words remain unnamed. Native containment code sets each saved group flag; image visibility additionally considers activation and the Treasure Mapper count at `31C`. The eighth tail byte remains unknown. All19 initialized USA headers match native class and physical slot; unready slots are not repaired or inferred from zero bytes.
+
+Physical slots map to internal level IDs `[14,14,10,10,10,6,6,1,16,3,18,5,11,11,17,0,7,9,15,2,12]` via `24E6E8`, consumed by native map title/description lookup. This is a label association, not current planet. Baked nibble0 becomes persistent state0,1..7 state1,8..15 state2; native nearby-cell updates clear qualified cells to0. World-axis orientation/scale, pixel-specific terrain meaning and edited-save acceptance remain unverified.
 
 ```powershell
 python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
 python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodPersistentGrid.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
 ## Saved options and load selections

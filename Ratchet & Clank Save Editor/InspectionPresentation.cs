@@ -29,7 +29,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Counters & nearby fields" => 6, "Gameplay records" => 5, "Gameplay segments" => 8,
                 "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
                 "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9,
-                "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 8,
+                "Blueprints" => 7, "Bonuses & cheats" => 8, "Stored state blocks" => 9,
                 "Game settings" => 5, "Arena challenges" => 7, "Global event flags" => 8, "World object flags" => 7, "Reset-event counters" => 5, _ => 0
             };
             if (expected == 0 || source.Columns.Length != expected) return source;
@@ -42,7 +42,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Special bolts" => new[] { "Level", "Collected", "Total" },
                 "Blueprints" => new[] { "Blueprint", "Collected" },
                 "Bonuses & cheats" => new[] { "Bonus", "Stored state", "Shipped score" },
-                "Stored state blocks" => new[] { "Stored slot", "Stored", "Encoded bytes", "Decoded bytes" },
+                "Stored state blocks" => new[] { "Stored grid (map label)", "Stored", "Encoded bytes", "Decoded bytes" },
                 "Skins" => new[] { "Skin", "Owned", "Selected", "Bolt cost" },
                 "World progress" => new[] { "Level", "Unlocked", "Visited", "Saved missions" },
                 "Quick select" => new[] { "Stored slot", "Item" },
@@ -71,7 +71,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Skins" => "Labels are formatted native identifiers. Shipped prices use special bolts; ownership and selected ID are saved separately.",
                     "Blueprints" => "Shows native all-grant IDs plus any unexpected set bits. Pickup/planet names are not confirmed; Technical retains all32 bits.",
                     "Bonuses & cheats" => "Physical saved states and shipped score requirements; not current menu availability or confirmed on/off labels. Runtime mode can remap menu indices.",
-                    "Stored state blocks" => "Bounded native-format RLE inspection, not a planet/completion map. Select a row for decoded hash, byte histogram, clipping and header evidence.",
+                    "Stored state blocks" => "Native map-label associations for 21 persistent 512×512 grids; several slots can share a level. Not a completion percentage. Select a row for copied header, seven group flags, exact histogram/hash and clipping evidence.",
                     "Game settings" => "Saved options, read-only. Percentages are display conversions of volume floats, not measured audio loudness. Technical retains unknown fields and exact raw bytes.",
                     "Arena challenges" => "Read-only recorded wins, not current arena availability. Descriptions are shipped config comments; base bolts are not a live payout quote. Technical retains the reserved ID0 and exact bits.",
                     "Global event flags" => "Recorded bits, not a story-completion checklist: Clear does not necessarily mean unfinished. Labels are formatted native identifiers; Technical preserves the28 unnamed tail bits and exact BE64 words.",
@@ -121,7 +121,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Skins" => new[] { c[1] == "SKIN_NONE" ? "Default" : Label(c[1], "SKIN_"), c[2], c[3], c[4] },
             "Blueprints" => new[] { "Blueprint ID " + c[0] + (c[2] == "Yes" ? "" : " (unmapped)"), c[1] },
             "Bonuses & cheats" => new[] { Label(c[1], "CHEAT_"), c[2], c[3] },
-            "Stored state blocks" => new[] { c[0], c[1], c[2], c[3] },
+            "Stored state blocks" => new[] { Label(c[8]) + " · slot " + c[0], c[1], c[2], c[3] },
             "World progress" => new[] { Label(c[1], "LEVEL_"), c[2], c[3], c[4] },
             "Quick select" => new[] { c[0], c[2] },
             "Objects & equipment" => new[] { Label(c[1], "OBJ_"), c[2] },

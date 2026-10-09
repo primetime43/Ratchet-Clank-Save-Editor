@@ -79,7 +79,7 @@ def inspect(elf_path, save_path=None):
         raise ValueError("Named equipped-item binding changed")
     for address, size in ((slot, 8), (descriptor, 8), (name, len("hero_get_equipped") + 1), (0x84A4E0, 4)):
         guards[address] = elf.read(address, size)
-    report = {"confidence": "code-backed", "warning": "Exact USA build. RLE byte meanings and gameplay edit acceptance remain unknown; no original files are modified.",
+    report = {"confidence": "code-backed", "warning": "Exact USA build. See persistent_grid for verified grid/header refinements; pixel-specific meanings and gameplay edit acceptance remain unknown. No original files are modified.",
         "equipment_history": {"offsets": [hex(elf.u32(a) & 65535) for a in (0x1F55A8, 0x1F559C, 0x1F5598)],
             "type": "int32 BE item IDs; raw bits retained", "update_va": "0x1f5570", "owner_initializer_va": "0x1f5db8",
             "named_getter_chain": ["0x2b7f70", "0x288060", "0x466ec0"],
@@ -93,7 +93,7 @@ def inspect(elf_path, save_path=None):
             "presnapshot_chain": ["0x35e710", "0x250758", "0x24eac8", "0x24dab8", "0x12670", "0x35c5b8"],
             "encoding": "An unequal byte is literal. Two equal bytes start four-byte token value,value,BE16 additional-repeat count; run length=count+2. Native decoder caps output at40000 and stops pair checks after output offset3FFFB. Safe research decoder additionally bounds token reads by declared input; it never imitates native out-of-range reads.",
             "accumulator": "Encoder memberC8 adds1 for a zero literal or BE16 additional-repeat count for a zero run; initial two repeated bytes are excluded. It is NOT exact zero-byte count, completion count or checksum.",
-            "warning": "21 physical slots, not a confirmed planet index catalog. Ready byte nonzero marks encoder-produced storage, not visit/completion status. Header prefixes, per-byte logical meanings, tail60D4..60DB and synchronization/reset dependencies remain unresolved. Final runs can extend beyond decoded output and are clipped by native restore; preserve original encoded bytes."},
+            "warning": "21 physical slots, not a one-block-per-planet index catalog. See persistent_grid for native map-label associations, copied volume headers,512x512 states and seven group flags. Ready byte nonzero marks storage, not visit/completion status. Pixel-specific meanings, unnamed header/group words, tail60DB and synchronization/reset dependencies remain unresolved. Final runs can extend beyond decoded output and are clipped by native restore; preserve original encoded bytes."},
         "instruction_guards": [{"va": hex(a), "bytes": b.hex().upper()} for a, b in sorted(guards.items())]}
     if save_path is not None:
         if Path(save_path).stat().st_size != 0x906F0:

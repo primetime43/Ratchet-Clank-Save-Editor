@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1172 annotations, 118 imports, evidence, byte signatures and 28 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1181 annotations, 118 imports, evidence, byte signatures and 30 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -588,16 +588,17 @@ The supplied USA save contains IDs **15, 25, 0**, corresponding to the independe
 
 #### Native RLE storage
 
-Initializer `35E110` creates **21 physical blocks** starting at save `0x114D8`, stride `0x60DC`, ending at `0x906E4`. These slots are not a confirmed planet catalog. The following block members are proven by encoder `35C5B8`, decoder `35C460` and initializer `35E070`:
+Initializer `35E110` creates **21 physical blocks** starting at save `0x114D8`, stride `0x60DC`, ending at `0x906E4`. These slots are not a one-block-per-planet catalog; their native map-label associations are documented below. The following block members are proven by encoder `35C5B8`, decoder `35C460` and initializer `35E070`:
 
 | Block member | Meaning |
 | --- | --- |
-| `+0x00–0xC7` | Opaque prefix, not assumed padding |
+| `+0x00–0xC7` | Copied runtime volume definition; partially refined below, not padding |
 | `+0xC8`, BE32 | Native encoder accumulator; formula below, not checksum/completion |
 | `+0xCC`, byte | Encoder writes 1; initializer clears it; readiness, not visit/completion |
 | `+0xCD–0x60CF` | Physical RLE storage, `0x6003` bytes; writer asserts encoded length no greater than `0x5FFF` |
 | `+0x60D0`, BE32 | Declared encoded byte count |
-| `+0x60D4–0x60DB` | Eight opaque tail bytes; initializer explicitly clears only the first seven |
+| `+0x60D4–0x60DA` | Seven saved volume-group flags, detailed below; initializer clears them |
+| `+0x60DB` | Final byte remains unknown |
 
 RLE grammar is a literal byte when it differs from the next byte, or a four-byte token **value, value, BE16 extra-repeat count** when two bytes match. A run contains `extra + 2` copies. Native restore caps output at **`0x40000` / 262,144 bytes** and stops pair recognition after output offset `0x3FFFB`. Its final run may exceed this output cap and is clipped. The safe Python and C# research decoders additionally refuse truncated tokens and oversized declared input; they do not emulate native out-of-range reads or normalize malformed streams. Empty/not-ready slots are not interpreted as zero-filled logical state.
 
@@ -607,7 +608,76 @@ The supplied USA save has **19 ready blocks**, with slots **3 and 4 not marked r
 
 Independent Python and C# decoders agree on the actual output hashes, including slot 0 `2CE4BB0E543C205E2524A6AA309B008F6824695EEAC68040847393F598EF9CD8` and slot 11 `9CD7A4BF562AB098D75C0FF51BDFD7625D9F68DADECA96BB9CC6A5D85795004E`. Their agreement and accumulator checks confirm encoding/storage interpretation, not gameplay meanings.
 
-The native **pre-snapshot synchronization chain** is `35E710 → 250758 → 24EAC8 → 24DAB8 → 12670 → 35C5B8`. `24DAB8` only invokes encoding when runtime member `+20` is nonnull; it passes runtime `+24` as source and loaded-object member `+10` as block slot. This identifies a synchronization step before the bulk save copy, not every synchronization dependency. `TOD_SaveRleBlock_verified` and the read-only Stored state blocks view retain opaque prefix/tails, raw readiness, sizes, hashes, value histograms and clipping details. No new editing controls are introduced.
+The native **pre-snapshot synchronization chain** is `35E710 → 250758 → 24EAC8 → 24DAB8 → 12670 → 35C5B8`. `24DAB8` only invokes encoding when runtime member `+20` is nonnull; it passes runtime `+24` as source and loaded-object member `+10` as block slot. This identifies a synchronization step before the bulk save copy, not every synchronization dependency. `TOD_SaveRleBlock_verified` retains the earlier physical layout; the separate verified header/group types below refine it without replacing existing analysis types. The read-only Stored state blocks view retains unknown bytes, raw readiness, sizes, hashes, value histograms and clipping details. No new editing controls are introduced.
+
+### Persistent grid volume headers, map labels and group flags
+
+[Inspect-TodPersistentGrid.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodPersistentGrid.py) independently derives the bundled `persistent_grid` section from the fingerprinted USA v02.00 ELF. Its **86 byte guards** include complete native consumers, the relative switch table and case blocks, level-name table/strings, TOC identities, copy thunk and label/camera call chains. Seven tests cover map/type reproduction, all21 labels, unsigned pointer/index bits, nonboolean flags, last-group/tail bounds, malformed lengths and unchanged actual inputs.
+
+#### Copied200-byte volume definition
+
+Selector `24DEA8` iterates enabled definitions (`+C` nonzero), requires class `+4 == 0x535` and tests hero containment. Definition `+18` selects an optional runtime volume (`FFFFFFFF` means use direct geometry). Definition `+10` selects the saved physical block. On switching volumes it encodes the previous grid; ready slots restore via `10660 → 35C460`, while unready slots initialize a baked layer then copy exactly `0xC8` bytes at `24E09C → 12BB0 → 81A9A8` into that block's prefix. This is a copied runtime definition, not a freshly constructed pointer-free save header.
+
+| Prefix member | Confirmed interpretation |
+| --- | --- |
+| `+00`, BE32 | Runtime geometry pointer bits; never follow from the save, not a portable pointer/stable UID |
+| `+04`, BE32 | Volume class; selector requires `0x535` |
+| `+08`, BE32 | Unnamed common-object word |
+| `+0C`, byte | Definition enabled when nonzero; `+0D..0F` unresolved |
+| `+10`, BE32 | Physical saved block slot |
+| `+14`, BE32 | Baked resource layer index |
+| `+18`, BE32 | Optional runtime volume reference; preserve `FFFFFFFF` sentinel bits |
+| `+1C`, byte | Coordinate-sign control used by `24D570`; axis orientation unverified |
+| `+1D..1F` | Unresolved bytes |
+| `+20..C7` | Seven24-byte groups |
+
+Each group has reference index `+00`, unnamed words `+04/+08`, nonzero activation word `+0C`, unnamed word `+10`, and image/resource index `+14`. `TOD_SaveGridVolumeHeader_verified` and `TOD_SaveGridGroup_verified` model only these distinctions. No save pointer is dereferenced and no unknown field is normalized.
+
+#### Seven containment flags and image visibility
+
+`24E8A0` iterates exactly seven groups. A nonzero saved byte at block `+60D4+group` skips further checks. Otherwise it follows the group's runtime volume-list reference (skipping `FFFFFFFF`), checks hero containment, and writes1 when group activation `+0C` is nonzero. `25AE08` uses those saved bytes and activation words to display image index `+14+25`. A nonzero independently named `OBJ_TREASURE_MAPPER` count at save `31C` bypasses the saved-flag visibility requirement, not the activation requirement. These are qualified containment/visibility flags, **not a mission completion checklist**. Eighth tail byte `+60DB` remains unknown.
+
+#### Native512×512 grid
+
+`24DCA0` reads baked resource `250D0`, selecting layer from definition `+14`. Two512-iteration loops consume eight high-to-low nibbles per BE32 and write persistent state bytes at runtime manager `+24`, separate image bytes through pointer `+40028`. Index is `first_coordinate*512 + second_coordinate`; the persistent grid is exactly `0x40000` bytes.
+
+Conversion `24D6E8` yields image0/state0 for input0. Otherwise image is `min((input & 15)*17,254)` and state is `min(ceil(image/127),2)`, with native constants127 and1 guarded independently. Thus baked nibbles1..7 initialize state1 and8..15 initialize state2. `24D570` projects world coordinates using runtime geometry and the sign byte; `24D788` checks coordinates below512 and clears qualifying cells in a bounded neighboring region to0. State2 is not another spelling of boolean true. Coordinate orientation/scale, pixel-specific terrain meaning, palette and edited-save acceptance are still unverified; this does not authorize a fog-map editor.
+
+#### All21 physical slot-to-level label associations
+
+`24E6E8` bounds slot0..20 and returns the level literal from relative jump table `24E70C` (TOC slot `897F00`). Unresolved-switch decompilation omits case blocks, so the inspector decodes and guards them directly. Caller `25D1D0` uses thunk `251428` at `25D33C`, then passes that result into native title/description lookups `2D0988` / `2D0C18` at `25D3CC` / `25D3E0`. The independent19-name table at `10062F7C` supplies internal labels.
+
+| Physical slot(s) | Native level ID | Internal map-label level |
+| --- | --- | --- |
+| 0, 1 | 14 | kerchucity |
+| 2, 3, 4 | 10 | sargasso |
+| 5, 6 | 6 | apogeespacestation |
+| 7 | 1 | cobalia |
+| 8 | 16 | cragmitiruins |
+| 9 | 3 | fastoon |
+| 10 | 18 | fastoon_return |
+| 11 | 5 | imperialfightfest |
+| 12, 13 | 11 | iris |
+| 14 | 17 | meridiancity |
+| 15 | 0 | metropolis |
+| 16 | 7 | piratebase |
+| 17 | 9 | rykanv |
+| 18 | 15 | slags_fleet |
+| 19 | 2 | stratuscity |
+| 20 | 12 | zordoomprison |
+
+This proves a **map-label relationship**, not current planet or the identity of every gameplay subsystem. Multiple slots share a level; physical slot number is not level ID. Other neighboring switches implement browse order and image selection, not interchangeable level catalogs.
+
+All19 ready blocks in the supplied USA plaintext have class535 and stored slot matching physical slot. Slots3/4 are not ready and have zero headers; they are left uninterpreted. All ready streams still decode to512×512, with297 state2 bytes in slot11. The UI adds these map labels to the simple Stored state blocks view; Technical/details retain all21 slots, header bits, seven raw flags, unnamed words and the final unknown byte. Neither grid data nor flags are editable.
+
+#### Settings follow-up without a guessed option name
+
+The `114C0` consumer `20F3F0` sets independently cataloged global bit6 `HERO_FIRST_PERSON` (`ld5528`, `ori40`, `std5528`). Camera getter `10420 → 639400` and priority-qualified request `13D50 → 639548` establish runtime modes0F/10 used by this path and `2108D8`. This supports first-person camera context, **not** a localized menu label or toggle/hold polarity. Runtime camera members do not become new save offsets; `114C0`, `114D6/114D7` and `906E4` retain unknown semantic labels.
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodPersistentGrid.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodPersistentGrid.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
 
 ### Saved settings and load destinations
 
@@ -865,7 +935,7 @@ python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodResetCategories.p
 
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, player-facing reset-category names and category1 selection, any persisted checkpoint/health dependencies, additional snapshot synchronization and the logical meanings of RLE-decoded bytes and block prefixes/tails. The5734 bank now has confirmed initialization/increment mechanics, selectors2..7 and runtime expiration; this still does not make it named challenge failures or prove in-game counter semantics. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above; the twenty-one RLE slots are not yet a fully understood planet/mission map. Tail `0x906E4`, settings word `114C0`, settings bytes `114D6/114D7` remain unresolved; the final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, segment runtime name/slot mapping, reward channel A and cache channel labels, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, player-facing reset-category names and category1 selection, any persisted checkpoint/health dependencies, additional snapshot synchronization, grid world-coordinate scale/orientation and pixel-specific meanings, unnamed copied-header/group words and final tail byte60DB. The5734 bank has confirmed initialization/increment mechanics, selectors2..7 and runtime expiration; this still does not make it named challenge failures or prove in-game counter semantics. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above. All21 grid slots now have native map-label associations and partially verified volume headers/group flags, not a fully understood planet/mission completion map. Tail `0x906E4`, settings word `114C0` and settings bytes `114D6/114D7` remain semantically unresolved; first-person context is established without guessing an option label or polarity. The final restart word's exact gameplay terminology remains a candidate. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -875,7 +945,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1171 mapped annotations (the third TOC reference base is unmapped), 28 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1180 mapped annotations (the third TOC reference base is unmapped), 30 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

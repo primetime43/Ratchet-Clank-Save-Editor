@@ -36,6 +36,27 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Persistent grid labels, copied headers and seven group flags are bounded and preserved", () =>
+        {
+            byte[] bytes = ResearchFixture(); int offset = 0x114D8 + 20 * 0x60DC;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 4, 4), 0x535);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 0x10, 4), 20);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset, 4), 0xDEADBEEF);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 0x2C + 6 * 24, 4), 7);
+            bytes[offset + 0x60DA] = 0xAB; bytes[offset + 0x60DB] = 0xCD;
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var table = inspection.Table("Stored state blocks");
+            Equal(21, table.Rows.Count); Equal(9, table.Columns.Length);
+            Equal("metropolis", table.Rows[15].Cells[8]); Equal("sargasso", table.Rows[3].Cells[8]);
+            True(table.Rows[^1].Details.Contains("DEADBEEF") && table.Rows[^1].Details.Contains("saved flag 0xAB") && table.Rows[^1].Details.Contains("60DB: CD"), "Unknown bits and last-group boundaries must survive.");
+            True(table.Rows[^1].Details.Contains("not portable") && table.Rows[^1].Details.Contains("not mission"), "Runtime pointers and group flags must not imply portable progress edits.");
+            Equal(4, InspectionPresentation.Simplify("Stored state blocks", table).Columns.Length);
+            True(InspectionPresentation.Simplify("Stored state blocks", table).Rows[15].Cells[0].Contains("Metropolis"), "Native map-label associations should be readable.");
+            True(bytes.SequenceEqual(before), "Grid header inspection must not mutate source.");
+            Array.Clear(bytes);
+            True(inspection.Table("Stored state blocks").Rows[^1].Details.Contains("DEADBEEF"), "Snapshot must be detached.");
+        });
         Check("Reset-event category counters retain all eight unsigned words without inferred meanings", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -238,7 +259,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1172, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1181, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -666,7 +687,7 @@ internal static partial class Program
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
             tabs.SelectedIndex = 2;
             foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
-                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 8), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 8), ("Reset-event counters", 3, 5), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
+                ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 9), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 8), ("Reset-event counters", 3, 5), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
                 views.SelectedItem = expected.Item1;
                 Equal(expected.Item2, grid.Columns.Count);

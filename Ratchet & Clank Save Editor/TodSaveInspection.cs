@@ -267,13 +267,28 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                             catch (ArgumentException error) { status = error.Message; }
                         }
                     }
+                    var catalog = TodResearch.Map.GetProperty("persistent_grid").GetProperty("slot_catalog")[slot];
+                    string level = catalog.GetProperty("internal_level_name").GetString();
+                    var header = new StringBuilder($"Copied volume header: class 0x{U32(offset + 4):X}, stored slot {U32(offset + 0x10)}, baked layer {U32(offset + 0x14)}.\r\n");
+                    bool matches = U32(offset + 4) == 0x535 && U32(offset + 0x10) == slot;
+                    header.AppendLine(matches ? "Header matches native class/slot selection." : "Header does not match class535/physical slot; retained/empty/malformed bytes are not repaired.");
+                    header.AppendLine($"Copied runtime geometry pointer bits 0x{U32(offset):X8} (not followed); optional volume reference 0x{U32(offset + 0x18):X8}; coordinate sign byte 0x{data[offset + 0x1C]:X2}.");
+                    header.AppendLine($"Definition enabled byte 0x{data[offset + 0xC]:X2}; unknown word +08: {U32(offset + 8):X8}; unknown bytes +0D..0F: {Convert.ToHexString(data.AsSpan(offset + 0xD, 3))}; +1D..1F: {Convert.ToHexString(data.AsSpan(offset + 0x1D, 3))}.");
+                    for (int group = 0; group < 7; group++)
+                    {
+                        int g = offset + 0x20 + group * 0x18;
+                        header.AppendLine($"Group {group}: reference 0x{U32(g):X8}, activation word {U32(g + 0xC)}, image index {U32(g + 0x14)}, saved flag 0x{data[offset + 0x60D4 + group]:X2} at {TodResearch.Hex(offset + 0x60D4 + group)}; unknown words {U32(g + 4):X8}/{U32(g + 8):X8}/{U32(g + 0x10):X8}.");
+                    }
                     string details = $"Physical stored block {slot} at {TodResearch.Hex(offset)}; ready byte0x{ready:X2}; declared encoded size {length}; saved accumulator {savedAccumulator}.\r\n" +
-                        $"Opaque tail60D4..60DB: {Convert.ToHexString(data.AsSpan(offset + 0x60D4, 8))}.\r\n" + status + "\r\n" + result + "\r\n" +
-                        "Twenty-one physical slots are not a confirmed planet catalog. Readiness is not visit/completion status; decoded byte meanings remain unknown. Safe decoding bounds both input and output; native final runs may be clipped. Original compressed bytes are never rewritten.";
+                        $"Native map-label level: {level} (ID {catalog.GetProperty("label_level_id")}). Several grid slots may share a level; not the current runtime planet.\r\n" +
+                        header + $"Unknown last byte60DB: {data[offset + 0x60DB]:X2}.\r\n" + status + "\r\n" + result + "\r\n" +
+                        "Persistent 512×512 byte grid; native index=first coordinate*512+second coordinate. Cells0/1/2 are not interchangeable booleans: a native update clears qualifying cells to0. Unknown values are preserved. " +
+                        "Seven group flags record conditional volume containment and affect map image display; the treasure mapper can bypass flag display requirements. They are not mission/collectible completion flags. " +
+                        "Readiness is not visit/completion status. Runtime geometry pointer bits are not portable and never dereferenced. Safe decoding bounds both input and output; native final runs may be clipped. Original compressed bytes are never rewritten.";
                     rows.Add(new(new[] { slot.ToString(), ready != 0 ? "Yes" : "No", length.ToString(CultureInfo.InvariantCulture), decodedSize,
-                        savedAccumulator.ToString(CultureInfo.InvariantCulture), $"0x{ready:X2}", TodResearch.Hex(offset), status }, details));
+                        savedAccumulator.ToString(CultureInfo.InvariantCulture), $"0x{ready:X2}", TodResearch.Hex(offset), status, level }, details));
                 }
-                return new(new[] { "Slot", "Stored", "Encoded bytes", "Decoded bytes", "Saved accumulator", "Ready byte", "Offset", "Status" }, rows.AsReadOnly());
+                return new(new[] { "Slot", "Stored", "Encoded bytes", "Decoded bytes", "Saved accumulator", "Ready byte", "Offset", "Status", "Map-label level" }, rows.AsReadOnly());
             }
             if (view == "Blueprints")
             {

@@ -5622,7 +5622,7 @@
 },
   "state_storage": {
   "confidence": "code-backed",
-  "warning": "Exact USA build. RLE byte meanings and gameplay edit acceptance remain unknown; no original files are modified.",
+  "warning": "Exact USA build. See persistent_grid for verified grid/header refinements; pixel-specific meanings and gameplay edit acceptance remain unknown. No original files are modified.",
   "equipment_history": {
     "offsets": [
       "0x42c",
@@ -5664,7 +5664,7 @@
     ],
     "encoding": "An unequal byte is literal. Two equal bytes start four-byte token value,value,BE16 additional-repeat count; run length=count+2. Native decoder caps output at40000 and stops pair checks after output offset3FFFB. Safe research decoder additionally bounds token reads by declared input; it never imitates native out-of-range reads.",
     "accumulator": "Encoder memberC8 adds1 for a zero literal or BE16 additional-repeat count for a zero run; initial two repeated bytes are excluded. It is NOT exact zero-byte count, completion count or checksum.",
-    "warning": "21 physical slots, not a confirmed planet index catalog. Ready byte nonzero marks encoder-produced storage, not visit/completion status. Header prefixes, per-byte logical meanings, tail60D4..60DB and synchronization/reset dependencies remain unresolved. Final runs can extend beyond decoded output and are clipped by native restore; preserve original encoded bytes."
+    "warning": "21 physical slots, not a one-block-per-planet index catalog. See persistent_grid for native map-label associations, copied volume headers,512x512 states and seven group flags. Ready byte nonzero marks storage, not visit/completion status. Pixel-specific meanings, unnamed header/group words, tail60DB and synchronization/reset dependencies remain unresolved. Final runs can extend beyond decoded output and are clipped by native restore; preserve original encoded bytes."
   },
   "instruction_guards": [
     {
@@ -21759,6 +21759,547 @@
       }
     ]
   },
+  "persistent_grid": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00. Persistent 512x512 grid and map-label associations, not a per-planet completion checklist, editable fog map or runtime acceptance proof. Unknown scalar meanings remain preserved.",
+    "blocks": {
+      "base": "0x114d8",
+      "stride": "0x60dc",
+      "count": 21,
+      "header_size": "0xc8",
+      "copy_va": "0x24e09c",
+      "copy_thunk_va": "0x12bb0",
+      "copy_leaf_va": "0x81a9a8",
+      "selection_class": "0x535",
+      "selection_class_member": "0x4",
+      "selection_enabled_member": "0xc",
+      "saved_slot_member": "0x10",
+      "baked_layer_member": "0x14",
+      "optional_volume_reference_member": "0x18",
+      "coordinate_sign_member": "0x1c",
+      "header_provenance": "24DEA8 selects enabled class535 definitions containing the hero, uses definition+10 for block slot, saves prior grid, then copies exactly200 bytes into an unready block prefix. Header+0 is copied runtime geometry pointer, not a portable pointer or stable UID. Other common header bytes remain unresolved.",
+      "groups": {
+        "base": "0x20",
+        "count": 7,
+        "stride": "0x18",
+        "reference_member": "0x0",
+        "activation_member": "0xc",
+        "image_index_member": "0x14",
+        "flag_base": "0x60d4",
+        "unknown_last_byte": "0x60db",
+        "semantics": "24E8A0 tests referenced volume-list entries against hero position; if group+0C nonzero and containment succeeds, stores1 in its saved flag. Nonzero saved flags skip further checks.25AE08 reads those flags and group+0C to choose/show group image index+14+25; treasure-mapper object count at save31C can bypass flag display requirement. No localized group names or completion meanings inferred."
+      }
+    },
+    "grid": {
+      "width": 512,
+      "height": 512,
+      "bytes": "0x40000",
+      "runtime_buffer_member": "0x24",
+      "runtime_image_pointer_member": "0x40028",
+      "offset_formula": "first_coordinate*512 + second_coordinate",
+      "initialization": "24DCA0 reads resource250D0, layer definition+14; each BE32 contributes eight high-to-low nibbles. Nested512 loops store persistent bytes at runtime+24 and converted image bytes via+40028.",
+      "conversion": "24D6E8: zero input yields image0/state0; otherwise image=min((input&15)*17,254), state=min(ceil(image/127),2). Thus nibble1..7->state1,8..15->state2.",
+      "updates": "24D570 maps world coordinates using runtime geometry pointer and sign byte1C;24D788 checks coordinates<512, processes a bounded neighboring region and clears qualifying saved-grid cells to0. Zero is a cleared cell, not a mission-completion bit.1/2 encode native state classes, not boolean equivalents.",
+      "limits": "Coordinate orientation/scale, pixel-specific terrain labels, runtime image palette and visual/edited-save acceptance remain unverified. Native logical grid is distinct from encoded physical bytes."
+    },
+    "slot_catalog": [
+      {
+        "slot": 0,
+        "offset": "0x114d8",
+        "label_level_id": 14,
+        "internal_level_name": "kerchu city",
+        "case_va": "0x24e764"
+      },
+      {
+        "slot": 1,
+        "offset": "0x175b4",
+        "label_level_id": 14,
+        "internal_level_name": "kerchu city",
+        "case_va": "0x24e764"
+      },
+      {
+        "slot": 2,
+        "offset": "0x1d690",
+        "label_level_id": 10,
+        "internal_level_name": "sargasso",
+        "case_va": "0x24e770"
+      },
+      {
+        "slot": 3,
+        "offset": "0x2376c",
+        "label_level_id": 10,
+        "internal_level_name": "sargasso",
+        "case_va": "0x24e770"
+      },
+      {
+        "slot": 4,
+        "offset": "0x29848",
+        "label_level_id": 10,
+        "internal_level_name": "sargasso",
+        "case_va": "0x24e770"
+      },
+      {
+        "slot": 5,
+        "offset": "0x2f924",
+        "label_level_id": 6,
+        "internal_level_name": "apogee space station",
+        "case_va": "0x24e778"
+      },
+      {
+        "slot": 6,
+        "offset": "0x35a00",
+        "label_level_id": 6,
+        "internal_level_name": "apogee space station",
+        "case_va": "0x24e778"
+      },
+      {
+        "slot": 7,
+        "offset": "0x3badc",
+        "label_level_id": 1,
+        "internal_level_name": "cobalia",
+        "case_va": "0x24e780"
+      },
+      {
+        "slot": 8,
+        "offset": "0x41bb8",
+        "label_level_id": 16,
+        "internal_level_name": "cragmite ruins",
+        "case_va": "0x24e788"
+      },
+      {
+        "slot": 9,
+        "offset": "0x47c94",
+        "label_level_id": 3,
+        "internal_level_name": "fastoon",
+        "case_va": "0x24e790"
+      },
+      {
+        "slot": 10,
+        "offset": "0x4dd70",
+        "label_level_id": 18,
+        "internal_level_name": "fastoon_return",
+        "case_va": "0x24e798"
+      },
+      {
+        "slot": 11,
+        "offset": "0x53e4c",
+        "label_level_id": 5,
+        "internal_level_name": "imperial fight fest",
+        "case_va": "0x24e7a0"
+      },
+      {
+        "slot": 12,
+        "offset": "0x59f28",
+        "label_level_id": 11,
+        "internal_level_name": "iris",
+        "case_va": "0x24e7a8"
+      },
+      {
+        "slot": 13,
+        "offset": "0x60004",
+        "label_level_id": 11,
+        "internal_level_name": "iris",
+        "case_va": "0x24e7a8"
+      },
+      {
+        "slot": 14,
+        "offset": "0x660e0",
+        "label_level_id": 17,
+        "internal_level_name": "meridian city",
+        "case_va": "0x24e7b0"
+      },
+      {
+        "slot": 15,
+        "offset": "0x6c1bc",
+        "label_level_id": 0,
+        "internal_level_name": "metropolis",
+        "case_va": "0x24e7b8"
+      },
+      {
+        "slot": 16,
+        "offset": "0x72298",
+        "label_level_id": 7,
+        "internal_level_name": "pirate base",
+        "case_va": "0x24e7c0"
+      },
+      {
+        "slot": 17,
+        "offset": "0x78374",
+        "label_level_id": 9,
+        "internal_level_name": "rykan v",
+        "case_va": "0x24e7c8"
+      },
+      {
+        "slot": 18,
+        "offset": "0x7e450",
+        "label_level_id": 15,
+        "internal_level_name": "slags_fleet",
+        "case_va": "0x24e7d0"
+      },
+      {
+        "slot": 19,
+        "offset": "0x8452c",
+        "label_level_id": 2,
+        "internal_level_name": "stratus city",
+        "case_va": "0x24e7d8"
+      },
+      {
+        "slot": 20,
+        "offset": "0x8a608",
+        "label_level_id": 12,
+        "internal_level_name": "zordoom prison",
+        "case_va": "0x24e7e0"
+      }
+    ],
+    "label_provenance": "24E6E8 maps physical slot to native level ID;25D1D0 calls it via251428 and passes the result to named-table lookups2D0988/2D0C18. This is a map-label relationship, not current planet or identity of every gameplay subsystem.",
+    "settings_followup": "20F3F0's saved114C0 consumer sets independently named HERO_FIRST_PERSON bit6; native mode requests0F/10 via13D50->639548, getter10420->639400. This strengthens first-person camera context, but no menu-option name, toggle/hold polarity or trailing-byte meanings are confirmed.",
+    "instruction_guards": [
+      {
+        "va": "0x10420",
+        "bytes": "F84100283C4200023842FF2448628FD4"
+      },
+      {
+        "va": "0x12bb0",
+        "bytes": "F84100283C4200023842FF2448807DEC"
+      },
+      {
+        "va": "0x13d50",
+        "bytes": "F84100283C4200023842FF24486257EC"
+      },
+      {
+        "va": "0x20f3f0",
+        "bytes": "F821FF717C8802A6FBA1007883A2686438000000FBE100883D7D0001FBC10080F88100A0980300247C7F1B7881430014812B14C02F890000409E000C38600001987F0024393F0018810268683BCA1120C182686C79260020C16268707BCA0020C00268743980000038E0000138A000019186000098E60008C1A800B4D1A60004D00A005890AA0054D18A005CD16A0060807F00044BE0193DE84100282C030000408200C0807F00144BE04029E8410028809F0014380414C47C7E1B78780300204BE01E51E84100282C8305C94186005C7BDE00207FC3F3784BE00F59E84100282F03000F419A00447FC3F3784BE00F45E84100282F830010419E0030887F00242C030000418200847FC3F378C02268803880000F38A0000038E000004BE04845E841002860000000E91D552861060040F8DD552880BF00143BE000009BE51DF1EBA100A0EBC100807FA803A6EBE10088EBA10078382100904E80002060000000817F0004C02268847D635B78C0426878C062687C814B0054808A00404BE01CC5E84100284BFFFF207FC3F378C02268803880001038A0000038E000004BE047C5E84100284BFFFF84"
+      },
+      {
+        "va": "0x20f518",
+        "bytes": "E91D5528"
+      },
+      {
+        "va": "0x20f51c",
+        "bytes": "61060040"
+      },
+      {
+        "va": "0x20f520",
+        "bytes": "F8DD5528"
+      },
+      {
+        "va": "0x2108d8",
+        "bytes": "F821FF817CA802A68082692038000000FBE100787C7F1B783D240001FBC10070F8A1009038630018981F003F816914C0786A0020390000002F8B00007BE30020409E000C38C0000198DF003F818268E83BC00000911F002C911F002839000001C0226924D03F003493CA0000990A0008C00C00B4D00A000488FF003F2C07000041820098807F00144BE02B61E8410028787E00207FC3F3784BDFFAB1E84100282C83000F7FC3F3784186004C4BDFFA9DE84100282F030010419A003C895F003F7FC3F3783880000F2F8A000038A0000038E00000409E00147FC3F3783880001038A0000038E00000C02269284BE0338DE8410028817F001439200000992B1DF1EBE10090EBC100707FE803A6EBE10078382100804E8000204BFFF3A14BFFFF68"
+      },
+      {
+        "va": "0x24d570",
+        "bytes": "81230020C0E27F84816900008869001C7D4300D0C10B00047C6C5378ECC80232C0AB00007D80FE76C16B0038780807E0C08B0008C1AB0030EC4258287D000338EC2168287C05AE767804056039250001ED85317A386407FF2BA900027C6A0378794A0524EC64613AFC00182CEC00002A409C00087C0A0378F941FFF0C921FFF0FC804E9CC1A27F70ED600372C1827F74C0A27F7CC1227F78FD402018C0827F80EC6A5824EC0260FAED6160FAFCC03828FD8B3828ED050028FDA64A2EEC0D0132ED455828FC6C4AAEEC430132FCE0065EFC20165ED8E1FFF0E961FFF0D821FFF0E881FFF090860000916700004E800020"
+      },
+      {
+        "va": "0x24d6e8",
+        "bytes": "5483073E2F840000546920367C604B7878090020419E007C3809FF02C1627F88C0A27F8C7C09FE767D230038398300FE798A002099850000F941FFF0C901FFF0FCE0469CFCC03818EC465824FC60165EFC601E9CFC031028FC83282AFD82192EFC2060AEFC000050FC20606EFDA00E5ED9A1FFF0E8A1FFF0210500027D0BFE707D0758387C853A14988600004E8000209885000038800000988600004E800020"
+      },
+      {
+        "va": "0x24d788",
+        "bytes": "2B8401FF7C0802A6F821FEF1F9E10088FA010090FA210098FA4100A0FA6100A8FA8100B0FAA100B8FAC100C0FAE100C8FB0100D0FB2100D8FB4100E0FB6100E8FB8100F0FBA100F8FBC10100FBE10108F80101207C6F1B787CA82B78419D000C280501FF40810058E9E10120EA0100907DE803A6EA210098E9E10088EA4100A0EA6100A8EA8100B0EAA100B8EAC100C0EAE100C8EB0100D0EB2100D8EB4100E0EB6100E8EB8100F0EBA100F8EBC10100EBE10108382101104E800020787A00205497482C3F3A000438A4FFF9388400072265040022240400831900283B88FFF93BA800077ED7C214219C04007EB64214207D04007AAB00207E32FE707E74FE707E2A90387E66A0387C69FE707D90FE703A8100703AA100717C6848387E4532147FE45214888B00007D8780387F43D3787E85A3787EA6AB787F7C3A147E3D42144BFFFE217C92F8408B0100714084FF1C2B1201FF565E482C7E5793787EDEDA147E12F8503A6000004199FF00600000007F1B8840409800902B9B01FF419D008883A27F907CB67A147EDEB3787F93EA147F7FDB783BA500247F3B8850600000003CFA00047F43D3787E85A3787EA6AB783BFF0001818700287D3E62143BDE000179280020888800004BFFFD997B8B002088E100717C9BCA147BA80020289F01FF7F04F800894B00003B9C000E3BBD00017F0050387F803800419E0030419A00084085FFA03AF700017FF282147C1FB8004182FE58289701FF3A7300013AD602004085FF504BFFFE4438C0000098C800004BFFFFCC60000000"
+      },
+      {
+        "va": "0x24dca0",
+        "bytes": "81227F987C0802A6F821FF31FBE100C87C9F23783C800002FB210098FB010090FB4100A0FB6100A8FB8100B0FBA100B8FBC100C0F80100E07C791B78806900A8608450D038A1007038C000004BDC57B5E84100285463063E2F830000419E00B8810100783B00000080C100707B3B00207CFF41D654E5003A7F462A147B4700207F1DC3783BC000003BE00000838700004800000C600000004199006C3D3B000457E6103A7CBDCA142086001C39650024800900287F8324303BFF00017D9D02147864002079850020796600207F63DB783BDE00014BFFF975281F00073BBD02002B1E01FF289E01FF4081FFB03BE000003B5A000441C500147B4A0020838A00004BFFFF9C3B5A00043B1800012CB8020040E6FF6CEB0100E0EB2100987F0803A6EB4100A0EB010090EB6100A8EB8100B0EBA100B8EBC100C0EBE100C8382100D04E80002060000000"
+      },
+      {
+        "va": "0x24dea8",
+        "bytes": "F821FF417C8802A6FB21008878790020FB6100983D390004FB010080FB410090FB8100A0FBA100A8FBC100B0FBE100B8F88100D0880900247C7B1B782F800001419E02383BA100703B8000007BA500207CA32B787CBF2B784BDC2471E841002848000020600000004BF92FA1600000007C7C1B787FE3FB784BDC2B41E84100287FE3FB784BDC2645E84100285466063E7FE3FB782C0600004082FFD02C9C0000418601D84BDC5355E84100287BBF002083027FA87B9A002048000014600000007BA300204BDC4005E84100287FE3FB784BDC5ED9E8410028547E063E7FE3FB782F1E0000419A011C4BDC4EA1E8410028786A0020880A000C2F800000419EFFC480EA00047C7E1B782F070535409AFFB4810A00182F88FFFF550B3830550320367C835A14419E0184819800007C8462142C04000041820174813A00147884002039490030794300204BDC2B71E84100282C8300004186FF6C813B00207F89F000419E01C02C0900004182001C793800203B5B00247B430020809800104BDC464DE84100287BCA002080A27FAC93DB0020806A00101D6360DC3CEB000138C715907CC407B47FE42A148BBF00142C9D000040860144808A00147F23CB7838A0020038C0000038E000004BFFFC3183BB002080027FAC38A000C87FA4EB78835D00101F1A60DC3D3800017D490214386A14D8786300204BDC4B15E8410028480000083BC00000813B00202F090000419A006C2F9E0000419E0064793F0020801F00182C00FFFF4182008C80C27FA8540B3830540720367C875A1480A600007C042A142C8000004186006C7B9F00207804002083DF00143B9E00307B8300204BDC2A5DE84100282F030000409A0074807B00204800078960000000EB2100D0EB0100807F2803A6EB410090EB210088EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E800020808A00004BFFFE8C7B9F00207BC8002083DF0014800800003B9E0030780400207B8300204BDC29EDE84100282F030000419AFF94819F00147F23CB78E8AC0030E8CC00384BFFF82D4BFFFF7C399B002478630020798400204BDC24B9E84100283900FFFF7F23CB7838A00000790400204BFFF9414BFFFEE87D3E4B784BFFFEEC"
+      },
+      {
+        "va": "0x24dfb0",
+        "bytes": "2F070535"
+      },
+      {
+        "va": "0x24e07c",
+        "bytes": "38A000C8"
+      },
+      {
+        "va": "0x24e094",
+        "bytes": "386A14D8"
+      },
+      {
+        "va": "0x24e1d0",
+        "bytes": "81227FB07C8802A6F821FF71FBE10088FBA10078F88100A080E900007C7F1B78880700102F800000419E00D880A7000038000001806700048107000C7FA51A14980700107D88E8503CCCFFFC54C900367D6548507D4B18509147000C7BEC0020792300203FAC0004388000003CA00004913D0028485D9CF560000000807D00284BDC4E41E84100283CA002043CC002003CE0000160AB3C003940000038A000003D00000398BD002460C902003FA0800060E6A12A6144AAFF610C030338000200913F0018901F001C917F0014909F001093BF000C919F000890DF0004907F000090BF0020E8E100A0EBA10078EBE100887CE803A6382100904E800020600000008167000881470000386B000F546900363C8900047D295214908700084BFFFF40"
+      },
+      {
+        "va": "0x24e6e8",
+        "bytes": "2B830014419D007481627FC8786917887C89582E7C8307B47C035A147C0903A64E80042000000058000000580000006400000064000000640000006C0000006C000000740000007C000000840000008C000000940000009C0000009C000000A4000000AC000000B4000000BC000000C4000000CC000000D44E8000203860000E786300204E8000203860000A4BFFFFF4386000064BFFFFEC386000014BFFFFE4386000104BFFFFDC386000034BFFFFD4386000124BFFFFCC386000054BFFFFC43860000B4BFFFFBC386000114BFFFFB4386000004BFFFFAC386000074BFFFFA4386000094BFFFF9C3860000F4BFFFF94386000024BFFFF8C3860000C4BFFFF84"
+      },
+      {
+        "va": "0x24e6f0",
+        "bytes": "81627FC8"
+      },
+      {
+        "va": "0x24e70c",
+        "bytes": "00000058000000580000006400000064000000640000006C0000006C000000740000007C000000840000008C000000940000009C0000009C000000A4000000AC000000B4000000BC000000C4000000CC000000D4"
+      },
+      {
+        "va": "0x24e764",
+        "bytes": "3860000E786300204E800020"
+      },
+      {
+        "va": "0x24e770",
+        "bytes": "3860000A4BFFFFF438600006"
+      },
+      {
+        "va": "0x24e778",
+        "bytes": "386000064BFFFFEC38600001"
+      },
+      {
+        "va": "0x24e780",
+        "bytes": "386000014BFFFFE438600010"
+      },
+      {
+        "va": "0x24e788",
+        "bytes": "386000104BFFFFDC38600003"
+      },
+      {
+        "va": "0x24e790",
+        "bytes": "386000034BFFFFD438600012"
+      },
+      {
+        "va": "0x24e798",
+        "bytes": "386000124BFFFFCC38600005"
+      },
+      {
+        "va": "0x24e7a0",
+        "bytes": "386000054BFFFFC43860000B"
+      },
+      {
+        "va": "0x24e7a8",
+        "bytes": "3860000B4BFFFFBC38600011"
+      },
+      {
+        "va": "0x24e7b0",
+        "bytes": "386000114BFFFFB438600000"
+      },
+      {
+        "va": "0x24e7b8",
+        "bytes": "386000004BFFFFAC38600007"
+      },
+      {
+        "va": "0x24e7c0",
+        "bytes": "386000074BFFFFA438600009"
+      },
+      {
+        "va": "0x24e7c8",
+        "bytes": "386000094BFFFF9C3860000F"
+      },
+      {
+        "va": "0x24e7d0",
+        "bytes": "3860000F4BFFFF9438600002"
+      },
+      {
+        "va": "0x24e7d8",
+        "bytes": "386000024BFFFF8C3860000C"
+      },
+      {
+        "va": "0x24e7e0",
+        "bytes": "3860000C4BFFFF8481027FD0"
+      },
+      {
+        "va": "0x24e8a0",
+        "bytes": "F821FF117C8802A6FB4100C07C7A1B7838610070FBC100E078600020FBE100E87C0303783BC000007C1F0378FA610088FA810090FAA10098FAC100A0FAE100A8FB0100B0FB2100B8FB6100C8FB8100D0FBA100D8F88101004BDC1A79E841002848000020600000004BF925A9600000007C7E1B787FE3FB784BDC2149E84100287FE3FB784BDC1C4DE84100285465063E7FE3FB782F850000409EFFD02C1E0000418201447BD8002082627FE03B60000082C27FD882827FDC82BA00107F7EDB781D9560DC7D6CDA143D4B0001390A75A07D0707B47D27B21488C9000C2C860000408600F8577F1838577D28347F9FE8503B3C00207EFACA147AF90020813900002F09FFFF419A00D455232036801400007D2302142F890000419E00C0793C0020A3BC000A2C1D0000418200B03BE00000396000007E779B783AA00001600000005564083C815C00043BFF00017D0452143880000079090020A0E900002C87FFFF54E6383054E520367D2532144186000C817700007C895A14807800147884002039830030798300204BDC2139E84100287F1DF8002F8300007FEBFB78419E00348019000C2C00000041820028815A00101C8A60DC7D04F2143D28000138E975A07CE607B47CA6B2149AA5000C60000000409AFF70600000003B7B00012F3B0007409AFED8EA610100EA8100907E6803A6EAA10098EA610088EAC100A0EAE100A8EB0100B0EB2100B8EB4100C0EB6100C8EB8100D0EBA100D8EBC100E0EBE100E8382100F04E800020"
+      },
+      {
+        "va": "0x24e97c",
+        "bytes": "2C860000"
+      },
+      {
+        "va": "0x24ea40",
+        "bytes": "8019000C"
+      },
+      {
+        "va": "0x24ea68",
+        "bytes": "9AA5000C"
+      },
+      {
+        "va": "0x24ea7c",
+        "bytes": "2F3B0007"
+      },
+      {
+        "va": "0x251428",
+        "bytes": "F84100283C42FFFF384200184BFFD2B4"
+      },
+      {
+        "va": "0x25ae08",
+        "bytes": "F821FF417C0802A6FAE10078FB010080FB210088FB410090FB610098FB8100A0FBA100A8FBC100B0FBE100B8F80100D07C7D1B783B636398806300547C9923783D230006388000003BD900343B9D0AE43B4000008069B4FC4BFF6159E841002882E283CC8317031C48000038600000003B5A00013B7B00AC3BDE00183B9C00041C1F00AC7CC0EA143926632C792300204BFF7671E84100282CBA0007418600FC38DEFFF87F5FD37878C5002039600000808500002F840000419E000839600001809900101C0460DC7C60FA143D230001398975A07D8A07B47D0ABA1488E8000C2C070000418200105565063E2C850000408600E02F180000419AFF78556C063E2F8C0000419EFF6C7BCB002080DD0B045740482C813D0B00574578207C80321438E00000806B00007CC54A14788400203903002578C600207903002060E7800038A002004BFF694DE84100287B8400202C0300007C601B7890640000418200CC7B6C00203B5A00013B7B00AC3BDE00183B9C0004900C00001CBF00AC7D45EA143BEA632C7BE300204BFF4A09E84100282CBA00074086FF0CEAE100D0EB0100807EE803A6EB210088EAE10078EB410090EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E800020600000007BCA0020811D0B04817D0B0057E7482C57E678207C8742147CC65A14806A000038E00000788400203903002578C600207903002060E7800038A002004BFF6885E84100287B8400202C0300007C601B78906400004082FF3C800283D04BFFFF34"
+      },
+      {
+        "va": "0x25d1d0",
+        "bytes": "F821FEC17C0802A6FBE10138FB210108FB410110FB610118FB810120FBA10128FBC10130F801015081230B0C7C7F1B78834900202F9A0000419E023880630AD02C03FFFF4182022C786300204BFF4EADE84100282C83FFFF7C7E1B784186021438BF00B83880000078BC00207C7D1B787F83E3784BFF3FE5E84100285463063E2F030000409A02C47F83E378388000014BFF3FC9E8410028547B063E2F1B0000409A01FC7F1DF000419A01C87BBC00207F83E3787BF900204BFF4031E8410028814283CC7C7C1B787F23CB78939F0AD07B5B00201D9C60DC3D0C00017D68521438EB14D878E4002090FF0B084BFFDB4D809F0ACC38A0020080DF0AC83CE00008807F0AD04BFF45C5E8410028907F0ADC807F0AD04BFF2DF5E8410028809F0AD880DF0AD438A002003CE00002786300204BFF4599E8410028809F0AD0907F0AE0807F0B0C4BFF4C65E841002883DF0AD0835B00107F9ED000419E02E0807F0B0C4BFF54E9E8410028807F0AD04BFF40EDE841002883C2841C7C7B1B788BBE00002C1D00004182028C838284207B9C00203880060C7F83E3784BFF4F31E84100287C7D1B78887E00002C830000418602407F83E3787BA4002038A000004BFF3B1DE84100282F030000419A0298786400208064000838FF0A4880A284C87866002078E400207B7C0020386000013BDF09C84BFF3DF9E84100287F83E378480735BD600000003BE000027C7B1B787F83E378480738396000000080A28428786700207B6600207BC40020386000024BFF3DBDE84100287F23CB784BFFD96938C100803880001478DA00203B20067B7F43D3784BFF5A09E84100287F44D378386100709321008893E100E44BFF1CB1E8410028E9610150EB210108EB4101107D6803A6EB610118EB810120EBA10128EBC10130EBE10138382101404E80002038BDFFEC38C0FFEB7CA7FE703800FFEB7CC438387D2428507D23FE707C1C18387FBC48507BBC00207F83E3784BFF3E21E84100287F9DF000419EFF9C836283CC1D2360DC4800000C600000001D2360DC3F290001399915907D8A07B47D0ADA14896800142C0B00004082FDAC387DFFEC3880FFEB7C66FE703BA0FFEB7C8530387D2518507D20FE707FBC00387FBC48507BBC00207F83E3784BFF3DB5E84100287C9DF0004086FFA84BFFFF2C391EFFEA3980FFEB7D19FE7038E0FFEB7D8AC8387CCA40507CCBFE707CE458387FA430507BA300204BFF3D79E84100287F9DF000419EFD0C836283CC1D2360DC4800004460000000391DFFEA3980FFEB7D19FE703BA0FFEB7D8AC8387CEA40507CEBFE707FA658387FA638507BA300204BFF3D31E84100287C9DF0004186FCC41D2360DC3C89000138A415907CA307B47D23DA14880900142C0000004182FFAC4BFFFCA07F83E3784BFF39D9E841002838A000018062842498BE00004BFF20B5E84100284BFFFDA4838284207B8300204BFF39B1E84100283800000180628424981E00004BFF208DE84100284BFFFD583920FFFF807F0B0C38A00000792400204BFF4331E8410028807F0B0C4BFF3C55E84100284BFFFD0C806284C44BFFFD70"
+      },
+      {
+        "va": "0x25d33c",
+        "bytes": "4BFF40ED"
+      },
+      {
+        "va": "0x25d3cc",
+        "bytes": "480735BD"
+      },
+      {
+        "va": "0x25d3e0",
+        "bytes": "48073839"
+      },
+      {
+        "va": "0x2d0988",
+        "bytes": "5465103A8002F238F821FF717CC802A67CA407B4FBA100787C640214FBC10080FBE10088F8C100A083A3004C2F9D0000419E00F083C2F23C88FE00002C0700004182007083E2F2407BA400207BFF00207FE3FB784BF818BDE8410028893E00002C8900007C7D1B78418600907FE3FB787BA4002038A000004BF804A9E84100282F030000419A009C786B0020E98100A0EBA10078EBC100807D8803A6EBE1008838210090806B0008786300204E80002083E2F2407BE300207BFF00204BF80555E8410028390000018062F244991E00004BF7EC31E84100287BA400207FE3FB784BF81831E8410028893E00002C8900007C7D1B784086FF787FE3FB784BF80515E8410028394000018062F244995E00004BF7EBF1E84100284BFFFF5460000000E98100A08062F248EBA100787D8803A678630020EBC10080EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x2d0c18",
+        "bytes": "5465103A8002F238F821FF717CC802A67CA407B4FBA100787C640214FBC10080FBE10088F8C100A083A300E42F9D0000419E00F083C2F23C88FE00002C0700004182007083E2F2407BA400207BFF00207FE3FB784BF8162DE8410028893E00002C8900007C7D1B78418600907FE3FB787BA4002038A000004BF80219E84100282F030000419A009C786B0020E98100A0EBA10078EBC100807D8803A6EBE1008838210090806B0008786300204E80002083E2F2407BE300207BFF00204BF802C5E8410028390000018062F244991E00004BF7E9A1E84100287BA400207FE3FB784BF815A1E8410028893E00002C8900007C7D1B784086FF787FE3FB784BF80285E8410028394000018062F244995E00004BF7E961E84100284BFFFF5460000000E98100A08062F248EBA100787D8803A678630020EBC10080EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x35e170",
+        "bytes": "1D7F60DC"
+      },
+      {
+        "va": "0x35e180",
+        "bytes": "390914D8"
+      },
+      {
+        "va": "0x35e190",
+        "bytes": "2C3F0015"
+      },
+      {
+        "va": "0x639400",
+        "bytes": "F821FF917C8802A63960FFFFF8810080800321142F800000780900207D234B78419E002C812900008169003080AB0000F8410028804B00047CA903A64E800421E84100287863002081630064E8C100807D6307B4382100707CC803A64E800020"
+      },
+      {
+        "va": "0x639548",
+        "bytes": "800320C02F80FFFF419E0010C00320C8FC0008004C80002090E320CC908320C090A320C4D02320C84E80002060000000"
+      },
+      {
+        "va": "0x89679c",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x896858",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x897ec0",
+        "bytes": "42FE0000"
+      },
+      {
+        "va": "0x897ec4",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x897ecc",
+        "bytes": "101E7570"
+      },
+      {
+        "va": "0x897ed0",
+        "bytes": "1035E680"
+      },
+      {
+        "va": "0x897edc",
+        "bytes": "00000001"
+      },
+      {
+        "va": "0x897ee4",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x897ef4",
+        "bytes": "0024E3C0"
+      },
+      {
+        "va": "0x897f00",
+        "bytes": "0024E70C"
+      },
+      {
+        "va": "0x897f10",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f158",
+        "bytes": "10062E4C"
+      },
+      {
+        "va": "0x100061e0",
+        "bytes": "73747261747573206369747900"
+      },
+      {
+        "va": "0x10006238",
+        "bytes": "666173746F6F6E00"
+      },
+      {
+        "va": "0x10019a78",
+        "bytes": "6D6574726F706F6C697300"
+      },
+      {
+        "va": "0x10019a88",
+        "bytes": "636F62616C696100"
+      },
+      {
+        "va": "0x10019a90",
+        "bytes": "737061636520636F6D626174206900"
+      },
+      {
+        "va": "0x10019aa0",
+        "bytes": "696D70657269616C206669676874206665737400"
+      },
+      {
+        "va": "0x10019ab8",
+        "bytes": "61706F6765652073706163652073746174696F6E00"
+      },
+      {
+        "va": "0x10019ad0",
+        "bytes": "706972617465206261736500"
+      },
+      {
+        "va": "0x10019ae0",
+        "bytes": "737061636520636F6D62617420696900"
+      },
+      {
+        "va": "0x10019af0",
+        "bytes": "72796B616E207600"
+      },
+      {
+        "va": "0x10019af8",
+        "bytes": "736172676173736F00"
+      },
+      {
+        "va": "0x10019b08",
+        "bytes": "6972697300"
+      },
+      {
+        "va": "0x10019b10",
+        "bytes": "7A6F72646F6F6D20707269736F6E00"
+      },
+      {
+        "va": "0x10019b20",
+        "bytes": "737061636520636F6D6261742069696900"
+      },
+      {
+        "va": "0x10019b38",
+        "bytes": "6B6572636875206369747900"
+      },
+      {
+        "va": "0x10019b48",
+        "bytes": "736C6167735F666C65657400"
+      },
+      {
+        "va": "0x10019b58",
+        "bytes": "637261676D697465207275696E7300"
+      },
+      {
+        "va": "0x10019b68",
+        "bytes": "6D6572696469616E206369747900"
+      },
+      {
+        "va": "0x10019b78",
+        "bytes": "666173746F6F6E5F72657475726E00"
+      },
+      {
+        "va": "0x10062f7c",
+        "bytes": "10019A7810019A88100061E01000623810019A9010019AA010019AB810019AD010019AE010019AF010019AF810019B0810019B1010019B2010019B3810019B4810019B5810019B6810019B78"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -22252,6 +22793,87 @@
     ]
   },
   "annotations": [
+    {
+      "va": "0x0024D570",
+      "name": "TOD_grid_world_to_coordinates",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "81230020C0E27F84",
+      "comment": "Maps world coordinates through runtime geometry pointer and sign byte1C; coordinate orientation/time units not inferred.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
+    {
+      "va": "0x0024D6E8",
+      "name": "TOD_grid_nibble_to_image_and_state",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "5483073E2F840000",
+      "comment": "Converts baked nibble into capped image byte and persistent state0/1/2; cells are not simple booleans.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
+    {
+      "va": "0x0024D788",
+      "name": "TOD_grid_clear_near_coordinates",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2B8401FF7C0802A6",
+      "comment": "Bounds coordinates below512 and clears qualifying neighboring persistent grid cells to0.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
+    {
+      "va": "0x0024DCA0",
+      "name": "TOD_grid_initialize_baked_layer",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "81227F987C0802A6",
+      "comment": "Reads resource250D0 as packed high-to-low nibbles; writes512x512 persistent grid and runtime image.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
+    {
+      "va": "0x0024DEA8",
+      "name": "TOD_grid_select_volume_save_restore",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF417C8802A6",
+      "comment": "Enabled class535 volume selection; saves previous slot, restores ready grid or initializes/copies200-byte definition header.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
+    {
+      "va": "0x0024E1D0",
+      "name": "TOD_grid_runtime_image_initialize",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "81227FB07C8802A6",
+      "comment": "Allocates/zeros256KiB runtime image, creates512x512 descriptor; distinct from serialized RLE payload.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
+    {
+      "va": "0x0024E6E8",
+      "name": "TOD_grid_slot_to_map_label_level",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2B830014419D0074",
+      "comment": "Explicit21-slot relative switch maps to native level IDs used in map-label lookups, not current planet.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
+    {
+      "va": "0x0024E8A0",
+      "name": "TOD_grid_record_group_containment",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF117C8802A6",
+      "comment": "Seven group references; if group+0C nonzero and hero contained, saves flag1 at block60D4+group. No completion checklist claim.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
+    {
+      "va": "0x0025AE08",
+      "name": "TOD_grid_group_image_visibility",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF417C0802A6",
+      "comment": "Uses saved group flags, activation word and image index+14; treasure mapper31C bypasses flag requirement, so stored flag alone is not current visibility.",
+      "evidence": "persistent_grid guarded native header copy, nibble/grid conversion,21-slot label switch and seven saved group flags; exact USA v02.00."
+    },
     {
       "va": "0x000132D0",
       "name": "TOD_reset_category_selection_thunk",
@@ -30701,6 +31323,120 @@
   ],
   "structures": [
     {
+      "name": "TOD_SaveGridVolumeHeader_verified",
+      "size": "0xc8",
+      "comment": "200 copied bytes from enabled class535 runtime volume definition. Physical21 slot to map-label levels established separately; runtime pointer bits are not portable.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "runtime_geometry_pointer_bits",
+          "type": "u32",
+          "comment": "Copied runtime pointer used for coordinate projection; never followed from save."
+        },
+        {
+          "offset": "0x4",
+          "name": "definition_class",
+          "type": "u32",
+          "comment": "Selector requires535."
+        },
+        {
+          "offset": "0x8",
+          "name": "unknown_object_word",
+          "type": "u32",
+          "comment": "Copied common definition word; handle/UID interpretation unconfirmed."
+        },
+        {
+          "offset": "0xc",
+          "name": "enabled_byte",
+          "type": "u8",
+          "comment": "Native selector tests nonzero."
+        },
+        {
+          "offset": "0xd",
+          "name": "unknown_0d_0f",
+          "type": "u8",
+          "comment": "Preserved; not proven padding.",
+          "count": 3
+        },
+        {
+          "offset": "0x10",
+          "name": "stored_block_slot",
+          "type": "u32",
+          "comment": "Definition+10 selects physical RLE block; no writer bounds claim."
+        },
+        {
+          "offset": "0x14",
+          "name": "baked_layer_index",
+          "type": "u32",
+          "comment": "Definition+14 indexes baked resource250D0."
+        },
+        {
+          "offset": "0x18",
+          "name": "optional_volume_reference",
+          "type": "u32",
+          "comment": "FFFFFFFF uses direct geometry; otherwise index*90 into runtime volume table."
+        },
+        {
+          "offset": "0x1c",
+          "name": "coordinate_sign_byte",
+          "type": "u8",
+          "comment": "24D570 controls coordinate sign; exact world-axis orientation unverified."
+        },
+        {
+          "offset": "0x1d",
+          "name": "unknown_1d_1f",
+          "type": "u8",
+          "comment": "Preserved opaque bytes.",
+          "count": 3
+        },
+        {
+          "offset": "0x20",
+          "name": "group_definition_bytes",
+          "type": "u8",
+          "comment": "Seven24-byte groups; see TOD_SaveGridGroup_verified.",
+          "count": 168
+        }
+      ]
+    },
+    {
+      "name": "TOD_SaveGridGroup_verified",
+      "size": "0x18",
+      "comment": "Copied per-grid definition group, seven at header20. Reference/image/activation roles established; other words deliberately opaque.",
+      "fields": [
+        {
+          "offset": "0x0",
+          "name": "volume_list_reference",
+          "type": "u32",
+          "comment": "Native reference index,FFFFFFFF skips; not a save offset or stable UID."
+        },
+        {
+          "offset": "0x4",
+          "name": "unknown_04_08",
+          "type": "u32",
+          "comment": "Copied words; not inferred coordinates.",
+          "count": 2
+        },
+        {
+          "offset": "0xc",
+          "name": "activation_word",
+          "type": "u32",
+          "comment": "Nonzero gates containment recording and group image display."
+        },
+        {
+          "offset": "0x10",
+          "name": "unknown_10",
+          "type": "u32",
+          "comment": "Copied opaque word."
+        },
+        {
+          "offset": "0x14",
+          "name": "image_index",
+          "type": "u32",
+          "comment": "25AE08 passes image_index+25 to resource lookup; localized group label unknown."
+        }
+      ]
+    },
+    {
       "name": "TOD_SaveResetCategoryCounters_verified",
       "size": "0x20",
       "comment": "Eight initializer-cleared BE32 reset-event category counters at save5734..5754. No recovered player-facing category names or writer bounds validation; ID0 increment skipped. Read-only evidence, not edit safety.",
@@ -31147,7 +31883,7 @@
       ]
     },
     {"name":"TOD_SaveEquipmentHistory_verified","size":"0xC","comment":"Save42C..437: three historical signed item IDs, not primary/secondary weapon slots.","fields":[{"offset":"0x0","name":"last_recorded_equipped_id","type":"u32","comment":"Raw signed item ID from native getter; current runtime state may differ."},{"offset":"0x4","name":"previous_recorded_equipped_id","type":"u32","comment":"Previous word0, not a guaranteed distinct usable item."},{"offset":"0x8","name":"older_recorded_equipped_id","type":"u32","comment":"Previous word4; allthree initializedFFFFFFFF."}]},
-    {"name":"TOD_SaveRleBlock_verified","size":"0x60DC","comment":"21 physical saved slots at114D8; RLE storage decoded, logical byte meanings not established.","fields":[{"offset":"0x0","name":"opaque_prefix","type":"u8","comment":"Prefix semantics remain unknown.","count":200},{"offset":"0xC8","name":"encoder_accumulator","type":"u32","comment":"Zero literals+additional zero-run count, excludes firsttwo run bytes; not a checksum or exact zero count."},{"offset":"0xCC","name":"encoded_ready","type":"u8","comment":"Encoder writes1, initializer0; not visit or completion flag."},{"offset":"0xCD","name":"rle_storage","type":"u8","comment":"Physical6003 bytes until encoded length; native writer cap5FFF. Preserve unused storage.","count":24579},{"offset":"0x60D0","name":"encoded_size","type":"u32","comment":"Declared encoded bytes; bounded safe decoder refuses beyond native cap."},{"offset":"0x60D4","name":"opaque_tail","type":"u8","comment":"Eight opaque bytes; initializer explicitly clears firstseven only.","count":8}]},
+    {"name":"TOD_SaveRleBlock_verified","size":"0x60DC","comment":"21 physical saved slots at114D8; original physical layout retained. See persistent_grid for512x512 state classes, map-label associations and copied header/group refinements; pixel-specific semantics unverified.","fields":[{"offset":"0x0","name":"opaque_prefix","type":"u8","comment":"Original raw-byte field retained; refine with TOD_SaveGridVolumeHeader_verified and TOD_SaveGridGroup_verified, preserving unnamed members.","count":200},{"offset":"0xC8","name":"encoder_accumulator","type":"u32","comment":"Zero literals+additional zero-run count, excludes firsttwo run bytes; not a checksum or exact zero count."},{"offset":"0xCC","name":"encoded_ready","type":"u8","comment":"Encoder writes1, initializer0; not visit or completion flag."},{"offset":"0xCD","name":"rle_storage","type":"u8","comment":"Physical6003 bytes until encoded length; native writer cap5FFF. Preserve unused storage.","count":24579},{"offset":"0x60D0","name":"encoded_size","type":"u32","comment":"Declared encoded bytes; bounded safe decoder refuses beyond native cap."},{"offset":"0x60D4","name":"opaque_tail","type":"u8","comment":"Original raw field retained: firstseven are conditional volume-group flags, last60DB remains unknown. Initializer clears firstseven only.","count":8}]},
     {"name":"TOD_BonusDefinition_verified","size":"0x30","comment":"Native cheat definition,14 entries at10026384; IDs are not localized strings.","fields":[{"offset":"0x0","name":"title_lookup_id","type":"u32","comment":"Runtime title lookup ID."},{"offset":"0x4","name":"description_lookup_id","type":"u32","comment":"Runtime description lookup ID."},{"offset":"0x8","name":"score_requirement","type":"u32","comment":"Unsigned threshold after mode/index adjustment."},{"offset":"0xC","name":"state_count","type":"u32","comment":"Populated state-name count, not setter-wide1..8 bound."},{"offset":"0x10","name":"state_name_lookup_ids","type":"u32","comment":"Eight physical slots; retain trailing zeros.","count":8}]},
     {"name":"TOD_SaveBonusState_verified","size":"0x18","comment":"Save86F4..870B; shared score, not earned mask8710.","fields":[{"offset":"0x0","name":"blueprint_mask","type":"u32","comment":"Integer bitID, grant-all mask0007DEE4; retain other bits."},{"offset":"0x4","name":"bonus_states","type":"u8","comment":"14 physical saved slots, not remapped menu IDs; retain all values.","count":14},{"offset":"0x12","name":"unknown_padding_8706","type":"u8","comment":"Meaning unknown, preserve bytes.","count":2},{"offset":"0x14","name":"weighted_skill_score","type":"u32","comment":"Score8708; enable_all_cheats writes840 without awarding bits."}]},
     {"name":"TOD_SaveMissionEntry_verified","size":"0xC","comment":"Entry in active/completed saved lists. IDs feed native text lookups; no localized names inferred.","fields":[{"offset":"0x0","name":"title_lookup_id","type":"u32","comment":"Also native search key."},{"offset":"0x4","name":"description_lookup_id","type":"u32","comment":"Native description text-lookup input; localized text not recovered."},{"offset":"0x8","name":"flags","type":"u32","comment":"Bit0 optional, bit1 complete; available=!complete. Other bits retained."}]},
