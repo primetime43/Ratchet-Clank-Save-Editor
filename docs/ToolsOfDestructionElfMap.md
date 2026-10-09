@@ -4,7 +4,7 @@ Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map c
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 442 annotations, 118 imports, evidence, byte signatures and ten structure definitions.
+- [Shared address map](maps/ToolsOfDestruction.BCUS98127.v02.00.json): 530 annotations, 118 imports, evidence, byte signatures and sixteen structure definitions.
 - [Ghidra importer](../Tools/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../Tools/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](ToolsOfDestructionSaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -427,13 +427,77 @@ The USA plaintext working copy has XP2,315,144; collected32, spent32, balance0; 
 
 The original `TOD_hero_progression_restore_candidate` label is retained at `0x23E090` for existing analysis databases, but its confidence/comment now establish XP via the named binding. No executable or original save bytes were patched.
 
+## World progress mission counters and quick select
+
+The shared `world_state` section and [Inspect-TodWorldState.py](../Tools/Inspect-TodWorldState.py) independently reproduce 19 native level rows and 205 original-byte guards from this exact ELF. Newly imported types preserve opaque bytes: `TOD_SaveLevelProgressState_verified` refines the older collectible type without replacing it; `TOD_SaveMissionCounterRecord_verified` maps only its final counter; `TOD_SaveQuickSelectStorage_verified` stores raw ID bits with signed interpretation in its comments.
+
+| Named binding / native path | Proven storage or behavior |
+| --- | --- |
+| `is_level_unlocked`: `0x30768 → 0x24AD0` | Nonzero byte `save+0x888+0x408*level` |
+| `is_level_visited`: `0x30690 → 0x279F8` | Nonzero byte `save+0x889+0x408*level` |
+| `is_level_seen`: `0x399F0 → 0x37460` | Same saved byte as visited |
+| `is_level_visitable`: `0x39BA0 → 0x36A10` | Nonzero level ID, unlocked and clear record member `+0x402`; suppresses level3 when level18 qualifies |
+| `is_level_visible`: `0x39AC8 → 0x36AC8` | Delegates to visitable; not another saved boolean |
+| `get_level_missions_completed`: `0x395A0 → 0x36FC0 → 0x12470 → 0x2D0EF0 → 0x2D0DF0` | Save `0x10AF8+0x7C*level`, member `+0x78`; menu remaps level3 to18 under visibility condition |
+| `hero_add_quick_select`: `0x2B8780 → 0x288988 → 0x252B08 → 0x1E26F0` | Stored item IDs at `0x284`; automatic insertion searches 24 slots and filters config flags `0x1040` |
+| `hero_remove_quick_select`: `0x2B8650 → 0x288888 → 0x252ED8 → 0x1E22A8` | Scans 32 words; replaces matching IDs with `0xFFFFFFFF` |
+| Membership helper `0x1E22F8` | Scans all 32 stored quick-select words |
+
+Pointers `0x888624`, `0x889AF4`, `0x89550C` and `0x89F16C` all resolve to serialized base `0x101EFB20`. World stride is derived from shifts10+3; mission stride from shifts7−2. Assembly proves the mission-counter load at `0x2D0F04`, the insertion bound at `0x1E2730`, its automatic-search count at `0x1E27F0`, and removal's 32-word loop. Thunks restore/change TOCs explicitly; decompiler output alone is not used for these displacements.
+
+The USA snapshot has all32 quick-select slots empty, all19 mission counters/unlocked/exclusion bytes zero, and only native level0 visited. This surprising observation is retained without inferring current runtime progress. See the [save-format notes](ToolsOfDestructionSaveFormat.md#confirmed-world-progress-and-quick-select-storage) for limitations and reproduction checks. No completion percentage, wheel position, mission-ID catalog or safe edit range is established.
+
+### Remaining native leads, not promoted to saved-field names
+
+`get_times_challenge_completed` registration at `0x88944C` reaches wrapper `0x315A8`, native `0x279B8`, then TOC thunk `0x110B0 → 0x2756F8`. It reads `save+0x56D8+4*resolvedIndex`, but the resolver consults a runtime Lua table and applies an upper index cap23. This is **not** a proven direct challenge-ID array; negative/out-of-range script inputs and the challenge definition-to-index catalog have not been validated. The supplied snapshot has zero words in the observed 24-word range. No editable challenge controls or guessed names are added.
+
+`get_current_level` leads to runtime pointer access (`0x30840 → 0x25C30 → 0x109E0`), not a demonstrated saved planet field. `hero_get_equipped` (`0x2B7F70 → 0x288060 → 0x466EC0`) traverses a runtime inventory object; the link to nearby saved words `0x42C/0x430/0x434` is unresolved. The three initialized 23-word arrays at `0x304/0x360/0x3BC` are now mapped below through named object APIs. A numeric resemblance or initializer alone is insufficient proof.
+
+## Native object counters and equipment
+
+Two enum exporters (`0x28440 → 0x12990` and `0x294E90 → 0x252EB8`) agree on all23 `OBJ_` IDs and the count sentinel23. [Inspect-TodObjects.py](../Tools/Inspect-TodObjects.py) independently reproduces those IDs and the three saved arrays, with 205 exact-byte guards and named registrations. All23 native object-name strings and their accessor/thunk chains are importable; `TOD_SaveObjectCounters_verified` preserves signed-current interpretation as comments on raw BE32 words.
+
+| Named API | Exact native chain |
+| --- | --- |
+| `hero_set_num_objects` | `0x2B88F8 → 0x288A98 → 0x2509B8 → 0x23D970` |
+| `hero_get_num_objects` | `0x2B8A70 → 0x288B80 → 0x24FC88 → 0x23D8E0` |
+| `hero_add_object` | `0x2B8BE8 → 0x288C58 → 0x252F78 → 0x23D870` |
+| `hero_has_object` | `0x2B8D60 → 0x288D40 → 0x24F7B8 → 0x23D940` |
+
+Native methods access hero member `+0x1A68`, whose pointer linkage to serialized `0x101EFB20` is guarded at `0x23E73C/0x23E744` and TOC slot `0x897B38`. Current getter loads `+0x304+4*i` and sign-extends; high-water getter `0x23D900` loads `+0x360+4*i`. Set/add methods compare high-water as unsigned (`cmplw`), not signed, and add updates `+0x3BC+4*i` only when the signed delta is positive. The presence predicate compares current against zero, not against a positive threshold. Native arithmetic wraps 32 bits; no repaired or clamped data is implied.
+
+Full catalog, actual USA observations, reproduction commands and limitations are in the [save-format notes](ToolsOfDestructionSaveFormat.md#confirmed-object-counters-and-equipment). Timer units, arena-count usage, reset points and each item's runtime dependencies still require further tracing or controlled captures. Positive additions are not asserted to be unique pickups or lifetime acquisition totals.
+
+## Active and completed mission lists
+
+The `mission_lists` section is independently reproduced by [Inspect-TodMissions.py](../Tools/Inspect-TodMissions.py). Native active address getter `0x2D0D60` resolves `save+0x10148+0x7C*level`; completed getter `0x2D0DF0` resolves `save+0x10AF8+0x7C*level`. Each list has ten12-byte entries and count at member78. Original count values are retained; analysis only bounds reads to the physical capacity. Added types `TOD_SaveMissionEntry_verified` and `TOD_SaveMissionList_verified` refine the old counter-only type without overwriting it.
+
+| Named native chain | Evidence |
+| --- | --- |
+| `get_num_missions`: `0x311C0 → 0x25EC8` | Sum active count (`0x137C0 → 0x2D0DC8`) and completed count (`0x12470 → 0x2D0EF0`) |
+| `is_mission_complete`: `0x31098 → 0x25E80` | Entry flags bit1 |
+| `is_mission_optional`: `0x30F70 → 0x25E38` | Entry flags bit0 |
+| `is_mission_available`: `0x30E48 → 0x25DF0` | Inverse of bit1, not another saved flag |
+| `get_mission_name`: `0x30D20 → 0x27CA8` | Entry word0 passed into native text lookup |
+| `get_mission_desc`: `0x30BF8 → 0x27B40` | Entry word4 passed into native text lookup |
+| `add_mission`: `0x2A7680 → 0x2776D8 → 0x2D1168` | Duplicate title-ID check, active capacity10, append with low8 flag bits |
+| `complete_mission`: `0x2A7568 → 0x2776B0 → 0x2D0F78` | Moves title/description, ORs completion bit, updates both counts and compacts active entries |
+
+All getter paths use `0x11D30 → 0x2D0E18`: one-based script indices become zero-based, active entries precede completed entries. The native getter is not an independently safe bounds checker; inspection never invokes it. Unknown flag bits and malformed counts remain visible. The transaction code does not prove a safe edit sequence, valid arbitrary title IDs, or console acceptance. The supplied save has no occupied mission entries, so controlled gameplay captures are still needed to observe a nonempty example and its reset behavior.
+
+### Why this is not 100-percent semantic or gameplay confirmation
+
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes world-record subrecords/bitmaps, equipment-state dependencies, challenge definition/index resolution, checkpoint/position/runtime-health linkage, scenario tails, synchronization before snapshot and the large save-state blocks. Initializer `0x35E110` establishes twenty world records and twenty-one opaque blocks at `save+0x114D8`, stride `0x60DC`, ending at `0x906E4`; `0x35E070` initializes selected members but does not name their meanings. This geometry must not be advertised as fully understood planet or mission state. Tail `0x906E4/0x906E8` remains unresolved, and the final restart word's exact gameplay terminology remains a candidate.
+
+One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
+
 ## Import and reproduce
 
 ### Ghidra
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 441 mapped annotations (the third TOC reference base is unmapped), ten structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible instruction guards and ownership/acquisition relationships. Both progression and collectible decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 529 mapped annotations (the third TOC reference base is unmapped), sixteen structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list instruction guards and ownership/acquisition relationships. Progression, collectible, world-state, object and mission-list decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

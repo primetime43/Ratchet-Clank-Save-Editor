@@ -27,7 +27,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 "Weapons & gadgets" => 10, "Skill points" => 8, "Armor" => 7,
                 "Counters & nearby fields" => 6, "Gameplay records" => 4,
-                "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7, _ => 0
+                "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
+                "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9, _ => 0
             };
             if (expected == 0 || source.Columns.Length != expected) return source;
 
@@ -38,6 +39,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Armor" => new[] { "Armor", "Owned", "Equipped" },
                 "Special bolts" => new[] { "Level", "Collected", "Total" },
                 "Skins" => new[] { "Skin", "Owned", "Selected", "Bolt cost" },
+                "World progress" => new[] { "Level", "Unlocked", "Visited", "Saved missions" },
+                "Quick select" => new[] { "Stored slot", "Item" },
+                "Objects & equipment" => new[] { "Object", "Count" },
                 "Counters & nearby fields" => new[] { "Information", "Value" },
                 "Gameplay records" => new[] { "Location", "Saved record" },
                 "Save regions" => new[] { "Section", "Size", "Understanding" },
@@ -54,6 +58,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Armor" => "Ownership, equipped ID and the saved unlock byte are independent. Raw flags and native availability caveats are below.",
                     "Special bolts" => "Counts are from native per-level masks; labels are internal level identifiers. Select a row for overall collected/spent balance and exact bits.",
                     "Skins" => "Labels are formatted native identifiers. Shipped prices use special bolts; ownership and selected ID are saved separately.",
+                    "World progress" => "Saved flags/counters only, not a completion percentage or current travel eligibility. Labels are formatted native identifiers.",
+                    "Quick select" => "Stored indices, not a proven wheel order. Automatic insertion searches only the first24 of32 slots.",
+                    "Objects & equipment" => "Native object counters, not weapon IDs. Select a row for its high-water count and positive-addition counter; timer/arena units are unverified.",
                     "Gameplay records" => "These are saved location/scenario identifiers, not proof that a mission is complete. Record tail meanings remain unknown.",
                     "Save regions" => "This is a structural overview. Technical shows the original research map; selected-row details retain its offsets and limitations.",
                     _ => "Technical shows all decoded fields, including unknowns. This view does not validate save integrity."
@@ -85,6 +92,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             "Armor" => new[] { c[1] == "ARMOR_NONE" ? "No armor" : Label(c[1], "ARMOR_"), c[2], c[4] },
             "Special bolts" => new[] { Label(c[1], "LEVEL_"), c[2], c[3] },
             "Skins" => new[] { c[1] == "SKIN_NONE" ? "Default" : Label(c[1], "SKIN_"), c[2], c[3], c[4] },
+            "World progress" => new[] { Label(c[1], "LEVEL_"), c[2], c[3], c[4] },
+            "Quick select" => new[] { c[0], c[2] },
+            "Objects & equipment" => new[] { Label(c[1], "OBJ_"), c[2] },
             "Counters & nearby fields" => Summary(c),
             "Gameplay records" => new[] { Label(c[1]), Label(c[2], "gameplay_") },
             "Save regions" => Region(c),
@@ -130,7 +140,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 0 => ("Weapons & gadgets", "Partially mapped"),
                 0x280 => ("Acquisition counter", "Mapped counter"),
-                0x284 => ("Other player data", "Partially mapped: includes hero XP"),
+                0x284 => ("Other player data", "Partially mapped: quick select and hero XP"),
                 0x41C => ("Bolts", "Mapped"), 0x420 => ("Raritanium", "Mapped"),
                 0x424 => ("Special bolts spent", "Code-backed field"), 0x428 => ("Bolt multiplier", "Code-backed field"),
                 0x42C => ("Other game state", "Partially mapped: armor, skins, collectibles and skill points"),

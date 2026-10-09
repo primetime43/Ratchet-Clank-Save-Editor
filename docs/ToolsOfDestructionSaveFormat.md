@@ -321,6 +321,77 @@ Reports include hashes, exact changed ranges, region totals, XP/ammo/level/owner
 
 Run `./Tests/TestTodSaveComparison.ps1 -SourceFile <reference-GAME.SAV>` for 11 checks against this exact sample. Tests generate and modify temporary copies to verify decoding, bounds, masks, unknown ranges and input preservation. **These are generated fixtures, not before/after game captures.** Only one supplied save is available; runtime paired-save and edited-load validation remain outstanding.
 
+## Confirmed world progress and quick-select storage
+
+The exact USA v02.00 ELF independently confirms these fields. [Inspect-TodWorldState.py](../Tools/Inspect-TodWorldState.py) checks the reference hash, named Lua bindings, full native routines and TOC-changing thunks before decoding. Its 205 original-byte guards and 19-level catalog are bundled under `world_state` in the shared map. All inspector views are read-only; regional behavior and edited-load acceptance remain unverified.
+
+| Save offset | Storage | Code-backed meaning |
+| --- | --- | --- |
+| `0x284 + 4*s`, `s=0..31` | signed BE32 item ID | Quick-select stored slot; `-1` means empty |
+| `0x888 + 0x408*l`, `l=0..18` | byte, nonzero | Level unlocked |
+| `0x889 + 0x408*l` | byte, nonzero | Level visited; menu's “seen” reads the same byte |
+| `0x88A + 0x408*l` | byte | Nonzero excludes this level from native menu eligibility; actual gameplay name unknown |
+| `0x10B70 + 0x7C*l` | BE32 integer | Saved missions-completed counter for the native level |
+
+Quick-select membership and removal search all 32 words. Insertion accepts slots 0–23, and automatic insertion searches only those first 24; it also checks item configuration flags `0x1040`. Slots 24–31 are retained and displayed, not discarded. These indices do **not** establish the physical wheel layout. Only the player0 block is decoded; the routine's `0x484` player stride is not proof that additional player blocks are valid here.
+
+The menu's visitable/visible predicate requires a nonzero level ID, an unlocked byte and a clear exclusion byte. Level3 is suppressed when level18 passes its recursive eligibility check; its displayed mission count then uses level18 storage. The inspector shows unremapped native rows and does not emulate runtime eligibility or claim a completion percentage. Twenty world records are initialized, but the native catalog has only 19 levels; the extra slot is not assigned a planet name.
+
+Mission-counter records start at `0x10AF8`, stride `0x7C`; the getter reads member `+0x78`. The preceding 120 bytes are now mapped as ten entries in the mission-list section below. A counter alone does not resolve mission titles, and the other world-record members remain unmapped.
+
+Actual USA snapshot (`F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463`): all 32 quick-select words are `-1`; all 19 unlocked/exclusion bytes and mission counters are zero; only native level0 has visited byte1. These are exact observations, **not** a claim that the player has no game progress. They coexist with the mapped populated inventory and collectibles, so zero counters are not converted into “0% complete” or silently repaired. The original encrypted save is never changed.
+
+```powershell
+python -B Tools/Inspect-TodWorldState.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/TestTodWorldState.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
+The program exposes simple **World progress** and **Quick select** views. Technical retains exact offsets, IDs and exclusion bytes; row details explain the asymmetrical bounds, aliases and limitations. Unknown values, unusual nonzero bytes and out-of-catalog IDs are preserved.
+
+## Confirmed object counters and equipment
+
+The three previously opaque 23-word arrays are now independently linked to named object APIs and two matching native enum registrations. They are a separate catalog from the 32 weapon IDs. [Inspect-TodObjects.py](../Tools/Inspect-TodObjects.py) reproduces the shared map's `objects` section with 205 exact-byte guards; `TOD_SaveObjectCounters_verified` maps the three arrays without claiming valid edit ranges.
+
+| Save storage, object ID `i=0..22` | Code-backed role |
+| --- | --- |
+| `0x304 + 4*i` | Current object count; getter returns signed BE32; possession tests nonzero, including negative values |
+| `0x360 + 4*i` | High-water counter, updated using **unsigned** comparison |
+| `0x3BC + 4*i` | Accumulated positive additions; signed-positive add deltas only, modulo 32 bits |
+
+`hero_set_num_objects` sets current and raises the high-water value without touching positive additions. `hero_add_object` adds its signed delta to current modulo 32 bits; only a positive delta also increments the additions counter, then it raises the peak using an unsigned comparison. Thus these arrays need not be equal, a direct set is not a pickup, and a negative current value can yield a very large unsigned peak. No normalization is performed. The last additions word ends at `0x418`, immediately before hero XP.
+
+Native IDs in order: 0 Heli Pack; 1 Thruster Pack; 2 Hydro Pack; 3 Grind Boots; 4 Gravity Boots; 5 Charge Boots; 6 Treasure Mapper; 7 Box Basher; 8 Armor Magnetizer; 9 O2 Mask; 10 Qwark Info Bot; 11 Golden Groovitron; 12 Verdigris Upgrade; 13 Praxus Upgrade; 14 Hexagonal Washer; 15 Statues; 16 Souls; 17 Ship Parts; 18 Turrets; 19 Timer; 20 Timer Detonator; 21 Timer Clock; 22 Arena Count. `OBJ_TYPE_COUNT=23` is a bound, not another object. These readable labels format native identifiers; timer/arena names do not prove units or conversion rules.
+
+Actual USA snapshot: current and peak are both `[1,1,1,1,1,1,3,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0]`; positive additions are `[0,0,0,0,0,1,3,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0]`. In particular, initialized/equipped packs have current1 but additions0, reinforcing that additions must not be called “all items acquired.” The save alone does not prove how each value appears in live gameplay.
+
+The new **Objects & equipment** inspector shows only object and current count by default. Exact high-water/addition counters, offsets, raw current bits and limitations remain available in Technical and row details. Tests cover signed negatives, independent unsigned words, full catalog bounds, actual observations and unchanged input hashes.
+
+```powershell
+python -B Tools/Inspect-TodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/TestTodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
+## Confirmed active and completed mission lists
+
+[Inspect-TodMissions.py](../Tools/Inspect-TodMissions.py) independently reproduces the `mission_lists` section from exact named bindings, address arithmetic and complete native routines. Each group occupies twenty `0x7C` physical list slots; only native levels0..18 are named. Active lists begin at `0x10148`; completed lists begin at `0x10AF8`. Each list contains ten `0x0C` entries followed by a saved BE32 count at `+0x78`.
+
+| Entry member | Proven meaning |
+| --- | --- |
+| `+0x0`, BE32 | Title lookup ID, also the native duplicate/search key |
+| `+0x4`, BE32 | Description lookup ID |
+| `+0x8`, BE32 | Flags: bit0 optional, bit1 complete; all higher bits unknown |
+
+`is_mission_available` returns the inverse of completion bit1; there is **no separate available bit** established by this getter. Script indices are one-based. The combined accessor subtracts1, selects the active list first using its count, then the completed list. Title and description getters feed the stored IDs to native text lookup; numeric IDs are not recovered localized strings.
+
+`add_mission` searches both lists by title ID, skips duplicates and appends to active only when count<10. It stores title/description and the low eight incoming flag bits. `complete_mission` searches active by title ID, copies title/description into the completed destination, ORs completion bit2 into that destination's existing flag word, increments completed count, decrements active count and compacts active entries. The observed path does not visibly copy all original flags or independently check completed capacity; these are code observations, not a justification to reproduce the transaction in an editor or repair game state.
+
+The USA snapshot has zero counts in all19 active and completed lists. Unused entries are not assigned mission names or interpreted as current missions. World progress row details show saved counts and bounded entries when present; Technical/research retains the lookup IDs, unknown flag bits, precise native indices and limitations. If a count exceeds10, inspection reads only the ten physical entries and reports the unchanged original count. No cross-list reads or silent normalization occurs.
+
+```powershell
+python -B Tools/Inspect-TodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/TestTodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
+```
+
 ## Runtime validation and remaining fields
 
 Executable research is recorded separately in the [Tools of Destruction ELF map](ToolsOfDestructionElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.

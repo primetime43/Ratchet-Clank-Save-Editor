@@ -32,6 +32,7 @@ class MapChecks(unittest.TestCase):
             self.assertIn(record["name"], text)
             for field in record["fields"]:
                 self.assertIn(field["name"], text)
+                self.assertTrue(field.get("comment"), "Ghidra import requires a field comment")
 
     def test_descriptor_bounds_and_counts(self):
         binary = MAPPING["binary"]
@@ -194,7 +195,10 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["weapon_configuration"]["instruction_guards"]
                 + MAPPING["weapon_configuration"]["catalog_instruction_guards"]
                 + MAPPING["progression"]["instruction_guards"]
-                + MAPPING["collectibles"]["instruction_guards"]):
+                + MAPPING["collectibles"]["instruction_guards"]
+                + MAPPING["world_state"]["instruction_guards"]
+                + MAPPING["objects"]["instruction_guards"]
+                + MAPPING["mission_lists"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

@@ -41,7 +41,10 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(442, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(530, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(10, TodResearch.Map.GetProperty("mission_lists").GetProperty("capacity_per_list").GetInt32());
+            Equal(23, TodResearch.Map.GetProperty("objects").GetProperty("catalog").GetArrayLength());
+            Equal(19, TodResearch.Map.GetProperty("world_state").GetProperty("worlds").GetProperty("catalog").GetArrayLength());
             Equal(19, TodResearch.Map.GetProperty("collectibles").GetProperty("special_bolts").GetProperty("catalog").GetArrayLength());
             Equal(9, TodResearch.Map.GetProperty("collectibles").GetProperty("skins").GetProperty("catalog").GetArrayLength());
             Equal(60, TodResearch.Map.GetProperty("progression").GetProperty("skill_points").GetProperty("catalog").GetArrayLength());
@@ -153,6 +156,76 @@ internal static partial class Program
             Equal("5", summary.Rows.Single(row => row.Cells[0] == "Special bolts spent").Cells[1]);
             True(original.SequenceEqual(bytes), "New read-only views changed bytes.");
         });
+        Check("World and quick-select views preserve nonboolean flags, unsigned counters and unknown signed IDs", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            for (int slot = 0; slot < 32; slot++) BinaryPrimitives.WriteInt32BigEndian(bytes.AsSpan(0x284 + slot * 4, 4), -1);
+            bytes[0xC90] = 2;
+            bytes[0xC91] = 3;
+            bytes[0xC92] = 4;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10BEC, 4), uint.MaxValue);
+            BinaryPrimitives.WriteInt32BigEndian(bytes.AsSpan(0x284, 4), -2);
+            BinaryPrimitives.WriteInt32BigEndian(bytes.AsSpan(0x288, 4), 1);
+            BinaryPrimitives.WriteInt32BigEndian(bytes.AsSpan(0x300, 4), 99);
+            byte[] original = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var worlds = inspection.Table("World progress");
+            Equal(19, worlds.Rows.Count);
+            Equal("Yes", worlds.Rows[1].Cells[2]);
+            Equal("Yes", worlds.Rows[1].Cells[3]);
+            Equal("4294967295", worlds.Rows[1].Cells[4]);
+            Equal("0x04", worlds.Rows[1].Cells[5]);
+            True(worlds.Rows[1].Details.Contains("0x02") && worlds.Rows[1].Details.Contains("not a completion percentage"), "Nonboolean flags and limitations must survive simplification.");
+            var quick = inspection.Table("Quick select");
+            Equal(32, quick.Rows.Count);
+            Equal("Unknown (-2)", quick.Rows[0].Cells[2]);
+            Equal("Combuster", quick.Rows[1].Cells[2]);
+            Equal("Empty", quick.Rows[2].Cells[2]);
+            Equal("Yes", quick.Rows[23].Cells[3]);
+            Equal("No", quick.Rows[24].Cells[3]);
+            Equal("Unknown (99)", quick.Rows[31].Cells[2]);
+            Equal(4, InspectionPresentation.Simplify("World progress", worlds).Columns.Length);
+            Equal(2, InspectionPresentation.Simplify("Quick select", quick).Columns.Length);
+            True(original.SequenceEqual(bytes), "Read-only views must not normalize unknown flags or IDs.");
+        });
+        Check("Object inspection preserves signed counts and independent unsigned high-water/addition counters", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteInt32BigEndian(bytes.AsSpan(0x304, 4), -2);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x360, 4), 0xFFFFFFFF);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x3BC, 4), 0x80000000);
+            byte[] original = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Objects & equipment");
+            Equal(23, table.Rows.Count);
+            Equal("OBJ_HELI_PACK", table.Rows[0].Cells[1]);
+            Equal("-2", table.Rows[0].Cells[2]);
+            Equal("4294967295", table.Rows[0].Cells[3]);
+            Equal("2147483648", table.Rows[0].Cells[4]);
+            Equal("Yes", table.Rows[0].Cells[5]);
+            Equal("0x35C", table.Rows[22].Cells[6]);
+            Equal("0x3B8", table.Rows[22].Cells[7]);
+            Equal("0x414", table.Rows[22].Cells[8]);
+            var friendly = InspectionPresentation.Simplify("Objects & equipment", table);
+            Equal(2, friendly.Columns.Length);
+            Equal("Heli Pack", friendly.Rows[0].Cells[0]);
+            True(friendly.Rows[0].Details.Contains("FFFFFFFE") && friendly.Rows[0].Details.Contains("not unique"), "Raw bits and counter caveats must survive presentation.");
+            True(original.SequenceEqual(bytes), "Object inspection changed bytes.");
+        });
+        Check("Mission details bound malformed list counts and retain unknown flags and lookup IDs", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x101C0, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10148, 4), 1234);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x1014C, 4), 5678);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10150, 4), 0x80000003);
+            byte[] original = bytes.ToArray();
+            string detail = TodSaveInspection.Read(bytes, "BCUS98127").Table("World progress").Rows[0].Details;
+            True(detail.Contains("saved count 4294967295") && detail.Contains("Exceeds capacity10"), "Malformed counts must remain visible without unbounded reads.");
+            True(detail.Contains("title lookup ID 1234") && detail.Contains("description lookup ID 5678"), "Lookup IDs must not be guessed localized titles.");
+            True(detail.Contains("optional Yes, complete Yes, available No") && detail.Contains("unknown bits0x80000000"), "Flag semantics and opaque bits must remain independent.");
+            True(detail.Contains("Slot 9:") && !detail.Contains("Slot 10:"), "Do not read beyond the ten physical entries.");
+            True(original.SequenceEqual(bytes), "Mission details must never repair counts or clear flags.");
+        });
         Check("Research refuses other games, sizes and mismatched IDs without guessing", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -183,7 +256,7 @@ internal static partial class Program
         {
             byte[] bytes = ResearchFixture(), original = bytes.ToArray();
             var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Counters & nearby fields", "Gameplay records", "Save regions" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "World progress", "Quick select", "Counters & nearby fields", "Gameplay records", "Save regions" })
             {
                 var raw = inspection.Table(view);
                 var rawCells = raw.Rows.Select(row => string.Join("|", row.Cells)).ToArray();
@@ -333,7 +406,7 @@ internal static partial class Program
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
             tabs.SelectedIndex = 2;
             foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
-                ("Saved locations", 2, 4), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
+                ("Objects & equipment", 2, 9), ("World progress", 4, 9), ("Quick select", 2, 6), ("Saved locations", 2, 4), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
                 views.SelectedItem = expected.Item1;
                 Equal(expected.Item2, grid.Columns.Count);
@@ -417,6 +490,26 @@ internal static partial class Program
             Equal(9, skins.Rows.Count);
             for (int id = 0; id < 9; id++)
                 Equal($"0x{BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x45C + id * 4, 4)):X8}", skins.Rows[id].Cells[5]);
+            var worlds = inspection.Table("World progress");
+            Equal(19, worlds.Rows.Count);
+            for (int id = 0; id < 19; id++)
+            {
+                Equal(bytes[0x888 + id * 0x408] != 0 ? "Yes" : "No", worlds.Rows[id].Cells[2]);
+                Equal(bytes[0x889 + id * 0x408] != 0 ? "Yes" : "No", worlds.Rows[id].Cells[3]);
+                Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x10B70 + id * 0x7C, 4)).ToString(), worlds.Rows[id].Cells[4]);
+            }
+            var quick = inspection.Table("Quick select");
+            Equal(32, quick.Rows.Count);
+            for (int slot = 0; slot < 32; slot++)
+                Equal(BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(0x284 + slot * 4, 4)).ToString(), quick.Rows[slot].Cells[1]);
+            var objects = inspection.Table("Objects & equipment");
+            Equal(23, objects.Rows.Count);
+            for (int id = 0; id < 23; id++)
+            {
+                Equal(BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(0x304 + id * 4, 4)).ToString(), objects.Rows[id].Cells[2]);
+                Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x360 + id * 4, 4)).ToString(), objects.Rows[id].Cells[3]);
+                Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x3BC + id * 4, 4)).ToString(), objects.Rows[id].Cells[4]);
+            }
             var summary = InspectionPresentation.Simplify("Counters & nearby fields", inspection.Table("Counters & nearby fields"));
             Equal(BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(0x418, 4)).ToString(), summary.Rows.Single(row => row.Cells[0] == "Hero XP").Cells[1]);
             var files = SaveContainerInspection.Read(session.WorkingFolder, session.Profile.FileName, session.ReadInspectionData());
@@ -444,7 +537,7 @@ internal static partial class Program
             form.ClientSize = new Size(499, 248);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-compact-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Player summary", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Objects & equipment", "World progress", "Quick select", "Player summary", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));
