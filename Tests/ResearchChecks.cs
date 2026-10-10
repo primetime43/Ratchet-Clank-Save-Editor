@@ -36,6 +36,45 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Saved auxiliary words retain extreme and nonfinite values without changing the simple summary", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8758, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x875C, 4), 0x80000000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8760, 4), 0x7FC12345);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            Equal("4294967295", table.Rows.Single(r => r.Cells[0] == "0x8758").Cells[2]);
+            Equal("2147483648", table.Rows.Single(r => r.Cells[0] == "0x875C").Cells[2]);
+            Equal("7FC12345", table.Rows.Single(r => r.Cells[0] == "0x8760").Cells[4]);
+            True(table.Rows.Single(r => r.Cells[0] == "0x875C").Details.Contains("sixaxis_enabled"), "Saved gate must remain Sixaxis, not combat help.");
+            True(table.Rows.Single(r => r.Cells[0] == "0x8760").Details.Contains("not named deaths, wins"), "Native event meanings remain qualified.");
+            Equal(18, InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Count);
+            True(bytes.SequenceEqual(before), "Viewing new auxiliary words must not sanitize input.");
+        });
+        Check("Health and checkpoint ammo evidence remains runtime-qualified and read-only", () =>
+        {
+            var evidence = TodResearch.Map.GetProperty("health_persistence");
+            Equal("0x1784", evidence.GetProperty("health").GetProperty("current_health_runtime_offset").GetString());
+            Equal("0x1788", evidence.GetProperty("health").GetProperty("capacity_runtime_offset").GetString());
+            Equal("0x418", evidence.GetProperty("xp_restore").GetProperty("saved_xp_offset").GetString());
+            True(evidence.GetProperty("xp_restore").GetProperty("boundary").GetString().Contains("runtime BSS"), "Save XP alone cannot imply a numeric runtime health value.");
+            byte[] bytes = ResearchFixture(); byte[] before = bytes.ToArray();
+            string detail = TodSaveInspection.Read(bytes, "BCUS98127").Table("Weapons & gadgets").Rows[1].Details;
+            True(detail.Contains("runtime-only checkpoint bank") && detail.Contains("not a verbatim copy") && detail.Contains("definition/level/modifier-dependent"), "Ammo restoration needs checkpoint scope and capacity clamp caveats.");
+            True(bytes.SequenceEqual(before), "Checkpoint research must not simulate restoration into the save.");
+        });
+        Check("Unknown first-person word explains qualified coupling without inventing hold or toggle", () =>
+        {
+            byte[] bytes = ResearchFixture(); BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114C0, 4), 0xDEADBEEF);
+            byte[] before = bytes.ToArray();
+            var raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Game settings");
+            var field = raw.Rows.Single(r => r.Cells[2] == "0x114C0");
+            Equal("DEADBEEF", field.Cells[4]);
+            True(field.Details.Contains("nonzero saved values permit") && field.Details.Contains("Other runtime conditions") && field.Details.Contains("not a currently active camera or a hold/toggle verdict"), "Entry-latched camera paths must not become unconditional runtime state.");
+            True(!InspectionPresentation.Simplify("Game settings", raw).Rows.Any(r => r.Cells[0] == "Unknown settings word"), "Unknown native option remains Technical-only.");
+            True(bytes.SequenceEqual(before), "Camera evidence must not normalize saved options.");
+        });
         Check("Gameplay names come from fingerprinted reference assets, not stale save log order", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -392,7 +431,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1239, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1255, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

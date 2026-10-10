@@ -28,11 +28,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(new("Overview", TodResearch.Scope + $"\r\n\r\n32 native inventory IDs; 28 shipped configuration definitions; 204 nodes including 15 starts; 15 grids; 60 skill points; 5 armor IDs; {TodResearch.Map.GetProperty("annotations").GetArrayLength()} ELF annotations and 118 imports.\r\n\r\nSelect a topic or search for a name/address. All content is embedded and read-only; original game files and private saves are not bundled. File offsets, save offsets and ELF virtual addresses must not be interchanged.\r\n\r\nResize the window for more reading space. Ctrl+C copies selected text.", new()));
             topics.Add(JsonTopic("Progression & armor", TodResearch.Map.GetProperty("progression"), 0));
             topics.Add(JsonTopic("Hero XP, collectibles & skins", TodResearch.Map.GetProperty("collectibles"), 0));
+            topics.Add(JsonTopic("Runtime health, XP restoration & checkpoint ammo lifecycle", TodResearch.Map.GetProperty("health_persistence"), 0));
             topics.Add(JsonTopic("Saved pack/boot types & exact pack dispatch selector", TodResearch.Map.GetProperty("hero_aux_fields"), 0));
             topics.Add(JsonTopic("World progress & quick select", TodResearch.Map.GetProperty("world_state"), 0));
             topics.Add(JsonTopic("Gameplay segments, timing & retained log", TodResearch.Map.GetProperty("gameplay_segments"), 0));
             topics.Add(JsonTopic("Reward channels, caches & diminishing returns", TodResearch.Map.GetProperty("reward_channels"), 0));
             topics.Add(JsonTopic("Replay/restart lifecycle & retained segment median", TodResearch.Map.GetProperty("save_tail"), 0));
+            topics.Add(JsonTopic("Native adjustment counters, Sixaxis gate & modifier", TodResearch.Map.GetProperty("save_aux_fields"), 0));
             topics.Add(JsonTopic("Per-world object bits & spawn rules", TodResearch.Map.GetProperty("world_object_flags"), 0));
             topics.Add(JsonTopic("Object counters & equipment", TodResearch.Map.GetProperty("objects"), 0));
             topics.Add(JsonTopic("Mission lists & flags", TodResearch.Map.GetProperty("mission_lists"), 0));
@@ -46,6 +48,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Map-menu order, images & native grid checks", TodResearch.Map.GetProperty("grid_routing"), 0));
             topics.Add(JsonTopic("Map rectangles, world projection & clearing brush", TodResearch.Map.GetProperty("grid_geometry"), 0));
             topics.Add(JsonTopic("Settings, load destinations & runtime limits", TodResearch.Map.GetProperty("settings"), 0));
+            topics.Add(JsonTopic("First-person camera coupling & unknown option limits", TodResearch.Map.GetProperty("first_person_option"), 0));
             topics.Add(JsonTopic("Shipped pause-menu settings & API dispatch", TodResearch.Map.GetProperty("settings_menu"), 0));
             topics.Add(JsonTopic("Arena challenges, recorded wins & reward rules", TodResearch.Map.GetProperty("arena_challenges"), 0));
             topics.Add(JsonTopic("Reset-event categories & runtime countdown", TodResearch.Map.GetProperty("reset_categories"), 0));

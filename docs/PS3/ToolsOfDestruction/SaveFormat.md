@@ -4,6 +4,14 @@ Offset map checked against the PS3 `BCES00052_SAVE_1` plaintext sample and the s
 
 **Status:** the wrapper headers are mapped; game-state structures are partially mapped. A byte pattern is not enough to establish a field's gameplay meaning. No new fields are enabled for editing.
 
+## Auxiliary state, health and checkpoint ammo lifecycle
+
+Three additional words have native behavior/type proof: unsigned counters`0x8758` and`0x875C`, and float32 modifier`0x8760`. Actual values are0/0/1.0. The first increments on an unnamed runtime event; the second resets on that branch or increments when saved Sixaxis-enabled byte`114D3` permits it. The modifier's ordered finite update is bounded to float32 representations of0.6..1.0, with the event branch ultimately resetting1.0. These are not confirmed deaths, wins or a player-facing difficulty setting. Raw extreme and nonfinite snapshots remain unchanged in Technical view. [Exact auxiliary proof](BCUS98127/v02.00/ElfMap.md#three-saved-auxiliary-words-event-branch-sixaxis-gate-and-bounded-modifier).
+
+Current health is confirmed at **runtime hero`+1784`**, upper bound at`+1788`, not at a new save offset. Saved XP`418` drives a conditional changed-level refresh from a runtime BSS table; XP alone does not recover current health or capacity. Runtime checkpoint`10330610` is outside the serialized state. It captures32 ammo floats from inventory member`+8`; qualified successful vendor paths merge higher finite ammo into that bank. Valid-checkpoint hero setup restores through a definition/level/modifier-dependent clamped setter, not a verbatim copy. No active checkpoint is inferred from this save. [Health/checkpoint evidence](BCUS98127/v02.00/ElfMap.md#runtime-health-and-checkpoint-ammo-qualifying-restoration-paths).
+
+Saved unknown word`114C0` remains unnamed, but its entry-latched runtime flags now have paired update proof: nonzero saved values permit qualified mode10 camera angular/basis adjustment, while zero bypasses those paths. Actualword1 is not proof of the current camera or hold/toggle behavior; opaque`114D6/114D7` remain unresolved. [Camera coupling evidence](BCUS98127/v02.00/ElfMap.md#first-person-option-entry-latch-and-qualified-camera-coupling). All findings are embedded read-only in the program and scoped to the exact USA v02.00 executable; no new editing controls are enabled.
+
 ## Pack/boot state, reference segment names and initializer ownership
 
 Three previously unnamed BE32 saved words now have native API provenance:

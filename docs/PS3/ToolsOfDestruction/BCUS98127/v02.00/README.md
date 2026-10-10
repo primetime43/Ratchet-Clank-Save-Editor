@@ -4,7 +4,10 @@
 
 - [Executable map and evidence](ElfMap.md): save and non-save findings, import instructions and repeatable commands.
 - [Pack/boot state, reference segment names and opaque-byte ownership](ElfMap.md#saved-packboot-state-ordered-segment-names-and-initializer-ownership): three newly named words,56 asset-backed segment associations across19 worlds and exact initialization/copy boundaries.
-- [Native address/structure map](maps/NativeMap.json): 1239 annotations, 118 imports and 36 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1255 annotations, 118 imports and 38 structure definitions.
+- [Health and checkpoint ammo lifecycle](ElfMap.md#runtime-health-and-checkpoint-ammo-qualifying-restoration-paths): runtime health identity/upper bound, conditional XP-driven refresh,32-slot ammo capture, qualified vendor merge and clamped restoration.
+- [Saved auxiliary words](ElfMap.md#three-saved-auxiliary-words-event-branch-sixaxis-gate-and-bounded-modifier): three typed words at8758/875C/8760, wrapping counters, Sixaxis gate and native finite modifier bounds; gameplay event names remain unknown.
+- [First-person camera coupling](ElfMap.md#first-person-option-entry-latch-and-qualified-camera-coupling): entry-latched option behavior, paired update methods and qualified orientation adjustment; original option name/hold-toggle meaning unresolved.
 - [Parallel save research](ElfMap.md#parallel-save-research-rewards-replay-lifecycle-and-mission-keys): weapon experience rewards, per-world diminishing-return indices/remainders, replay lifecycle, historical segment median and81 native mission lookup pairs.
 - [Persistent grids and copied headers](ElfMap.md#persistent-grid-volume-headers-map-labels-and-group-flags): 512×512 native grid, all21 physical slot-to-level label associations, copied200-byte volume definitions and seven saved group flags.
 - [Menu routing and aggregate predicate](ElfMap.md#map-menu-routing-and-native-accumulator-predicate): inverse browse permutations, shared image IDs, readiness skips and qualified accumulator threshold.

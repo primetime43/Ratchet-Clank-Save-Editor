@@ -2,6 +2,50 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
+## Runtime health and checkpoint ammo: qualifying restoration paths
+
+Three parallel tasks produced the health/checkpoint, auxiliary-word and first-person findings below. This pass adds132 native byte guards,16 annotations and two narrow types. [Inspect-TodHealthPersistence.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodHealthPersistence.py) reproduces61 exact guards in `health_persistence`; all source observations are read-only.
+
+### Health identity and XP-driven refresh
+
+Named `hero_get_health` native `289358` requests float attribute`6C` and reads attribute`+4`. Base hero vtable`84BE30+24` points through descriptor`868D78` to dispatcher`23E368`; subclass`84A3F8+24` points through`8660E0` to `1E3380`, which delegates this attribute to the base. Exact dispatch returns hero`+1780`, making **current health runtime hero`+1784`**. Native `240FF8` adds a float to that value and clamps ordered finite results against hero`+1788`, proving the latter is the health upper bound. This path has no additional zero lower clamp; neither member is a save-file offset.
+
+Hero bind `23E650` sets its saved-state pointer, clears runtime level`1B61` and fractional XP`1B68`, reads saved integer XP`418` and calls `23E090`. On its qualifying changed-level path, progression reads float `table+190+4*new_level` and stores both current health`1784` and capacity`1788`. This proves conditional XP-driven health refresh, not unconditional healing for XPzero/disabled thresholds or a dedicated serialized current-health word. The table root `897B00 → 101B9EE8` is runtime BSS, so the supplied XP2,315,144 cannot establish a numeric current level, health or capacity from the ELF/save alone.
+
+### Checkpoint capture, vendor merge and clamped ammo restoration
+
+Runtime checkpoint `10330610` is outside the serialized state `101EFB20..10280210`: its relative offset`140AF0` exceeds file size`906F0`. Capture `35CF40` copies32 inventory ammo floats per iterated player: `state + player*484 + weapon*14 + 8` into `checkpoint + 50 + player*80 + weapon*4`. These are ammo, not weapon XP or health. The bank is runtime-only and does not make checkpoint positions or valid flags part of GAME.SAV.
+
+Native merge `35D358` selects the higher ordered finite value from current saved ammo and checkpoint ammo using `fsub/fsel`. Qualified successful vendor paths `2D2990`, `2D2B90`, `2D2D38` call it at `2D2AE8`, `2D2CF0`, `2D2E28`; this is not a complete inventory of every refill or every ammo writer. During hero bind, nonzero checkpoint-valid byte`EF` gates a32-slot restore through thunk`13DD0 → 465DC0`. That setter applies the definition/level/modifier-dependent maximum from`463DE0` and a zero fallback, **not a verbatim bit copy**. Thus checkpoint setup can overwrite saved inventory ammo, and qualifying purchases can update the runtime checkpoint bank.
+
+The actual first inventory bank includes Combuster ammo100; no second-player runtime bank, active checkpoint or current health is inferred. Tests retain extreme/nonfinite ammo bits and original hashes, check runtime/save separation and reproduce the bundled native report. The app explains this lifecycle in weapon details and a Research topic, without simulating checkpoint restore or enabling new edits. `TOD_RuntimeHeroHealthAttribute_verified` describes only the12-byte runtime slice; it is not automatically applied to a dynamic hero or to serialized state.
+
+## Three saved auxiliary words: event branch, Sixaxis gate and bounded modifier
+
+The parallel auxiliary pass adds20 native byte guards in `save_aux_fields`, reproduced by [Inspect-TodSaveAux.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSaveAux.py). These are behavior-qualified field roles, not recovered player-facing names.
+
+| Save offset | Type / actual value | Confirmed behavior |
+| --- | --- | --- |
+| `8758` | BE32 unsigned / 0 | Increments with32-bit wrap when runtime argument byte`5381` is nonzero; its old value contributes to a threshold |
+| `875C` | BE32 unsigned / 0 | Clears on that event branch; otherwise increments with32-bit wrap only when saved Sixaxis-enabled byte`114D3` is nonzero |
+| `8760` | BE32 float / 1.0 (`3F800000`) | Ordered finite update bounded to stored float32 representations of0.6 and1.0; the event branch ultimately forces1.0 |
+
+Initializer `35E110` passes save`+5528` to `35D9A0`; its inner member`+321C` is save`8744`. Stores at inner`+14/+18/+1C` initialize these three words to0/0/1.0. Update `3B5AB8` resolves saved state through `8A3554 = 101EFB20`; caller `3B8BF0` reaches it at `3B9978`. Runtime bytes`5381/5383` belong to its runtime argument and are **not** new save offsets.
+
+For ordinary old counter values, threshold is `4 - min(old8758,2)`. The report preserves the exact low32-bit sign-mask expression for extreme counters; the shortcut is not a validation rule. With runtime`5381` zero, runtime`5383` above threshold subtracts float32`0.05`, otherwise the adjustment iszero; either path bounds an ordered finite result to0.6..1.0. With runtime`5381` nonzero an intermediate positive adjustment can be computed, but the final store overwrites it with1.0 and clears`875C`. Thus the intermediate `+0.1` constant must not be reported as an independently retained increase.
+
+The seven-state caller does not yet yield confirmed gameplay names for the event bytes. Do not label these deaths, wins, a combat-help setting or player-facing difficulty. Sixaxis is the independently named saved gate, not proof of an original name for either counter. Native `fsel` is not a NaN-sanitization contract. Fixtures preserve NaN payloads, infinities, out-of-bound floats and large unsigned words without repair; original hashes remain unchanged. The app exposes these in Technical player data and an embedded Research topic, keeping the simple summary unchanged.
+
+## First-person option: entry latch and qualified camera coupling
+
+The parallel option pass adds51 exact native byte guards in `first_person_option`, reproduced by [Inspect-TodFirstPersonOption.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodFirstPersonOption.py). Saved BE32 `114C0` still has no confirmed original option name. This pass establishes what two native update paths do with it rather than guessing a hold/toggle label.
+
+Method tables `84AF18` and `84AF48` associate entries `20F3F0` / `2108D8` with updates `20F598` / `210B80`. Entry reads the saved word and latches a runtime byte at `+24` / `+3F` to1 exactly when the whole word iszero. Update reads that byte, not the saved option again. Zero-derived flag1 skips the mode10 orientation-adjustment paths; flag0 from any nonzero saved word permits them if additional runtime conditions pass. This does not establish that no other lifecycle changes the runtime flag.
+
+Mode lookup `683F0` scans16 runtime records at container`+C0`, stride`200`, comparing numeric mode at record`+64`. The permitted paths call `778C8`, which uses vector/basis products and angular math to update runtime scalar`+F4` and basis`+C0`. This is neither a direct vector copy nor a save-field write. Entry mode requests0F/10 are priority-qualified and can be skipped if already in either mode; a request does not prove the active camera.
+
+The actual word is1 (`00000001`), so its static interpretation permits the qualified mode10 path; it does not report the current camera. Opaque bytes `114D6/114D7` are bothzero and remain uninterpreted. Tests cover zero, ordinary and extreme nonzero words, method-table/branch evidence, malformed plaintext rejection and unchanged input hashes. No activation/release sequence confirms hold/toggle behavior, and generic `AIMMODE` text-tag exports are not evidence tying a menu label to this word. The app keeps the unknown field in Technical view and explains the new behavior in its details and Research topic.
+
 ## Saved pack/boot state, ordered segment names and initializer ownership
 
 Three parallel research passes independently traced named APIs, the native asset loader and initializer write boundaries. New sections `hero_aux_fields`, `segment_configuration` and `world_aux_fields` contain66,42 and34 native byte guards respectively. Fingerprinted `segment_configuration_assets` records the ordered reference names from19 original level archives. All observations are read-only; none establishes safe edits or full game/save reversal.
@@ -96,7 +140,7 @@ Reproduction tools (all read-only; `--save` accepts the detached plaintext worki
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1239 annotations, 118 imports, evidence, byte signatures and 36 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1255 annotations, 118 imports, evidence, byte signatures and 38 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -1024,7 +1068,7 @@ An arbitrary pointer or stored object UID cannot safely be substituted. The phys
 - **Mode2:** runtime checkpoint mask+44 blocks the associated gameplay segment; otherwise use definition byte40 before saved segment completion and byte41 after completion. The saved segment byte is world+slot*30+2C. Runtime checkpoint state is outside serialized GAME.SAV.
 - **Other modes:** this predicate returns true; other loader/runtime conditions are not removed or claimed irrelevant.
 
-No set bit is promoted to a mission/collectible checklist or completion percentage. Reset dependencies, runtime slot/name mapping and controlled in-game before/after behavior remain unresolved. The third reward channel still has no confirmed player-facing label: its traced consumers forward a runtime message value, which is not enough to rename it XP.
+No set bit is promoted to a mission/collectible checklist or completion percentage. Object-specific reset dependencies and controlled in-game before/after behavior remain unresolved. The later reward-channel pass above confirms the third channel reaches weapon XP through the native message consumers; it is not the hero XP balance at `418`. The later segment-configuration pass supplies56 qualified reference slot/name associations, not a catalog of arbitrary runtime objects.
 
 ### Actual save and inspector
 
@@ -1099,7 +1143,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1238 mapped annotations (the third TOC reference base is unmapped), 36 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry/save-tail/reward-channel/mission-key/pack-boot/segment-loader/world-footprint instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1254 mapped annotations (the third TOC reference base is unmapped), 38 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry/save-tail/reward-channel/mission-key/pack-boot/segment-loader/world-footprint/health-checkpoint/auxiliary-word/first-person-coupling instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

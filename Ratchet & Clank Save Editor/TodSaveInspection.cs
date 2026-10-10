@@ -167,7 +167,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     string details = $"{item.Name} · ID {item.Id} · save offset {TodResearch.Hex(item.Offset)}\r\n" +
                         $"XP bits: 0x{item.XpBits:X8}; ammo bits: 0x{item.AmmoBits:X8}. Stored level is zero-based.\r\n" +
                         $"Ownership byte: 0x{item.Ownership:X2} (nonzero = script-owned, not necessarily usable). Unlock byte: 0x{item.Unlock:X2} at {TodResearch.Hex(0x5754 + item.Id)}.\r\n" +
-                        $"Unknown record +0x12/+0x13: {item.UnknownTail:X4}. Set modifier bits: [{bits}]. Start node 0 need not be purchased.\r\n" + item.Warning;
+                        $"Unknown record +0x12/+0x13: {item.UnknownTail:X4}. Set modifier bits: [{bits}]. Start node 0 need not be purchased.\r\n" +
+                        "Checkpoint ammo lifecycle: native35CF40 captures these saved ammo floats into a runtime-only checkpoint bank. Qualified successful purchase paths merge finite ammo as max(saved, checkpoint) through35D358. If checkpoint validbyteEF is set, hero setup23E650 can restore ammo through13DD0/465DC0, clamping to a definition/level/modifier-dependent maximum and zero fallback. This is not a verbatim copy or a checkpoint embedded in GAME.SAV; active checkpoint and runtime capacity are not inferred.\r\n" + item.Warning;
                     rows.Add(new(new[] { item.Id.ToString(), item.Name, item.ScriptOwned ? "Yes" : "No", item.StoredLevel.ToString(),
                         Number(item.XpBits), Number(item.AmmoBits), $"0x{item.ModifierMask:X8}", $"0x{item.Unlock:X2}", TodResearch.Hex(item.Offset), item.Warning }, details));
                 }
@@ -196,6 +197,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 {
                     uint value = U32(field.Item1);
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 }, field.Item4));
+                }
+                foreach (var field in TodResearch.Map.GetProperty("save_aux_fields").GetProperty("fields").EnumerateArray())
+                {
+                    int offset = TodResearch.Offset(field.GetProperty("offset")); uint bits = U32(offset);
+                    rows.Add(new(new[] { TodResearch.Hex(offset), field.GetProperty("display_name").GetString(), bits.ToString(CultureInfo.InvariantCulture), Number(bits), $"{bits:X8}", "code-backed" },
+                        field.GetProperty("type").GetString() + ". " + field.GetProperty("rule").GetString() + "\r\n" +
+                        TodResearch.Map.GetProperty("save_aux_fields").GetProperty("update").GetProperty("context_limit").GetString() +
+                        "\r\nThese behavior-qualified native fields are not named deaths, wins or a player-facing difficulty setting. Raw values remain unchanged, including nonfinite floats and values outside native update bounds."));
                 }
                 return new(new[] { "Offset", "Field", "uint32 BE", "float32 BE", "Raw bits", "Confidence" }, rows.AsReadOnly());
             }
@@ -295,7 +304,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     rows.Add(new(new[] { InspectionPresentation.Label(name), value, TodResearch.Hex(offset), type, raw }, details));
                 }
                 rows.Add(new(new[] { "Unknown settings word", U32(0x114C0).ToString(CultureInfo.InvariantCulture), "0x114C0", "unmapped u32", Convert.ToHexString(data.AsSpan(0x114C0, 4)) },
-                    "Initializer writes1. Consumers20F3F0/2108D8 compare with zero and select runtime modes0F/10;20F3F0 sets independently named HERO_FIRST_PERSON bit6. The option name and polarity remain unresolved, including after shipped pause-menu analysis. get_button_layout returns constant0 and set_button_layout is a no-op; this is not a confirmed button-layout word."));
+                    "Initializer writes1. Consumers20F3F0/2108D8 compare with zero and select runtime modes0F/10;20F3F0 sets independently named HERO_FIRST_PERSON bit6. Their update methods20F598/210B80 use the zero-derived runtime flags: nonzero saved values permit the qualified camera0x10 transform-update paths through778C8; zero skips those paths. Other runtime conditions still apply. This is a behavior relationship, not a currently active camera or a hold/toggle verdict. The option name and polarity remain unresolved, including after shipped pause-menu analysis. get_button_layout returns constant0 and set_button_layout is a no-op; this is not a confirmed button-layout word."));
                 rows.Add(new(new[] { "Unknown settings tail", Convert.ToHexString(data.AsSpan(0x114D6, 2)), "0x114D6", "unmapped bytes", Convert.ToHexString(data.AsSpan(0x114D6, 2)) },
                     "Two preserved bytes. Not proven padding; not normalized or interpreted."));
                 return new(new[] { "Setting", "Value", "Offset", "Storage", "Raw bytes" }, rows.AsReadOnly());
