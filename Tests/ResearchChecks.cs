@@ -754,6 +754,27 @@ internal static partial class Program
             Equal("255", table.Rows[27].Cells[3]); Equal("0xFFFFFFFF", table.Rows[27].Cells[6]);
             True(bytes.SequenceEqual(before), "Viewing must not execute or balance a Gelanator transition.");
         });
+        Check("Inventory queries and removal boundaries retain raw ammo, levels, ownership and counter samples", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(28, 4), 2.75f);
+            bytes[36] = 0xFE; bytes[37] = 0xFF; bytes[38] = 0xAB; bytes[39] = 0xCD;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x280, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var table = inspection.Table("Weapons & gadgets");
+            string detail = table.Rows[1].Details;
+            True(detail.Contains("Named inventory query distinctions") && detail.Contains("owned false while flag2 exposes"), "Raw ownership must not become script-visible attributes or live eligibility.");
+            True(detail.Contains("FLOOR(saved ammo)") && detail.Contains("not nearest rounding, ceiling, clamping"), "Script-floor arithmetic must not normalize saved ammo.");
+            True(detail.Contains("raw255 becomes256") && detail.Contains("retains the original zero-based byte"), "Script one-based arithmetic must not replace stored levels.");
+            True(detail.Contains("gameplay caller unresolved") && detail.Contains("does not prove unused/dead code"), "Removal mechanics must not claim a known gameplay caller.");
+            string counterDetail = inspection.Table("Counters & nearby fields").Rows.Single(r => r.Cells[0] == "0x280").Details;
+            True(counterDetail.Contains("Only AFTER both helpers") && counterDetail.Contains("No local underflow clamp"), "Counter sample/store order must remain qualified to the leaf.");
+            Equal("255", table.Rows[1].Cells[3]); Equal("2.75", table.Rows[1].Cells[5]);
+            True(detail.Contains("ABCD"), "Opaque record bytes stay visible.");
+            Equal(10, table.Columns.Length);
+            True(bytes.SequenceEqual(before), "Viewing must not floor ammo, renumber levels, remove ownership or decrement counters.");
+        });
         Check("Ammo-crate details preserve raw ammo and separate declared refill inputs from later rounding", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1278,7 +1299,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1480, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1482, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

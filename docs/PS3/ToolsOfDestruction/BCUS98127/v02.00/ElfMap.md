@@ -2,7 +2,46 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
-Latest completed pass confirms the CrateAmmo refill producer, separate ordered-below-capacity method, level-zero CrateAmmo versus saved-level/modifier capacity, and post-add ceiling except native ID3 Ravager. Subsequent flag2 acquisition and UI rejection remain distinct from the earlier ammo operation.88 guard ranges,14 focused tests and four annotations cover the native evidence; the fingerprinted original CSV supplies32 constructor-linked declared reference amounts with missing values left unknown. Existing inventory details and two Research topics remain read-only with unchanged columns. All824 native/asset/organization checks and198 app regressions pass, including raw-value preservation, UI resizing/DPI, original-save loading and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1479 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1480 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage. Actual refill context/factor/definition overrides, coupling between predicate and invocation, pointer lifetime, FPSCR/nonfinite conversion, callback/hardware outcomes, phase units, target identities/counts and event names remain unresolved.
+Latest completed pass confirms independent named ownership versus definition-gated ammo/level visibility, bounded finite ammo FLOOR and one-based script level arithmetic. The handle-qualified ownership path has diagnostic continuations rather than independently established safe rejection. A removal leaf requests XP/ammo setters before ownership0 and a reread wrapping counter decrement; its gameplay caller remains unresolved.89 guard ranges,14 focused tests, two new instruction comments and refinements to two existing function comments cover the evidence. Existing raw inventory/counter details and Research remain read-only with unchanged columns. All838 native/asset/organization checks and199 app regressions pass, including raw-value preservation, UI resizing/DPI, original-save loading and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1481 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1482 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage. Native query context/definitions, removal reachability, indirect/computed calls, pointer lifetime, FPSCR/nonfinite conversion, callback/hardware outcomes, phase units, target identities/counts and event names remain unresolved.
+
+## Inventory ownership queries, attribute visibility and qualified removal leaf
+
+[Inspect-TodInventoryQueries.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodInventoryQueries.py) adds89 exact-build byte-guard ranges and fourteen focused tests. Four named API registrations, canonical saved roots, thunk/TOC targets, attribute gates, numeric projection instructions and removal-store ordering reproduce `inventory_queries` in NativeMap.json. Two new instruction comments accompany refinements to two existing function comments without renaming them. Member offsets and addresses below are hexadecimal; inventory stride20 is decimal. Inspection and detached reference plans never run native/Lua code or edit the save.
+
+### Raw ownership is not the ammo/level visibility rule
+
+Named **is_weapon_owned** reaches **33F40→25AF0→12950→2D1C10**, which reads saved **0x14×ID+0x10** through89F1B8→101EFB20. Zero returns0; **any nonzero byte returns1**. This complete leaf does not consult definitions, flags, ammo, level or capacity, and establishes no local item-ID bound. Wrapper33F40 pushes the Boolean then returns1 as Lua **result count**, not always-true ownership.
+
+Named **get_weapon_ammo**33C80→**258C0** and **get_weapon_level**33A98→**27608** first resolve the definition through13B90→463190. Their shared visibility gate is `(ownership != 0 OR definition flags & 0x2) AND !(definition flags & 0x1)`. Otherwise they return0 locally. Saved ownership alone cannot reproduce these results because current definition flags and pointer/ID validity are separate prerequisites:
+
+| Supplied ownership byte | Supplied low definition flags | Owned predicate | Ammo/level branch |
+| --- | --- | --- | --- |
+| 0 | 0 | False | Return0 |
+| 0 | 2 | False | Expose attributes |
+| Any nonzero | 0 | True | Expose attributes |
+| Any nonzero | 1 or3 | True | Return0 |
+
+These are explicit-input branch relationships, not active usability, valid gameplay definitions, current capacities or accepted editing ranges. The inspector's raw ownership/level/ammo columns retain their existing meaning; it does not substitute a hypothetical script result.
+
+### Visible ammo floors; visible level is one-based
+
+After admission,258C0 loads saved ammo at member8 and uses **FCTIDZ/FCFID/FSEL around1.0 to select FLOOR** for bounded ordinary finite inputs. Thus supplied2.75 projects to2; supplied−0.25 projects to−1. It is not nearest rounding, ceiling, a lower/capacity clamp or a write back to ammo. Nonfinite or out-of-range integer conversion, FPSCR and signed-zero identity remain outside the detached projection. This differs from the previously mapped crate producer's later **ceiling** local value after clamped addition. Fractional saved ammo remains fractional even when this numeric getter projects it to an integer.
+
+27608 loads the unsigned saved level byte at member11 and returns **byte+1** after the same gate: stored0→1 and9→10. Raw255→256 is only arithmetic, not a valid weapon level or native index-safety guarantee. No XP threshold recomputation or saved-byte normalization occurs in the getter. Hidden attributes return0 regardless of the stored level. These complete getters contain no capacity calculation or saved stores.
+
+### Handle-qualified ownership has diagnostic boundaries, not proven safe rejection
+
+Named **hero_has_weapon**2BB4B0→**28B160**, on a reached valid handle/type211/non-null hero+1A68 path, normalizes the selected ownership byte without the ammo/level definition gates. Native28B160 resolves the handle repeatedly, rather than caching one stable object. Its unsigned ID>31, missing-handle and initial typeB9 diagnostics call24F9D8 then **continue**; the code does not independently establish terminal assertions or safe rejection. Later type211 and nonnull-save gates do return0. Wrapper admission/conversion, diagnostics and helper mutation can affect execution; malformed handles/IDs are not simulated. Its wrapper also returns Lua1 only after pushing the predicate.
+
+### Removal leaf requests setters before ownership and counter stores
+
+Complete **466AE8** accepts an inventory-shaped base and index. It samples selected record ownership+10: zero skips its setter calls and explicit stores. **Any nonzero** requests XP+0 through4660A8, then absolute ammo+0 through465DC0, then explicitly stores ownership0. Those are setter operations, not a raw first18-byte record reset or a guaranteed final level/ammo0: XP progression and definition-dependent ammo clamping still apply.
+
+Only **after both helpers and the ownership store**, it reads base+280 and writes low32(counter−1). There is no local underflow clamp: an explicit post-helper sample0 wraps toFFFFFFFF. The snapshot's counter is not necessarily the sample later read after these helpers. Its only direct stores target ownership+10 and counter+280; there is no direct modifier-mask, unlock, quick-select or opaque-tail store. That does not prove called helpers/callbacks preserve every other field.
+
+**Gameplay reachability is unresolved.** Descriptor874B00 exists, but an aligned BE32 census of all four file-backed LOAD ranges finds no references to that descriptor. A direct-branch census of the executable range10200..83C648 also finds no branch to466AE8. These bounded static surveys do not prove dead/unused code, exclude computed/indirect calls or establish a gameplay removal action. The existing map name is preserved with this qualification; no new removal editor feature or safe removal recipe is added.
+
+The supplied save has25 nonzero ownership records and raw counter0000002E (46), which remains unnormalized. Raw level9 stays9 in inspection; neither hypothetical script10 nor floor-projected ammo replaces saved data. Original raw values, nonfinite words and opaque tails are preserved. Existing inventory and counter details expose these distinctions, and Research adds a searchable topic. No new columns, rows or editing permissions result.
 
 ## CrateAmmo refill requests versus admission and later rounding
 

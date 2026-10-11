@@ -306,6 +306,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "Level-5 publication writes level5/threshold5 XP and adds maximum ammo before charging bolts. The bridge alone accepts num_levels>4, a weaker condition than the purchase gate. Normal acquisition has no local duplicate-ownership rejection: a repeated call can charge again while skipping its local acquisition-counter increment. Later callbacks and checkpoint updates remain qualified; viewing never purchases, refills or changes counters.\r\n" +
                         "Checkpoint ammo lifecycle: native35CF40 captures these saved ammo floats into a runtime-only checkpoint bank. Qualified successful purchase paths merge finite ammo as max(saved, checkpoint) through35D358. If checkpoint validbyteEF is set, hero setup23E650 can restore ammo through13DD0/465DC0, clamping to a definition/level/modifier-dependent maximum and zero fallback. This is not a verbatim copy or a checkpoint embedded in GAME.SAV; active checkpoint and runtime capacity are not inferred.\r\n" + item.Warning;
                     var capacity = TodResearch.Map.GetProperty("ammo_capacity");
+                    var queries = TodResearch.Map.GetProperty("inventory_queries");
+                    details += "\r\nNamed inventory query distinctions: " + queries.GetProperty("ownership").GetString() +
+                        "\r\n" + queries.GetProperty("visible_attributes").GetString() +
+                        "\r\n" + queries.GetProperty("ammo_rounding").GetString() +
+                        "\r\n" + queries.GetProperty("level_numbering").GetString() +
+                        "\r\nRemoval leaf (gameplay caller unresolved): " + queries.GetProperty("removal_leaf").GetProperty("ordered_rule").GetString() +
+                        "\r\n" + queries.GetProperty("removal_leaf").GetProperty("scope").GetString() +
+                        "\r\n" + queries.GetProperty("snapshot_limit").GetString();
                     var crate = TodResearch.Map.GetProperty("ammo_crate");
                     var declaredCrate = TodResearch.Map.GetProperty("ammo_crate_assets").GetProperty("catalog")
                         .EnumerateArray().Single(c => c.GetProperty("id").GetInt32() == item.Id);
@@ -342,7 +350,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
             if (view == "Counters & nearby fields")
             {
-                foreach (var field in new[] { (0x280, "Acquisition/removal counter", "confirmed", "Not asserted equal to the owned-item count."),
+                foreach (var field in new[] { (0x280, "Acquisition/removal counter", "confirmed", "Not asserted equal to the owned-item count.\r\n" +
+                    TodResearch.Map.GetProperty("inventory_queries").GetProperty("removal_leaf").GetProperty("ordered_rule").GetString() + "\r\n" +
+                    TodResearch.Map.GetProperty("inventory_queries").GetProperty("removal_leaf").GetProperty("scope").GetString()),
                     (0x418, "Hero XP", "code-backed", "Whole-number hero experience, not current health or a saved level. Named hero_set_xp chain 2BAED0 -> 28A9B0 -> 252C78 -> 23E090 writes this integer. The script setter discards ordinary positive fractions before the leaf.\r\nThe live handler keeps a separate fractional remainder: it carries one XP only when the remainder is greater than1, not exactly1; there is no carry loop. Level checks use original incoming XP, not the saved value after carry, and only raise an existing runtime level. Reload binding resets runtime level/remainder first.\r\nReload converts saved XP through float32 before republishing it. Some large integers above2^24 lose precision; near uint32 maximum, conversion/wrap/carry can interact. Numerical previews assume nearest-even rounding; live FPSCR and active runtime threshold values are unknown. The Hero XP reference view lists98 shipped XP/HP rows separately; those definitions do not establish current health or runtime level. The raw saved value shown here is preserved. Runtime remainder, level and health cannot be inferred from this snapshot; no safe editing range inferred."),
                     (0x41C, "Bolts", "confirmed", "uint32 big endian. Reward-side additions wrap modulo32 and update a separate runtime accumulator first. Hero-side additions use the signed low32(cap-sum) selection with cap999999999, not a universal unsigned minimum or a lower clamp. These native paths do not establish a safe edit range or repair unusual balances."),
                     (0x420, "Raritanium", "confirmed", "uint32 big endian. Reward-side additions wrap modulo32 and update a separate runtime accumulator first. Hero-side additions use the signed low32(cap-sum) selection with cap999999999, not a universal unsigned minimum or a lower clamp. Runtime reward-cache subtraction can use the full requested amount, not the actual wallet delta; that cache is not saved here."),

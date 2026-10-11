@@ -119177,6 +119177,427 @@
     ],
     "qualification": "Fingerprint-verified declared CrateAmmo[0] only; missing values stay unknown. Constructor-based IDs, not CSV order. No live runtime overrides/factor, pickup amount, capacity or event history inferred."
   },
+  "inventory_queries": {
+    "confidence": "exact-build-named-queries-and-qualified-removal-leaf",
+    "warning": "USA BCUS98127 v02.00 only. Static read-only reference, not full inventory usability, native execution, removal reachability or new editing permission.",
+    "named_apis": [
+      {
+        "name": "is_weapon_owned",
+        "slot_va": "0x8892f4",
+        "wrapper_va": "0x33f40"
+      },
+      {
+        "name": "get_weapon_ammo",
+        "slot_va": "0x88930c",
+        "wrapper_va": "0x33c80"
+      },
+      {
+        "name": "get_weapon_level",
+        "slot_va": "0x88931c",
+        "wrapper_va": "0x33a98"
+      },
+      {
+        "name": "hero_has_weapon",
+        "slot_va": "0x89deb8",
+        "wrapper_va": "0x2bb4b0"
+      }
+    ],
+    "ownership": "Named is_weapon_owned33F40->25AF0->12950->2D1C10 reads canonical saved20*ID+10 through89F1B8=101EFB20 and returns normalized0/1 for zero/ANY nonzero byte. It does not resolve definitions, inspect flags, ammo, level or capacity. No local ID bound is established. Wrapper returns1 as Lua RESULT COUNT after pushing the predicate, not always true ownership.",
+    "visible_attributes": "Named get_weapon_ammo33C80->258C0 and get_weapon_level33A98->27608 resolve definition through13B90->463190. They expose attributes only if (saved ownership nonzero OR definition flag2) AND definition flag1 clear; otherwise both return0 locally. Thus owned can be true while visible attributes are0, or owned false while flag2 exposes them. No capacity, stored-level range or playable-weapon validation is performed by these gates. Valid record/definition pointers, matching ID and current definition flags remain necessary; viewing does not infer them from a save.",
+    "ammo_rounding": "258C0 exposes FLOOR(saved ammo) for bounded ordinary finite inputs through FCTIDZ/FCFID and FSEL around1.0. It is not nearest rounding, ceiling, clamping to0/capacity or a store back to the record. Negative fractional ammo floors farther negative; positive fractional ammo remains raw in GAME.SAV even when the named numeric getter returns a lower integer. Nonfinite/out-of-range conversion and FPSCR/signed-zero identity remain unmodeled. This differs from2FF6C0's later CEILING local request after the crate add.",
+    "level_numbering": "27608 returns raw unsigned stored-level byte+1 only after the visibility gate. Stored0 becomes script1; stored9 becomes10; raw255 becomes256 in this arithmetic, not a valid level or accepted edit. The inspector retains the original zero-based byte and does not replace it with this getter result.",
+    "handle_ownership": "Named hero_has_weapon2BB4B0->28B160, on a valid resolved handle/type211/non-null hero+1A68 path, normalizes the selected saved ownership byte without applying the ammo/level definition gates. The native method resolves the handle repeatedly rather than caching one stable object. Its unsigned ID>31, missing handle and initial typeB9 diagnostic branches call24F9D8 then CONTINUE; they are not independently proven safe rejection or terminal assertions. Later type211/nonnull-save gates do return0. Wrapper validation/conversion, diagnostics, helper mutations and full invalid-handle behavior remain unmodeled; Lua1 is result count after pushing its predicate.",
+    "removal_leaf": {
+      "va": "0x466ae8",
+      "ordered_rule": "For a valid supplied inventory-shaped base/index, complete466AE8 samples record+10: zero skips both setter calls and its explicit stores. ANY nonzero calls4660A8 with XP+0, then465DC0 with absolute ammo+0, then explicitly stores ownership0. Only AFTER both helpers and that byte store does it load base+280 and publish wrapping low32(counter-1). No local underflow clamp; post-helper sample0 becomesFFFFFFFF. Setter calls can alter XP/level/ammo and other callback state; requests are not a raw first18-byte reset or guaranteed final level/ammo0.",
+      "scope": "Only direct leaf stores target ownership+10 and counter+280. No direct modifier-mask, unlock, quick-select or opaque-tail store occurs here; called helpers' complete effects are not thereby ruled out. Descriptor874B00 exists but this survey found no aligned file-backed references to it and no direct executable branch to466AE8. No caller or gameplay invocation is established; this does not prove unused/dead code or authorize removal. Counter arithmetic must use a supplied post-helper sample, not promise the snapshot's next value.",
+      "static_descriptor_references": [],
+      "static_direct_branch_sites": []
+    },
+    "snapshot_limit": "Raw ownership, ammo and stored level are separate saved facts. Current definition flags, active handles, native query results and removal history are not recovered. Acquisition counter is not repaired to the number of owned records; the qualified leaf can decrement it if invoked, but its gameplay use is unresolved. Inspection never floors ammo in storage, renumbers levels, clears ownership or changes counters.",
+    "recommended_annotations": [
+      {
+        "va": "0x25978",
+        "kind": "comment",
+        "name": "TOD_weapon_ammo_visible_finite_floor_not_saved_mutation",
+        "comment": "Visible attribute gate (ownership!=0 OR flags2) AND !flags1. FCTIDZ/FCFID/FSEL select FLOOR for bounded finite saved ammo, not ceiling, lower/max clamp or raw ammo store. Nonfinite/FPSCR unmodeled."
+      },
+      {
+        "va": "0x27690",
+        "kind": "comment",
+        "name": "TOD_weapon_level_script_one_based_after_visibility_gate",
+        "comment": "Returns saved unsigned byte+1 only after (ownership!=0 OR flags2) AND !flags1; raw255 arithmetic256, not level validity or save normalization. Hidden branch0."
+      },
+      {
+        "va": "0x2d1c10",
+        "name": "TOD_weapon_saved_ownership_nonzero_predicate",
+        "comment": "Named is_weapon_owned leaf: canonical saved20*ID+10 through89F1B8; normalizes ANY nonzero byte to1 without definition/ammo/level/capacity checks. No local ID bound."
+      },
+      {
+        "va": "0x466ae8",
+        "name": "TOD_inventory_removal_leaf_requests_then_owner_clear_counter_decrement",
+        "comment": "Owned nonzero: XP+0 setter, absolute ammo+0 setter, owner0 store, THEN reread base280 and wrap decrement. Owner0 skips. No observed static caller/descriptor reference; not established gameplay removal or exact helper final state."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x12950",
+        "bytes": "F84100283C4200013842FFE8482BF2B4"
+      },
+      {
+        "va": "0x13b90",
+        "bytes": "F84100283C4200013842FFE84844F5F4"
+      },
+      {
+        "va": "0x258c0",
+        "bytes": "F821FF717CE802A6FBA100787C7D1B787C6307B4F8E100A04BFEE2B9E841002857A9203680A286EC57A6103A7C864A147FA42A147BBD0020881D00102F800000409E005080630018546807BC2C08000040820044E86100A0C1628724C042870C7C6803A6EBA1007838210090FC205E5EFC200E9CFDA15828FD811028FC0B606EFC2D02EEFDA06850FC2D006E4E80002080630018546A07FE2C8A00004086FFB8E86100A0C17D0008C042870C7C6803A6EBA1007838210090FC205E5EFC200E9CFDA15828FD811028FC0B606EFC2D02EEFDA06850FC2D006E4E80002060000000"
+      },
+      {
+        "va": "0x258d8",
+        "bytes": "4BFEE2B9"
+      },
+      {
+        "va": "0x258f8",
+        "bytes": "881D0010"
+      },
+      {
+        "va": "0x25908",
+        "bytes": "546807BC"
+      },
+      {
+        "va": "0x25910",
+        "bytes": "40820044"
+      },
+      {
+        "va": "0x25954",
+        "bytes": "546A07FE"
+      },
+      {
+        "va": "0x2595c",
+        "bytes": "4086FFB8"
+      },
+      {
+        "va": "0x25964",
+        "bytes": "C17D0008"
+      },
+      {
+        "va": "0x25978",
+        "bytes": "FC205E5E"
+      },
+      {
+        "va": "0x2597c",
+        "bytes": "FC200E9C"
+      },
+      {
+        "va": "0x25980",
+        "bytes": "FDA15828"
+      },
+      {
+        "va": "0x25984",
+        "bytes": "FD811028"
+      },
+      {
+        "va": "0x25988",
+        "bytes": "FC0B606E"
+      },
+      {
+        "va": "0x2598c",
+        "bytes": "FC2D02EE"
+      },
+      {
+        "va": "0x25990",
+        "bytes": "FDA06850"
+      },
+      {
+        "va": "0x25994",
+        "bytes": "FC2D006E"
+      },
+      {
+        "va": "0x25af0",
+        "bytes": "F821FF917C8802A6F88100804BFECE55E8410028E8010080786306207C0803A6382100704E800020"
+      },
+      {
+        "va": "0x25afc",
+        "bytes": "4BFECE55"
+      },
+      {
+        "va": "0x27608",
+        "bytes": "F821FF717CE802A6FBA100787C7D1B787C6307B4F8E100A04BFEC571E841002857A9203680A286EC57A6103A7C864A147FA42A147BBD0020881D00102F800000409E003080630018546807BC2C08000040820024E98100A038600000EBA10078382100907C6307B47D8803A64E80002080630018546A07FE2C8A00004086FFD8897D0011E98100A0386B0001EBA100787D8803A6382100907C6307B44E800020"
+      },
+      {
+        "va": "0x27620",
+        "bytes": "4BFEC571"
+      },
+      {
+        "va": "0x27640",
+        "bytes": "881D0010"
+      },
+      {
+        "va": "0x27650",
+        "bytes": "546807BC"
+      },
+      {
+        "va": "0x27658",
+        "bytes": "40820024"
+      },
+      {
+        "va": "0x2767c",
+        "bytes": "546A07FE"
+      },
+      {
+        "va": "0x27684",
+        "bytes": "4086FFD8"
+      },
+      {
+        "va": "0x27688",
+        "bytes": "897D0011"
+      },
+      {
+        "va": "0x27690",
+        "bytes": "386B0001"
+      },
+      {
+        "va": "0x33a98",
+        "bytes": "F821FF517C8802A638010070FBE100A8781F0020F88100C038A00000388000017FE6FB78FBC100A07C7E1B784BFDF52DE84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F37880829B007FE5FB784BFDD795E841002838600000E94100C07C6307B4EBC100A0EBE100A87D4803A6382100B04E800020600000004BFDED69E841002838800001C02298A42C0300007FC3F3784182FFB04BFDF54DE841002839010080FC20081E7C2047AE806100807C6307B44BFF3AB9600000007C6007B47FC3F3787C07AE76780605603927000138A607FF28A900027CAB0378796B052441840024F9610090C8410090FC00169CFC2000184BFE0621E8410028386000014BFFFF5C7C0B03784BFFFFDC"
+      },
+      {
+        "va": "0x33c80",
+        "bytes": "F821FF617C8802A638010070FBE10098781F0020F88100B038A00000388000017FE6FB78FBC100907C7E1B784BFDF345E84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F37880829B087FE5FB784BFDD5ADE841002838600000E8A100B07C6307B4EBC10090EBE100987CA803A6382100A04E800020600000004BFDEB81E841002838800001C02298A42C0300007FC3F3784182FFB04BFDF365E841002839210080FC20081E7C204FAE806100807C6307B44BFF1B89600000007FC3F3784BFE046DE8410028386000014BFFFF9060000000"
+      },
+      {
+        "va": "0x33f40",
+        "bytes": "F821FF617C8802A638010070FBE10098781F0020F88100B038A00000388000017FE6FB78FBC100907C7E1B784BFDF085E84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F37880829B147FE5FB784BFDD2EDE841002838600000E8A100B07C6307B4EBC10090EBE100987CA803A6382100A04E800020600000004BFDE8C1E841002838800001C02298A42C0300007FC3F3784182FFB04BFDF0A5E841002839210080FC20081E7C204FAE806100807C6307B44BFF1AF960000000786406207FC3F3784BFDC699E8410028386000014BFFFF8C"
+      },
+      {
+        "va": "0x33ff8",
+        "bytes": "4BFF1AF9"
+      },
+      {
+        "va": "0x23e650",
+        "bytes": "F821FED17C0802A6FB0100F03B0311B8FB2100F87B190020FAA100D8FBE101283AA311C07C7F1B78FBA101183BA00000FA8100D07AA300203A9F11C8F8010140FAC100E0FAE100E8FB410100FB610108FB810110FBC1012093B9000493B900004BDD4841E84100283AFF12D07A8300203ADF12DC4BDD482DE84100287AE300204BDD4821E84100287AC300204BDD35F5E8410028399F1320798300207BF500204BDD4801E8410028395F14A0794300203B0000004BDD249DE8410028811F00147EA3AB783B4000003B20000080A800543B6000003A9F112080E5001060E6000290C500104BFA26DD6000000081227C0038600000913F1A68907F1B689BBF1B619BBF001C808904187EA3AB78F88100C0C82100C0FC000E9CFC2000184BFFF92582DF00147AD700207EE3BB784BDD51E5E841002883827C04881C00EF2F800000419E02743BBC00207C00E0CE387C001039370010397700207DA0E8CE3BA000007C2018CE7C00B9CE7C2049CE7DA059CEEBDC0038E89C0030FBD70038F897003083DF1A6860000000807F002057AC103A57A02036546928347D0C02147C89EA147CDE4214548A103A78C3002038EA00503BBD00017CE507B47C3C2C2E4BDD55C5E84100282C3D00204082FFC08BDC00EE2C9E0000408601E07EA3AB783BC000004BFFF7D938BF184838DF18608097006478A3002078C5002038C0000A3BA000404BDD1F11E8410028395F14B0381F14C479430020780500207EE4BB784BDD2685E8410028399F154C83627C0C799C0020C0827C1038FF1B1C3900FFFF90FC0000911C000893BC00049BDF1B60EB5B0000FB5F1A58807700C8C0D700602F830000C0770110FCA62028FD232028FD6521AEFC2920EED1770060D0370110419E001C81627C147863002038A00000808B00004BDD4F91E84100287A9600207EE4BB787EC3B3783BBF1A704BDD4699E841002838BF1AB08156006438DF1AC0C1427BC4399700303917001038F7002078B8002078D900203B9F1A803B7F1A903B5F1AA06140000B3A800000901600647C00B8CE7EA3AB787D8060CE3AA000047C2040CE7DA038CE7C00E9CE7C20E1CE7DA0D9CE7D80D1CE929800009298000492980008D158000C929900009299000492990008D159000C82DF00008096006481240000F84100287D2903A6804400044E800421E8410028387F18407877002092BF10D0929700009BD700069BD700049BD700059BDF1B62EBE10140EA8100D07FE803A6EAA100D8EAC100E0EAE100E8EB0100F0EB2100F8EB410100EB610108EB810110EBA10118EBC10120EBE10128382101304E80002039360010C0227BF838960030792C0020788300203961009038800006797E0020C04C000CC003000CEDA2002AC10C0008D1A100C8C1830008ECE8602AC0CC000480A100C878BB002C38A00001D0E100C8C1430004ECA6502AC08C000080C100C878DB000E38C00001D0A100C8C16300007FC3F378EC64582A814100C8FB610078795A002CC101007CC0C10078D06100C8800100C8781A000EFB410070C12C000CC04C0008ED890072C1AC0004ED420072ED6D0072C00C0000ED200072C0810074C0410070ECE86028ECA65028EC645828EDA24828D0E100C8810100C8D0A100C880E100C87919002CD06100C883A100C878F9000ED1A100C87BB8002C838100C8FB2100887B98000EFB0100804BDD1901E84100288377009038810080C0227C08386100707FC6F37892C100A0936100A44BDD27BDE8410028547A063E2F1A0000409A00147FC3F3784BDD2E15E84100284BFFFCD4830100907FC3F378EB380000EAD80008FB370030FAD700384BDD2DF1E84100284BFFFCB060000000"
+      },
+      {
+        "va": "0x23e744",
+        "bytes": "913F1A68"
+      },
+      {
+        "va": "0x28b160",
+        "bytes": "2B84001F7C0802A6F821FF71FBC10080FBA10078FBE10088F80100A07C9E2378906100C0419D014C3BA100C07BBF00207FE3FB784BFEBBB52C230000418201147FE3FB784BFEBBA5806300402C8300004186007878630020388000B94BFC404DE84100285463063E2F030000419A005C7BBF00207FE3FB784BFEBB71806300402F830000419E002038800211786300204BFC4019E84100285464063E2C0400004082004838600000EBC100A07C6307B4EBA100787FC803A6EBE10088EBC10080382100904E80002080E2908080A294DC808292C4806700044BFC47A1E84100284BFFFF90600000007FE3FB784BFEBAFD80A3004081651A682C8B00004186FFA857C0203657DF103A796B00207FBF021438600000399D00107D8A07B47D0B50AE2F080000419AFF84EBC100A038600001EBA100787C6307B47FC803A6EBE10088EBC10080382100904E8000206000000080C290808082928080A294DC806600044BFC4719E84100284BFFFED8600000008122908038C00000808290BC38E0001F80A294D8806900044BFC46F1E84100284BFFFE9860000000"
+      },
+      {
+        "va": "0x28b184",
+        "bytes": "419D014C"
+      },
+      {
+        "va": "0x28b194",
+        "bytes": "4BFEBBB5"
+      },
+      {
+        "va": "0x28b1b8",
+        "bytes": "388000B9"
+      },
+      {
+        "va": "0x28b1e8",
+        "bytes": "38800211"
+      },
+      {
+        "va": "0x28b254",
+        "bytes": "81651A68"
+      },
+      {
+        "va": "0x28b25c",
+        "bytes": "4186FFA8"
+      },
+      {
+        "va": "0x28b27c",
+        "bytes": "7D0B50AE"
+      },
+      {
+        "va": "0x28b280",
+        "bytes": "2F080000"
+      },
+      {
+        "va": "0x28b28c",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x28b2c0",
+        "bytes": "4BFC4719"
+      },
+      {
+        "va": "0x28b2e8",
+        "bytes": "4BFC46F1"
+      },
+      {
+        "va": "0x28b2f0",
+        "bytes": "4BFFFE98"
+      },
+      {
+        "va": "0x2bb4b0",
+        "bytes": "F821FF517C0802A6FBC100A03BC1007080A29740FBA100987BDD002038C00000388000017FA7EB78FBE100A8F80100C07C7F1B784BF94E55E84100282F8300007FA6EB783880000238A000007FE3FB78409E00407FE3FB788082EDF07FC5F3784BF95EF9E841002838600000E8C100C07C6307B4EBA10098EBC100A07CC803A6EBE100A8382100B04E800020600000004BF97769E84100287FA5EB782C030000388000037FE3FB784182FFAC4BF9768DE84100282C8300004186FF9C38A00000388000017FE3FB784BF96351E841002838800002C022E9107C651B78787D00202F0500007FE3FB78419A004883BD00004BF966D9E8410028FC20081E392100807FA3EB787C204FAE808100807C8407B44BFCFBA160000000786406207FE3FB784BF94E69E8410028386000014BFFFF407FE3FB788082E94438A000004BF95E1DE8410028386000004BFFFF2460000000"
+      },
+      {
+        "va": "0x2bb5c0",
+        "bytes": "4BFCFBA1"
+      },
+      {
+        "va": "0x2d1c10",
+        "bytes": "546720368122F2985466103A396000007CA63A14388500107C8307B47C0918AE2F800000419E0008396000017D6307B44E80002060000000"
+      },
+      {
+        "va": "0x2d1c24",
+        "bytes": "38850010"
+      },
+      {
+        "va": "0x2d1c2c",
+        "bytes": "7C0918AE"
+      },
+      {
+        "va": "0x2d1c30",
+        "bytes": "2F800000"
+      },
+      {
+        "va": "0x2d1c34",
+        "bytes": "419E0008"
+      },
+      {
+        "va": "0x2d1c38",
+        "bytes": "39600001"
+      },
+      {
+        "va": "0x465dc0",
+        "bytes": "F821FF717C8802A6FBA100707C7D1B78DBE1008878630020FFE00890F88100A04BFFE00160000000C1A25FD4FC7F6828FC036FEEFC400828FD82006ED19D0008E80100A0EBA10070CBE100887C0803A6382100904E800020"
+      },
+      {
+        "va": "0x4660a8",
+        "bytes": "F821FF617C0802A6DBE10098FFE00890FB810078FBA10080FBC10088FBE10090F80100B07C7F1B78787D0020806300007C6307B44BFFD1D5600000008B9F00117C7E1B787FA3EB784BFFFE192F9E0000D3FF0004419E006C5468063E388000002C080000989F0011418200A87BC30020C0030234FC9F00004CC533824086009439400000480000187DA34C2EC03F0004FF8168004FDDF382409E002838CA000154CB063E7CCA33785565103A7F0858003925023498DF00117D2907B4409AFFCC579E063E88FF00117C07F040408100447FA3EB784BFFDC65600000007FA3EB784BFFFC9181425FD8810A00D02888003C40850020819F00007BC4062088BF00117D8307B4C0225FDC480224D960000000EB8100B0EBA100807F8803A6EBC10088EB810078EBE10090CBE10098382100A04E80002060000000"
+      },
+      {
+        "va": "0x466ae8",
+        "bytes": "548620367CE802A65485103AC0225FECF821FF81FBC100707C7E1B787C653214FBE100787C9E1A14F8E10090789F00207FE3FB78881F00102F800000419E00304BFFF581600000007FE3FB78C0225FEC4BFFF2896000000039400000995F0010811E02803928FFFF913E0280E9610090EBC10070EBE100787D6803A6382100804E80002060000000"
+      },
+      {
+        "va": "0x466af4",
+        "bytes": "C0225FEC"
+      },
+      {
+        "va": "0x466b1c",
+        "bytes": "881F0010"
+      },
+      {
+        "va": "0x466b24",
+        "bytes": "419E0030"
+      },
+      {
+        "va": "0x466b28",
+        "bytes": "4BFFF581"
+      },
+      {
+        "va": "0x466b34",
+        "bytes": "C0225FEC"
+      },
+      {
+        "va": "0x466b38",
+        "bytes": "4BFFF289"
+      },
+      {
+        "va": "0x466b44",
+        "bytes": "995F0010"
+      },
+      {
+        "va": "0x466b48",
+        "bytes": "811E0280"
+      },
+      {
+        "va": "0x466b4c",
+        "bytes": "3928FFFF"
+      },
+      {
+        "va": "0x466b50",
+        "bytes": "913E0280"
+      },
+      {
+        "va": "0x85a910",
+        "bytes": "00033A980088FF38"
+      },
+      {
+        "va": "0x85a920",
+        "bytes": "00033C800088FF38"
+      },
+      {
+        "va": "0x85a938",
+        "bytes": "00033F400088FF38"
+      },
+      {
+        "va": "0x86be98",
+        "bytes": "002BB4B00089FF20"
+      },
+      {
+        "va": "0x874b00",
+        "bytes": "00466AE8"
+      },
+      {
+        "va": "0x874b04",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x888624",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x888644",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x88865c",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x8892f4",
+        "bytes": "10002EF00085A938"
+      },
+      {
+        "va": "0x88930c",
+        "bytes": "10002F280085A920"
+      },
+      {
+        "va": "0x88931c",
+        "bytes": "10002F500085A910"
+      },
+      {
+        "va": "0x897b38",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89deb8",
+        "bytes": "1001B3E00086BE98"
+      },
+      {
+        "va": "0x89f1b8",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a5f0c",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x10002ef0",
+        "bytes": "69735F776561706F6E5F6F776E656400"
+      },
+      {
+        "va": "0x10002f28",
+        "bytes": "6765745F776561706F6E5F616D6D6F00"
+      },
+      {
+        "va": "0x10002f50",
+        "bytes": "6765745F776561706F6E5F6C6576656C00"
+      },
+      {
+        "va": "0x1001b3e0",
+        "bytes": "6865726F5F6861735F776561706F6E00"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -119670,6 +120091,8 @@
     ]
   },
   "annotations": [
+{"va":"0x00025978","name":"TOD_weapon_ammo_visible_finite_floor_not_saved_mutation","kind":"comment","confidence":"confirmed","bytes":"FC205E5E","comment":"Visible attribute gate (ownership!=0 OR flags2) AND !flags1. FCTIDZ/FCFID/FSEL select FLOOR for bounded finite saved ammo, not ceiling, lower/max clamp or raw ammo store. Nonfinite/FPSCR unmodeled.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; inventory_queries native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00027690","name":"TOD_weapon_level_script_one_based_after_visibility_gate","kind":"comment","confidence":"confirmed","bytes":"386B0001","comment":"Returns saved unsigned byte+1 only after (ownership!=0 OR flags2) AND !flags1; raw255 arithmetic256, not level validity or save normalization. Hidden branch0.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; inventory_queries native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x002FF5F0","name":"TOD_ammo_crate_ordered_below_capacity_predicate","kind":"function","confidence":"confirmed","bytes":"F821FF717CA802A6","comment":"Qualified hero/type context selects saved20*actor9C+8 and extracts ordered LT against463DE0 max. Equal/unordered false, no ownership read or local refill call; not full pickup eligibility.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_crate native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x002FF7FC","name":"TOD_ammo_crate_unrounded_request_before_later_rounding","kind":"comment","confidence":"confirmed","bytes":"4816661D","comment":"Calls465E18 ADD with finite min(max(runtime factor*CrateAmmo[0],0), max-ammo), FMULS/FSUBS rounding. No floor1, local ownership/below-capacity gate, exact delta or stable definition assumption. Rounding below is AFTER this store path.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_crate native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x002FF810","name":"TOD_ammo_crate_post_add_request_ceiling_except_id3","kind":"comment","confidence":"confirmed","bytes":"FCA0FE5E","comment":"After465E18 returned, ID3 WPN_RAVAGER bypasses; other IDs FCTIDZ/FCFID/FSEL select ceil for bounded finite request. Later local/helper value, not rounded saved ammo or exact acquired amount. Native nonfinite conversion unmodeled.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_crate native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
@@ -128367,7 +128790,7 @@
       "kind": "function",
       "confidence": "confirmed",
       "bytes": "546720368122F298",
-      "comment": "Returns true iff byte at state101EFB20+itemID*14(hex)+10(hex) is nonzero. Any nonzero byte satisfies this predicate; definitions still gate other getters.",
+      "comment": "Named is_weapon_owned returns normalized0/1 for canonical saved20*ID+10 zero/ANY nonzero. No definition/ammo/level/capacity check or local ID bound. Attribute getters separately require (ownership!=0 OR flags2) AND !flags1; inventory_queries guards the distinction.",
       "evidence": "2D1C14 slot89F1B8=101EFB20;2D1C2C lbzx and comparison; named Lua chain33F40->25AF0->12950."
     },
     {
@@ -128403,7 +128826,7 @@
       "kind": "function",
       "confidence": "confirmed",
       "bytes": "548620367CE802A6",
-      "comment": "If record+10 is nonzero, delegates XP/ammo resets, clears ownership byte and decrements word at inventory+280. Other inventory/list state may need separate updates.",
+      "comment": "Owned nonzero: XP+0 setter, absolute ammo+0 setter, owner0 store, THEN reread base280 and wrap decrement without underflow clamp. Owner0 skips. Descriptor exists but no aligned file-backed descriptor reference/direct executable branch found; gameplay caller unresolved. Not exact helper final state or editor-safe removal; inventory_queries guards requests/order/survey.",
       "evidence": "466B44 stb+10;466B50 stw inventory+280 after subtract1; calls4660A8 and465DC0."
     },
     {
