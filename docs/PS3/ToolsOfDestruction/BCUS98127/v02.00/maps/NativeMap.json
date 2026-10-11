@@ -110725,6 +110725,426 @@
     ],
     "qualification": "Shipped reference definitions, not captured runtime values. The old50-row designer note is stale;98 rows are populated. Blank-header designer tags are not parsed properties or pickup/world placements. Later overrides, installation and values of unpopulated indices98/99 are not proven by this table."
   },
+  "bolt_multiplier_flow": {
+    "confidence": "exact-build-native-flow-and-detached-snapshot",
+    "warning": "USA v02.00 static evidence only. Saved428 is a multiplier, not its runtime accumulator or health cache. Finite synthetic previews assume nearest-even; native nonfinite exceptions/FPSCR, event meaning, timing and gameplay acceptance are not emulated. Viewing never calls the mutating getter.",
+    "storage": {
+      "saved_offset": "0x428",
+      "saved_type": "f32 BE",
+      "cached_health_runtime_offset": "0x21c4",
+      "accumulator_runtime_offset": "0x21c8",
+      "current_health_runtime_offset": "0x1784"
+    },
+    "gate": "Each getter/updater separately calls13B30\u21922D1860, reading global saved906EC through89F1B8\u2192101EFB20. Any raw nonzero word enables the body; this is not a bounded mode boolean or proven completed-playthrough count. The outer update gate and inner getter gate are independent reads.",
+    "getter": {
+      "va": "0x1e2568",
+      "rule": "Gate false returns saved428 unchanged, without updating health cache or accumulator. Gate true compares cached21C4 to current health1784; strict cached>current resets saved428 and accumulator21C8 to1.0 and refreshes cached21C4. Otherwise refreshes the cache and returns saved428 without a range clamp. This is a sampled health decrease, not a direct damage-event listener; equality/healing does not reset.",
+      "nonfinite": "Unordered health comparison does not take bgt; the native path writes current health bits into cache. Previews reject nonfinite values instead of pretending they are ordinary comparisons."
+    },
+    "update": {
+      "va": "0x1e25f0",
+      "rule": "After outer admission, calls the getter first, subtracts0.5 with fsubs from runtime21C8, and stores it. Post-subtraction>=float32(0.01) returns without an explicit multiplier store. Otherwise increments returned multiplier by1 with fadds, applies native fsub/fsel1..20 selection for finite values, stores428 and replaces accumulator with that saved multiplier. One step per call, no loop or time delta.",
+      "threshold": {
+        "raw_hex": "3C23D70A",
+        "value": 0.009999999776482582
+      },
+      "reset_interaction": "A health-drop reset inside the getter replaces accumulator with1 before this subtraction, so the same finite update leaves0.5 and does not advance. NaN/unordered accumulator comparison does not take bge; nonfinite native arithmetic is not modeled as a Python clamp."
+    },
+    "restore_seed": "Hero initialization1E36B0..1E36C4 seeds cached21C4 from runtime current health1784 and accumulator21C8 from saved multiplier428. It does not load serialized cache/countdown fields; they are not stored at save offsets21C4/21C8.",
+    "event_pairing": {
+      "consumer_va": "0x1e5c28",
+      "rule": "Within the qualified hero-message path, numeric6A and6B linked nodes each send float payload+90 through23E338 before advancing next pointer+4. Only the6B branch additionally calls1E25F0 after rereading payload and comparing to literal0. For finite payloads it calls only when positive; unordered also falls through native ble. The6A loop has no such explicit updater call. Event source identities, enclosing gates and callbacks remain qualified, not one increment per kill or elapsed second.",
+      "xp_addition": "23E338 zero-extends saved XP418, converts via fcfid/frsp, fadds the supplied payload, and tail-branches23E090. The payload is an addition, unlike hero_set_xp replacement. XP/level/callback effects happen before the6B multiplier test, which rereads node+90."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x1e259c",
+        "name": "TOD_multiplier_sampled_health_drop",
+        "kind": "comment",
+        "comment": "Replay-gated strict cached-health21C4>current1784 resets saved multiplier428 and runtime accumulator21C8 to1. Getter can mutate state; not a direct damage callback or universal clamp."
+      },
+      {
+        "va": "0x1e264c",
+        "name": "TOD_multiplier_accumulator_threshold",
+        "kind": "comment",
+        "comment": "After mutating getter, subtract0.5 from runtime21C8. bge skips a single increment when result>=float32(0.01); otherwise finite multiplier+1 selection1..20 reseeds accumulator. Not a timer or loop."
+      },
+      {
+        "va": "0x1e5e08",
+        "name": "TOD_message_6B_multiplier_gate",
+        "kind": "comment",
+        "comment": "After23E338 adds hero XP, reread6B node float+90; finite<=0 skips multiplier update1E25F0, positive/unordered falls through.6A sibling loop has no explicit updater; source/gameplay cadence unverified."
+      },
+      {
+        "va": "0x23e35c",
+        "name": "TOD_hero_xp_float32_addition",
+        "kind": "comment",
+        "comment": "fadds incoming payload to saved unsigned XP418 converted through float32, then tail-branches23E090. Additive event path, unlike script replacement setter; no runtime level/health acceptance inferred."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x13b30",
+        "bytes": "F84100283C4200013842FFE8482BDD24"
+      },
+      {
+        "va": "0x13b34",
+        "bytes": "3C420001"
+      },
+      {
+        "va": "0x13b38",
+        "bytes": "3842FFE8"
+      },
+      {
+        "va": "0x13b3c",
+        "bytes": "482BDD24"
+      },
+      {
+        "va": "0x1e2568",
+        "bytes": "F821FF817C0802A6FBE10078F80100907C7F1B784BE315B5E84100285463063E2F830000419E0018C1BF1784C01F21C4FC00680041810024D1BF21C480BF1A68E8810090EBE10078382100807C8803A6C02504284E800020813F1A68C02255E0D029042880BF1A68D03F21C8D1BF21C4E8810090EBE1007838210080C02504287C8803A64E800020"
+      },
+      {
+        "va": "0x1e257c",
+        "bytes": "4BE315B5"
+      },
+      {
+        "va": "0x1e2584",
+        "bytes": "5463063E"
+      },
+      {
+        "va": "0x1e258c",
+        "bytes": "419E0018"
+      },
+      {
+        "va": "0x1e2590",
+        "bytes": "C1BF1784"
+      },
+      {
+        "va": "0x1e2594",
+        "bytes": "C01F21C4"
+      },
+      {
+        "va": "0x1e2598",
+        "bytes": "FC006800"
+      },
+      {
+        "va": "0x1e259c",
+        "bytes": "41810024"
+      },
+      {
+        "va": "0x1e25a0",
+        "bytes": "D1BF21C4"
+      },
+      {
+        "va": "0x1e25b8",
+        "bytes": "C0250428"
+      },
+      {
+        "va": "0x1e25c4",
+        "bytes": "C02255E0"
+      },
+      {
+        "va": "0x1e25c8",
+        "bytes": "D0290428"
+      },
+      {
+        "va": "0x1e25d0",
+        "bytes": "D03F21C8"
+      },
+      {
+        "va": "0x1e25d4",
+        "bytes": "D1BF21C4"
+      },
+      {
+        "va": "0x1e25f0",
+        "bytes": "F821FF817C8802A6FBE10078F88100907C7F1B784BE3152DE84100285460063E7BE300202F800000409E0018E8610090EBE10078382100807C6803A64E8000204BFFFF39C05F21C8C1A255E4EC026828C18255E8FC006000D01F21C84080FFD0817F1A68C16255E0ECE1582AC14255ECFCC75828FCA659EEFC855028FC642AAED06B0428813F1A68C0290428D03F21C8E8610090EBE10078382100807C6803A64E80002060000000"
+      },
+      {
+        "va": "0x1e2604",
+        "bytes": "4BE3152D"
+      },
+      {
+        "va": "0x1e260c",
+        "bytes": "5460063E"
+      },
+      {
+        "va": "0x1e2618",
+        "bytes": "409E0018"
+      },
+      {
+        "va": "0x1e2630",
+        "bytes": "4BFFFF39"
+      },
+      {
+        "va": "0x1e2634",
+        "bytes": "C05F21C8"
+      },
+      {
+        "va": "0x1e2638",
+        "bytes": "C1A255E4"
+      },
+      {
+        "va": "0x1e263c",
+        "bytes": "EC026828"
+      },
+      {
+        "va": "0x1e2640",
+        "bytes": "C18255E8"
+      },
+      {
+        "va": "0x1e2644",
+        "bytes": "FC006000"
+      },
+      {
+        "va": "0x1e2648",
+        "bytes": "D01F21C8"
+      },
+      {
+        "va": "0x1e264c",
+        "bytes": "4080FFD0"
+      },
+      {
+        "va": "0x1e2654",
+        "bytes": "C16255E0"
+      },
+      {
+        "va": "0x1e2658",
+        "bytes": "ECE1582A"
+      },
+      {
+        "va": "0x1e265c",
+        "bytes": "C14255EC"
+      },
+      {
+        "va": "0x1e2660",
+        "bytes": "FCC75828"
+      },
+      {
+        "va": "0x1e2664",
+        "bytes": "FCA659EE"
+      },
+      {
+        "va": "0x1e2668",
+        "bytes": "FC855028"
+      },
+      {
+        "va": "0x1e266c",
+        "bytes": "FC642AAE"
+      },
+      {
+        "va": "0x1e2670",
+        "bytes": "D06B0428"
+      },
+      {
+        "va": "0x1e2678",
+        "bytes": "C0290428"
+      },
+      {
+        "va": "0x1e267c",
+        "bytes": "D03F21C8"
+      },
+      {
+        "va": "0x1e36b0",
+        "bytes": "82FF1A68"
+      },
+      {
+        "va": "0x1e36b4",
+        "bytes": "C1BF1784"
+      },
+      {
+        "va": "0x1e36b8",
+        "bytes": "D1BF21C4"
+      },
+      {
+        "va": "0x1e36c0",
+        "bytes": "C0770428"
+      },
+      {
+        "va": "0x1e36c4",
+        "bytes": "D07F21C8"
+      },
+      {
+        "va": "0x1e5cac",
+        "bytes": "787B0020"
+      },
+      {
+        "va": "0x1e5cb8",
+        "bytes": "3A1A0008"
+      },
+      {
+        "va": "0x1e5cc4",
+        "bytes": "7A160020"
+      },
+      {
+        "va": "0x1e5d90",
+        "bytes": "3880006A"
+      },
+      {
+        "va": "0x1e5d94",
+        "bytes": "4BE2CBCD"
+      },
+      {
+        "va": "0x1e5da8",
+        "bytes": "780F0020"
+      },
+      {
+        "va": "0x1e5dac",
+        "bytes": "7F63DB78"
+      },
+      {
+        "va": "0x1e5db0",
+        "bytes": "C02F0090"
+      },
+      {
+        "va": "0x1e5db4",
+        "bytes": "48058585"
+      },
+      {
+        "va": "0x1e5dbc",
+        "bytes": "800F0004"
+      },
+      {
+        "va": "0x1e5dc4",
+        "bytes": "4082FFE4"
+      },
+      {
+        "va": "0x1e5dcc",
+        "bytes": "3880006B"
+      },
+      {
+        "va": "0x1e5dd0",
+        "bytes": "4BE2CB91"
+      },
+      {
+        "va": "0x1e5de0",
+        "bytes": "C3E255C8"
+      },
+      {
+        "va": "0x1e5de8",
+        "bytes": "787D0020"
+      },
+      {
+        "va": "0x1e5dec",
+        "bytes": "7F63DB78"
+      },
+      {
+        "va": "0x1e5df0",
+        "bytes": "C03D0090"
+      },
+      {
+        "va": "0x1e5df4",
+        "bytes": "48058545"
+      },
+      {
+        "va": "0x1e5dfc",
+        "bytes": "C19D0090"
+      },
+      {
+        "va": "0x1e5e00",
+        "bytes": "FF0CF800"
+      },
+      {
+        "va": "0x1e5e08",
+        "bytes": "40990008"
+      },
+      {
+        "va": "0x1e5e0c",
+        "bytes": "4BFFC7E5"
+      },
+      {
+        "va": "0x1e5e10",
+        "bytes": "82DD0004"
+      },
+      {
+        "va": "0x1e5e1c",
+        "bytes": "409EFFCC"
+      },
+      {
+        "va": "0x23e338",
+        "bytes": "7C6B1B78FC00089078630020812B1A6880090418F801FFF0C841FFF0FDA0169CFC206818EC21002A4BFFFD3060000000"
+      },
+      {
+        "va": "0x23e344",
+        "bytes": "812B1A68"
+      },
+      {
+        "va": "0x23e348",
+        "bytes": "80090418"
+      },
+      {
+        "va": "0x23e354",
+        "bytes": "FDA0169C"
+      },
+      {
+        "va": "0x23e358",
+        "bytes": "FC206818"
+      },
+      {
+        "va": "0x23e35c",
+        "bytes": "EC21002A"
+      },
+      {
+        "va": "0x23e360",
+        "bytes": "4BFFFD30"
+      },
+      {
+        "va": "0x23e744",
+        "bytes": "913F1A68"
+      },
+      {
+        "va": "0x2d1860",
+        "bytes": "8082F268386000003D240009800906EC2F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2d1868",
+        "bytes": "3D240009"
+      },
+      {
+        "va": "0x2d186c",
+        "bytes": "800906EC"
+      },
+      {
+        "va": "0x2d1870",
+        "bytes": "2F800000"
+      },
+      {
+        "va": "0x2d1874",
+        "bytes": "419E0008"
+      },
+      {
+        "va": "0x2d1878",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x895500",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x895518",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x89551c",
+        "bytes": "3F000000"
+      },
+      {
+        "va": "0x895520",
+        "bytes": "3C23D70A"
+      },
+      {
+        "va": "0x895524",
+        "bytes": "41A00000"
+      },
+      {
+        "va": "0x897b38",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f1b8",
+        "bytes": "101EFB20"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -111218,6 +111638,10 @@
     ]
   },
   "annotations": [
+{"va":"0x001E259C","name":"TOD_multiplier_sampled_health_drop","kind":"comment","confidence":"confirmed","bytes":"41810024","comment":"Replay-gated strict cached-health21C4>current1784 resets saved multiplier428 and runtime accumulator21C8 to1. Getter can mutate state; not a direct damage callback or universal clamp.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bolt_multiplier_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001E264C","name":"TOD_multiplier_accumulator_threshold","kind":"comment","confidence":"confirmed","bytes":"4080FFD0","comment":"After mutating getter, subtract0.5 from runtime21C8. bge skips a single increment when result>=float32(0.01); otherwise finite multiplier+1 selection1..20 reseeds accumulator. Not a timer or loop.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bolt_multiplier_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001E5E08","name":"TOD_message_6B_multiplier_gate","kind":"comment","confidence":"confirmed","bytes":"40990008","comment":"After23E338 adds hero XP, reread6B node float+90; finite<=0 skips multiplier update1E25F0, positive/unordered falls through.6A sibling loop has no explicit updater; source/gameplay cadence unverified.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bolt_multiplier_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0023E35C","name":"TOD_hero_xp_float32_addition","kind":"comment","confidence":"confirmed","bytes":"EC21002A","comment":"fadds incoming payload to saved unsigned XP418 converted through float32, then tail-branches23E090. Additive event path, unlike script replacement setter; no runtime level/health acceptance inferred.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bolt_multiplier_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x000B78C8","name":"TOD_HeroConfig_XP_array_getter","kind":"function","confidence":"confirmed","bytes":"F821FF417C8802A6","comment":"XP indexed HeroConfig getter; normal indices0..99, offset0x0, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_config native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x000B77A8","name":"TOD_HeroConfig_XP_array_setter","kind":"function","confidence":"confirmed","bytes":"F821FF417C8802A6","comment":"XP indexed HeroConfig setter; normal indices0..99, offset0x0, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_config native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x000B7698","name":"TOD_HeroConfig_HP_array_getter","kind":"function","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"HP indexed HeroConfig getter; normal indices0..99, offset0x190, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_config native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

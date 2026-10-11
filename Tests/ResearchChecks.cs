@@ -36,6 +36,24 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Multiplier research preserves raw values without executing its mutating getter", () =>
+        {
+            foreach (uint bits in new uint[] { 0x7FC12345, 0xFF800000, 0xC1200000, 0x41C80000 })
+            {
+                byte[] bytes = ResearchFixture();
+                BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x428, 4), bits);
+                BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906EC, 4), 3);
+                byte[] before = bytes.ToArray();
+                var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+                var raw = table.Rows.Single(row => row.Cells[1] == "Bolt multiplier");
+                Equal(bits.ToString("X8"), raw.Cells[4]);
+                True(raw.Details.Contains("Viewing never calls it") && raw.Details.Contains("runtime-only accumulator") && raw.Details.Contains("cannot be inferred") && raw.Details.Contains("not a proven timer"), "Saved/runtime and event boundaries must stay explicit.");
+                var friendly = InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Single(row => row.Cells[0] == "Bolt multiplier");
+                True(friendly.Details.Contains(bits.ToString("X8")), "Friendly presentation must retain the raw float bits.");
+                True(bytes.SequenceEqual(before), "Viewing must not reset, increment or repair a multiplier.");
+            }
+            Equal(90, TodResearch.Map.GetProperty("bolt_multiplier_flow").GetProperty("instruction_guards").GetArrayLength());
+        });
         Check("Hero progression reference rows stay separate from live level and health", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1003,7 +1021,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1385, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1389, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

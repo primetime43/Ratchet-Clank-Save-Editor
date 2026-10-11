@@ -32,6 +32,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Armor purchase, delayed equip & skin charge rules", TodResearch.Map.GetProperty("armor_consumer"), 0));
             topics.Add(JsonTopic("Hero XP, collectibles & skins", TodResearch.Map.GetProperty("collectibles"), 0));
             topics.Add(JsonTopic("Currency update paths & separate runtime reward caches", TodResearch.Map.GetProperty("currency_mutation"), 0));
+            topics.Add(JsonTopic("Bolt multiplier: health-drop reset & XP event updates", TodResearch.Map.GetProperty("bolt_multiplier_flow"), 0));
             topics.Add(JsonTopic("Runtime health, XP restoration & checkpoint ammo lifecycle", TodResearch.Map.GetProperty("health_persistence"), 0));
             topics.Add(JsonTopic("Hero XP: whole numbers, fractional carry & reload precision", TodResearch.Map.GetProperty("hero_xp_flow"), 0));
             topics.Add(JsonTopic("Hero XP / HP: named config arrays & progress arithmetic", TodResearch.Map.GetProperty("hero_config"), 0));
