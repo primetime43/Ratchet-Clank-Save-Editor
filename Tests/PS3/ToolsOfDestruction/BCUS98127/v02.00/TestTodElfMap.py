@@ -238,6 +238,7 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["first_person_option"]["instruction_guards"]
                 + MAPPING["save_aux_fields"]["instruction_guards"]
                 + MAPPING["health_persistence"]["instruction_guards"]
+                + MAPPING["load_reset_dependencies"]["instruction_guards"]
                 + MAPPING["adaptation_context"]["instruction_guards"]
                 + MAPPING["tail_aux_fields"]["instruction_guards"]
                 + MAPPING["grid_aux_fields"]["instruction_guards"]

@@ -735,6 +735,29 @@ internal static partial class Program
             Equal(7, TodResearch.Map.GetProperty("adaptation_context").GetProperty("seven_state_dispatch").GetProperty("states").GetArrayLength());
             True(bytes.SequenceEqual(before), "Decryptor inspection must not change counter values or speed.");
         });
+        Check("Load reset dependencies explain only Gelanator and selected gates without applying a reset", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x224, 4), 0x7FC12345);
+            bytes[0x22C] = 0xFE; bytes[0x22D] = 0xFF; bytes[0x22E] = 0xAB; bytes[0x22F] = 0xCD;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x874C, 4), 0x80000000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8750, 4), 0x7F800000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906EC, 4), 0xFFFFFFFF);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var weapons = inspection.Table("Weapons & gadgets");
+            string detail = weapons.Rows[27].Details;
+            True(detail.Contains("Gelanator-specific load reset") && detail.Contains("not an unconditional raw00000000 assignment"), "Weapon reset must remain item-specific and maximum-qualified.");
+            True(detail.Contains("ammo bits: 0x7FC12345") && detail.Contains("ABCD"), "Unusual ammo and opaque record tail must remain visible.");
+            True(!weapons.Rows[1].Details.Contains("Gelanator-specific load reset"), "Other weapons must not inherit this reset evidence.");
+            var counters = inspection.Table("Counters & nearby fields");
+            Equal("80000000", counters.Rows.Single(r => r.Cells[0] == "0x874C").Cells[4]);
+            Equal("7F800000", counters.Rows.Single(r => r.Cells[0] == "0x8750").Cells[4]);
+            True(counters.Rows.Single(r => r.Cells[0] == "0x8750").Details.Contains("ANY nonzero") &&
+                counters.Rows.Single(r => r.Cells[0] == "0x874C").Details.Contains("outside GAME.SAV"), "Deferred gate refresh needs replay and runtime latch qualifications.");
+            Equal(24, InspectionPresentation.Simplify("Counters & nearby fields", counters).Rows.Count);
+            True(bytes.SequenceEqual(before), "Inspection must not apply ammo/gate resets or infer runtime state.");
+        });
         Check("Saved aggregate and gate floats stay raw, unit-qualified and independent of retained logs", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1160,7 +1183,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1454, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1458, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

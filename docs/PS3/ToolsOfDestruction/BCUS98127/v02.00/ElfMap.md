@@ -2,7 +2,33 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
-Latest completed pass links selected load/resource entry39A328 to saved reset489F68: runtime-name lookup publishes saved906E8 and ONE world visited byte before8730/8728/872C clears. Name no-match fallback0 is distinguished from a successful level0 match. The separate35F490->362098->3645E0 reinitialization chain is now closed and proven runtime-only, without pending/index/saved-progress clears. The saved-event inspector has166 guard ranges,26 focused checks, four new instruction comments and one updated prior annotation. Findings appear in existing read-only bonus-progress, event-counter and saved-destination details and Research, without extra raw columns or editing permissions. All747 native/asset/organization checks and192 app regression checks pass, including actual-save loading, raw-value preservation, UI resizing/DPI and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1453 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1454 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. Space-target identities/counts, stable cross-load registration order, complete larger-caller/helper effects and reset causes, numeric runtime-stat labels/units and exact persistent-counter event names remain unresolved. The prior28-entry Dance association catalog remains qualified by incomplete variant/current-eligibility evidence. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage.
+## Load reset dependencies: Gelanator ammo and deferred timing gates
+
+The two previously qualified helper calls in reset489F68 now have additional closed evidence. This extends the selected load/resource reset path, not every load, all ammo writers or a complete reset model. The [read-only inspector](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodLoadResetDependencies.py) embeds49 guarded ranges in `load_reset_dependencies`, including nine complete function bodies, pointer/constants, calls, branch/store order and native enum provenance. Nine focused tests cover report reproduction, instruction/pointer/TOC tampering, replay/latch branches, finite maximum edge cases and immutable raw save observations. Four instruction comments are importable into IDA/Ghidra.
+
+### Gelanator ammo at saved224
+
+At489FE8, pointer slot8A689C contains101EFD3C. Relative to canonical save101EFB20, that is record21C = item27 ×14 hex bytes. The independent native enum export80D1C names ID27 `WPN_GELANATOR`. The next load supplies float32 +0 from8A68A0, then489FFC calls absolute ammo setter465DC0. Its store465DFC targets record+8, saved224. This selected reset does not locally inspect old ammo or ownership before the store; it is not an ownership/XP/inventory reset or a per-shot cost.
+
+The setter first calls463DE0 to resolve the record and obtain a maximum through466500 using stored level+11 and modifier mask+0C. Two fsub/fsel selections then clamp the request. A supplied finite positive maximum yields +0. A zero maximum can contribute its sign, including -0; a negative finite maximum can yield negative ammo. Thus a +0 argument is **not an unconditional raw00000000 write**. Nonfinite maxima, live definitions, deeper helper mutation and NaN payload behavior remain unmodeled; no safe ammo editing range follows. The synthetic preview accepts an explicit finite binary32 maximum only and never derives one from the save.
+
+### Runtime latch defers reset of saved874C and8750
+
+Call-free helper2CDBB0 writes integer1 through89F078=101E8D70 to runtime+54, address101E8DC4. That latch is outside GAME.SAV. Arming it neither immediately resets the gates nor clears saved8744/8748 aggregates.
+
+Setup2CE0D0 samples predicate2D1860 first (saved906EC nonzero). The selected branches are:
+
+| Saved906EC | Runtime latch+54 | Selected effect |
+| --- | --- | --- |
+| Nonzero | Any | Bypass both gate-reset calls and explicit latch consumption |
+| Zero | Zero | Skip those calls and the latch store |
+| Zero | Any nonzero | Call2CDC30, then2CDC00, then clear the latch at2CE28C |
+
+The first callback loads float32 from configuration101B9EE8+10FCC and stores to saved874C; the second loads config+10FD0 and stores to saved8750. Getter2CDBF8 resolves89F07C=101F8264, canonical save+8744. These are floating-point load/stores, not promised bit-for-bit copies for arbitrary NaN payloads. Neither selected store clears the adjacent aggregates. Larger setup work and the replay-bypass tail call2CDDD8 remain outside this bounded branch plan; skipping selected calls is not proof that all final state is preserved.
+
+The supplied detached USA snapshot has Gelanator ammo00000000, ownership0/level0/XP00000000, saved gates41200000 (10) and43960000 (300), and replay word3. If passed unchanged to this predicate, word3 takes the bypass. These observations do not establish defaults, seconds, active equipment, capacity, runtime latch status or invocation history. Original save contents are not embedded in the application report. Existing read-only weapon/gate details and Research expose the rules without running native code, normalizing raw values or enabling edits.
+
+Latest completed pass resolves two helpers in selected load/resource reset489F68: a +0 request targets native item27 WPN_GELANATOR ammo at saved224 through a definition-dependent clamp, while a separate runtime latch defers configured874C/8750 timing-gate refresh until replay-zero setup. The new load-reset dependency inspector has49 guard ranges, nine focused tests and four new instruction comments. Findings appear in existing read-only weapon/gate details and Research, without extra raw columns or editing permissions. All756 native/asset/organization checks and193 app regression checks pass, including actual-save loading, raw-value preservation, UI resizing/DPI and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1457 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1458 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. Actual runtime maxima/latch/configuration, complete larger-caller/helper effects and reset causes, space-target identities/counts and stable registration order, numeric runtime-stat labels/units and exact persistent-counter event names remain unresolved. The prior28-entry Dance association catalog remains qualified by incomplete variant/current-eligibility evidence. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage.
 
 ## Load-resource entry publishes destination and visited state before counter reset
 
@@ -14,9 +40,9 @@ The reset reads a name pointer from runtime cell **1036AC84** through8A688C and 
 | --- | --- | --- |
 | 1 | Store resolved low32 ID at906E8 (saved load destination) | 489FBC |
 | 2 | Store **ONE byte1** at889+408*ID (world488+401, visited) | 489FCC |
-| 3 | Call2CDBB0; its effects are outside the store-only plan | 489FE0 |
+| 3 | Call2CDBB0; arms runtime timing-gate refresh latch (see dependency section); no immediate gate store | 489FE0 |
 | 4 | Clear8730, then8728, then872C | 489FF0 /489FF4 /489FF8 |
-| 5 | Call465DC0; final callback state is not reconstructed | 489FFC |
+| 5 | Call465DC0 with Gelanator record and +0 request; definition-dependent clamp, not raw-zero/final-state guarantee | 489FFC |
 
 The visited publication is not unlocked byte+400, menu-exclusion byte+402 or a BE32 flag. An unmatched name still follows the destination0/visited-slot0 stores before the three clears: **ID0 is not proof of a successful level0 name match**. Neither runtime name nor lookup outcome is contained in GAME.SAV. This is an ordered sequence, not an atomic save transaction or a successful-load guarantee.
 

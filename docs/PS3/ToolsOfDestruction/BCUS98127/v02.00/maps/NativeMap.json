@@ -116003,6 +116003,258 @@
       }
     ]
   },
+  "load_reset_dependencies": {
+    "confidence": "exact-build-native-flow",
+    "warning": "USA BCUS98127 v02.00 static evidence only. Native code is never executed. Runtime latch/configuration, accepted loads, final helper effects and full reset coverage remain unknown; no new editing permission.",
+    "ammo_reset": {
+      "item_id": 27,
+      "enum": "WPN_GELANATOR",
+      "record_offset": "0x21C",
+      "ammo_offset": "0x224",
+      "record_pointer_slot": "0x8A689C",
+      "record_pointer": "0x101EFD3C",
+      "request_bits": "00000000",
+      "rule": "After saved8730/8728/872C clears,489F68 loads record pointer8A689C=101EFD3C and f32 +0 from8A68A0, then calls absolute ammo setter465DC0 at489FFC. Relative to save101EFB20 this is record21C=27*14, and setter+8 writes saved224. Native export80D1C independently names ID27 WPN_GELANATOR. The setter does not read old ammo or locally test ownership before its store; this is one specific load/resource reset path, not all ammo writers or a per-shot cost.",
+      "clamp_limit": "465DC0 first calls463DE0, which resolves the record ID and passes stored level+11/modifier mask+0C to the maximum resolver. It then applies two fsub/fsel comparisons before stfs+8. With supplied finite strictly positive maximum, +0 request writes +0; maximum+0/-0 can supply its own zero sign, and a finite negative maximum can produce negative ammo. Nonfinite maximum, helper mutation, exact runtime definitions and NaN payloads are not modeled. This is not an unconditional raw00000000 assignment, inventory/XP/ownership reset or safe maximum claim."
+    },
+    "deferred_gate_refresh": {
+      "latch_va": "0x101E8DC4",
+      "arm": "0x2CDBB0",
+      "consumer": "0x2CE0D0",
+      "gate_offsets": [
+        "0x874C",
+        "0x8750"
+      ],
+      "arm_rule": "Call-free2CDBB0 writes BE32 value1 to runtime101E8D70+54=101E8DC4. It does not directly reset either saved countdown, clear aggregates or write a saved latch. This replaces the earlier unknown-helper boundary at489FE0 specifically.",
+      "consume_rule": "2CE0D0 first calls saved replay/restart predicate2D1860 (906EC nonzero). Nonzero selects2CE24C before the latch test, skipping both gate-reset calls and explicit latch consumption on this path. Zero reaches a u32 runtime+54 test: zero skips refresh; ANY nonzero reaches2CE284->2CDC30 (saved874C from config101B9EE8+10FCC), then2CE288->2CDC00 (saved8750 from config+10FD0), then2CE28C clears runtime latch+54 using preserved zero r31. Gate values are loaded/stored as floats, not a promised raw-bit copy. Neither store clears saved8744/8748; larger setup/helper effects are not modeled.",
+      "order_limit": "This is a deferred setup refresh, not an immediate effect of arming2CDBB0. Calls may be separated and depend on runtime state. Native setup has subsequent segment/config work, and replay bypass tail-calls2CDDD8; skipping the selected calls is not a universal final-state preservation proof. The latch is outside GAME.SAV and cannot be inferred as armed/clear from the saved gates.",
+      "snapshot_limit": "The supplied replay word3 takes the bypass branch if passed unchanged to this setup predicate. Gate observations10/300 do not prove defaults, seconds, latch status or invocation history. A later setup with replay0 and a nonzero runtime latch can take the refresh branch; no actual transition is executed here."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x489fe8",
+        "kind": "comment",
+        "name": "TOD_load_reset_Gelanator_ammo_zero_request",
+        "comment": "Loads8A689C=101EFD3C, canonical saved record21C for native ID27 WPN_GELANATOR. Next f32 argument is+0 from8A68A0;489FFC calls465DC0, whose+8 store targets saved224. Definition/level/mask maximum clamp still applies; not raw-zero guarantee or ownership/XP reset."
+      },
+      {
+        "va": "0x2cdbb8",
+        "kind": "comment",
+        "name": "TOD_arm_deferred_saved_timing_gate_refresh",
+        "comment": "Call-free leaf stores1 to runtime101E8D70+54=101E8DC4, outside GAME.SAV. No immediate874C/8750 reset. Setup2CE0D0 consumes ANY nonzero latch only when saved replay906EC is zero, invoking two configured gate resets before latch clear."
+      },
+      {
+        "va": "0x2ce284",
+        "kind": "comment",
+        "name": "TOD_consume_latch_reset_two_saved_timing_gates",
+        "comment": "Reached only after2D1860 returns0 (saved906EC zero) and runtime latch+54 nonzero. Calls2CDC30 to reset874C fromconfig+10FCC, then2CDC00 to reset8750 from+10FD0;2CE28C clears latch. Deferred setup, not immediate arm effect, fixed seconds or complete callback-state proof."
+      },
+      {
+        "va": "0x2ce28c",
+        "kind": "comment",
+        "name": "TOD_timing_refresh_latch_consumption_after_gate_stores",
+        "comment": "Store preserved zero r31 to runtime101E8D70+54 AFTER both gate-reset calls. Replay-nonzero branch skips this consumption and those calls. Latch absent from GAME.SAV; gate values cannot establish latch state or past setup execution."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x80d14",
+        "bytes": "8082B488C022B48C4BF91C75"
+      },
+      {
+        "va": "0x80d1c",
+        "bytes": "4BF91C75"
+      },
+      {
+        "va": "0x2cdbb0",
+        "bytes": "8122F15838000001900900544E800020"
+      },
+      {
+        "va": "0x2cdbb4",
+        "bytes": "38000001"
+      },
+      {
+        "va": "0x2cdbb8",
+        "bytes": "90090054"
+      },
+      {
+        "va": "0x2cdbf8",
+        "bytes": "8062F15C4E800020"
+      },
+      {
+        "va": "0x2cdc00",
+        "bytes": "F821FF917C6802A6F86100804BFFFFED8082F1603D240001C0090FD0D003000CE8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x2cdc0c",
+        "bytes": "4BFFFFED"
+      },
+      {
+        "va": "0x2cdc18",
+        "bytes": "C0090FD0"
+      },
+      {
+        "va": "0x2cdc1c",
+        "bytes": "D003000C"
+      },
+      {
+        "va": "0x2cdc30",
+        "bytes": "F821FF917C6802A6F86100804BFFFFBD8082F1603D240001C0090FCCD0030008E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x2cdc3c",
+        "bytes": "4BFFFFBD"
+      },
+      {
+        "va": "0x2cdc48",
+        "bytes": "C0090FCC"
+      },
+      {
+        "va": "0x2cdc4c",
+        "bytes": "D0030008"
+      },
+      {
+        "va": "0x2ce0d0",
+        "bytes": "F821FF617C0802A6FBE10098FB810080FBA10088FBC10090F80100B04800377560000000547F063E2F9F0000409E01508382F15880BC00542C0500004082017838E0000083A2F16038C0000090E10070C1A1007090FC001C3BC0000A3940000054C7482C7FC903A654C828346000000055402036554530327C8838507C602850394A00017FE322143FDF00017D9EEA14392CEA2479290020896900002C8B00004186000CC0290020EDAD082A4200FFC438C600012F260014409AFFA038C0000AD1BC001C397C00203800FFFF7CC903A679680020396B0004900800004200FFF4480032E1600000003BE000005467482C546A28347FCA3850480000103BFF00012C3F000A4182005857E8303257E020367CC040507CA6F2143C8500017C64EA143983EA24798900207D234B78896900002F8B0000419EFFC848003721600000005469103A396900207D6707B47FFC392E3BFF00012C3F000A4082FFB0EB8100B0EBA100887F8803A6EBC10090EB810080EBE10098382100A04BFFFD6883A2F1584BFFF9A938800000C0030010909D0004D01D0000E86100B0EB810080EBA100887C6803A6EBC10090EBE10098382100A04BFFFB584BFFF9AD4BFFF97993FC00544BFFFE8060000000"
+      },
+      {
+        "va": "0x2ce0ec",
+        "bytes": "48003775"
+      },
+      {
+        "va": "0x2ce0fc",
+        "bytes": "409E0150"
+      },
+      {
+        "va": "0x2ce104",
+        "bytes": "80BC0054"
+      },
+      {
+        "va": "0x2ce10c",
+        "bytes": "40820178"
+      },
+      {
+        "va": "0x2ce284",
+        "bytes": "4BFFF9AD"
+      },
+      {
+        "va": "0x2ce288",
+        "bytes": "4BFFF979"
+      },
+      {
+        "va": "0x2ce28c",
+        "bytes": "93FC0054"
+      },
+      {
+        "va": "0x2d1860",
+        "bytes": "8082F268386000003D240009800906EC2F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2d186c",
+        "bytes": "800906EC"
+      },
+      {
+        "va": "0x2d1874",
+        "bytes": "419E0008"
+      },
+      {
+        "va": "0x463de0",
+        "bytes": "F821FF717C8802A6FBA10078F88100A07C7D1B78806300007C6307B44BFFF3957863002080BD000C889D0011480026F560000000E80100A0EBA100787C0803A6382100904E800020"
+      },
+      {
+        "va": "0x465dc0",
+        "bytes": "F821FF717C8802A6FBA100707C7D1B78DBE1008878630020FFE00890F88100A04BFFE00160000000C1A25FD4FC7F6828FC036FEEFC400828FD82006ED19D0008E80100A0EBA10070CBE100887C0803A6382100904E800020"
+      },
+      {
+        "va": "0x465de0",
+        "bytes": "4BFFE001"
+      },
+      {
+        "va": "0x465de8",
+        "bytes": "C1A25FD4"
+      },
+      {
+        "va": "0x465dec",
+        "bytes": "FC7F6828"
+      },
+      {
+        "va": "0x465df0",
+        "bytes": "FC036FEE"
+      },
+      {
+        "va": "0x465df4",
+        "bytes": "FC400828"
+      },
+      {
+        "va": "0x465df8",
+        "bytes": "FD82006E"
+      },
+      {
+        "va": "0x465dfc",
+        "bytes": "D19D0008"
+      },
+      {
+        "va": "0x489f68",
+        "bytes": "F821FF717C6802A6FBA1007883A2696CFB810070F86100A03B800000807D00004BE469516000000083A26970814269745460502A546818383CBD00097D880214810269783880000138EC08803960FFFF7CE607B4906506E87D26EA143FBD00013860000098890009986A00EF93880000938A0044996A00ED4BE43BD1600000008062697CC0226980939D8730939D8728939D872C4BFDBDC560000000E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x489fe0",
+        "bytes": "4BE43BD1"
+      },
+      {
+        "va": "0x489fe8",
+        "bytes": "8062697C"
+      },
+      {
+        "va": "0x489fec",
+        "bytes": "C0226980"
+      },
+      {
+        "va": "0x489ffc",
+        "bytes": "4BFDBDC5"
+      },
+      {
+        "va": "0x88b3c0",
+        "bytes": "100002D0"
+      },
+      {
+        "va": "0x88b3c4",
+        "bytes": "41D80000"
+      },
+      {
+        "va": "0x89f078",
+        "bytes": "101E8D70"
+      },
+      {
+        "va": "0x89f07c",
+        "bytes": "101F8264"
+      },
+      {
+        "va": "0x89f080",
+        "bytes": "101B9EE8"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a5ef4",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x8a689c",
+        "bytes": "101EFD3C"
+      },
+      {
+        "va": "0x8a68a0",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x100002d0",
+        "bytes": "57504E5F47454C414E41544F5200"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -116496,6 +116748,10 @@
     ]
   },
   "annotations": [
+{"va":"0x00489FE8","name":"TOD_load_reset_Gelanator_ammo_zero_request","kind":"comment","confidence":"confirmed","bytes":"8062697C","comment":"Loads8A689C=101EFD3C, canonical saved record21C for native ID27 WPN_GELANATOR. Next f32 argument is+0 from8A68A0;489FFC calls465DC0, whose+8 store targets saved224. Definition/level/mask maximum clamp still applies; not raw-zero guarantee or ownership/XP reset.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_reset_dependencies native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002CDBB8","name":"TOD_arm_deferred_saved_timing_gate_refresh","kind":"comment","confidence":"confirmed","bytes":"90090054","comment":"Call-free leaf stores1 to runtime101E8D70+54=101E8DC4, outside GAME.SAV. No immediate874C/8750 reset. Setup2CE0D0 consumes ANY nonzero latch only when saved replay906EC is zero, invoking two configured gate resets before latch clear.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_reset_dependencies native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002CE284","name":"TOD_consume_latch_reset_two_saved_timing_gates","kind":"comment","confidence":"confirmed","bytes":"4BFFF9AD","comment":"Reached only after2D1860 returns0 (saved906EC zero) and runtime latch+54 nonzero. Calls2CDC30 to reset874C fromconfig+10FCC, then2CDC00 to reset8750 from+10FD0;2CE28C clears latch. Deferred setup, not immediate arm effect, fixed seconds or complete callback-state proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_reset_dependencies native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002CE28C","name":"TOD_timing_refresh_latch_consumption_after_gate_stores","kind":"comment","confidence":"confirmed","bytes":"93FC0054","comment":"Store preserved zero r31 to runtime101E8D70+54 AFTER both gate-reset calls. Replay-nonzero branch skips this consumption and those calls. Latch absent from GAME.SAV; gate values cannot establish latch state or past setup execution.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_reset_dependencies native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x003645E4","name":"TOD_bonus_reinitialize_separate_runtime_word_clear","kind":"comment","confidence":"confirmed","bytes":"90030030","comment":"Call-free3645E0 clears argument+30. Through35F490->362098, argument10330750 means owner10330740+40=10330780, not pending+FC or next-index+11C. Closed chain has only admission-byte and this-word stores; no serialized progress writes.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; saved_event_counters native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0039A35C","name":"TOD_load_resource_entry_saved_progress_reset_call","kind":"comment","confidence":"confirmed","bytes":"480EFC0D","comment":"39A328 invokes489F68 before later asset/pointer branches. Reset publishes name-resolved saved906E8, ONE visited byte889+408*id, then clears8730/8728/872C after2CDBB0. Not universal transition/death/retry or final callback-state proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; saved_event_counters native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00489FBC","name":"TOD_reset_publish_name_resolved_saved_destination","kind":"comment","confidence":"confirmed","bytes":"906506E8","comment":"489F68 reads runtime name cell1036AC84 and calls2D08D8. Store resolved low32 ID to saved906E8. Inverse lookup compares19 names; unmatched fallback0 is NOT proof of a level0 name match. Followed by visited-byte publication before progress resets.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; saved_event_counters native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
