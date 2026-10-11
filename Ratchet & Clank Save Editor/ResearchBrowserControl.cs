@@ -37,6 +37,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Saved event counters & target restoration", TodResearch.Map.GetProperty("saved_event_counters"), 0));
             topics.Add(JsonTopic("Load reset: Gelanator ammo & deferred timing gates", TodResearch.Map.GetProperty("load_reset_dependencies"), 0));
             topics.Add(JsonTopic("Ammo capacity: saved level & upgrade arithmetic", TodResearch.Map.GetProperty("ammo_capacity"), 0));
+            topics.Add(JsonTopic("Weapon ammo: borrowed save record, local check & debit", TodResearch.Map.GetProperty("weapon_ammo_debit"), 0));
             topics.Add(JsonTopic("Gelanator: paired ammo debit/refund & runtime gates", TodResearch.Map.GetProperty("gelanator_transition"), 0));
             topics.Add(JsonTopic("Space statistics: runtime queries versus saved progress", TodResearch.Map.GetProperty("space_stat_boundary"), 0));
             topics.Add(JsonTopic("Quick-select assignment & full-list warning state", TodResearch.Map.GetProperty("quick_select_warning"), 0));

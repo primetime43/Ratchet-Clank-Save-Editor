@@ -116819,6 +116819,388 @@
       }
     ]
   },
+  "weapon_ammo_debit": {
+    "confidence": "exact-build-native-borrowed-record-and-ammo-branches",
+    "warning": "USA BCUS98127 v02.00 only. Read-only static evidence; no gameplay acceptance, per-shot pricing or new editing permission.",
+    "record_binding": "Hero23E650 installs canonical101EFB20 at+1A68. Owner setup1F5DB8 supplies hero+1A68 through12080->466D38, whose complete body stores that pointer at inventory+4. Callback1F5B68->108E0->4675A0 selects inventory+4 +20*runtime selected index+140; on the creation branch4676BC passes this record to463AD0. Binder463AD0 resolves the definition from record+0 ID, creates a runtime object through250528, then explicitly installs the SAME borrowed record at object40->weapon+2C and definition at weapon+30. No copy, universal item-index bounds, ownership admission, null creation safety, all runtime instances or callback immutability are proven. For valid canonical ID/index i, saved ammo is20*i+8; these runtime pointer members are not GAME.SAV offsets.",
+    "debit_rule": "Complete46AD80 skips null weapon+2C. Otherwise FNEG negates incoming FPR amount and calls465E18, the clamped ADD leaf, not4661F8's subtraction leaf. Positive amount requests a negative delta; negative amount requests an addition. The leaf resolves maximum through463DE0, adds and clamps before its saved record+8 store. No local sign/ownership check or call to46A420 exists in46AD80; no exact delta, universal per-shot cost, meaningful success return, active maximum or native nonfinite execution model inferred.",
+    "availability_rule": "Complete call-free46A420 returns1 for ANY nonzero anonymous runtime word103698E0, absent weapon+2C record, or definition+18 flag0x10. Otherwise ordered positive FPR request requires ordered saved ammo>=request (equality passes). A zero/negative OR UNORDERED request takes the GT-clear branch and requires ordered saved ammo>0. Signed zero thus requires positive ammo; unordered ammo rejects both tested routes. An unordered request can pass with positive ammo, but this is only CR branch behavior, not valid gameplay input or FPSCR exception/payload emulation. Ownership, stored level and maximum are not read here. Definition pointer validity is assumed after the bypass gates; anonymous global meaning remains unknown, not an infinite-ammo cheat label.",
+    "caller_boundary": "Representative469018 loads request+0 from8A5F6C and calls46A420 at469060. Failure returns before its later explicit debit. Success calls external46C158, then samples weapon+68; only the null branch explicitly publishes weapon+F4=1 and calls46AD80 with1.0 from8A5F40 at4690E0. Thus this caller's request0 predicate is not an ammo>=1 check; positive fractional ammo can pass that local predicate. Callback effects, record/definition/global changes, nonnull+68 route, weapon identity and overall firing outcome remain unmodeled. The check and debit are separate, not an atomic acceptance/charge contract.",
+    "runtime_limit": "Viewing shows saved ammo bits only. Runtime global, active record binding, definition flags/capacity, selected index, weapon+68 and intervening callbacks cannot be reconstructed from GAME.SAV. The shared path does not imply every gadget invokes it. The binder stores pointer/definition after object creation; initialization clears weapon+2C/+30 earlier, so pointer lifetime and rebinds remain qualified. Reference plans accept explicit supplied binary32-representable request samples, not arbitrary native binary64 FPR arguments. No eligibility, exact debit, refill, repair or runtime mutation executes.",
+    "recommended_annotations": [
+      {
+        "va": "0x463ad0",
+        "name": "TOD_weapon_create_and_bind_borrowed_inventory_record",
+        "comment": "Resolves definition from supplied record ID; after250528 creation installs same record at object+40->weapon+2C and definition+30. Canonical owner path1F5DB8/466D38/4675A0 established. Qualified creation/index/instance lifetime, not copied save or ownership admission."
+      },
+      {
+        "va": "0x46ad80",
+        "name": "TOD_weapon_ammo_negated_request_to_clamped_add",
+        "comment": "Null borrowed record+2C skips. Otherwise FNEG supplied FPR then465E18 clamped ADD to saved+8; no local availability/sign/ownership check. Negative request adds; not universal per-shot cost or exact delta."
+      },
+      {
+        "va": "0x46a420",
+        "name": "TOD_weapon_ammo_local_admission_predicate",
+        "comment": "Runtime global nonzero/recordless/definition flag10 bypass. Ordered positive request requires ammo>=request; zero/negative/unordered request requires ordered ammo>0. No ownership/max/mutation; not full firing eligibility or native exception model."
+      },
+      {
+        "va": "0x4690e0",
+        "kind": "comment",
+        "name": "TOD_weapon_zero_request_check_then_one_debit_branch",
+        "comment": "469018 earlier checks request+0 via46A420, then external46C158. Null runtime+68 branch requests1.0 via46AD80; predicate and later debit differ, fractional ammo may pass check. No stable samples, weapon identity or per-shot outcome inferred."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x108e0",
+        "bytes": "F8410028"
+      },
+      {
+        "va": "0x108e4",
+        "bytes": "3C420001"
+      },
+      {
+        "va": "0x108e8",
+        "bytes": "3842FFE8"
+      },
+      {
+        "va": "0x108ec",
+        "bytes": "48456CB4"
+      },
+      {
+        "va": "0x12080",
+        "bytes": "F8410028"
+      },
+      {
+        "va": "0x12084",
+        "bytes": "3C420001"
+      },
+      {
+        "va": "0x12088",
+        "bytes": "3842FFE8"
+      },
+      {
+        "va": "0x1208c",
+        "bytes": "48454CAC"
+      },
+      {
+        "va": "0x1f5b68",
+        "bytes": "F821FF917C8802A6F88100804BE1AD6DE8410028E8010080382100707C0803A64E80002060000000"
+      },
+      {
+        "va": "0x1f5b74",
+        "bytes": "4BE1AD6D"
+      },
+      {
+        "va": "0x1f5db8",
+        "bytes": "F821FF617D8802A6FB8100807C7C1B78F98100B0FB610078FBA10088FB410070909C0188834400147C9D2378787B00207F63DB78809A00644BE1BC41E84100287F63DB78809D1A684BE1C281E841002880A25A1838FD184838C5002478E400207F63DB7838E500484BE1DE11E841002838DC016878DD002038A000007F44D3787FA3EB784BE1B0B5E84100287FA3EB783880015C4BE1D3E5E84100287F63DB784BFFFDC138BC017C81425A1C3920000178AB002081025A0C3880000038600000992A0000989C01B6993C01B4993C01B5906B0000992B0008C00800B4D00B0004E80100B0EB410070EB6100787C0803A6EB810080EBA10088382100A04E800020"
+      },
+      {
+        "va": "0x1f5dfc",
+        "bytes": "809D1A68"
+      },
+      {
+        "va": "0x1f5e00",
+        "bytes": "4BE1C281"
+      },
+      {
+        "va": "0x23e650",
+        "bytes": "F821FED17C0802A6FB0100F03B0311B8FB2100F87B190020FAA100D8FBE101283AA311C07C7F1B78FBA101183BA00000FA8100D07AA300203A9F11C8F8010140FAC100E0FAE100E8FB410100FB610108FB810110FBC1012093B9000493B900004BDD4841E84100283AFF12D07A8300203ADF12DC4BDD482DE84100287AE300204BDD4821E84100287AC300204BDD35F5E8410028399F1320798300207BF500204BDD4801E8410028395F14A0794300203B0000004BDD249DE8410028811F00147EA3AB783B4000003B20000080A800543B6000003A9F112080E5001060E6000290C500104BFA26DD6000000081227C0038600000913F1A68907F1B689BBF1B619BBF001C808904187EA3AB78F88100C0C82100C0FC000E9CFC2000184BFFF92582DF00147AD700207EE3BB784BDD51E5E841002883827C04881C00EF2F800000419E02743BBC00207C00E0CE387C001039370010397700207DA0E8CE3BA000007C2018CE7C00B9CE7C2049CE7DA059CEEBDC0038E89C0030FBD70038F897003083DF1A6860000000807F002057AC103A57A02036546928347D0C02147C89EA147CDE4214548A103A78C3002038EA00503BBD00017CE507B47C3C2C2E4BDD55C5E84100282C3D00204082FFC08BDC00EE2C9E0000408601E07EA3AB783BC000004BFFF7D938BF184838DF18608097006478A3002078C5002038C0000A3BA000404BDD1F11E8410028395F14B0381F14C479430020780500207EE4BB784BDD2685E8410028399F154C83627C0C799C0020C0827C1038FF1B1C3900FFFF90FC0000911C000893BC00049BDF1B60EB5B0000FB5F1A58807700C8C0D700602F830000C0770110FCA62028FD232028FD6521AEFC2920EED1770060D0370110419E001C81627C147863002038A00000808B00004BDD4F91E84100287A9600207EE4BB787EC3B3783BBF1A704BDD4699E841002838BF1AB08156006438DF1AC0C1427BC4399700303917001038F7002078B8002078D900203B9F1A803B7F1A903B5F1AA06140000B3A800000901600647C00B8CE7EA3AB787D8060CE3AA000047C2040CE7DA038CE7C00E9CE7C20E1CE7DA0D9CE7D80D1CE929800009298000492980008D158000C929900009299000492990008D159000C82DF00008096006481240000F84100287D2903A6804400044E800421E8410028387F18407877002092BF10D0929700009BD700069BD700049BD700059BDF1B62EBE10140EA8100D07FE803A6EAA100D8EAC100E0EAE100E8EB0100F0EB2100F8EB410100EB610108EB810110EBA10118EBC10120EBE10128382101304E80002039360010C0227BF838960030792C0020788300203961009038800006797E0020C04C000CC003000CEDA2002AC10C0008D1A100C8C1830008ECE8602AC0CC000480A100C878BB002C38A00001D0E100C8C1430004ECA6502AC08C000080C100C878DB000E38C00001D0A100C8C16300007FC3F378EC64582A814100C8FB610078795A002CC101007CC0C10078D06100C8800100C8781A000EFB410070C12C000CC04C0008ED890072C1AC0004ED420072ED6D0072C00C0000ED200072C0810074C0410070ECE86028ECA65028EC645828EDA24828D0E100C8810100C8D0A100C880E100C87919002CD06100C883A100C878F9000ED1A100C87BB8002C838100C8FB2100887B98000EFB0100804BDD1901E84100288377009038810080C0227C08386100707FC6F37892C100A0936100A44BDD27BDE8410028547A063E2F1A0000409A00147FC3F3784BDD2E15E84100284BFFFCD4830100907FC3F378EB380000EAD80008FB370030FAD700384BDD2DF1E84100284BFFFCB060000000"
+      },
+      {
+        "va": "0x23e744",
+        "bytes": "913F1A68"
+      },
+      {
+        "va": "0x463ad0",
+        "bytes": "F821FF517D0802A6FB410080F90100C0FB610088FB810090FBA10098FBC100A0FBE100A87C7A1B78806300003BC000007C6307B43BE000004BFFF6897C7B1B787B4300207B7D0020480021A960000000786406207FA3EB7848002C116000000038A00000809D00147CA62B78C0225F7C7CA72B7878BF002C78DE002C80C25F9478FF000E78BE000E7863042038A100707C8407B4FBC10070FBE100784BDEC9BDE8410028786900207D234B7881690040934B002C936B0030E80100C0EB410080EB6100887C0803A6EB810090EBA10098EBC100A0EBE100A8382100B04E800020"
+      },
+      {
+        "va": "0x463af4",
+        "bytes": "7C7A1B78"
+      },
+      {
+        "va": "0x463af8",
+        "bytes": "80630000"
+      },
+      {
+        "va": "0x463b08",
+        "bytes": "4BFFF689"
+      },
+      {
+        "va": "0x463b6c",
+        "bytes": "4BDEC9BD"
+      },
+      {
+        "va": "0x463b7c",
+        "bytes": "81690040"
+      },
+      {
+        "va": "0x463b80",
+        "bytes": "934B002C"
+      },
+      {
+        "va": "0x463b84",
+        "bytes": "936B0030"
+      },
+      {
+        "va": "0x465e18",
+        "bytes": "F821FF717C8802A6DBE10088FFE00890FBA100707C7D1B7878630020F88100A04BFFDFA960000000C1825FD4C09D0008EFFF202AFC7F6028FC0367EEFC400828FDA2006ED1BD0008E80100A0EBA10070CBE100887C0803A6382100904E800020"
+      },
+      {
+        "va": "0x465e38",
+        "bytes": "4BFFDFA9"
+      },
+      {
+        "va": "0x466d38",
+        "bytes": "908300044E800020"
+      },
+      {
+        "va": "0x466d3c",
+        "bytes": "4E800020"
+      },
+      {
+        "va": "0x4675a0",
+        "bytes": "F821FF517CC802A6FB210078FB410080FB810090F8C100C0FB010070FB610088FBA10098FBC100A0FBE100A878790020818260047C7C1B788063014080E26008547A183880C25FF838BA0010E90C00007CA907B4E9470000816600107C99482A7C8040387C07543654E0043E7F8B0040419C0178541E482C83060000540B3830811C00045466103A7D4BF050547D20367FCAC2147D86EA147BDB00207CAC42147C6307B4813B006478BB00207C8938507C0748507C1F23787FEBFE707FDF58784BFFBB31600000007C781B787F63DB787B1D00204BFFE64D60000000786406207FA3EB784BFFF025600000007C781B787F63DB784BFFE62D60000000786406207FA3EB784BFFF095600000002C1F000040820140600000007F63DB784BFFC41560000000393A0010787F00207D3A07B47C7E1B78E81F00487C19D12A807C0008833F00402F030000809F00647B3D0020909C0144419A0018811D003083680018576506302F850000419E0108837F0068389E0150387E0070C022600C7B661FE27884002078630020480B52016000000083DD0000809C01487FA3EB7883FE005083BF0000F84100287FA903A6805F00044E800421E8410028EB8100C0EB0100707F8803A6EB210078EB410080EB610088EB810090EBA10098EBC100A0EBE100A8382100B04E800020546A103A819C0004546720367C6307B47CCA3A147F0662144BFFB9F1600000007B1B0020787F00207F63DB784BFFE50D60000000786406207FE3FB784BFFEEE5600000007C781B787F63DB784BFFE4ED60000000786406207FE3FB784BFFEF55600000004BFFFECC7BE400205467043E7FFEFB787C9F2378A06400507C8338004086FEB04BFFFED05709103A80BC014C833C0150788400207D692A14801C01547F49CA147CE90214797800207B4A002078EC00207863002080D8000080AA00007CC607B480EC00004BDE74C9E84100284BFFFEB460000000"
+      },
+      {
+        "va": "0x4675d8",
+        "bytes": "80630140"
+      },
+      {
+        "va": "0x467620",
+        "bytes": "811C0004"
+      },
+      {
+        "va": "0x467624",
+        "bytes": "5466103A"
+      },
+      {
+        "va": "0x46762c",
+        "bytes": "547D2036"
+      },
+      {
+        "va": "0x467634",
+        "bytes": "7D86EA14"
+      },
+      {
+        "va": "0x46763c",
+        "bytes": "7CAC4214"
+      },
+      {
+        "va": "0x467648",
+        "bytes": "78BB0020"
+      },
+      {
+        "va": "0x4676b8",
+        "bytes": "7F63DB78"
+      },
+      {
+        "va": "0x4676bc",
+        "bytes": "4BFFC415"
+      },
+      {
+        "va": "0x469018",
+        "bytes": "F821FE817C0802A6DBE10178C3E2604CFC20F890FB410140787A0020DBC10170FB6101487C7B1B787F43D378FB810150FBC10160FBE10168FB210138FBA10158F80101907C9C2378480013C1600000005463063E3BC000002F8300003BE00000409E0038EB410190EB2101387F4803A6EB610148EB410140EB810150EBA10158EBC10160EBE10168CBC10170CBE10178382101804E8000207B8400207F43D378480030A160000000809B00682C0400004082005838A00001C3C2602090BB00F4FC20F0907F43D37848001CA160000000EB410190EB2101387F4803A6EB610148EB410140EB810150EBA10158EBC10160EBE10168CBC10170CBE10178382101804E80002060000000813B000038A00000386101007F44D37883A90058839D0000F84100287F8903A6805D00044E800421E8410028386101107F44D378EB810100EBA10108480014ED60000000E8E10118EB2101103861008090E10120C041012078E40022FC2010507B2C0022D02101208141012090810120C0C10120795F002CFD60305038800074D16101208161012093210120C181012078790020FCE06050797F000E7F23CB78D0E101208101012091810120C1210120791E002CFFC04850D3C1012081210120793E000E4BDE9C45E8410028C3C26020FBC100C0C02100C438E00001ED410072C0A100C0FBE100C8C06100C8C122608CFB810090FBA10098D3E100CC98E100FD98E100FCD3E100ACEC05517AD3E100BCEC8300FAFDA0202CEC5E6824FD844828ED0300B2FC6CFA2EECE307F2D06100C8ECC500B2ED6100B2FC4CF1AEFC2CFAEEED4107F2D02100C4D04100C0ECE23FF8ED635028ECAA1028EC0701F2EDAB02FAEC05697AFC80002CEDBE2024FC804828ED450372EC0B0372FD44FAAEFD64F02EECA70372D16100A0FD24F96EEC0202B2D12100A4EDA102F2D14100A8ECE30272ED0302F8ECC26A78ED813AB8D10100B4D0C100B8D18100B0807B002C4BFFC9E5600000005466063E2C8600004186000C3BC0000B93C100DC83FB00147F24CB783B6000013861007093E10080936100E44BDE5DD9E84100284BFFFDC060000000"
+      },
+      {
+        "va": "0x469024",
+        "bytes": "C3E2604C"
+      },
+      {
+        "va": "0x469028",
+        "bytes": "FC20F890"
+      },
+      {
+        "va": "0x469060",
+        "bytes": "480013C1"
+      },
+      {
+        "va": "0x469078",
+        "bytes": "409E0038"
+      },
+      {
+        "va": "0x4690b8",
+        "bytes": "480030A1"
+      },
+      {
+        "va": "0x4690c0",
+        "bytes": "809B0068"
+      },
+      {
+        "va": "0x4690c8",
+        "bytes": "40820058"
+      },
+      {
+        "va": "0x4690d0",
+        "bytes": "C3C26020"
+      },
+      {
+        "va": "0x4690d4",
+        "bytes": "90BB00F4"
+      },
+      {
+        "va": "0x4690d8",
+        "bytes": "FC20F090"
+      },
+      {
+        "va": "0x4690e0",
+        "bytes": "48001CA1"
+      },
+      {
+        "va": "0x46a420",
+        "bytes": "812260AC800900002F800000409E004C8163002C2C0B00004182004080A3003080850018548306F62C8300004086002CC1A260B0FF0168004099002C7966002038600000C0060008FF8008004FDDF382409E000C60000000386000017C6307B44E8000207967002038600000C0270008FC0168004081FFE84BFFFFE060000000"
+      },
+      {
+        "va": "0x46a424",
+        "bytes": "80090000"
+      },
+      {
+        "va": "0x46a428",
+        "bytes": "2F800000"
+      },
+      {
+        "va": "0x46a42c",
+        "bytes": "409E004C"
+      },
+      {
+        "va": "0x46a430",
+        "bytes": "8163002C"
+      },
+      {
+        "va": "0x46a434",
+        "bytes": "2C0B0000"
+      },
+      {
+        "va": "0x46a438",
+        "bytes": "41820040"
+      },
+      {
+        "va": "0x46a43c",
+        "bytes": "80A30030"
+      },
+      {
+        "va": "0x46a440",
+        "bytes": "80850018"
+      },
+      {
+        "va": "0x46a444",
+        "bytes": "548306F6"
+      },
+      {
+        "va": "0x46a448",
+        "bytes": "2C830000"
+      },
+      {
+        "va": "0x46a44c",
+        "bytes": "4086002C"
+      },
+      {
+        "va": "0x46a450",
+        "bytes": "C1A260B0"
+      },
+      {
+        "va": "0x46a454",
+        "bytes": "FF016800"
+      },
+      {
+        "va": "0x46a458",
+        "bytes": "4099002C"
+      },
+      {
+        "va": "0x46a464",
+        "bytes": "C0060008"
+      },
+      {
+        "va": "0x46a468",
+        "bytes": "FF800800"
+      },
+      {
+        "va": "0x46a46c",
+        "bytes": "4FDDF382"
+      },
+      {
+        "va": "0x46a470",
+        "bytes": "409E000C"
+      },
+      {
+        "va": "0x46a478",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x46a48c",
+        "bytes": "C0270008"
+      },
+      {
+        "va": "0x46a490",
+        "bytes": "FC016800"
+      },
+      {
+        "va": "0x46a494",
+        "bytes": "4081FFE8"
+      },
+      {
+        "va": "0x46ad80",
+        "bytes": "F821FF917C8802A6F88100808003002C2F80000078030020419E0010FC2008504BFFB07960000000E8610080382100707C6803A64E800020"
+      },
+      {
+        "va": "0x46ad8c",
+        "bytes": "8003002C"
+      },
+      {
+        "va": "0x46ad90",
+        "bytes": "2F800000"
+      },
+      {
+        "va": "0x46ad94",
+        "bytes": "78030020"
+      },
+      {
+        "va": "0x46ad98",
+        "bytes": "419E0010"
+      },
+      {
+        "va": "0x46ad9c",
+        "bytes": "FC200850"
+      },
+      {
+        "va": "0x46ada0",
+        "bytes": "4BFFB079"
+      },
+      {
+        "va": "0x46af58",
+        "bytes": "F821FF617D4802A6FBA100887C7D1B78FB810080787C0020FB4100707F83E378FB610078FBC10090FBE10098F94100B04BDE6471E8410028837D00143920000080C260DC397D00383800000279640020913B005880BD001438E0FFFF396000003BC000007D6C5B783BE000009805005C913D002C913D0030E90600003920283C90E40008F904000080FD00147D685B7880A260B43B6000007D635B78800260B47D645B78799F002CE8C7002078BE002CE9470028791B002C913D0064F95C0078917D0060917D0050917D0054F8DC00703B400000E9870030787F000EE8670038789E000E791B000E811D0000781A002C7D6A5B78F99C0080F87C0088FBDC0090FBFC0098E8A70030795A000EE8C700387F83E378F8BC00A0F8DC00A8FB5C00B0FB7C00B8917D00688128005480890000F84100287C8903A6804900044E800421E8410028E80100B0EB4100707C0803A6EB610078EB810080EBA10088EBC10090EBE10098382100A04E80002060000000"
+      },
+      {
+        "va": "0x46afc8",
+        "bytes": "913D002C"
+      },
+      {
+        "va": "0x46afcc",
+        "bytes": "913D0030"
+      },
+      {
+        "va": "0x897b38",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a5f40",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x8a5f6c",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x8a5fcc",
+        "bytes": "103698E0"
+      },
+      {
+        "va": "0x8a5fd0",
+        "bytes": "00000000"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -117312,6 +117694,10 @@
     ]
   },
   "annotations": [
+{"va":"0x00463AD0","name":"TOD_weapon_create_and_bind_borrowed_inventory_record","kind":"function","confidence":"confirmed","bytes":"F821FF517D0802A6","comment":"Resolves definition from supplied record ID; after250528 creation installs same record at object+40->weapon+2C and definition+30. Canonical owner path1F5DB8/466D38/4675A0 established. Qualified creation/index/instance lifetime, not copied save or ownership admission.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_ammo_debit native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0046AD80","name":"TOD_weapon_ammo_negated_request_to_clamped_add","kind":"function","confidence":"confirmed","bytes":"F821FF917C8802A6","comment":"Null borrowed record+2C skips. Otherwise FNEG supplied FPR then465E18 clamped ADD to saved+8; no local availability/sign/ownership check. Negative request adds; not universal per-shot cost or exact delta.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_ammo_debit native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0046A420","name":"TOD_weapon_ammo_local_admission_predicate","kind":"function","confidence":"confirmed","bytes":"812260AC80090000","comment":"Runtime global nonzero/recordless/definition flag10 bypass. Ordered positive request requires ammo>=request; zero/negative/unordered request requires ordered ammo>0. No ownership/max/mutation; not full firing eligibility or native exception model.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_ammo_debit native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x004690E0","name":"TOD_weapon_zero_request_check_then_one_debit_branch","kind":"comment","confidence":"confirmed","bytes":"48001CA1","comment":"469018 earlier checks request+0 via46A420, then external46C158. Null runtime+68 branch requests1.0 via46AD80; predicate and later debit differ, fractional ammo may pass check. No stable samples, weapon identity or per-shot outcome inferred.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_ammo_debit native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0043A508","name":"TOD_Gelanator_transition_select_native_item27","kind":"comment","confidence":"confirmed","bytes":"901D0044","comment":"Publishes literal27 at actor+44; native WPN_GELANATOR export independently confirms identity. Qualified hero+1A68 +20*ID later selects saved record21C/ammo224. Not all actor instances or raw ID safety.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; gelanator_transition native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0043A9C8","name":"TOD_Gelanator_transition_ammo_debit_then_runtime_latch","kind":"comment","confidence":"confirmed","bytes":"4802B831","comment":"After ordered phase gate, record present and NEW actor+50 sample zero: subtract request1.0 through4661F8, then actor+50=1. Maximum clamp applies; not exactly1 actual delta or per-shot cost.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; gelanator_transition native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0043A8C8","name":"TOD_Gelanator_transition_ammo_refund_then_runtime_latch","kind":"comment","confidence":"confirmed","bytes":"4802B551","comment":"Record present/NEW actor+50 sample ANY nonzero: add request1.0 through465E18, then actor+50=0. Clamped request, not conserved refund or complete final callback state.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; gelanator_transition native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

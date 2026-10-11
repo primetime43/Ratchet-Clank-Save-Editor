@@ -306,6 +306,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "Level-5 publication writes level5/threshold5 XP and adds maximum ammo before charging bolts. The bridge alone accepts num_levels>4, a weaker condition than the purchase gate. Normal acquisition has no local duplicate-ownership rejection: a repeated call can charge again while skipping its local acquisition-counter increment. Later callbacks and checkpoint updates remain qualified; viewing never purchases, refills or changes counters.\r\n" +
                         "Checkpoint ammo lifecycle: native35CF40 captures these saved ammo floats into a runtime-only checkpoint bank. Qualified successful purchase paths merge finite ammo as max(saved, checkpoint) through35D358. If checkpoint validbyteEF is set, hero setup23E650 can restore ammo through13DD0/465DC0, clamping to a definition/level/modifier-dependent maximum and zero fallback. This is not a verbatim copy or a checkpoint embedded in GAME.SAV; active checkpoint and runtime capacity are not inferred.\r\n" + item.Warning;
                     var capacity = TodResearch.Map.GetProperty("ammo_capacity");
+                    var debit = TodResearch.Map.GetProperty("weapon_ammo_debit");
+                    details += "\r\nShared weapon ammo path (when this record is bound): " + debit.GetProperty("debit_rule").GetString() +
+                        "\r\nLocal ammo admission: " + debit.GetProperty("availability_rule").GetString() +
+                        "\r\n" + debit.GetProperty("caller_boundary").GetString() +
+                        "\r\n" + debit.GetProperty("runtime_limit").GetString();
                     details += "\r\nAmmo-capacity calculation: " + capacity.GetProperty("modifier_order").GetProperty("rule").GetString() +
                         "\r\n" + capacity.GetProperty("saved_inputs").GetProperty("index_limit").GetString() +
                         "\r\n" + capacity.GetProperty("modifier_order").GetProperty("limits").GetString();

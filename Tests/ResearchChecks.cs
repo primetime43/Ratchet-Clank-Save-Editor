@@ -754,6 +754,22 @@ internal static partial class Program
             Equal("255", table.Rows[27].Cells[3]); Equal("0xFFFFFFFF", table.Rows[27].Cells[6]);
             True(bytes.SequenceEqual(before), "Viewing must not execute or balance a Gelanator transition.");
         });
+        Check("Shared weapon ammo explains separate check and debit without inferring eligibility or changing raw records", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(28, 4), 0x7F800001);
+            bytes[36] = 0xFE; bytes[37] = 0xFF; bytes[38] = 0xAB; bytes[39] = 0xCD;
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Weapons & gadgets");
+            string detail = table.Rows[1].Details;
+            True(detail.Contains("Shared weapon ammo path (when this record is bound)") && detail.Contains("FNEG"), "Shared path must be qualified to an actual bound record.");
+            True(detail.Contains("request0 predicate is not an ammo>=1 check") && detail.Contains("external46C158"), "Separate samples and intervening helper must not become a firing-cost verdict.");
+            True(detail.Contains("OR UNORDERED request") && detail.Contains("meaning remains unknown"), "Raw branch behavior and anonymous runtime global must remain qualified.");
+            True(detail.Contains("cannot be reconstructed from GAME.SAV") && detail.Contains("No eligibility"), "Saved ammo alone must not be presented as current eligibility.");
+            True(detail.Contains("ammo bits: 0x7F800001") && detail.Contains("ABCD"), "Raw nonfinite values and opaque bytes must stay visible.");
+            Equal("255", table.Rows[1].Cells[3]); Equal(10, table.Columns.Length);
+            True(bytes.SequenceEqual(before), "Viewing must not execute admission, debit, refill or normalize records.");
+        });
         Check("Ammo capacity explains arithmetic and raw-level bounds without calculating live maxima", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1221,7 +1237,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1467, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1471, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
