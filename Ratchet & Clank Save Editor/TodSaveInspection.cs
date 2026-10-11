@@ -31,6 +31,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private static string Number(uint bits) => BitConverter.Int32BitsToSingle(unchecked((int)bits)).ToString("R", CultureInfo.InvariantCulture);
         private uint U32(int offset) => BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(offset, 4));
 
+        private static string SpaceStatBoundaryDetails() =>
+            "\r\nSpace-combat context: named get_space_stat reads runtime root 0x10330740, outside GAME.SAV. Its ID3 counts current pending bits at runtime+FC; ID7 tests whether that runtime bank is empty. Neither reads saved8728. " +
+            "Runtime statistics: unavailable from this save, not zero. Saved progress cannot supply target count, current remaining targets or live mission statistics. " +
+            "Named space_combat_reset explicitly clears runtime words120..148. The selected caller resets that live bank before incrementing saved872C and conditionally8730. " +
+            "The complete selected reset bodies do not directly clear saved8728/872C/8730 or runtime+FC, but helper/callback effects and final preservation remain unknown. " +
+            "Exact counter event names remain unresolved; not a deaths, kills or retries assertion. Viewing never queries runtime statistics or executes a reset.";
+
         private string QuickSelectWarningDetails()
         {
             var report = TodResearch.Map.GetProperty("quick_select_warning");
@@ -313,6 +320,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     uint value = U32(field.Item1);
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 },
                         field.Item4 + (field.Item1 is 0x42C or 0x430 or 0x434 ? EquipmentHistoryDetails() : "") +
+                        (field.Item1 == 0x8728 ? SpaceStatBoundaryDetails() : "") +
                         (field.Item1 == 0x8728 ? "\r\nRestoration362C20 consumes a sequential runtime index before testing this saved bit. An already-recorded bit returns false without adding it to runtime pending; caller375C48 then replaces the target index withFFFFFFFF. A clear bit adds it to runtime pending, leaving saved progress unchanged. Shift counts32..63 select zero but still return true; these are raw instruction cases, not proven target counts or IDs.\r\nReached native reset489F68 explicitly clears this word and neighboring872C/8730 after2CDBB0 and before465DC0. Neighbor meanings and all reset invocation causes remain unknown. The neighbors now have confirmed counter behavior, but no proven gameplay event names. This is not lifetime history; zero does not prove no previously recorded targets." : "") +
                         (field.Item1 == 0x906EC ? "\r\nThe restart dispatcher uses an object-local private bank, not a proven alias of the normal save-manager staging buffer. Phase1 captures live bytes once on entry; later polls do not recapture. Phase4 exact selector0/1 invokes selective restart/full private-bank restore before publishing phase5. Selective restart zeroes both mission groups and clears the log count, but retains prior private-bank log bytes8764..10144, not necessarily current live bytes. Runtime phase, choice and capture history are absent from this file; no action is executed here." : "")));
                 }
@@ -324,7 +332,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         field.GetProperty("type").GetString() + ". " + field.GetProperty("rule").GetString() + "\r\n" +
                         report.GetProperty("scaling").GetProperty(field.GetProperty("offset").GetString()).GetProperty("rule").GetString() + "\r\n" +
                         report.GetProperty("reset").GetString() + "\r\n" + report.GetProperty("warning").GetString() +
-                        "\r\nViewing preserves raw words and never dispatches events, resolves handles, changes runtime parameters or repairs counter relationships."));
+                        "\r\nViewing preserves raw words and never dispatches events, resolves handles, changes runtime parameters or repairs counter relationships." + SpaceStatBoundaryDetails()));
                 }
                 foreach (var field in TodResearch.Map.GetProperty("save_aux_fields").GetProperty("fields").EnumerateArray())
                 {

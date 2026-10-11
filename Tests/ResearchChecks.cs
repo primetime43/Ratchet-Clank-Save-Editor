@@ -36,6 +36,26 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Space runtime statistics stay unavailable instead of being synthesized from persistent counters", () =>
+        {
+            foreach (uint value in new uint[] { 0, 0x80000000, uint.MaxValue })
+            {
+                byte[] bytes = ResearchFixture();
+                foreach (int offset in new[] { 0x8728, 0x872C, 0x8730 })
+                    BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset, 4), value);
+                byte[] before = bytes.ToArray();
+                var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+                foreach (var row in table.Rows.Where(r => r.Cells[0] is "0x8728" or "0x872C" or "0x8730"))
+                {
+                    Equal(value.ToString("X8"), row.Cells[4]);
+                    True(row.Details.Contains("Runtime statistics: unavailable") && row.Details.Contains("Neither reads saved8728"), "Runtime pending/stat words cannot be synthesized from saved progress, including zero snapshots.");
+                    True(row.Details.Contains("helper/callback effects") && row.Details.Contains("Exact counter event names remain unresolved"), "Direct reset boundaries must not become final state or death-count claims.");
+                }
+                Equal(3, table.Rows.Count(r => r.Cells[0] is "0x8728" or "0x872C" or "0x8730"));
+                True(bytes.SequenceEqual(before), "Inspection must not reset progress or persistent counters.");
+            }
+            Equal(89, TodResearch.Map.GetProperty("space_stat_boundary").GetProperty("instruction_guards").GetArrayLength());
+        });
         Check("Dance progress keeps all64 bits and the earned award independent without inventing target identities", () =>
         {
             const ulong pattern = 0x000000000FFFFFFFUL;
@@ -1108,7 +1128,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1411, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1415, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
