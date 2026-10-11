@@ -4,6 +4,14 @@ Offset map checked against the PS3 `BCES00052_SAVE_1` plaintext sample and the s
 
 **Status:** the wrapper headers are mapped; game-state structures are partially mapped. A byte pattern is not enough to establish a field's gameplay meaning. No new fields are enabled for editing.
 
+## Weapon progression and mission byte ownership
+
+Native save launchers capture a separate staging bank before starting the save thread; later transfer reads staging, not live state. Load name/size admission uses the first matching record, then successful worker status and a qualified later poll gate the full restore. The Check-thread existence probe is separate from actual auto-load and supplies runtime-only manager fields. Restore applies audio settings and requests the saved destination after copying bytes. None of this proves atomicity, payload semantics or successful gameplay acceptance. [Staging and deferred-load evidence](BCUS98127/v02.00/ElfMap.md#save-staging-and-deferred-load-application).
+
+Weapon XP uses a cap selected from the pre-update stored level, further limited by runtime definition flags/count; high XP alone does not cross stored4/5 through the ordinary setter. Inclusive threshold promotions can also lower levels on decreased XP. Level increases add the new ammo maximum before clipping rather than assigning it absolutely; progress fractions are not locally clamped. Raw float bits and unusual levels remain visible without guessed runtime progress. [Exact-build evidence](BCUS98127/v02.00/ElfMap.md#weapon-xp-boundaries-and-additive-ammo-updates).
+
+Mission initialization leaves flags intact while clearing counts/IDs. Completion retains destination flags and sets bit2 instead of copying source optional/unknown bits; compaction leaves inactive residual entry bytes. Native searches trust raw counts before capacity checks, and completing into a full list can overwrite its own count. Read-only inspection remains bounded and never invokes these paths. Actual counts/flags are all0, not evidence of an occupied completion event. [Mutation evidence and safe detached tests](BCUS98127/v02.00/ElfMap.md#mission-mutation-and-retained-entry-flags).
+
 ## Object reset/restore, quick-select mutation and opaque-tail ownership
 
 The three 23-word object banks at `304/360/3BC` are independently saved current/high-water/positive-addition values. Selective restart copies them first, then preserves IDs `0..9,11` and clears all three words for IDs `10,12..22`. The reached hero-restore block separately sets current counts to 1 for IDs `0,1,2,3,4,9`, raises high-water values by unsigned comparison, and leaves additions unchanged. These are not universal lifetime pickup counters.

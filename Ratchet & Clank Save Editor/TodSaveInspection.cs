@@ -152,6 +152,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
             }
             text.AppendLine("Available is the inverse of complete, not a separate saved bit. Script indices concatenate active then completed and are one-based; stored slots here are zero-based. Unused entries are not interpreted or cleared.");
+            text.AppendLine("Mission initialization clears counts and title/description words, but leaves entry flags intact. Completion copies title/description and sets bit2 in the destination's retained flags; it does not transfer the source's optional or unknown bits. Compaction preserves all12 bytes of survivors and leaves the old last entry as inactive residual storage, not another mission.");
+            text.AppendLine("Native title searches use raw counts before the add-capacity check. Completing into a full ten-entry list can overwrite its count word, with later addresses based on the overwritten value. Viewing reads only physical entries and never invokes these unsafe native paths or repairs counts.");
             return text.ToString();
         }
 
@@ -242,6 +244,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         $"Ownership byte: 0x{item.Ownership:X2} (nonzero = script-owned, not necessarily usable). Unlock byte: 0x{item.Unlock:X2} at {TodResearch.Hex(0x5754 + item.Id)}.\r\n" +
                         $"Unknown record +0x12/+0x13: {item.UnknownTail:X4}. Standalone record reset465C98 writes only the first18 of20 bytes, preserving these two. Bulk initialization466A60 first zero-fills all32 records, so the same bytes are zero there. Selective restart copies the first484 save bytes before selected record resets; these tails survive those observed steps, not necessarily every later callback. Viewing never resets or normalizes them.\r\n" +
                         $"Set modifier bits: [{bits}]. Start node 0 need not be purchased.\r\n" +
+                        "Weapon progression: the XP setter chooses its cap from the PRE-UPDATE stored level: <=4 selects boundary4, >4 selects boundary9, further limited by definition flags/count. Threshold equality promotes; decreasing XP can lower the stored level and change the next call's cap. This saved byte alone does not establish the effective runtime cap.\r\n" +
+                        "A level increase adds the new ammo maximum to existing ammo before clipping; negative existing ammo need not fully refill. The progress helper reads the raw level's threshold before cap calculation and does not clamp its fraction to0..1. No progress fraction or safe edit range is guessed here; raw float bits remain unchanged.\r\n" +
                         "Checkpoint ammo lifecycle: native35CF40 captures these saved ammo floats into a runtime-only checkpoint bank. Qualified successful purchase paths merge finite ammo as max(saved, checkpoint) through35D358. If checkpoint validbyteEF is set, hero setup23E650 can restore ammo through13DD0/465DC0, clamping to a definition/level/modifier-dependent maximum and zero fallback. This is not a verbatim copy or a checkpoint embedded in GAME.SAV; active checkpoint and runtime capacity are not inferred.\r\n" + item.Warning;
                     rows.Add(new(new[] { item.Id.ToString(), item.Name, item.ScriptOwned ? "Yes" : "No", item.StoredLevel.ToString(),
                         Number(item.XpBits), Number(item.AmmoBits), $"0x{item.ModifierMask:X8}", $"0x{item.Unlock:X2}", TodResearch.Hex(item.Offset), item.Warning }, details));
@@ -789,7 +793,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 foreach (var region in TodResearch.Map.GetProperty("save_regions").EnumerateArray())
                     rows.Add(new(new[] { region.GetProperty("start").GetString(), region.GetProperty("end_exclusive").GetString(),
-                        region.GetProperty("confidence").GetString(), region.GetProperty("comment").GetString() }, TodResearch.Pretty(region)));
+                        region.GetProperty("confidence").GetString(), region.GetProperty("comment").GetString() }, TodResearch.Pretty(region) +
+                        "\r\nNative save I/O: the save launchers copy live state into a separate staging buffer before starting the worker thread. Later GAME transfer reads staging, not live memory. This does not establish atomicity across overlapping requests.\r\nLoad metadata accepts only the first matching filename with the exact configured64-bit size. Actual restore is deferred until the load API succeeds with selected-slot!=-1 and the later poll passes its handle/status/phase5 gates. The existence probe is separate. None of these runtime states or successful in-game acceptance is inferred from this file."));
                 return new(new[] { "Start", "End (exclusive)", "Confidence", "Meaning / limitation" }, rows.AsReadOnly());
             }
             if (view == "Prefix words")

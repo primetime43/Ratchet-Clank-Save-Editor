@@ -41,8 +41,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Object counters & equipment", TodResearch.Map.GetProperty("objects"), 0));
             topics.Add(JsonTopic("Object reset/restore, Souls award & quick-select mutation", TodResearch.Map.GetProperty("inventory_aux"), 0));
             topics.Add(JsonTopic("Inventory reset footprint & opaque prefix-byte ownership", TodResearch.Map.GetProperty("inventory_reset"), 0));
+            topics.Add(JsonTopic("Weapon XP, level boundaries & ammo updates", TodResearch.Map.GetProperty("weapon_progression"), 0));
             topics.Add(JsonTopic("Opaque final word & settings initialization/copy ownership", TodResearch.Map.GetProperty("final_tail_fields"), 0));
             topics.Add(JsonTopic("Mission lists & flags", TodResearch.Map.GetProperty("mission_lists"), 0));
+            topics.Add(JsonTopic("Mission completion, retained flags & list boundaries", TodResearch.Map.GetProperty("mission_mutation"), 0));
             topics.Add(JsonTopic("Native mission lookup keys & segment naming limits", TodResearch.Map.GetProperty("segment_bindings"), 0));
             topics.Add(JsonTopic("Segment-name configuration loader & hash collisions", TodResearch.Map.GetProperty("segment_configuration"), 0));
             topics.Add(JsonTopic("Shipped reference segment names for 19 worlds", TodResearch.Map.GetProperty("segment_configuration_assets"), 0));
@@ -61,6 +63,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Copied runtime definition handles & unresolved grid bytes", TodResearch.Map.GetProperty("grid_aux_fields"), 0));
             topics.Add(JsonTopic("Shipped grid definition fingerprints & copied header bodies", TodResearch.Map.GetProperty("grid_aux_assets"), 0));
             topics.Add(JsonTopic("Settings, load destinations & runtime limits", TodResearch.Map.GetProperty("settings"), 0));
+            topics.Add(JsonTopic("Save snapshots, load checks & deferred restoration", TodResearch.Map.GetProperty("snapshot_lifecycle"), 0));
             topics.Add(JsonTopic("Saved level requests, runtime deferral & lookup limits", TodResearch.Map.GetProperty("load_selection"), 0));
             topics.Add(JsonTopic("First-person camera coupling & unknown option limits", TodResearch.Map.GetProperty("first_person_option"), 0));
             topics.Add(JsonTopic("Shipped pause-menu settings & API dispatch", TodResearch.Map.GetProperty("settings_menu"), 0));

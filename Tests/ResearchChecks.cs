@@ -36,6 +36,45 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Snapshot and load gates do not become a current worker or acceptance verdict", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            bytes[0x484] = 0xAB;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906E8, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Save regions");
+            True(table.Rows[0].Details.Contains("before starting the worker thread") && table.Rows[0].Details.Contains("not live memory"), "The staging snapshot must not be confused with live worker-time state.");
+            True(table.Rows[0].Details.Contains("first matching filename") && table.Rows[0].Details.Contains("handle/status/phase5 gates") && table.Rows[0].Details.Contains("existence probe is separate"), "Metadata and worker gates must not become payload validation or a current apply verdict.");
+            Equal("0x1029ff18", TodResearch.Map.GetProperty("snapshot_lifecycle").GetProperty("memory_banks").GetProperty("staging_va").GetString());
+            True(bytes.SequenceEqual(before), "Lifecycle viewing must not snapshot, restore, issue syscalls or normalize opaque saved bytes.");
+        });
+        Check("Weapon progression explains pre-update caps without normalizing raw floats", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x18, 4), 0x7FC01234);
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(0x1C, 4), -10f);
+            bytes[0x25] = 255;
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Weapons & gadgets");
+            Equal("255", table.Rows[1].Cells[3]);
+            Equal("-10", table.Rows[1].Cells[5]);
+            True(table.Rows[1].Details.Contains("PRE-UPDATE stored level") && table.Rows[1].Details.Contains("negative existing ammo need not fully refill"), "Stored byte predicates and additive ammo must not become an absolute refill or runtime cap verdict.");
+            True(table.Rows[1].Details.Contains("0x7FC01234") && table.Rows[1].Details.Contains("does not clamp its fraction"), "Nonfinite bits and raw threshold lookup must remain visible without guessed progress.");
+            Equal("0x465f08", TodResearch.Map.GetProperty("weapon_progression").GetProperty("level_cap").GetProperty("function_va").GetString());
+            True(bytes.SequenceEqual(before), "Progression inspection must not recompute levels, clip ammo or execute native code.");
+        });
+        Check("Mission completion describes destination flags and bounded residual storage", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10148 + 0x78, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10148 + 8, 4), 0xABCD1235);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("World progress");
+            True(table.Rows[0].Details.Contains("Exceeds capacity10") && table.Rows[0].Details.Contains("unknown bits0xABCD1234"), "Corrupt counts and unknown mission flag bits must remain raw and bounded.");
+            True(table.Rows[0].Details.Contains("destination's retained flags") && table.Rows[0].Details.Contains("inactive residual storage"), "Completion flags must not be described as source transfer or residual entries as live missions.");
+            Equal(10, TodResearch.Map.GetProperty("mission_mutation").GetProperty("layout").GetProperty("capacity").GetInt32());
+            True(bytes.SequenceEqual(before), "Mission inspection must not clear stale bytes, compact lists or emulate native overflow.");
+        });
         Check("Arena queue diagnostics do not become a recovered table-taking native binding", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -708,7 +747,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1315, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1323, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

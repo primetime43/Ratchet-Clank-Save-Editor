@@ -3,6 +3,9 @@
 ## Findings and definitions
 
 - [Executable map and evidence](ElfMap.md): save and non-save findings, import instructions and repeatable commands.
+- [Save staging and deferred load application](ElfMap.md#save-staging-and-deferred-load-application): snapshot-before-thread ordering, first-match size admission, worker/poll gates and the separate existence probe.
+- [Weapon XP boundaries and additive ammo](ElfMap.md#weapon-xp-boundaries-and-additive-ammo-updates): pre-update stored-level caps, inclusive thresholds and additive rather than absolute ammo refill.
+- [Mission mutation and retained flags](ElfMap.md#mission-mutation-and-retained-entry-flags): initializer byte ownership, destination flags, residual compaction bytes and unsafe native count boundaries.
 - [Arena queue API and resource boundary](ElfMap.md#arena-queue-api-boundary-and-runtime-resource-ownership): distinguishes the registered native queue endpoint from diagnostic text and the unresolved table-taking Lua selector.
 - [Reset request admission and latch service](ElfMap.md#reset-request-admission-and-latch-service): qualifies the counter writer's caller path, exact latch0/1 tests and independent saved counter gates; runtime causes remain unnamed.
 - [Segment consumer mapping and lifecycle gates](ElfMap.md#saved-segment-slots-and-runtime-configuration-mapping): requested save slots stay distinct from runtime config indices; completion can outlive finalization gates, while reset lacks the completion test.
@@ -16,7 +19,7 @@
 - [Object/reset/restore and opaque-tail ownership](ElfMap.md#object-counter-lifecycles-quick-select-mutation-and-opaque-tail-ownership): selected three-bank resets, six restore assignments, signed Souls skill-point consumer, quick-select mutation and final-word/settings copy boundaries.
 - [Arena indexing and shipped display order](ElfMap.md#arena-native-ids-source-indices-and-display-rows): native count/inverse lookups and completion-dependent source-index routing; runtime table contents remain unresolved.
 - [Pack/boot state, reference segment names and opaque-byte ownership](ElfMap.md#saved-packboot-state-ordered-segment-names-and-initializer-ownership): three newly named words,56 asset-backed segment associations across19 worlds and exact initialization/copy boundaries.
-- [Native address/structure map](maps/NativeMap.json): 1315 annotations, 118 imports and 42 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1323 annotations, 118 imports and 42 structure definitions.
 - [Decryptor, timing and copied-handle findings](ElfMap.md#decryptor-state-saved-timing-aggregates-and-copied-runtime-handles): named wins/Sixaxis losses/spark-speed multiplier, four saved timing floats and runtime generation/slot handles;19 original shipped grid bodies match the actual save.
 - [Health and checkpoint ammo lifecycle](ElfMap.md#runtime-health-and-checkpoint-ammo-qualifying-restoration-paths): runtime health identity/upper bound, conditional XP-driven refresh,32-slot ammo capture, qualified vendor merge and clamped restoration.
 - [Saved auxiliary words](ElfMap.md#three-saved-auxiliary-words-event-branch-sixaxis-gate-and-bounded-modifier): three typed Decryptor words at8758/875C/8760, wrapping counters, Sixaxis gate and native finite spark-speed modifier bounds; retained native state, not universal lifetime statistics.
