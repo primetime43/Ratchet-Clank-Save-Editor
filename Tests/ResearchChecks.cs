@@ -735,6 +735,25 @@ internal static partial class Program
             Equal(7, TodResearch.Map.GetProperty("adaptation_context").GetProperty("seven_state_dispatch").GetProperty("states").GetArrayLength());
             True(bytes.SequenceEqual(before), "Decryptor inspection must not change counter values or speed.");
         });
+        Check("Ammo capacity explains arithmetic and raw-level bounds without calculating live maxima", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            bytes[0x11] = 0xFF; bytes[0x10] = 0xFE;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(8, 4), 0x7FC12345);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(12, 4), 0xFFFFFFFF);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var table = inspection.Table("Weapons & gadgets");
+            string detail = table.Rows[0].Details;
+            True(detail.Contains("not successive percentage compounding") && detail.Contains("ANY nonzero kind"), "Capacity must describe native addition and final multiply, not guessed compounding.");
+            True(detail.Contains("255 addresses67C") && detail.Contains("does not protect this native saved-byte path"), "XP/property bounds must not be substituted for the raw-level capacity lookup.");
+            True(detail.Contains("not read by this walker") && detail.Contains("does not clamp its result positive"), "Arithmetic must not become ownership, eligibility or valid-capacity verdicts.");
+            True(detail.Contains("ammo bits: 0x7FC12345"), "Nonfinite saved ammo must remain raw.");
+            Equal("255", table.Rows[0].Cells[3]);
+            Equal("0xFFFFFFFF", table.Rows[0].Cells[6]);
+            Equal(10, table.Columns.Length);
+            True(bytes.SequenceEqual(before), "Capacity inspection must not cap levels, clear masks or refill ammo.");
+        });
         Check("Load reset dependencies explain only Gelanator and selected gates without applying a reset", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1183,7 +1202,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1458, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1462, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

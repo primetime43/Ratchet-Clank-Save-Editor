@@ -116255,6 +116255,187 @@
       }
     ]
   },
+  "ammo_capacity": {
+    "confidence": "exact-build-native-arithmetic",
+    "warning": "USA BCUS98127 v02.00 static evidence only; no native execution, current runtime definition resolution or new editing permission.",
+    "saved_inputs": {
+      "rule": "463DE0 resolves record ID+0 through463190, then loads raw ownership-independent level byte+11 and modifier word+0C.466500 loads definition-data pointer+48 and base f32 at data+280+4*level, selects attribute9 (MOD_AMMO), and tail-branches466258. Saved ammo+8 and XP+4 are not inputs to these selected arithmetic bodies.",
+      "index_limit": "The raw saved level byte is not capped here by465F08, NumLevels or the declared20-slot MaxAmmo property. Level19 addresses2CC;20 addresses2D0;255 addresses67C. Values outside0..19 leave that declared array. Address arithmetic is not a valid dereference, playable level or safe editing range; the public indexed-property check does not protect this native saved-byte path."
+    },
+    "modifier_order": {
+      "rule": "466258 walks NumMods at data+6A4 in ascending physical index, entries at464 with stride18. A record contributes only when its indexed saved mask bit is enabled AND entry attribute+0 equals requested9. Kind+4 exactly0 adds value f32+8 to the base using fadds. ANY nonzero kind adds value to a separate factor initially1.0 from8A5F00. After the loop, one fmuls multiplies the adjusted base by that factor: (base + absolute additions) * (1 + percentage additions), with single-precision rounding after each operation, not successive percentage compounding.",
+      "limits": "NumMods is not locally capped at24 or32; native slw is not a general arbitrarily wide bitset. The bounded preview refuses more than24 explicit records and nonfinite/overflow values. Node0 has no special skip: it is ignored only when disabled or its attribute mismatches. Cost+0C, name/description tags, ownership, purchase eligibility and native level cap are not read by this walker. It does not clamp its result positive, mutate saved ammo or repair out-of-table mask bits; full lookup/helper effects and runtime overrides remain unresolved.",
+      "empty_rule": "NumMods0 takes a separate load of1.0 and still performs fmuls before returning. It is not an unconditional raw-bit return for arbitrary nonfinite/signed-zero input."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x463e08",
+        "kind": "comment",
+        "name": "TOD_ammo_capacity_raw_saved_level_no_local_clamp",
+        "comment": "Loads raw record+11 level byte; following466500 indexes data+280+4*level without local20-slot/NumLevels clamp. Separate XP cap does not protect this path; level255 offset67C is not proven valid."
+      },
+      {
+        "va": "0x466520",
+        "kind": "comment",
+        "name": "TOD_ammo_capacity_base_from_unclamped_saved_level",
+        "comment": "Reads f32 MaxAmmo base using raw caller level; then tail branch to466258 with saved mask and attribute9. No ownership/XP/current-ammo input or safe out-of-range lookup contract."
+      },
+      {
+        "va": "0x4662ec",
+        "kind": "comment",
+        "name": "TOD_modifier_absolute_add_before_final_factor",
+        "comment": "Kind exactly0: add f32 value+8 to base, physical index order. All nonzero kinds instead add to factor initialized1.0. Saved mask and exact attribute select records; cost/tags/ownership ignored by this arithmetic body."
+      },
+      {
+        "va": "0x4662e0",
+        "kind": "comment",
+        "name": "TOD_modifier_single_final_multiply_not_compounding",
+        "comment": "One final fmuls: adjusted base times accumulated factor. Formula(base+absolute additions)*(1+percentage additions), with per-operation binary32 rounding; not per-node percentage compounding or result positivity clamp."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x463de0",
+        "bytes": "F821FF717C8802A6FBA10078F88100A07C7D1B78806300007C6307B44BFFF3957863002080BD000C889D0011480026F560000000E80100A0EBA100787C0803A6382100904E800020"
+      },
+      {
+        "va": "0x463df4",
+        "bytes": "80630000"
+      },
+      {
+        "va": "0x463dfc",
+        "bytes": "4BFFF395"
+      },
+      {
+        "va": "0x463e04",
+        "bytes": "80BD000C"
+      },
+      {
+        "va": "0x463e08",
+        "bytes": "889D0011"
+      },
+      {
+        "va": "0x463e0c",
+        "bytes": "480026F5"
+      },
+      {
+        "va": "0x466258",
+        "bytes": "8163004879690020812906A42F890000419E008C3889FFFFC1A25FE0396B0464788300203940000038030001390000017C0903A648000010394A0001396B0018424000487D0C5030796900207D8730382C0700004182FFE4800900007C8028004086FFD8806900042F030000419A0024C0090008394A0001EDAD002A396B00184200FFC460000000EC2103724E800020C0490008EC21102A4BFFFFA0C1A25FE0EC2103724E800020"
+      },
+      {
+        "va": "0x466260",
+        "bytes": "812906A4"
+      },
+      {
+        "va": "0x466268",
+        "bytes": "419E008C"
+      },
+      {
+        "va": "0x466270",
+        "bytes": "C1A25FE0"
+      },
+      {
+        "va": "0x466274",
+        "bytes": "396B0464"
+      },
+      {
+        "va": "0x466284",
+        "bytes": "39000001"
+      },
+      {
+        "va": "0x466294",
+        "bytes": "396B0018"
+      },
+      {
+        "va": "0x46629c",
+        "bytes": "7D0C5030"
+      },
+      {
+        "va": "0x4662a4",
+        "bytes": "7D873038"
+      },
+      {
+        "va": "0x4662ac",
+        "bytes": "4182FFE4"
+      },
+      {
+        "va": "0x4662b0",
+        "bytes": "80090000"
+      },
+      {
+        "va": "0x4662b8",
+        "bytes": "4086FFD8"
+      },
+      {
+        "va": "0x4662bc",
+        "bytes": "80690004"
+      },
+      {
+        "va": "0x4662c4",
+        "bytes": "419A0024"
+      },
+      {
+        "va": "0x4662c8",
+        "bytes": "C0090008"
+      },
+      {
+        "va": "0x4662d0",
+        "bytes": "EDAD002A"
+      },
+      {
+        "va": "0x4662e0",
+        "bytes": "EC210372"
+      },
+      {
+        "va": "0x4662ec",
+        "bytes": "EC21102A"
+      },
+      {
+        "va": "0x4662f4",
+        "bytes": "C1A25FE0"
+      },
+      {
+        "va": "0x4662f8",
+        "bytes": "EC210372"
+      },
+      {
+        "va": "0x466500",
+        "bytes": "7C6B1B785483103A7CA62B783803028038A000097C0407B4812B0048796300207C29242E4BFFFD34"
+      },
+      {
+        "va": "0x466504",
+        "bytes": "5483103A"
+      },
+      {
+        "va": "0x466508",
+        "bytes": "7CA62B78"
+      },
+      {
+        "va": "0x46650c",
+        "bytes": "38030280"
+      },
+      {
+        "va": "0x466510",
+        "bytes": "38A00009"
+      },
+      {
+        "va": "0x466518",
+        "bytes": "812B0048"
+      },
+      {
+        "va": "0x466520",
+        "bytes": "7C29242E"
+      },
+      {
+        "va": "0x466524",
+        "bytes": "4BFFFD34"
+      },
+      {
+        "va": "0x8a5f00",
+        "bytes": "3F800000"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -116748,6 +116929,10 @@
     ]
   },
   "annotations": [
+{"va":"0x00463E08","name":"TOD_ammo_capacity_raw_saved_level_no_local_clamp","kind":"comment","confidence":"confirmed","bytes":"889D0011","comment":"Loads raw record+11 level byte; following466500 indexes data+280+4*level without local20-slot/NumLevels clamp. Separate XP cap does not protect this path; level255 offset67C is not proven valid.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_capacity native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00466520","name":"TOD_ammo_capacity_base_from_unclamped_saved_level","kind":"comment","confidence":"confirmed","bytes":"7C29242E","comment":"Reads f32 MaxAmmo base using raw caller level; then tail branch to466258 with saved mask and attribute9. No ownership/XP/current-ammo input or safe out-of-range lookup contract.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_capacity native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x004662EC","name":"TOD_modifier_absolute_add_before_final_factor","kind":"comment","confidence":"confirmed","bytes":"EC21102A","comment":"Kind exactly0: add f32 value+8 to base, physical index order. All nonzero kinds instead add to factor initialized1.0. Saved mask and exact attribute select records; cost/tags/ownership ignored by this arithmetic body.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_capacity native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x004662E0","name":"TOD_modifier_single_final_multiply_not_compounding","kind":"comment","confidence":"confirmed","bytes":"EC210372","comment":"One final fmuls: adjusted base times accumulated factor. Formula(base+absolute additions)*(1+percentage additions), with per-operation binary32 rounding; not per-node percentage compounding or result positivity clamp.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_capacity native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00489FE8","name":"TOD_load_reset_Gelanator_ammo_zero_request","kind":"comment","confidence":"confirmed","bytes":"8062697C","comment":"Loads8A689C=101EFD3C, canonical saved record21C for native ID27 WPN_GELANATOR. Next f32 argument is+0 from8A68A0;489FFC calls465DC0, whose+8 store targets saved224. Definition/level/mask maximum clamp still applies; not raw-zero guarantee or ownership/XP reset.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_reset_dependencies native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x002CDBB8","name":"TOD_arm_deferred_saved_timing_gate_refresh","kind":"comment","confidence":"confirmed","bytes":"90090054","comment":"Call-free leaf stores1 to runtime101E8D70+54=101E8DC4, outside GAME.SAV. No immediate874C/8750 reset. Setup2CE0D0 consumes ANY nonzero latch only when saved replay906EC is zero, invoking two configured gate resets before latch clear.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_reset_dependencies native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x002CE284","name":"TOD_consume_latch_reset_two_saved_timing_gates","kind":"comment","confidence":"confirmed","bytes":"4BFFF9AD","comment":"Reached only after2D1860 returns0 (saved906EC zero) and runtime latch+54 nonzero. Calls2CDC30 to reset874C fromconfig+10FCC, then2CDC00 to reset8750 from+10FD0;2CE28C clears latch. Deferred setup, not immediate arm effect, fixed seconds or complete callback-state proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_reset_dependencies native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
