@@ -275,6 +275,7 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["skill_producers"]["instruction_guards"]
                 + MAPPING["weapon_purchase"]["instruction_guards"]
                 + MAPPING["hero_xp_flow"]["instruction_guards"]
+                + MAPPING["hero_config"]["instruction_guards"]
                 + MAPPING["equipment_mutation"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)

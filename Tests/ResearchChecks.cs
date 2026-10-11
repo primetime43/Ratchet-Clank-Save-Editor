@@ -36,6 +36,23 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Hero progression reference rows stay separate from live level and health", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x418, 4), 2315144);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Hero XP reference");
+            Equal(98, table.Rows.Count); Equal(4, table.Columns.Length);
+            Equal("989,000", table.Rows[97].Cells[1]); Equal("999", table.Rows[97].Cells[2]);
+            True(table.Rows.All(row => row.Cells[3] == "At / above"), "Actual reference XP must be compared without an invented live level.");
+            True(table.Rows[97].Details.Contains("not your observed runtime level or current health") && table.Rows[97].Details.Contains("unpopulated") && table.Rows[97].Details.Contains("not a recovered player-facing level"), "Reference scope and unknown runtime entries must remain explicit.");
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x418, 4), 0);
+            var low = TodSaveInspection.Read(bytes, "BCUS98127").Table("Hero XP reference");
+            Equal("At / above", low.Rows[0].Cells[3]); Equal("Below", low.Rows[1].Cells[3]);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x418, 4), 2315144);
+            True(bytes.SequenceEqual(before), "Reference inspection must not modify saved XP or install config values.");
+            Equal(74, TodResearch.Map.GetProperty("hero_config").GetProperty("instruction_guards").GetArrayLength());
+        });
         Check("Hero XP carry and reload research preserves raw XP without runtime guesses", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -986,7 +1003,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1381, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1385, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

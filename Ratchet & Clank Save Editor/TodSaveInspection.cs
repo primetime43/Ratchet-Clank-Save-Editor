@@ -234,6 +234,22 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             if (!Available) return new(new[] { "Status" }, new[] { new InspectionRow(new[] { Message }, Message) });
             var rows = new List<InspectionRow>();
+            if (view == "Hero XP reference")
+            {
+                uint savedXp = U32(0x418);
+                foreach (var row in TodResearch.Map.GetProperty("hero_config_assets").GetProperty("rows").EnumerateArray())
+                {
+                    int index = row.GetProperty("index").GetInt32();
+                    uint threshold = row.GetProperty("xp").GetUInt32();
+                    string hp = row.GetProperty("hp").GetDouble().ToString("G", CultureInfo.InvariantCulture);
+                    rows.Add(new(new[] { index.ToString(CultureInfo.InvariantCulture), threshold.ToString("N0", CultureInfo.InvariantCulture), hp,
+                        savedXp >= threshold ? "At / above" : "Below" },
+                        $"USA BCUS98127 v02.00 shipped Hero config row {index}: XP threshold {threshold:N0}, HP capacity {hp}. Raw saved XP: {savedXp:N0}.\r\n" +
+                        "Reference definitions only, not your observed runtime level or current health. Config row is a zero-based native index, not a recovered player-facing level label. The supplied config has98 rows; native indices98/99 are unpopulated by this asset. Active installation, later overrides, callbacks and those unpopulated values remain unverified. No gameplay reload or health edit is performed.\r\n" +
+                        "Native HeroConfig bindings use separate100-entry XP/u32 and HP/float32 arrays. XP-driven health refresh is conditional. The live progress helper uses wrapping unsigned differences and single-precision division without a0..1 clamp; no progress percentage is inferred from this snapshot."));
+                }
+                return new(new[] { "Config row", "XP needed", "HP limit", "Saved XP vs threshold" }, rows.AsReadOnly());
+            }
             if (view == "Weapons & gadgets")
             {
                 foreach (var item in Inventory)
@@ -257,7 +273,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (view == "Counters & nearby fields")
             {
                 foreach (var field in new[] { (0x280, "Acquisition/removal counter", "confirmed", "Not asserted equal to the owned-item count."),
-                    (0x418, "Hero XP", "code-backed", "Whole-number hero experience, not current health or a saved level. Named hero_set_xp chain 2BAED0 -> 28A9B0 -> 252C78 -> 23E090 writes this integer. The script setter discards ordinary positive fractions before the leaf.\r\nThe live handler keeps a separate fractional remainder: it carries one XP only when the remainder is greater than1, not exactly1; there is no carry loop. Level checks use original incoming XP, not the saved value after carry, and only raise an existing runtime level. Reload binding resets runtime level/remainder first.\r\nReload converts saved XP through float32 before republishing it. Some large integers above2^24 lose precision; near uint32 maximum, conversion/wrap/carry can interact. Numerical previews assume nearest-even rounding; live FPSCR and threshold values are unknown. The raw saved value shown here is preserved. Runtime remainder, level and health cannot be inferred from this snapshot; no safe editing range inferred."),
+                    (0x418, "Hero XP", "code-backed", "Whole-number hero experience, not current health or a saved level. Named hero_set_xp chain 2BAED0 -> 28A9B0 -> 252C78 -> 23E090 writes this integer. The script setter discards ordinary positive fractions before the leaf.\r\nThe live handler keeps a separate fractional remainder: it carries one XP only when the remainder is greater than1, not exactly1; there is no carry loop. Level checks use original incoming XP, not the saved value after carry, and only raise an existing runtime level. Reload binding resets runtime level/remainder first.\r\nReload converts saved XP through float32 before republishing it. Some large integers above2^24 lose precision; near uint32 maximum, conversion/wrap/carry can interact. Numerical previews assume nearest-even rounding; live FPSCR and active runtime threshold values are unknown. The Hero XP reference view lists98 shipped XP/HP rows separately; those definitions do not establish current health or runtime level. The raw saved value shown here is preserved. Runtime remainder, level and health cannot be inferred from this snapshot; no safe editing range inferred."),
                     (0x41C, "Bolts", "confirmed", "uint32 big endian. Reward-side additions wrap modulo32 and update a separate runtime accumulator first. Hero-side additions use the signed low32(cap-sum) selection with cap999999999, not a universal unsigned minimum or a lower clamp. These native paths do not establish a safe edit range or repair unusual balances."),
                     (0x420, "Raritanium", "confirmed", "uint32 big endian. Reward-side additions wrap modulo32 and update a separate runtime accumulator first. Hero-side additions use the signed low32(cap-sum) selection with cap999999999, not a universal unsigned minimum or a lower clamp. Runtime reward-cache subtraction can use the full requested amount, not the actual wallet delta; that cache is not saved here."),
                     (0x424, "Special bolts spent", "code-backed", "Owned balance getter 25DB8 subtracts this word from collected bit counts. Skin purchase 27AA0 increments it by the definition cost. Do not normalize it to owned-skin count."),

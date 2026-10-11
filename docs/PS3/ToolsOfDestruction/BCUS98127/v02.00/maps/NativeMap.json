@@ -109850,6 +109850,881 @@
       }
     ]
   },
+  "hero_config": {
+    "confidence": "named-native-array-and-consumer-backed-exact-build",
+    "warning": "USA v02.00 static bindings/reference definitions only; no safe edits or observed runtime level/current health. Runtime config arrays are not GAME.SAV offsets.",
+    "root": {
+      "va": "0x101b9ee8",
+      "root_getter_va": "0x94400",
+      "hero_getter_va": "0x99a70",
+      "hero_offset": "0x0",
+      "rule": "MonolithicConfig.Hero getter passes the same parent pointer as HeroConfig; array registration in HeroConfig scope pairs the XP/HP names with distinct indexed callbacks. Scalar same-name properties in another class are not these arrays."
+    },
+    "arrays": [
+      {
+        "name": "XP",
+        "offset": "0x0",
+        "count": 100,
+        "element_type": "u32",
+        "getter_va": "0xb78c8",
+        "setter_va": "0xb77a8"
+      },
+      {
+        "name": "HP",
+        "offset": "0x190",
+        "count": 100,
+        "element_type": "f32",
+        "getter_va": "0xb7698",
+        "setter_va": "0xb7580"
+      }
+    ],
+    "conversion": "Normal indices0..99: XP setter fctidz/stwx publishes truncated low32; XP getter zero-extends lwzx then fcfid/frsp. HP setter/getter stfsx/lfsx use offset190. Unsigned index>99 invokes an error helper; no clamp or safety if that helper returns is inferred.",
+    "consumer": "Hero progression23E090 reads XP[level+1] and qualified HP[level] at190+4*level, matching the named arrays. Shipped definitions may supply numbers, but live installation/overrides and callbacks are not captured.",
+    "progress_fraction": {
+      "va": "0x23dbb0",
+      "rule": "For runtime level<=98, numerator=(saved418-XP[level]) modulo32 and denominator=(XP[level+1]-XP[level]) modulo32; convert each through frsp and fdivs. No0..1 clamp or zero-denominator repair. Level>=99 returns literal1.0. Runtime level and current table must be supplied; this is not computed from a save alone."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0xb78c8",
+        "name": "TOD_HeroConfig_XP_array_getter",
+        "comment": "XP indexed HeroConfig getter; normal indices0..99, offset0x0, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class."
+      },
+      {
+        "va": "0xb77a8",
+        "name": "TOD_HeroConfig_XP_array_setter",
+        "comment": "XP indexed HeroConfig setter; normal indices0..99, offset0x0, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class."
+      },
+      {
+        "va": "0xb7698",
+        "name": "TOD_HeroConfig_HP_array_getter",
+        "comment": "HP indexed HeroConfig getter; normal indices0..99, offset0x190, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class."
+      },
+      {
+        "va": "0xb7580",
+        "name": "TOD_HeroConfig_HP_array_setter",
+        "comment": "HP indexed HeroConfig setter; normal indices0..99, offset0x190, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x88fbc",
+        "bytes": "82E2E780"
+      },
+      {
+        "va": "0x8903c",
+        "bytes": "83C2E7BC"
+      },
+      {
+        "va": "0x894c8",
+        "bytes": "81C2B36C"
+      },
+      {
+        "va": "0x894d0",
+        "bytes": "7DC57378"
+      },
+      {
+        "va": "0x894dc",
+        "bytes": "7DC47378"
+      },
+      {
+        "va": "0x894e0",
+        "bytes": "4BF89521"
+      },
+      {
+        "va": "0x894e8",
+        "bytes": "7DC47378"
+      },
+      {
+        "va": "0x894f0",
+        "bytes": "4BF87AD1"
+      },
+      {
+        "va": "0x894f8",
+        "bytes": "7FC4F378"
+      },
+      {
+        "va": "0x89500",
+        "bytes": "80A2E994"
+      },
+      {
+        "va": "0x89504",
+        "bytes": "80C2E998"
+      },
+      {
+        "va": "0x89508",
+        "bytes": "4BF89779"
+      },
+      {
+        "va": "0x89510",
+        "bytes": "7EE4BB78"
+      },
+      {
+        "va": "0x89514",
+        "bytes": "80A2E99C"
+      },
+      {
+        "va": "0x89518",
+        "bytes": "80C2E9A0"
+      },
+      {
+        "va": "0x89520",
+        "bytes": "4BF89761"
+      },
+      {
+        "va": "0x99a70",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78491E84100282F8300007C7E1B7838A000007FE3FB78419E00387FE3FB7880A2B36C7BC400204BF76A19E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020600000008082FC204BF7779DE84100287FE3FB7880A2B36C7BC400204BF769D9E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E80002060000000"
+      },
+      {
+        "va": "0x99ab4",
+        "bytes": "7BC40020"
+      },
+      {
+        "va": "0x99ab8",
+        "bytes": "4BF76A19"
+      },
+      {
+        "va": "0xb7580",
+        "bytes": "F821FF517C8802A6FBE100A87C7F1B78F88100C080820150FBA10098FBC100A04BF5A7A1E84100287FE3FB78388000014BF595C1E84100283880FFFF7FE3FB784BF5B8F1E841002838010070781D002038A000007C7E1B78388000027FA6EB787FE3FB784BF5BA0DE84100287FA5EB782F8300007FE3FB78419E00907FE3FB78C022FBBC388000024BF5BA79E841002839210080FC20081E7FE3FB7838A000007C204FAE83A10080281D006340810010808201584BF59C4DE84100287FE3FB78C022FBBC388000034BF5BA39E841002857A3103A38E301907BCB00207CE607B4386000007C2B352EE8A100C0EBA10098EBC100A07CA803A6EBE100A8382100B04E80002060000000808201544BF59BF5E84100284BFFFF68"
+      },
+      {
+        "va": "0xb7628",
+        "bytes": "281D0063"
+      },
+      {
+        "va": "0xb762c",
+        "bytes": "40810010"
+      },
+      {
+        "va": "0xb7650",
+        "bytes": "57A3103A"
+      },
+      {
+        "va": "0xb7654",
+        "bytes": "38E30190"
+      },
+      {
+        "va": "0xb7664",
+        "bytes": "7C2B352E"
+      },
+      {
+        "va": "0xb7698",
+        "bytes": "F821FF517C8802A6FBE100A87C7F1B78F88100C080820150FBA10098FBC100A04BF5A689E84100287FE3FB78388000014BF594A9E84100283880FFFF7FE3FB784BF5B7D9E841002838010070781D002038A000007C7E1B78388000027FA6EB787FE3FB784BF5B8F5E84100287FA5EB782F8300007FE3FB78419E00887FE3FB78C022FBBC388000024BF5B961E841002839210080FC20081E7FE3FB7838A000007C204FAE83A10080281D006340810010808201584BF59B35E841002857A8103A7BCB002038E801907FE3FB787CE607B47C2B342E4BF5CA45E8410028E8A100C0EBA1009838600001EBC100A0EBE100A87CA803A6382100B04E80002060000000808201544BF59AE5E84100284BFFFF70"
+      },
+      {
+        "va": "0xb7740",
+        "bytes": "281D0063"
+      },
+      {
+        "va": "0xb775c",
+        "bytes": "38E80190"
+      },
+      {
+        "va": "0xb7768",
+        "bytes": "7C2B342E"
+      },
+      {
+        "va": "0xb77a8",
+        "bytes": "F821FF417C8802A6FBE100B87C7F1B78F88100D080820150FBA100A8FBC100B04BF5A579E84100287FE3FB78388000014BF59399E84100283880FFFF7FE3FB784BF5B6C9E841002838010070781D002038A000007C7E1B78388000027FA6EB787FE3FB784BF5B7E5E84100287FA5EB782F8300007FE3FB78419E00987FE3FB78C022FBBC388000024BF5B851E841002839210080FC20081E7FE3FB7838A000007C204FAE83A10080281D006340810010808201584BF59A25E84100287FE3FB78C022FBBC388000034BF5B811E841002857A3103AFC000E5E7BCB00207C6607B438600000D8010090E8E100907CEB312EE8A100D0EBA100A8EBC100B07CA803A6EBE100B8382100C04E80002060000000808201544BF599C5E84100284BFFFF60"
+      },
+      {
+        "va": "0xb7850",
+        "bytes": "281D0063"
+      },
+      {
+        "va": "0xb7854",
+        "bytes": "40810010"
+      },
+      {
+        "va": "0xb7878",
+        "bytes": "57A3103A"
+      },
+      {
+        "va": "0xb787c",
+        "bytes": "FC000E5E"
+      },
+      {
+        "va": "0xb7894",
+        "bytes": "7CEB312E"
+      },
+      {
+        "va": "0xb78c8",
+        "bytes": "F821FF417C8802A6FBE100B87C7F1B78F88100D080820150FBA100A8FBC100B04BF5A459E84100287FE3FB78388000014BF59279E84100283880FFFF7FE3FB784BF5B5A9E841002838010070781D002038A000007C7E1B78388000027FA6EB787FE3FB784BF5B6C5E84100287FA5EB782F8300007FE3FB78419E00907FE3FB78C022FBBC388000024BF5B731E841002839210080FC20081E7FE3FB7838A000007C204FAE83A10080281D006340810010808201584BF59905E841002857A8103A7BCB00207D0707B47FE3FB787CCB382EF8C10090C8410090FC00169CFC2000184BF5C809E8410028E8A100D0EBA100A838600001EBC100B0EBE100B87CA803A6382100C04E800020808201544BF598ADE84100284BFFFF68"
+      },
+      {
+        "va": "0xb7970",
+        "bytes": "281D0063"
+      },
+      {
+        "va": "0xb7984",
+        "bytes": "57A8103A"
+      },
+      {
+        "va": "0xb7994",
+        "bytes": "7CCB382E"
+      },
+      {
+        "va": "0xb79a0",
+        "bytes": "FC00169C"
+      },
+      {
+        "va": "0xb79a4",
+        "bytes": "FC200018"
+      },
+      {
+        "va": "0x23dbb0",
+        "bytes": "88031B615409103A2B800062396900047D2807B47D6007B4419D005081427BC881231A687D8A402E7D6A002E80E904187CCC58507CAC385078C4002078A30020F881FFF0C861FFF0F861FFF0FC401E9CC821FFF0FD800E9CFDA01018FC006018EC2068244E800020C0227BC44E800020"
+      },
+      {
+        "va": "0x23dbb8",
+        "bytes": "2B800062"
+      },
+      {
+        "va": "0x23dbc8",
+        "bytes": "419D0050"
+      },
+      {
+        "va": "0x23dbdc",
+        "bytes": "80E90418"
+      },
+      {
+        "va": "0x23dbe0",
+        "bytes": "7CCC5850"
+      },
+      {
+        "va": "0x23dbe4",
+        "bytes": "7CAC3850"
+      },
+      {
+        "va": "0x23dbe8",
+        "bytes": "78C40020"
+      },
+      {
+        "va": "0x23dbec",
+        "bytes": "78A30020"
+      },
+      {
+        "va": "0x23dc10",
+        "bytes": "EC206824"
+      },
+      {
+        "va": "0x23dc18",
+        "bytes": "C0227BC4"
+      },
+      {
+        "va": "0x23e13c",
+        "bytes": "7CDD382E"
+      },
+      {
+        "va": "0x23e23c",
+        "bytes": "39440190"
+      },
+      {
+        "va": "0x23e244",
+        "bytes": "7D7D3C2E"
+      },
+      {
+        "va": "0x85d538",
+        "bytes": "00099A700088FF38"
+      },
+      {
+        "va": "0x85e908",
+        "bytes": "000B75800088FF38"
+      },
+      {
+        "va": "0x85e910",
+        "bytes": "000B76980088FF38"
+      },
+      {
+        "va": "0x85e918",
+        "bytes": "000B77A80088FF38"
+      },
+      {
+        "va": "0x85e920",
+        "bytes": "000B78C80088FF38"
+      },
+      {
+        "va": "0x88b2a4",
+        "bytes": "10006680"
+      },
+      {
+        "va": "0x88e6b8",
+        "bytes": "10012B78"
+      },
+      {
+        "va": "0x88e6f4",
+        "bytes": "10012BA0"
+      },
+      {
+        "va": "0x88e8cc",
+        "bytes": "0085E920"
+      },
+      {
+        "va": "0x88e8d0",
+        "bytes": "0085E918"
+      },
+      {
+        "va": "0x88e8d4",
+        "bytes": "0085E910"
+      },
+      {
+        "va": "0x88e8d8",
+        "bytes": "0085E908"
+      },
+      {
+        "va": "0x88ea78",
+        "bytes": "10012FB0"
+      },
+      {
+        "va": "0x88ea7c",
+        "bytes": "0085D538"
+      },
+      {
+        "va": "0x88fafc",
+        "bytes": "101B9EE8"
+      },
+      {
+        "va": "0x897b00",
+        "bytes": "101B9EE8"
+      },
+      {
+        "va": "0x10006680",
+        "bytes": "4865726F436F6E66696700"
+      },
+      {
+        "va": "0x10012b78",
+        "bytes": "485000"
+      },
+      {
+        "va": "0x10012ba0",
+        "bytes": "585000"
+      },
+      {
+        "va": "0x10012fb0",
+        "bytes": "4865726F00"
+      }
+    ]
+  },
+  "hero_config_assets": {
+    "confidence": "fingerprinted-reference-assets-with-named-native-array-bindings",
+    "assets": [
+      {
+        "name": "/data/configs/hero.csv",
+        "bytes": 2038,
+        "sha256": "D40621A34C826C638CD0E5F40731EE42E28CAE25B45FF1EB16394AB0204DBC77"
+      },
+      {
+        "name": "/data/configs/hero.lua",
+        "bytes": 793,
+        "sha256": "E6D43D5ED88691DB798026499EA1FEC07CE279760BC58FE971F6A9DE23EC2EEC"
+      },
+      {
+        "name": "/data/configs/hero.lc",
+        "bytes": 534,
+        "sha256": "C835CD96E2EAA4F238AAF61E8FA38FF393BA364D9FEA96CA048042D22C6E25FF"
+      }
+    ],
+    "compiled_parser_code_sha256": "987A1354800AA0BAE8D2C0EBE193ED50CBE26B8EFD6550C4C874591426E41D26",
+    "parser_rule": "Header Hero selects XP/HP column names. Nonempty XP rows increment row_num from0; executable assignment string config.Hero.<column>[row_num] receives literal cells. Source and compiled72-instruction parser agree. No Lua or expressions are executed by this inspector.",
+    "rows": [
+      {
+        "index": 0,
+        "xp": 0,
+        "hp": 10.0
+      },
+      {
+        "index": 1,
+        "xp": 1000,
+        "hp": 11.0
+      },
+      {
+        "index": 2,
+        "xp": 2000,
+        "hp": 12.0
+      },
+      {
+        "index": 3,
+        "xp": 3000,
+        "hp": 13.0
+      },
+      {
+        "index": 4,
+        "xp": 4000,
+        "hp": 14.0
+      },
+      {
+        "index": 5,
+        "xp": 5000,
+        "hp": 15.0
+      },
+      {
+        "index": 6,
+        "xp": 6000,
+        "hp": 16.0
+      },
+      {
+        "index": 7,
+        "xp": 7000,
+        "hp": 17.0
+      },
+      {
+        "index": 8,
+        "xp": 8000,
+        "hp": 18.0
+      },
+      {
+        "index": 9,
+        "xp": 9000,
+        "hp": 19.0
+      },
+      {
+        "index": 10,
+        "xp": 10000,
+        "hp": 20.0
+      },
+      {
+        "index": 11,
+        "xp": 11000,
+        "hp": 21.0
+      },
+      {
+        "index": 12,
+        "xp": 12000,
+        "hp": 22.0
+      },
+      {
+        "index": 13,
+        "xp": 13000,
+        "hp": 23.0
+      },
+      {
+        "index": 14,
+        "xp": 15000,
+        "hp": 25.0
+      },
+      {
+        "index": 15,
+        "xp": 17000,
+        "hp": 27.0
+      },
+      {
+        "index": 16,
+        "xp": 19000,
+        "hp": 29.0
+      },
+      {
+        "index": 17,
+        "xp": 21000,
+        "hp": 31.0
+      },
+      {
+        "index": 18,
+        "xp": 23000,
+        "hp": 33.0
+      },
+      {
+        "index": 19,
+        "xp": 25000,
+        "hp": 35.0
+      },
+      {
+        "index": 20,
+        "xp": 27000,
+        "hp": 37.0
+      },
+      {
+        "index": 21,
+        "xp": 29000,
+        "hp": 39.0
+      },
+      {
+        "index": 22,
+        "xp": 31000,
+        "hp": 41.0
+      },
+      {
+        "index": 23,
+        "xp": 33000,
+        "hp": 43.0
+      },
+      {
+        "index": 24,
+        "xp": 35000,
+        "hp": 45.0
+      },
+      {
+        "index": 25,
+        "xp": 37000,
+        "hp": 47.0
+      },
+      {
+        "index": 26,
+        "xp": 41000,
+        "hp": 51.0
+      },
+      {
+        "index": 27,
+        "xp": 45000,
+        "hp": 55.0
+      },
+      {
+        "index": 28,
+        "xp": 49000,
+        "hp": 59.0
+      },
+      {
+        "index": 29,
+        "xp": 53000,
+        "hp": 63.0
+      },
+      {
+        "index": 30,
+        "xp": 57000,
+        "hp": 67.0
+      },
+      {
+        "index": 31,
+        "xp": 61000,
+        "hp": 71.0
+      },
+      {
+        "index": 32,
+        "xp": 65000,
+        "hp": 75.0
+      },
+      {
+        "index": 33,
+        "xp": 69000,
+        "hp": 79.0
+      },
+      {
+        "index": 34,
+        "xp": 73000,
+        "hp": 83.0
+      },
+      {
+        "index": 35,
+        "xp": 79000,
+        "hp": 89.0
+      },
+      {
+        "index": 36,
+        "xp": 85000,
+        "hp": 95.0
+      },
+      {
+        "index": 37,
+        "xp": 91000,
+        "hp": 101.0
+      },
+      {
+        "index": 38,
+        "xp": 97000,
+        "hp": 107.0
+      },
+      {
+        "index": 39,
+        "xp": 104000,
+        "hp": 114.0
+      },
+      {
+        "index": 40,
+        "xp": 111000,
+        "hp": 121.0
+      },
+      {
+        "index": 41,
+        "xp": 118000,
+        "hp": 128.0
+      },
+      {
+        "index": 42,
+        "xp": 127000,
+        "hp": 137.0
+      },
+      {
+        "index": 43,
+        "xp": 136000,
+        "hp": 146.0
+      },
+      {
+        "index": 44,
+        "xp": 145000,
+        "hp": 155.0
+      },
+      {
+        "index": 45,
+        "xp": 155000,
+        "hp": 165.0
+      },
+      {
+        "index": 46,
+        "xp": 165000,
+        "hp": 175.0
+      },
+      {
+        "index": 47,
+        "xp": 172000,
+        "hp": 182.0
+      },
+      {
+        "index": 48,
+        "xp": 178370,
+        "hp": 188.0
+      },
+      {
+        "index": 49,
+        "xp": 184963,
+        "hp": 195.0
+      },
+      {
+        "index": 50,
+        "xp": 191787,
+        "hp": 202.0
+      },
+      {
+        "index": 51,
+        "xp": 198849,
+        "hp": 209.0
+      },
+      {
+        "index": 52,
+        "xp": 206159,
+        "hp": 216.0
+      },
+      {
+        "index": 53,
+        "xp": 213724,
+        "hp": 224.0
+      },
+      {
+        "index": 54,
+        "xp": 221555,
+        "hp": 232.0
+      },
+      {
+        "index": 55,
+        "xp": 229659,
+        "hp": 240.0
+      },
+      {
+        "index": 56,
+        "xp": 238047,
+        "hp": 248.0
+      },
+      {
+        "index": 57,
+        "xp": 246729,
+        "hp": 257.0
+      },
+      {
+        "index": 58,
+        "xp": 255714,
+        "hp": 266.0
+      },
+      {
+        "index": 59,
+        "xp": 265014,
+        "hp": 275.0
+      },
+      {
+        "index": 60,
+        "xp": 274640,
+        "hp": 285.0
+      },
+      {
+        "index": 61,
+        "xp": 284602,
+        "hp": 295.0
+      },
+      {
+        "index": 62,
+        "xp": 294913,
+        "hp": 305.0
+      },
+      {
+        "index": 63,
+        "xp": 305585,
+        "hp": 316.0
+      },
+      {
+        "index": 64,
+        "xp": 316631,
+        "hp": 327.0
+      },
+      {
+        "index": 65,
+        "xp": 328063,
+        "hp": 338.0
+      },
+      {
+        "index": 66,
+        "xp": 339895,
+        "hp": 350.0
+      },
+      {
+        "index": 67,
+        "xp": 352142,
+        "hp": 362.0
+      },
+      {
+        "index": 68,
+        "xp": 364817,
+        "hp": 375.0
+      },
+      {
+        "index": 69,
+        "xp": 377935,
+        "hp": 388.0
+      },
+      {
+        "index": 70,
+        "xp": 391513,
+        "hp": 402.0
+      },
+      {
+        "index": 71,
+        "xp": 405566,
+        "hp": 416.0
+      },
+      {
+        "index": 72,
+        "xp": 420111,
+        "hp": 430.0
+      },
+      {
+        "index": 73,
+        "xp": 435164,
+        "hp": 445.0
+      },
+      {
+        "index": 74,
+        "xp": 450745,
+        "hp": 461.0
+      },
+      {
+        "index": 75,
+        "xp": 466871,
+        "hp": 477.0
+      },
+      {
+        "index": 76,
+        "xp": 483562,
+        "hp": 494.0
+      },
+      {
+        "index": 77,
+        "xp": 500836,
+        "hp": 511.0
+      },
+      {
+        "index": 78,
+        "xp": 518716,
+        "hp": 529.0
+      },
+      {
+        "index": 79,
+        "xp": 537221,
+        "hp": 547.0
+      },
+      {
+        "index": 80,
+        "xp": 556374,
+        "hp": 566.0
+      },
+      {
+        "index": 81,
+        "xp": 576197,
+        "hp": 586.0
+      },
+      {
+        "index": 82,
+        "xp": 596713,
+        "hp": 607.0
+      },
+      {
+        "index": 83,
+        "xp": 617948,
+        "hp": 628.0
+      },
+      {
+        "index": 84,
+        "xp": 639927,
+        "hp": 650.0
+      },
+      {
+        "index": 85,
+        "xp": 662674,
+        "hp": 673.0
+      },
+      {
+        "index": 86,
+        "xp": 686218,
+        "hp": 696.0
+      },
+      {
+        "index": 87,
+        "xp": 710585,
+        "hp": 721.0
+      },
+      {
+        "index": 88,
+        "xp": 735806,
+        "hp": 746.0
+      },
+      {
+        "index": 89,
+        "xp": 761909,
+        "hp": 772.0
+      },
+      {
+        "index": 90,
+        "xp": 788926,
+        "hp": 799.0
+      },
+      {
+        "index": 91,
+        "xp": 816888,
+        "hp": 827.0
+      },
+      {
+        "index": 92,
+        "xp": 845829,
+        "hp": 856.0
+      },
+      {
+        "index": 93,
+        "xp": 875783,
+        "hp": 886.0
+      },
+      {
+        "index": 94,
+        "xp": 906786,
+        "hp": 917.0
+      },
+      {
+        "index": 95,
+        "xp": 938873,
+        "hp": 949.0
+      },
+      {
+        "index": 96,
+        "xp": 972084,
+        "hp": 982.0
+      },
+      {
+        "index": 97,
+        "xp": 989000,
+        "hp": 999.0
+      }
+    ],
+    "populated_rows": 98,
+    "unpopulated_native_indices": [
+      98,
+      99
+    ],
+    "qualification": "Shipped reference definitions, not captured runtime values. The old50-row designer note is stale;98 rows are populated. Blank-header designer tags are not parsed properties or pickup/world placements. Later overrides, installation and values of unpopulated indices98/99 are not proven by this table."
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -110343,6 +111218,10 @@
     ]
   },
   "annotations": [
+{"va":"0x000B78C8","name":"TOD_HeroConfig_XP_array_getter","kind":"function","confidence":"confirmed","bytes":"F821FF417C8802A6","comment":"XP indexed HeroConfig getter; normal indices0..99, offset0x0, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_config native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x000B77A8","name":"TOD_HeroConfig_XP_array_setter","kind":"function","confidence":"confirmed","bytes":"F821FF417C8802A6","comment":"XP indexed HeroConfig setter; normal indices0..99, offset0x0, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_config native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x000B7698","name":"TOD_HeroConfig_HP_array_getter","kind":"function","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"HP indexed HeroConfig getter; normal indices0..99, offset0x190, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_config native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x000B7580","name":"TOD_HeroConfig_HP_array_setter","kind":"function","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"HP indexed HeroConfig setter; normal indices0..99, offset0x190, stride4. Runtime configuration, not serialized save state. Same-name scalar properties belong to a different class.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_config native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0023E100","name":"TOD_hero_xp_strict_single_carry","kind":"comment","confidence":"confirmed","bytes":"4081001C","comment":"Hero XP leaf: remainder<=1 skips carry; otherwise subtract1 and increment saved418 once. No carry loop or >=1 boundary. Runtime1B68 is not serialized XP.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_xp_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0023E150","name":"TOD_hero_xp_original_input_threshold","kind":"comment","confidence":"confirmed","bytes":"FF010000","comment":"Threshold comparison uses original incoming f1, not saved418 after carry. Positive threshold and old level<99 required; loop only advances runtime1B61.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_xp_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0023E768","name":"TOD_hero_xp_restore_float32_conversion","kind":"comment","confidence":"confirmed","bytes":"FC200018","comment":"Saved unsigned XP418 is converted through fcfid/frsp after runtime level/remainder reset, then23E090 republishes low32 and checks carry. Not universally bit-exact above2^24; live FPSCR unknown.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; hero_xp_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

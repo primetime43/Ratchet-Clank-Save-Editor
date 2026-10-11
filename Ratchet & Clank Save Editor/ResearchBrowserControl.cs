@@ -34,6 +34,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Currency update paths & separate runtime reward caches", TodResearch.Map.GetProperty("currency_mutation"), 0));
             topics.Add(JsonTopic("Runtime health, XP restoration & checkpoint ammo lifecycle", TodResearch.Map.GetProperty("health_persistence"), 0));
             topics.Add(JsonTopic("Hero XP: whole numbers, fractional carry & reload precision", TodResearch.Map.GetProperty("hero_xp_flow"), 0));
+            topics.Add(JsonTopic("Hero XP / HP: named config arrays & progress arithmetic", TodResearch.Map.GetProperty("hero_config"), 0));
+            topics.Add(JsonTopic("Reference hero progression: 98 shipped XP / HP rows", TodResearch.Map.GetProperty("hero_config_assets"), 0));
             topics.Add(JsonTopic("Saved pack/boot types & exact pack dispatch selector", TodResearch.Map.GetProperty("hero_aux_fields"), 0));
             topics.Add(JsonTopic("Equipment restart filters & script argument boundaries", TodResearch.Map.GetProperty("equipment_mutation"), 0));
             topics.Add(JsonTopic("World progress & quick select", TodResearch.Map.GetProperty("world_state"), 0));
