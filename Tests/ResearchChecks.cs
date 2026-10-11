@@ -36,6 +36,18 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Hero XP carry and reload research preserves raw XP without runtime guesses", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x418, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            var row = table.Rows.Single(r => r.Cells[1] == "Hero XP");
+            True(row.Details.Contains("greater than1, not exactly1") && row.Details.Contains("no carry loop") && row.Details.Contains("original incoming XP"), "Carry and threshold input must remain distinct.");
+            True(row.Details.Contains("float32") && row.Details.Contains("cannot be inferred") && row.Details.Contains("raw saved value") && row.Details.Contains("no safe editing range"), "Raw XP must not become inferred runtime health, level or safe bounds.");
+            Equal(100, TodResearch.Map.GetProperty("hero_xp_flow").GetProperty("instruction_guards").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Viewing XP must not apply a reload preview or normalize large values.");
+        });
         Check("Weapon purchase gates and ordered writes remain read-only and runtime-qualified", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -974,7 +986,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1377, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1381, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
