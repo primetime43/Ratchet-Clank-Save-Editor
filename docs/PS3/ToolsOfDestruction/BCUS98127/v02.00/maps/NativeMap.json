@@ -36782,6 +36782,1350 @@
       }
     ]
   },
+  "load_selection": {
+    "confidence": "code-backed",
+    "warning": "Static exact USA v02.00 control flow; requests are not successful loads. No native execution, original-save edits, arbitrary-ID preview or current runtime state inference.",
+    "saved_fields": {
+      "load_destination": "0x906e8",
+      "next_level_selection": "0x8740",
+      "direct_setters": {
+        "load_va": "0x27bad0",
+        "next_va": "0x27a818"
+      },
+      "setter_scope": "Both direct setters store the supplied low32 bits without a local ID range check. set_save_level does not itself dispatch a transition. set_next_level writes8740, not the deferred request word. A physical19-name catalog is not native bounds validation."
+    },
+    "transition": {
+      "function_va": "0x2d16a0",
+      "same_destination": "If argument r4 is zero and requested low32 ID equals saved906E8, return before the qualifier/lookup/dispatch; a forced call bypasses only this early return, not every later gate.",
+      "qualifier": {
+        "getter_va": "0x38e440",
+        "runtime_base_va": "0x1035e1e0",
+        "rule": "Getter reads a runtime byte+0. Nonzero selects the special request path, bypassing the runtime-mode4 deferral test; after requesting by catalog pointer and storing906E8,38E450 sets byte+1 to1. The context name/current value remains unknown."
+      },
+      "deferred": "With zero qualifier, runtime mode1036BC0C==4 and r5==0, store the request in runtime10063024 and return WITHOUT changing saved906E8 or requesting by name. This word is outside serialized state and is not saved8740.",
+      "ordinary": "Otherwise lookup the requested ID through2D0880, pass its pointer to48B490, store906E8, then call38E3E0. The special branch likewise stores906E8 after48B490 before its byte+1 latch. Saved assignment does not establish completion or rejection of the asynchronous/native request.",
+      "restore": "Full restore35E508 copies906F0 bytes, applies the saved settings and reaches2D16A0(saved906E8,1,0); its forced argument bypasses same-destination equality, not the remaining runtime gates."
+    },
+    "pending_consumer": {
+      "function_va": "0x2d17c8",
+      "runtime_word_va": "0x10063024",
+      "rule": "Pending raw signed ID -1 skips this consumer. Otherwise it makes runtime helper calls2518F8 and252C68; when the returned float compares ordered >=1.0 it looks up the queued ID, calls48B490, stores it to906E8, calls38E3E0 and finally clears the pending word toFFFFFFFF. Below-threshold/unordered results leave the pending request and saved destination unchanged in this path.",
+      "limits": "0.5,0 and1.0 are helper/gate constants, not proved elapsed seconds or named progress units. FFFFFFFF is a skip marker for THIS runtime queue; it does not establish sentinel semantics for saved8740. No in-game completion or all queue writers/consumers claimed."
+    },
+    "lookup": {
+      "function_va": "0x2d0880",
+      "inverse_va": "0x2d08d8",
+      "catalog": [
+        {
+          "id": 0,
+          "internal_name": "metropolis"
+        },
+        {
+          "id": 1,
+          "internal_name": "cobalia"
+        },
+        {
+          "id": 2,
+          "internal_name": "stratus city"
+        },
+        {
+          "id": 3,
+          "internal_name": "fastoon"
+        },
+        {
+          "id": 4,
+          "internal_name": "space combat i"
+        },
+        {
+          "id": 5,
+          "internal_name": "imperial fight fest"
+        },
+        {
+          "id": 6,
+          "internal_name": "apogee space station"
+        },
+        {
+          "id": 7,
+          "internal_name": "pirate base"
+        },
+        {
+          "id": 8,
+          "internal_name": "space combat ii"
+        },
+        {
+          "id": 9,
+          "internal_name": "rykan v"
+        },
+        {
+          "id": 10,
+          "internal_name": "sargasso"
+        },
+        {
+          "id": 11,
+          "internal_name": "iris"
+        },
+        {
+          "id": 12,
+          "internal_name": "zordoom prison"
+        },
+        {
+          "id": 13,
+          "internal_name": "space combat iii"
+        },
+        {
+          "id": 14,
+          "internal_name": "kerchu city"
+        },
+        {
+          "id": 15,
+          "internal_name": "slags_fleet"
+        },
+        {
+          "id": 16,
+          "internal_name": "cragmite ruins"
+        },
+        {
+          "id": 17,
+          "internal_name": "meridian city"
+        },
+        {
+          "id": 18,
+          "internal_name": "fastoon_return"
+        }
+      ],
+      "rule": "2D0880 scales low32 ID by4, sign-extends the resulting32-bit offset, then indexes10062F7C WITHOUT a local19-entry bounds check. Inspector previews only IDs0..18 and never follows unknown saved IDs. Inverse2D08D8 compares19 names through2500F8 and returns0 on no match; fallback0 must not be called a successful name match."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x2d16a0",
+        "kind": "function",
+        "name": "TOD_saved_level_request_with_runtime_deferral",
+        "comment": "Same saved906E8 request returns unless forced. Zero runtime qualifier + mode4 + r5zero queues10063024 without saved write; other branches request by native name then store906E8. Not successful-load proof."
+      },
+      {
+        "va": "0x2d17c8",
+        "kind": "function",
+        "name": "TOD_consume_deferred_level_request",
+        "comment": "Runtime pending10063024!=-1 and ordered helper result>=1.0 dispatch by name, write saved906E8, request transition, then clear pending=-1. Queue is outside save and unrelated to saved8740."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x36af0",
+        "bytes": "80629BBC3D230001806987404E800020"
+      },
+      {
+        "va": "0x27a818",
+        "bytes": "808290303D240001906987404E800020"
+      },
+      {
+        "va": "0x27a820",
+        "bytes": "90698740"
+      },
+      {
+        "va": "0x27bad0",
+        "bytes": "808290303D240009906906E84E800020"
+      },
+      {
+        "va": "0x27bad8",
+        "bytes": "906906E8"
+      },
+      {
+        "va": "0x2d0880",
+        "bytes": "5460103A8122F2347C0307B47C69182E4E80002060000000"
+      },
+      {
+        "va": "0x2d0888",
+        "bytes": "7C0307B4"
+      },
+      {
+        "va": "0x2d088c",
+        "bytes": "7C69182E"
+      },
+      {
+        "va": "0x2d08d8",
+        "bytes": "F821FF717C0802A6FB810070FBC10080FBE1008883C2F2347C7C1B783BE00000FBA10078F80100A04800000C60000000419A00547BC900207F83E3787FFDFB783BFF00013BDE0004808900004BF7F7D5E84100282F3F00132F830000409EFFD4E88100A07BA30020EB810070EBA100787C8803A6EBC10080EBE10088382100904E8000203BA00000E88100A0EB8100707BA30020EBC10080EBA100787C8803A6EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x2d1490",
+        "bytes": "8062F2683D230009806906E84E800020"
+      },
+      {
+        "va": "0x2d16a0",
+        "bytes": "2F8400007C0802A6F821FF71FBA10078FBC10080FBE10088F80100A07C7E1B787CBD2B787C7F1B78409E00188082F2683D240009806906E87C03F0004182005C480BCD61600000005465063E7BE300202C8500004086008C8142F2787BE300202F1D0000810A00002F880004419E004C4BFFF1716000000078630020481B9D756000000083A2F2683D9D000993EC06E8480BCCB160000000EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E80002060000000409AFFB88162F27C93CB0000EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E8000204BFFF1016000000078630020481B9D056000000080E2F2683CC7000993C606E8480BCCB160000000EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E80002060000000"
+      },
+      {
+        "va": "0x2d16d4",
+        "bytes": "806906E8"
+      },
+      {
+        "va": "0x2d16dc",
+        "bytes": "4182005C"
+      },
+      {
+        "va": "0x2d16e0",
+        "bytes": "480BCD61"
+      },
+      {
+        "va": "0x2d16f4",
+        "bytes": "4086008C"
+      },
+      {
+        "va": "0x2d1708",
+        "bytes": "2F880004"
+      },
+      {
+        "va": "0x2d172c",
+        "bytes": "93EC06E8"
+      },
+      {
+        "va": "0x2d1758",
+        "bytes": "409AFFB8"
+      },
+      {
+        "va": "0x2d1760",
+        "bytes": "93CB0000"
+      },
+      {
+        "va": "0x2d179c",
+        "bytes": "93C606E8"
+      },
+      {
+        "va": "0x2d17c8",
+        "bytes": "F821FF817C6802A6FBE1007883E2F27CF8610090C042F288801F00002F80FFFF419E0060C022F2804BF80109E84100284BF81471E8410028C002F284FC0100004C4113824082003C807F00004BFFF06D6000000078630020481B9C716000000080C2F26880BF00003D26000990A906E8480BCBA9600000003880FFFF909F0000E8E10090EBE10078382100807CE803A64E80002060000000"
+      },
+      {
+        "va": "0x2d17e4",
+        "bytes": "2F80FFFF"
+      },
+      {
+        "va": "0x2d1804",
+        "bytes": "FC010000"
+      },
+      {
+        "va": "0x2d1808",
+        "bytes": "4C411382"
+      },
+      {
+        "va": "0x2d1834",
+        "bytes": "90A906E8"
+      },
+      {
+        "va": "0x2d1840",
+        "bytes": "3880FFFF"
+      },
+      {
+        "va": "0x2d1844",
+        "bytes": "909F0000"
+      },
+      {
+        "va": "0x35e508",
+        "bytes": "3CC3000280621A643CA000097CE802A63886FD0860A506F078840020F821FF71F8E100A0FB810070FBA100784BEF3EF5E841002883821A64386000013FBC00013F9C0009C03D14C84BEF3779E84100283860000CC03D14CC4BEF3769E841002838600006C03D14C44BEF3759E8410028807C06E83880000138A000004BF7311D60000000E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x38e3e0",
+        "bytes": "F821FF917C6802A638800003F8610080386000034BEC39D5E8410028E8010080382100707C0803A64E80002060000000"
+      },
+      {
+        "va": "0x38e440",
+        "bytes": "81222634886900004E80002060000000"
+      },
+      {
+        "va": "0x38e444",
+        "bytes": "88690000"
+      },
+      {
+        "va": "0x38e450",
+        "bytes": "8122263438000001980900014E800020"
+      },
+      {
+        "va": "0x38e454",
+        "bytes": "38000001"
+      },
+      {
+        "va": "0x38e458",
+        "bytes": "98090001"
+      },
+      {
+        "va": "0x898f50",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f154",
+        "bytes": "10062F7C"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f198",
+        "bytes": "1036BC0C"
+      },
+      {
+        "va": "0x89f19c",
+        "bytes": "10063024"
+      },
+      {
+        "va": "0x89f1a0",
+        "bytes": "3F000000"
+      },
+      {
+        "va": "0x89f1a4",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x89f1a8",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x8a2554",
+        "bytes": "1035E1E0"
+      },
+      {
+        "va": "0x100061e0",
+        "bytes": "73747261747573206369747900"
+      },
+      {
+        "va": "0x10006238",
+        "bytes": "666173746F6F6E00"
+      },
+      {
+        "va": "0x10019a78",
+        "bytes": "6D6574726F706F6C697300"
+      },
+      {
+        "va": "0x10019a88",
+        "bytes": "636F62616C696100"
+      },
+      {
+        "va": "0x10019a90",
+        "bytes": "737061636520636F6D626174206900"
+      },
+      {
+        "va": "0x10019aa0",
+        "bytes": "696D70657269616C206669676874206665737400"
+      },
+      {
+        "va": "0x10019ab8",
+        "bytes": "61706F6765652073706163652073746174696F6E00"
+      },
+      {
+        "va": "0x10019ad0",
+        "bytes": "706972617465206261736500"
+      },
+      {
+        "va": "0x10019ae0",
+        "bytes": "737061636520636F6D62617420696900"
+      },
+      {
+        "va": "0x10019af0",
+        "bytes": "72796B616E207600"
+      },
+      {
+        "va": "0x10019af8",
+        "bytes": "736172676173736F00"
+      },
+      {
+        "va": "0x10019b08",
+        "bytes": "6972697300"
+      },
+      {
+        "va": "0x10019b10",
+        "bytes": "7A6F72646F6F6D20707269736F6E00"
+      },
+      {
+        "va": "0x10019b20",
+        "bytes": "737061636520636F6D6261742069696900"
+      },
+      {
+        "va": "0x10019b38",
+        "bytes": "6B6572636875206369747900"
+      },
+      {
+        "va": "0x10019b48",
+        "bytes": "736C6167735F666C65657400"
+      },
+      {
+        "va": "0x10019b58",
+        "bytes": "637261676D697465207275696E7300"
+      },
+      {
+        "va": "0x10019b68",
+        "bytes": "6D6572696469616E206369747900"
+      },
+      {
+        "va": "0x10019b78",
+        "bytes": "666173746F6F6E5F72657475726E00"
+      },
+      {
+        "va": "0x10062f7c",
+        "bytes": "10019A7810019A88100061E01000623810019A9010019AA010019AB810019AD010019AE010019AF010019AF810019B0810019B1010019B2010019B3810019B4810019B5810019B6810019B78"
+      }
+    ]
+  },
+  "world_consumers": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 static consumer relationships only. No saved field renamed, safe edit range inferred, native game code executed or runtime slot table reconstructed.",
+    "storage": {
+      "world_base": "0x488",
+      "world_stride": "0x408",
+      "physical_world_slots": 20,
+      "segment_stride": "0x30",
+      "segments_per_world": 10,
+      "completion_member": "0x2c",
+      "restart_word_offset": "0x906ec",
+      "log_count_offset": "0x10144"
+    },
+    "runtime_mapping": {
+      "pointer_slot_va": "0x89f078",
+      "runtime_owner_va": "0x101e8d70",
+      "member": "0x20",
+      "word_stride": 4,
+      "absent_word": "0xffffffff",
+      "validity_function_va": "0x2cdbc0",
+      "saved_getter_va": "0x2cdf40",
+      "raw_saved_getter_va": "0x2d14e0",
+      "config_getter_va": "0x2cdec0",
+      "saved_rule": "2CDBC0 tests runtime[20+4*requested_slot] against -1, but returns the requested slot itself, not the table value. 2CDF40 returns null for absent mapping; otherwise saved+488+current_world*408+requested_slot*30. Raw2D14E0 performs the saved address calculation without this runtime mapping gate.",
+      "configuration_rule": "2CDEC0 instead uses the runtime table value as a configuration record index: runtime configuration root+EA24+current_world*1E0+mapped_index*30. These runtime records are not saved segment records; a remapped configuration index does not reorder GAME.SAV slots.",
+      "bounds_scope": "These guarded leaves do not establish a 0..9 input-range check. Preview and snapshot reads stay inside the 200 physical saved records; no unsafe malformed-index address is reproduced."
+    },
+    "lifecycle": {
+      "completion": {
+        "function_va": "0x2d15c8",
+        "flag_store_va": "0x2d1658",
+        "rule": "Raw requested saved-slot byte2C is tested first. Nonzero returns0 without calling finalizer or replacing the byte. Zero calls2CE328 then writes1 and returns1, even when finalizer skipped because replay word is nonzero or runtime mapping absent. Runtime checkpoint mask+44 updates separately before that byte test.",
+        "scope": "A newly set completion flag is not evidence of a log append, timer reset, reward commit or reconstructed active runtime configuration."
+      },
+      "finalization": {
+        "function_va": "0x2ce328",
+        "rule": "Requires restart906EC==0, runtime mapping present through2CDF40, and saved byte2C==0 before incrementing log count and storing scalar/timing entries. No completion-byte store is made by this leaf; the caller performs it afterward."
+      },
+      "tick": {
+        "function_va": "0x2ce620",
+        "rule": "Saved segment elapsed updates require restart906EC==0, two saved timing gates, runtime mapping present and saved byte2C==0. Additional runtime context matters; completion-byte clearance alone does not predict elapsed changes."
+      },
+      "reset": {
+        "function_va": "0x2ce518",
+        "counter_store_va": "0x2ce5b0",
+        "rule": "For the selected runtime slot, restart906EC==0 and runtime mapping present suffice for this leaf's saved segment writes. It does not test byte2C: increments BE32+8 modulo32, clears+4, and stores adjusted+0 using current-attempt+4 times runtime config10FC8 plus previous+0. Completed records are therefore not inherently frozen against this reset consumer. Category-bank increment precedes restart gate and is documented separately.",
+        "scope": "Does not prove the game actually calls reset after completion or reveal reset cause/time units. Full leaf coverage, not a global no-reader claim."
+      },
+      "preview_scope": "Explicit runtime validity is a preview argument, not obtained from GAME.SAV. Tick/finalizer gate success does not execute any log/timer write or promise native side effects."
+    },
+    "opaque_members": {
+      "segment_word28": "Unresolved; no new semantic consumer established.",
+      "segment_tail2d_2f": "Unresolved; existing initializer footprint does not prove padding.",
+      "world_tail404_407": "Unresolved. Immediate-address candidates do not by themselves prove this saved-record owner; no absence of all consumers is claimed."
+    },
+    "named_bindings": [
+      {
+        "name": "complete_segment",
+        "registration_slot_va": "0x89d960",
+        "wrapper_va": "0x2c8a18"
+      },
+      {
+        "name": "is_segment_complete",
+        "registration_slot_va": "0x89d968",
+        "wrapper_va": "0x2c8950"
+      }
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x2cdbc0",
+        "name": "segment_runtime_mapping_validity",
+        "kind": "function",
+        "comment": "Tests runtime mapping word20+4*requested_slot against -1, returning requested slot itself or -1. Table value is not returned and no normal-slot bounds check is established."
+      },
+      {
+        "va": "0x2cdf40",
+        "name": "segment_saved_pointer_if_runtime_mapped",
+        "kind": "function",
+        "comment": "Uses2CDBC0 for runtime mapping validity only; saved offset remains requested_slot*30, current_world*408, plus488. Does not substitute mapped config index."
+      },
+      {
+        "va": "0x2cdec0",
+        "name": "segment_runtime_config_from_mapping",
+        "kind": "function",
+        "comment": "Uses runtime mapping table value as configuration index; runtime root+EA24+current_world*1E0+mapped_index*30. Distinct from saved-record addressing."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x2cdbc0",
+        "bytes": "5465103A8162F158388500207C8907B47C0B482E2F80FFFF419E0010786300204E800020600000003860FFFF786300204E80002060000000"
+      },
+      {
+        "va": "0x2cdbc4",
+        "bytes": "8162F158"
+      },
+      {
+        "va": "0x2cdbc8",
+        "bytes": "38850020"
+      },
+      {
+        "va": "0x2cdbd0",
+        "bytes": "7C0B482E"
+      },
+      {
+        "va": "0x2cdbd4",
+        "bytes": "2F80FFFF"
+      },
+      {
+        "va": "0x2cdbd8",
+        "bytes": "419E0010"
+      },
+      {
+        "va": "0x2cdbdc",
+        "bytes": "78630020"
+      },
+      {
+        "va": "0x2cdbe8",
+        "bytes": "3860FFFF"
+      },
+      {
+        "va": "0x2cdec0",
+        "bytes": "5464103A8122F158F821FF817CA802A638040020FBE100787C0307B4F8A10090396000007FE9182E2F9FFFFF419E0038480035A16000000057E930328162F16057E420365460482C547F28347D4448507D9F00507D0A62143CE800017CC75A143966EA24E8A1009079630020EBE10078382100807CA803A64E80002060000000"
+      },
+      {
+        "va": "0x2cdee4",
+        "bytes": "7FE9182E"
+      },
+      {
+        "va": "0x2cdee8",
+        "bytes": "2F9FFFFF"
+      },
+      {
+        "va": "0x2cdeec",
+        "bytes": "419E0038"
+      },
+      {
+        "va": "0x2cdf20",
+        "bytes": "3966EA24"
+      },
+      {
+        "va": "0x2cdf40",
+        "bytes": "F821FF817C0802A6FBE10078F80100904BFFFC71380000002F83FFFF7C7F1B78419E00344800352D6000000057E8303280A2F178546B502A57EA2036546718387CCA40507C675A147C861A147D242A1438090488E981009078030020EBE10078382100807D8803A64E80002060000000"
+      },
+      {
+        "va": "0x2cdf50",
+        "bytes": "4BFFFC71"
+      },
+      {
+        "va": "0x2cdf58",
+        "bytes": "2F83FFFF"
+      },
+      {
+        "va": "0x2cdf60",
+        "bytes": "419E0034"
+      },
+      {
+        "va": "0x2cdf6c",
+        "bytes": "57E83032"
+      },
+      {
+        "va": "0x2cdf78",
+        "bytes": "57EA2036"
+      },
+      {
+        "va": "0x2cdf90",
+        "bytes": "38090488"
+      },
+      {
+        "va": "0x2ce328",
+        "bytes": "F821FF617C8802A6FBA10080FBE100907C7D1B78DBE10098FB610070FB810078FBC10088F88100B048003511600000005460063E7BBF00202F8000007FE3FB78419E0030EBC100B0EB6100707FC803A6EB810078EBA10080EBC10088EBE10090CBE10098382100A04E800020600000004BFFFBA92C0300007C7E1B784182FFC88863002CC3E2F1702C8300004086FFB88122F1788162F1783D490001806A0144398300011C83009C3D040001918A014438C887507FA65A14480030B1600000003B9D0014786300207B9C00204800248D600000008362F188786600207F84E3787F65DB78386000014BF82DA9E84100287FE3FB78480035ED6000000038FD0054786600207F65DB7878E40020386000014BF82D81E84100284BFFF7B97C7B1B787FE3FB784BFFFA75C082F18CC1A30020FC20F890C13B0000EC6D0132C19E0000FC4C1828FC026B2EED69002AC0FB0004D17B0000C1030020ED47402AD15B0004C0DE0000D0DC0088C0A30020D0BC008CC09B0000D09C0090C07B0004D07C009480BE000890BC0098D3FE0004D3FE0000C0430024C083002CC06300284BFFF85DD03C00844BFFFAE58122F158C0490000D05C0080C1890004EDA2602AFC3F6828FC016FEED01E000CEBC100B0EB6100707FC803A6EB810078EBA10080EBC10088EBE10090CBE10098382100A04E800020"
+      },
+      {
+        "va": "0x2ce350",
+        "bytes": "48003511"
+      },
+      {
+        "va": "0x2ce398",
+        "bytes": "4BFFFBA9"
+      },
+      {
+        "va": "0x2ce3a8",
+        "bytes": "8863002C"
+      },
+      {
+        "va": "0x2ce3b4",
+        "bytes": "4086FFB8"
+      },
+      {
+        "va": "0x2ce518",
+        "bytes": "8162F1587C8802A6F821FF91F8810080800B00485403103A2F800000392357207D2907B4419E00188102F1787CA9421480E5001438C7000190C500144800330D60000000546A063E2C0A000041820014E8610080382100707C6803A64E8000208182F17C806C00004BFFF9C12C8300004186FFE080A2F16039200000C02300043D650001C18300008083000838040001C00B0FC8EDA1603A9003000891230004D1A30000E8610080382100707C6803A64E80002060000000"
+      },
+      {
+        "va": "0x2ce554",
+        "bytes": "4800330D"
+      },
+      {
+        "va": "0x2ce580",
+        "bytes": "4BFFF9C1"
+      },
+      {
+        "va": "0x2ce584",
+        "bytes": "2C830000"
+      },
+      {
+        "va": "0x2ce5a0",
+        "bytes": "80830008"
+      },
+      {
+        "va": "0x2ce5a4",
+        "bytes": "38040001"
+      },
+      {
+        "va": "0x2ce5b0",
+        "bytes": "90030008"
+      },
+      {
+        "va": "0x2ce5b4",
+        "bytes": "91230004"
+      },
+      {
+        "va": "0x2ce5b8",
+        "bytes": "D1A30000"
+      },
+      {
+        "va": "0x2ce620",
+        "bytes": "F821FF717C0802A6DBE10088F80100A0FBA10070FBC10078FBE100804BFFFF9548003221600000005463063E2F830000419E0028EBE100A0EBA100707FE803A6EBC10078EBE10080CBE10088382100904E800020600000004BFFF581C3E2F168FC20F89038A3000C83A2F1907C7F1B7878A400207FA3EB784BF80621E8410028FC20F890389F00087FA3EB78788400204BF80609E8410028C01F000CC1A2F170FC0068004C4013824182FF8CC03F0008FC8168004CC433824186FF7C8122F17C83A900007FA3EB784BFFF8592F0300007C7F1B78419A009483C2F158815E00502C0A00004182007C897F002C2C8B00004086FF448182F1947FA3EB78C19F0000C09F0004C06C00A4EDA3202AEC43602AD1BF0004D05F00004BFFF789C03F0000C083002CC0430024C0630028C3FE00044BFFF5D1FF1F0800D03E0004419AFEF8EBC100A0EBA100707FC803A6EBE10080EBC10078CBE10088382100904BFFF65C4BFFF6594BFFFF8480E2F15880C700502F860000419EFEC0E90100A0EBA10070EBC100787D0803A6EBE10080CBE10088382100904BFFF594"
+      },
+      {
+        "va": "0x2ce640",
+        "bytes": "48003221"
+      },
+      {
+        "va": "0x2ce6e8",
+        "bytes": "4BFFF859"
+      },
+      {
+        "va": "0x2ce708",
+        "bytes": "897F002C"
+      },
+      {
+        "va": "0x2ce710",
+        "bytes": "4086FF44"
+      },
+      {
+        "va": "0x2d1490",
+        "bytes": "8062F2683D230009806906E84E800020"
+      },
+      {
+        "va": "0x2d14e0",
+        "bytes": "F821FF717D6802A654683032546A2036FBA10078F96100A07FAA40504BFFFF955467502A8122F26854661838E80100A07CA63A147C0803A67C9D2A147C644A143BA304887BA30020EBA10078382100904E80002060000000"
+      },
+      {
+        "va": "0x2d14e8",
+        "bytes": "54683032"
+      },
+      {
+        "va": "0x2d14ec",
+        "bytes": "546A2036"
+      },
+      {
+        "va": "0x2d1520",
+        "bytes": "3BA30488"
+      },
+      {
+        "va": "0x2d15c8",
+        "bytes": "8162F2707D0802A6F821FF71FB8100703B800001FBA10078FBC10080FBE10088F90100A07F89183080CB0044787D00207C9E23787CC54B787FA3EB7890AB00444BFFFED9392000007C7F1B787FA3EB78881F002C2F800000419E0028E88100A07D2307B4EB810070EBA100787C8803A6EBC10080EBE10088382100904E8000204BFFCCE1600000002C1E0000388000049B9F002C392000014182FFC48142F274806A00004BF7F93DE8410028E88100A0EB81007039200001EBA10078EBC100807C8803A67D2307B4EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x2d1618",
+        "bytes": "881F002C"
+      },
+      {
+        "va": "0x2d1620",
+        "bytes": "419E0028"
+      },
+      {
+        "va": "0x2d1648",
+        "bytes": "4BFFCCE1"
+      },
+      {
+        "va": "0x2d1658",
+        "bytes": "9B9F002C"
+      },
+      {
+        "va": "0x2d1860",
+        "bytes": "8082F268386000003D240009800906EC2F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2d186c",
+        "bytes": "800906EC"
+      },
+      {
+        "va": "0x86c470",
+        "bytes": "002C89500089FF20"
+      },
+      {
+        "va": "0x86c478",
+        "bytes": "002C8A180089FF20"
+      },
+      {
+        "va": "0x89d960",
+        "bytes": "1001F6180086C478"
+      },
+      {
+        "va": "0x89d968",
+        "bytes": "1001F6300086C470"
+      },
+      {
+        "va": "0x89f078",
+        "bytes": "101E8D70"
+      },
+      {
+        "va": "0x89f098",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a1984",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x1001f618",
+        "bytes": "636F6D706C6574655F7365676D656E7400"
+      },
+      {
+        "va": "0x1001f630",
+        "bytes": "69735F7365676D656E745F636F6D706C65746500"
+      }
+    ]
+  },
+  "reset_context": {
+    "confidence": "code-backed",
+    "admission": {
+      "function_va": "0x1e1ed0",
+      "owner_pointer_slot_va": "0x8954d4",
+      "runtime_owner_va": "0x101d5c30",
+      "runtime_latch_offset": "0x68",
+      "predicate_calls": [
+        "0x7b358",
+        "0x7eb48"
+      ],
+      "rule": "Admits only when low byte of 7EB48(7B358()) is zero and runtime word +68 is zero. Other cases return0 without the counter writer.",
+      "ordered_calls": [
+        "0x13680 -> 0x2ce518",
+        "0x244760",
+        "0x11050"
+      ],
+      "publication_store_va": "0x1e1f58",
+      "publication": "Only after those calls return does this wrapper store latch1 and return1. The latch is not set before recording. No atomicity or callback reentry safety is proven.",
+      "not_serialized": "Runtime owner101D5C30 and category owner101E8D70 are below serialized state101EFB20; neither latch nor current category is a saved byte."
+    },
+    "blocking_context": {
+      "function_va": "0x7eb48",
+      "context_getter_va": "0x7b350",
+      "context_pointer_slot_va": "0x88b0ec",
+      "context_va": "0x101b88e0",
+      "context_word_offset": "0x58",
+      "state_word_pointer_slot_va": "0x88b200",
+      "state_word_va": "0x1036bc0c",
+      "secondary_owner_pointer_slot_va": "0x88b204",
+      "secondary_owner_va": "0x1036ba44",
+      "secondary_mode_offset": "0x20",
+      "secondary_predicate_chain": "0x13490 -> 0x48b4a8",
+      "rule": "Returns1 when runtime context+58 is nonzero, or unsigned runtime state word is7..9. Otherwise returns0 if low byte of48B4A8 is0; if nonzero, returns1 only for secondary context+20 equal7 or9.",
+      "scope": "7EB48 does not consume the passed7B358 +170 subobject in this native body; it calls7B350 to fetch the separate context. Numeric states are not named pause, death, failure or game-mode enums."
+    },
+    "latch_service": {
+      "function_va": "0x1e1e58",
+      "clear_store_va": "0x1e1eb4",
+      "caller_thunk_va": "0x252258",
+      "readiness_getter_va": "0x244658",
+      "runtime_singleton_pointer_slot_va": "0x897cc0",
+      "runtime_readiness_offset": "0x5b62c",
+      "threshold_va": "0x8954f4",
+      "threshold": 1.0,
+      "clear_callback_chain": "0x11920 -> 0x38e3b0",
+      "rule": "Services only latch==1. Runtime singleton float+5B62C must compare ordered >=1.0; NaN does not qualify. Qualified branch calls11920\u219238E3B0 then stores latch0. Other nonzero latch values block admission but are not serviced by this function.",
+      "scope": "The predicate's gameplay meaning, timer units, external-call side effects and reentry are not inferred."
+    },
+    "counter_dependencies": {
+      "writer_va": "0x2ce518",
+      "category_offset": "0x5734",
+      "category_count": 8,
+      "category_rule": "Admitted wrapper calls writer. Nonzero runtime category increments one BE32 word modulo32 before the saved replay/restart gate. Category0 skips its word.",
+      "segment_rule": "Segment+08 increments modulo32 only if saved906EC is zero and2CDF40 resolves a nonnull segment. The same branch zeroes segment+04 and adds old segment+04 * runtime config10FC8 to segment+00.",
+      "scope": "Arithmetic preview accepts only physical IDs0..7; native writer has no such bound. No death count, challenge-failure name, count equality or current actor is reconstructed."
+    },
+    "virtual_selector_contexts": [
+      {
+        "categories": [
+          5
+        ],
+        "vtable_va": "0x842128",
+        "method_offset": "0x10",
+        "descriptor_va": "0x85ae20",
+        "function_va": "0x3bfa0",
+        "scope": "Category selection is in this virtual callback. Actor type, event name and invocation frequency remain unconfirmed."
+      },
+      {
+        "categories": [
+          2
+        ],
+        "vtable_va": "0x842178",
+        "method_offset": "0x10",
+        "descriptor_va": "0x85b048",
+        "function_va": "0x433b0",
+        "scope": "Category selection is in this virtual callback. Actor type, event name and invocation frequency remain unconfirmed."
+      },
+      {
+        "categories": [
+          4
+        ],
+        "vtable_va": "0x8421f8",
+        "method_offset": "0x10",
+        "descriptor_va": "0x85b218",
+        "function_va": "0x4b9e8",
+        "scope": "Category selection is in this virtual callback. Actor type, event name and invocation frequency remain unconfirmed."
+      },
+      {
+        "categories": [
+          6
+        ],
+        "vtable_va": "0x842260",
+        "method_offset": "0x10",
+        "descriptor_va": "0x85b3d8",
+        "function_va": "0x54fb0",
+        "scope": "Category selection is in this virtual callback. Actor type, event name and invocation frequency remain unconfirmed."
+      },
+      {
+        "categories": [
+          3,
+          7
+        ],
+        "vtable_va": "0x8482e0",
+        "method_offset": "0x10",
+        "descriptor_va": "0x864478",
+        "function_va": "0x18f480",
+        "scope": "Category selection is in this virtual callback. Actor type, event name and invocation frequency remain unconfirmed."
+      }
+    ],
+    "unresolved": [
+      "Category1 selection and all player-facing category names remain unresolved.",
+      "Virtual callback presence does not establish actor class names or current actor selection.",
+      "External callbacks and runtime predicates are not executed or simulated."
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x1e1ed0",
+        "name": "AdmitResetRequest_RecordBeforeLatchPublication",
+        "kind": "function",
+        "comment": "Low-byte blocking predicate must be0 and runtime101D5C30+68 must be0. Calls13680\u21922CE518 then244760 and11050 before publishing latch1; callback reentry/atomicity unproved. Latch is not serialized."
+      },
+      {
+        "va": "0x1e1e58",
+        "name": "ServiceResetRequestLatch_ExactOneOnly",
+        "kind": "function",
+        "comment": "Only runtime101D5C30+68==1 reaches244658 reading singletonfloat+5B62C. Ordered >=1.0 calls11920\u219238E3B0 before clearing latch0. NaN and other nonzero latch values do not clear here; gameplay predicate meaning unconfirmed."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x11050",
+        "bytes": "F84100283C4200023842FF24485FB78C"
+      },
+      {
+        "va": "0x1105c",
+        "bytes": "485FB78C"
+      },
+      {
+        "va": "0x11920",
+        "bytes": "F84100283C4200013842FFE84837CA84"
+      },
+      {
+        "va": "0x1192c",
+        "bytes": "4837CA84"
+      },
+      {
+        "va": "0x13490",
+        "bytes": "F84100283C4200013842FFE84847800C"
+      },
+      {
+        "va": "0x1349c",
+        "bytes": "4847800C"
+      },
+      {
+        "va": "0x13680",
+        "bytes": "F84100283C4200013842FFE8482BAE8C"
+      },
+      {
+        "va": "0x1368c",
+        "bytes": "482BAE8C"
+      },
+      {
+        "va": "0x3bfb0",
+        "bytes": "38600005"
+      },
+      {
+        "va": "0x43578",
+        "bytes": "38600002"
+      },
+      {
+        "va": "0x4bb04",
+        "bytes": "38600004"
+      },
+      {
+        "va": "0x55094",
+        "bytes": "38600006"
+      },
+      {
+        "va": "0x7b350",
+        "bytes": "8062B1B44E800020"
+      },
+      {
+        "va": "0x7b358",
+        "bytes": "8062B1B4386301704E800020"
+      },
+      {
+        "va": "0x7eb48",
+        "bytes": "F821FF917C6802A6F86100804BFFC7FD60000000800300582F800000409E00188122B2C8808900003964FFF9280B00024181002039200001E96100807D2307B4382100707D6803A64E800020600000004BF948F9E8410028392000005465063E2C8500004186FFD48062B2CC80030020680C00092F0000077D8AFE707D4862787CEA405038C7FFFF54C90FFE419AFFA8E96100807D2307B4382100707D6803A64E800020"
+      },
+      {
+        "va": "0x7eb54",
+        "bytes": "4BFFC7FD"
+      },
+      {
+        "va": "0x7eb98",
+        "bytes": "4BF948F9"
+      },
+      {
+        "va": "0x18f4ac",
+        "bytes": "38600007"
+      },
+      {
+        "va": "0x18f4e0",
+        "bytes": "38600003"
+      },
+      {
+        "va": "0x1e1e58",
+        "bytes": "F821FF817C6802A6FBE1007883E2559CF8610090801F00682F800001419E001CE8A10090EBE10078382100807CA803A64E80002060000000480627C960000000C00255BCFC0100004C4113824082FFD44BE2FA79E841002838800000909F0068E8A10090EBE10078382100807CA803A64E80002060000000"
+      },
+      {
+        "va": "0x1e1e64",
+        "bytes": "83E2559C"
+      },
+      {
+        "va": "0x1e1e6c",
+        "bytes": "801F0068"
+      },
+      {
+        "va": "0x1e1e70",
+        "bytes": "2F800001"
+      },
+      {
+        "va": "0x1e1e90",
+        "bytes": "480627C9"
+      },
+      {
+        "va": "0x1e1e98",
+        "bytes": "C00255BC"
+      },
+      {
+        "va": "0x1e1e9c",
+        "bytes": "FC010000"
+      },
+      {
+        "va": "0x1e1ea0",
+        "bytes": "4C411382"
+      },
+      {
+        "va": "0x1e1ea8",
+        "bytes": "4BE2FA79"
+      },
+      {
+        "va": "0x1e1eb0",
+        "bytes": "38800000"
+      },
+      {
+        "va": "0x1e1eb4",
+        "bytes": "909F0068"
+      },
+      {
+        "va": "0x1e1ed0",
+        "bytes": "F821FF817C0802A6FBE10078F80100904BE9947960000000786300204BE9CC5D60000000392000005463063E2F830000409E001483E2559C809F00682C04000041820020E8C100907D2307B4EBE10078382100807CC803A64E800020600000004BE31751E8410028C02255BCC04255C048062821600000004BE2F109E841002838A000013920000190BF0068E8C100907D2307B4EBE10078382100807CC803A64E800020"
+      },
+      {
+        "va": "0x1e1ee0",
+        "bytes": "4BE99479"
+      },
+      {
+        "va": "0x1e1eec",
+        "bytes": "4BE9CC5D"
+      },
+      {
+        "va": "0x1e1ef8",
+        "bytes": "5463063E"
+      },
+      {
+        "va": "0x1e1efc",
+        "bytes": "2F830000"
+      },
+      {
+        "va": "0x1e1f04",
+        "bytes": "83E2559C"
+      },
+      {
+        "va": "0x1e1f08",
+        "bytes": "809F0068"
+      },
+      {
+        "va": "0x1e1f0c",
+        "bytes": "2C040000"
+      },
+      {
+        "va": "0x1e1f30",
+        "bytes": "4BE31751"
+      },
+      {
+        "va": "0x1e1f40",
+        "bytes": "48062821"
+      },
+      {
+        "va": "0x1e1f48",
+        "bytes": "4BE2F109"
+      },
+      {
+        "va": "0x1e1f50",
+        "bytes": "38A00001"
+      },
+      {
+        "va": "0x1e1f58",
+        "bytes": "90BF0068"
+      },
+      {
+        "va": "0x244658",
+        "bytes": "81627D88806B00003D230006C029B62C4E800020"
+      },
+      {
+        "va": "0x252258",
+        "bytes": "F84100283C42FFFF384200184BF8FBF4"
+      },
+      {
+        "va": "0x252264",
+        "bytes": "4BF8FBF4"
+      },
+      {
+        "va": "0x2ce518",
+        "bytes": "8162F1587C8802A6F821FF91F8810080800B00485403103A2F800000392357207D2907B4419E00188102F1787CA9421480E5001438C7000190C500144800330D60000000546A063E2C0A000041820014E8610080382100707C6803A64E8000208182F17C806C00004BFFF9C12C8300004186FFE080A2F16039200000C02300043D650001C18300008083000838040001C00B0FC8EDA1603A9003000891230004D1A30000E8610080382100707C6803A64E800020"
+      },
+      {
+        "va": "0x2ce528",
+        "bytes": "800B0048"
+      },
+      {
+        "va": "0x2ce530",
+        "bytes": "2F800000"
+      },
+      {
+        "va": "0x2ce54c",
+        "bytes": "38C70001"
+      },
+      {
+        "va": "0x2ce550",
+        "bytes": "90C50014"
+      },
+      {
+        "va": "0x2ce554",
+        "bytes": "4800330D"
+      },
+      {
+        "va": "0x2ce560",
+        "bytes": "2C0A0000"
+      },
+      {
+        "va": "0x2ce580",
+        "bytes": "4BFFF9C1"
+      },
+      {
+        "va": "0x2ce584",
+        "bytes": "2C830000"
+      },
+      {
+        "va": "0x2ce5a4",
+        "bytes": "38040001"
+      },
+      {
+        "va": "0x2ce5b0",
+        "bytes": "90030008"
+      },
+      {
+        "va": "0x2d1860",
+        "bytes": "8082F268386000003D240009800906EC2F800000419E0008386000017C6307B44E800020"
+      },
+      {
+        "va": "0x2d186c",
+        "bytes": "800906EC"
+      },
+      {
+        "va": "0x2d1870",
+        "bytes": "2F800000"
+      },
+      {
+        "va": "0x842138",
+        "bytes": "0085AE20"
+      },
+      {
+        "va": "0x842188",
+        "bytes": "0085B048"
+      },
+      {
+        "va": "0x842208",
+        "bytes": "0085B218"
+      },
+      {
+        "va": "0x842270",
+        "bytes": "0085B3D8"
+      },
+      {
+        "va": "0x8482f0",
+        "bytes": "00864478"
+      },
+      {
+        "va": "0x85ae20",
+        "bytes": "0003BFA00088FF38"
+      },
+      {
+        "va": "0x85b048",
+        "bytes": "000433B00088FF38"
+      },
+      {
+        "va": "0x85b218",
+        "bytes": "0004B9E80088FF38"
+      },
+      {
+        "va": "0x85b3d8",
+        "bytes": "00054FB00088FF38"
+      },
+      {
+        "va": "0x864478",
+        "bytes": "0018F4800088FF38"
+      },
+      {
+        "va": "0x88b0ec",
+        "bytes": "101B88E0"
+      },
+      {
+        "va": "0x88b200",
+        "bytes": "1036BC0C1036BA44"
+      },
+      {
+        "va": "0x8954d4",
+        "bytes": "101D5C30"
+      },
+      {
+        "va": "0x8954f4",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x897cc0",
+        "bytes": "101E72B8"
+      },
+      {
+        "va": "0x89f078",
+        "bytes": "101E8D70"
+      },
+      {
+        "va": "0x89f098",
+        "bytes": "101EFB20"
+      }
+    ]
+  },
+  "arena_binding": {
+    "confidence": "native-confirmed",
+    "binary_sha256": "0EE9A8414C8FC182BC19FA2A523E6D050D0BE76138B3733AE515798D77D2468C",
+    "queue_binding": {
+      "registration_slot_va": "0x89d8ac",
+      "name": "queue_arena_challenge_screen",
+      "descriptor_va": "0x86c530",
+      "wrapper_va": "0x2ca1d8",
+      "native_va": "0x282af8",
+      "diagnostic_identifier": "select_arena_challenge",
+      "diagnostic_pointer_slot_va": "0x8991e0",
+      "distinction": "The registered native queue API and its diagnostic identifier are different. A diagnostic select_arena_challenge string does not establish a named native binding for the table-taking shipped Lua call.",
+      "arguments": [
+        {
+          "position": 1,
+          "meaning": "Required moby_handle checked via250338; userdata lookup2518C8 must return nonzero before dereferencing the handle word."
+        },
+        {
+          "position": 2,
+          "meaning": "Required string-compatible argument checked via252288\u21926A5C68, using diagnostic type string;24FAB8\u21926A9E78 returns its pointer through66B078."
+        }
+      ],
+      "arity": "252BE8\u21926A5FC8 with index3 rejects a present third argument; ordinary path requires two arguments. String-compatible means the native Lua predicate's accepted domain, not an asserted strict Python string type.",
+      "native_argument_boundary": "Wrapper places handle inr3 and extracted string pointer inr4 before282AF8. The guarded complete282AF8 body does not preserve/read incomingr4 before overwriting it; the operation request uses actor thread token, operation5,0,0. No string/table payload is carried by this observed request path.",
+      "validation_scope": "Failure paths call the engine Lua diagnostic helper; no assertion that errors are recoverable or that invalid handles safely continue."
+    },
+    "loader_resource_ownership": {
+      "loader_va": "0x62d2e8",
+      "resource_setter_va": "0x632710",
+      "resource_pointer_slot_va": "0x8a9578",
+      "runtime_resource_owner_va": "0x107225cc",
+      "source": "Operation5's UI loader receives owner+108+2C as its incomingr6;62D320 retains it inr24,62D55C movesr24 tor3,62D560 calls632710.",
+      "resource_store": "632710 stores its supplied word to runtime owner+0 via8A9578. This is a resource word, not a recovered Lua-state pointer or saved challenge ID.",
+      "companion_setter_va": "0x632720",
+      "companion_store": "632720 independently stores a supplied word to runtime owner+4 and clears owner+8. The later loader call632710 does not perform those companion writes.",
+      "context_setup": "6329D0\u2192636EF0 stores two supplied runtime words at separate owner107225D8+14/+18; no ARENA_CHALLENGE_DATA assignment is present in these setter bodies.",
+      "warning": "All owner members and pointer slots are runtime virtual addresses, not GAME.SAV offsets. This extends the loader resource boundary but does not install or alias the script challenge list."
+    },
+    "unresolved": [
+      "Shipped select_arena_challenge(actor, challenge_list) is not connected to a recovered table-installing wrapper; queue_arena_challenge_screen is the observed registered native endpoint.",
+      "The Lua ARENA_CHALLENGE_DATA table's current identity/list installation remains unresolved; selector input, native ID and display row cannot be equated.",
+      "No new serialized save field, live queue state or in-game edit acceptance is claimed."
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x2ca1d8",
+        "name": "TOD_lua_queue_arena_challenge_screen",
+        "kind": "function",
+        "comment": "Named native queue_arena_challenge_screen registration89D8AC. Requires moby_handle/string-compatible arg2, rejects ordinary third arg. Extracted string is passed to282AF8 but not consumed by that native body. Diagnostic select_arena_challenge string is not a proven table-taking API binding."
+      },
+      {
+        "va": "0x632710",
+        "name": "TOD_ui_store_runtime_resource_word",
+        "kind": "function",
+        "comment": "Stores supplied word to runtime107225CC+0 through TOC slot8A9578. Arena loader62D2E8 passes incomingr6 here; not a saved field or recovered ARENA_CHALLENGE_DATA installer."
+      },
+      {
+        "va": "0x632720",
+        "name": "TOD_ui_store_companion_resource_clear_aux_word",
+        "kind": "function",
+        "comment": "Stores supplied runtime word to107225CC+4 and clears107225CC+8. Separate from632710 owner+0 store; no serialized save offset or confirmed Lua table binding."
+      },
+      {
+        "va": "0x636ef0",
+        "name": "TOD_ui_store_runtime_context_pair",
+        "kind": "function",
+        "comment": "Stores supplied words at runtime owner107225D8+14/+18 through8A9898; called by6329D0. No challenge list alias or GAME.SAV member inferred."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x24fab8",
+        "bytes": "F84100283C4200013842FF3C4845A3B4"
+      },
+      {
+        "va": "0x252288",
+        "bytes": "F84100283C4200013842FF3C484539D4"
+      },
+      {
+        "va": "0x252be8",
+        "bytes": "F84100283C4200013842FF3C484533D4"
+      },
+      {
+        "va": "0x282af8",
+        "bytes": "F821FF817C0802A6FBC100703BC100B0FBE100787BDF0020906100B07FE3FB78F80100904BFF422D2FA30000419E008C7FE3FB784BFF421D388000B980A300402C05000078A30020418200184BFCC6C5E84100285463063E2C8300004086001C80C2908080A292C0808292C4806600044BFCCE71E84100284811B339600000007FC3F3784BFF41CD38800005E863004838A0000038C000004BFCC509E8410028E8810090EBC10070EBE100787C8803A6382100804E8000208122908080A292C080829280806900044BFCCE19E8410028"
+      },
+      {
+        "va": "0x2ca1d8",
+        "bytes": "F821FF617C0802A6FBC100903BC1007080A29740FBA100887BDD002038C00000388000017FA7EB78FBE10098F80100B07C7F1B784BF8612DE84100282F8300007FA6EB783880000238A000007FE3FB78409E00387FE3FB788082F0C07FC5F3784BF871D1E8410028E88100B038600000EBA10088EBC100907C8803A6EBE10098382100A04E8000204BF88029E84100287FA5EB782C030000388000037FE3FB784182FFB44BF8896DE84100282C8300004186FFA43880000138A000007FE3FB784BF87631E8410028388000027C661B7838A000002F0600007FE3FB7878DD0020419A002483BD00004BF857F9E8410028786400207FA3EB784BFB8829600000004BFFFF687FE3FB788082E94438A000004BF87121E84100284BFFFF5060000000"
+      },
+      {
+        "va": "0x62d2e8",
+        "bytes": "F821FF317D0802A6FBE100C87C7F1B78FB010090FB4100A0FB8100B0FBC100C0FB210098FB6100A8FBA100B8F90100E07C9C23787CBA2B787CD833787CFE3B7848009D8960000000801F10682F800000419E037C3B3F000C4BFF9BE960000000907F00087B2300207BF90020480914E560000000817F000039800000939F1494919F1070814B00147F23CB7838FF10B078FD0020812A0000F84100287D2903A6804A00044E800421E84100284BFFE5ED600000007C7C1B784BFFE5F1600000007C7B1B784BFFE5C56000000078680020387F11087B860020786500207B6700207B4400207FA3EB784800AAB160000000807F0008388000004BFFB2B960000000809F10AC807F00084BFF9B4960000000807F00084BFF9B4D600000007FA4EB78807F00084BFF9B2560000000839F00084BFFE54960000000786400207B8300204BFF9B19600000004BFFE541600000008B4300102C9A00004186017080C300003B600001810300048143000C7F8642149B6300107FAAE0503B5DFF50574500367C8628507CBD2B787C0440509003000C7BA30020809F106880BF00084808D75D60000000809F1064380000013860FFFF93BF000498040010907F11104BF92965600000002B03000F41990060834296C0787B17887FBBD02E7FA607B47CA6D2147CA903A64E800420000002680000004000000260000002B0000002B80000029000000298000002A000000040000002A8000001DC000001DC000002700000027800000280000002884BF9293160000000393E00102F830002419E00087FC9F378792A0020838A00042C1C00004082009C4BFFE469600000007C7A1B784BFFE46D60000000786400207B4300204800547D600000007B030020480051B16000000083E296547F23CB783B200000933F00044BFFEF59EB0100E0EB2100987F0803A6EB4100A0EB010090EB6100A8EB8100B0EBA100B8EBC100C0EBE100C8382100D04E8000206000000081030008816300003988000F5589003638E900B07FA95A1490E300084BFFFEAC38E00000F8E100704BF92831600000002883000F41850064816296C4786417887D04582E7D0C07B47D2C5A147D2903A64E8004200000019C00000044000001EC000001AC000001A4000001C4000001BC000001B400000044000001940000018C0000018C000001D4000001CC000001E4000001DC600000004BF927F9600000003BBE00102F030002419A00087FDDF3783BC100784BFFE30D600000007BDC002078660020388100707BA300207F85E37838E0000039000000480391E1600000002F830000409EFEA47F83E3784BF92DDD60000000907F11104BFFFE90393E00A04BFFFE784BFFE2BD60000000888300102C0400004182004C80E300003B20000180C3000483A3000C7F6732149B2300107D9DD850396CFF20556900367D4748507D3D4B787CAA305090A3000C7BA300204813D5A16000000093BF10684BFFFC3080C300088103000038A6000F54A40036380400E07FA44214900300084BFFFFD0"
+      },
+      {
+        "va": "0x632710",
+        "bytes": "8122971C906900004E80002060000000"
+      },
+      {
+        "va": "0x632720",
+        "bytes": "8122971C3800000090090008906900044E80002060000000"
+      },
+      {
+        "va": "0x6329d0",
+        "bytes": "F821FF917CA802A6F8A100804800451560000000E8010080382100707C0803A64E80002060000000"
+      },
+      {
+        "va": "0x636ef0",
+        "bytes": "81229A3C90690014908900184E80002081229A3C906900384E80002060000000"
+      },
+      {
+        "va": "0x6a5c68",
+        "bytes": "2F8500007C0802A6F821FF71FB810070FBA10078FBC10080FBE10088F80100A07C9C23787CDE3378787F00207C9D2378419E00247FE3FB784BFC29E1600000007F89FE707D25E2787C8928507C041800418100287FBD07B47FE3FB787FA4EB784BFC4E79600000007FA4EB782C8300007FE3FB784086002CE8E100A039200001EB8100707D2307B4EBA10078EBC100807CE803A6EBE10088382100904E8000204BFC5B3160000000392000002F030000409AFFC880C2A7A0907E0004939E000090DE0008E8E100A07D2307B4EB810070EBA100787CE803A6EBC10080EBE10088382100904E8000202F8500007C0802A6"
+      },
+      {
+        "va": "0x6a5fc8",
+        "bytes": "F821FF717CC802A6FBC100807C9E2378FBE10088FBA10078F8C100A07CBF2B784BFC2699600000007FC9FE707D24F2787C0920507F80180038600001419D001C3860000080A2A7B093DF0000907F00043860000090BF0008"
+      },
+      {
+        "va": "0x6a9e78",
+        "bytes": "F821FF717CC802A6FBE100887C9F2378FBA10078FBC100807C7D1B78F8C100A07CBE2B784BFBE7E5600000007FE9FE707D24FA787C0920507FE407B47F8018007FA3EB78419D00104BFC11B9600000007C7E1B78E8A100A07BC30020EBA10078EBC100807CA803A6EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x86c530",
+        "bytes": "002CA1D8"
+      },
+      {
+        "va": "0x86c534",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x8991e0",
+        "bytes": "1001A7D8"
+      },
+      {
+        "va": "0x899660",
+        "bytes": "1001C1A8"
+      },
+      {
+        "va": "0x89d8ac",
+        "bytes": "1001F4C0"
+      },
+      {
+        "va": "0x89d8b0",
+        "bytes": "0086C530"
+      },
+      {
+        "va": "0x8a9578",
+        "bytes": "107225CC"
+      },
+      {
+        "va": "0x8a957c",
+        "bytes": "10731E64"
+      },
+      {
+        "va": "0x8a9898",
+        "bytes": "107225D8"
+      },
+      {
+        "va": "0x8aa5fc",
+        "bytes": "1002C6D8"
+      },
+      {
+        "va": "0x8aa60c",
+        "bytes": "1002C090"
+      },
+      {
+        "va": "0x1001a7d8",
+        "bytes": "73656C6563745F6172656E615F6368616C6C656E676500"
+      },
+      {
+        "va": "0x1001c1a8",
+        "bytes": "6D6F62795F68616E646C6500"
+      },
+      {
+        "va": "0x1001f4c0",
+        "bytes": "71756575655F6172656E615F6368616C6C656E67655F73637265656E00"
+      },
+      {
+        "va": "0x1002c090",
+        "bytes": "5B6E6F206F626A6563745D00"
+      },
+      {
+        "va": "0x1002c6d8",
+        "bytes": "737472696E6700"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -37275,6 +38619,17 @@
     ]
   },
   "annotations": [
+{"va":"0x002CA1D8","name":"TOD_lua_queue_arena_challenge_screen","kind":"function","confidence":"confirmed","bytes":"F821FF617C0802A6","comment":"Named native queue_arena_challenge_screen registration89D8AC. Requires moby_handle/string-compatible arg2, rejects ordinary third arg. Extracted string is passed to282AF8 but not consumed by that native body. Diagnostic select_arena_challenge string is not a proven table-taking API binding.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_binding native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00632710","name":"TOD_ui_store_runtime_resource_word","kind":"function","confidence":"confirmed","bytes":"8122971C90690000","comment":"Stores supplied word to runtime107225CC+0 through TOC slot8A9578. Arena loader62D2E8 passes incomingr6 here; not a saved field or recovered ARENA_CHALLENGE_DATA installer.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_binding native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00632720","name":"TOD_ui_store_companion_resource_clear_aux_word","kind":"function","confidence":"confirmed","bytes":"8122971C38000000","comment":"Stores supplied runtime word to107225CC+4 and clears107225CC+8. Separate from632710 owner+0 store; no serialized save offset or confirmed Lua table binding.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_binding native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00636EF0","name":"TOD_ui_store_runtime_context_pair","kind":"function","confidence":"confirmed","bytes":"81229A3C90690014","comment":"Stores supplied words at runtime owner107225D8+14/+18 through8A9898; called by6329D0. No challenge list alias or GAME.SAV member inferred.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_binding native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001E1ED0","name":"TOD_AdmitResetRequest_RecordBeforeLatchPublication","kind":"function","confidence":"confirmed","bytes":"F821FF817C0802A6","comment":"Low-byte blocking predicate must be0 and runtime101D5C30+68 must be0. Calls13680\u21922CE518 then244760 and11050 before publishing latch1; callback reentry/atomicity unproved. Latch is not serialized.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_context native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001E1E58","name":"TOD_ServiceResetRequestLatch_ExactOneOnly","kind":"function","confidence":"confirmed","bytes":"F821FF817C6802A6","comment":"Only runtime101D5C30+68==1 reaches244658 reading singletonfloat+5B62C. Ordered >=1.0 calls11920\u219238E3B0 before clearing latch0. NaN and other nonzero latch values do not clear here; gameplay predicate meaning unconfirmed.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_context native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002CDBC0","name":"TOD_segment_runtime_mapping_validity","kind":"function","confidence":"confirmed","bytes":"5465103A8162F158","comment":"Tests runtime mapping word20+4*requested_slot against -1, returning requested slot itself or -1. Table value is not returned and no normal-slot bounds check is established.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; world_consumers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002CDF40","name":"TOD_segment_saved_pointer_if_runtime_mapped","kind":"function","confidence":"confirmed","bytes":"F821FF817C0802A6","comment":"Uses2CDBC0 for runtime mapping validity only; saved offset remains requested_slot*30, current_world*408, plus488. Does not substitute mapped config index.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; world_consumers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002CDEC0","name":"TOD_segment_runtime_config_from_mapping","kind":"function","confidence":"confirmed","bytes":"5464103A8122F158","comment":"Uses runtime mapping table value as configuration index; runtime root+EA24+current_world*1E0+mapped_index*30. Distinct from saved-record addressing.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; world_consumers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002D16A0","name":"TOD_saved_level_request_with_runtime_deferral","kind":"function","confidence":"confirmed","bytes":"2F8400007C0802A6","comment":"Same saved906E8 request returns unless forced. Zero runtime qualifier + mode4 + r5zero queues10063024 without saved write; other branches request by native name then store906E8. Not successful-load proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_selection native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002D17C8","name":"TOD_consume_deferred_level_request","kind":"function","confidence":"confirmed","bytes":"F821FF817C6802A6","comment":"Runtime pending10063024!=-1 and ordered helper result>=1.0 dispatch by name, write saved906E8, request transition, then clear pending=-1. Queue is outside save and unrelated to saved8740.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; load_selection native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0024DDE8","name":"TOD_grid_active_image_overlay_verified","kind":"function","confidence":"confirmed","bytes":"7865002038000001","comment":"Image-only mask/remapping from logical bytes; sets runtime display latch40024=1; no saved logical-grid normalization.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; grid_lifecycle native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0024D660","name":"TOD_grid_other_slot_binary_image_verified","kind":"function","confidence":"confirmed","bytes":"7865002038000001","comment":"Maps logical0/nonzero to separate image0/127; raises display latch. Stored logical state classes remain unchanged.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; grid_lifecycle native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0025B918","name":"TOD_map_exit_restore_active_grid_verified","kind":"function","confidence":"confirmed","bytes":"F821FEE17C8802A6","comment":"Reached exit path restores active definition's saved slot after browsing, then refreshes image/clears display latch; no browse-buffer flush.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; grid_lifecycle native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

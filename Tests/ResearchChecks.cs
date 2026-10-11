@@ -36,6 +36,60 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Arena queue diagnostics do not become a recovered table-taking native binding", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x56D8 + 4, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Arena challenges");
+            Equal("-1", table.Rows[1].Cells[3]);
+            True(table.Rows[1].Details.Contains("registered as queue_arena_challenge_screen") && table.Rows[1].Details.Contains("diagnostic identifier"), "Diagnostic select text must not become a registered table-taking API.");
+            True(table.Rows[1].Details.Contains("does not consume that string as a challenge-list payload") && table.Rows[1].Details.Contains("runtime-only"), "Loader resource words must not become saved fields or a current Lua table.");
+            Equal("queue_arena_challenge_screen", TodResearch.Map.GetProperty("arena_binding").GetProperty("queue_binding").GetProperty("name").GetString());
+            True(bytes.SequenceEqual(before), "Arena boundary inspection must not execute UI loading or normalize recorded wins.");
+        });
+        Check("Reset admission and service latches remain runtime-qualified without death-count inference", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x5738, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Reset-event counters");
+            Equal(uint.MaxValue.ToString(), table.Rows[1].Cells[1]);
+            True(table.Rows[1].Details.Contains("before callback calls return") && table.Rows[1].Details.Contains("not atomically"), "Latch publication must not become a prepublished recording lock.");
+            True(table.Rows[1].Details.Contains("only latch==1") && table.Rows[1].Details.Contains("None of this runtime state is read from GAME.SAV"), "Runtime latch semantics must not add saved fields or infer current reset eligibility.");
+            Equal("0x101d5c30", TodResearch.Map.GetProperty("reset_context").GetProperty("admission").GetProperty("runtime_owner_va").GetString());
+            Equal(3, InspectionPresentation.Simplify("Reset-event counters", table).Columns.Length);
+            True(bytes.SequenceEqual(before), "Reset context inspection must not count events, clear latches or clamp unsigned counters.");
+        });
+        Check("Segment flags remain independent of runtime configuration mapping and reset eligibility", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            bytes[0x488 + 0x2C] = 255;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x488 + 8, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Gameplay segments");
+            True(table.Rows[0].Details.Contains("completion byte 0xFF") && table.Rows[0].Details.Contains("configuration getter substitutes the mapped index"), "Saved slots must not be reordered by unavailable runtime configuration metadata.");
+            True(table.Rows[0].Details.Contains("reset leaf does not test completion") && table.Rows[0].Details.Contains("not proof that reset is actually called after completion"), "A native eligibility difference must not become a current reset verdict.");
+            Equal(5, InspectionPresentation.Simplify("Gameplay segments", table).Columns.Length);
+            Equal("0x2cdf40", TodResearch.Map.GetProperty("world_consumers").GetProperty("runtime_mapping").GetProperty("saved_getter_va").GetString());
+            True(bytes.SequenceEqual(before), "Segment consumer inspection must not normalize nonzero flags, remap records or append logs.");
+        });
+        Check("Saved level words do not become runtime queues, sentinels or successful loads", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906E8, 4), 0x80000000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8740, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            var next = table.Rows.Single(row => row.Cells[0] == "0x8740");
+            var load = table.Rows.Single(row => row.Cells[0] == "0x906E8");
+            Equal(uint.MaxValue.ToString(), next.Cells[2]);
+            Equal("2147483648", load.Cells[2]);
+            True(next.Details.Contains("does not establish sentinel semantics") && load.Details.Contains("not proof of a successful load"), "Queue skip markers and saved assignments are not saved sentinel or load acceptance proof.");
+            True(load.Details.Contains("without changing this word") && load.Details.Contains("not every runtime gate"), "Deferral and force have distinct native scope.");
+            Equal("0x10063024", TodResearch.Map.GetProperty("load_selection").GetProperty("pending_consumer").GetProperty("runtime_word_va").GetString());
+            True(bytes.SequenceEqual(before), "Load-selection inspection must never execute a request or normalize an unknown ID.");
+        });
         Check("Language-dependent bonus menu queries do not become physical-state effects", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -654,7 +708,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1304, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1315, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
