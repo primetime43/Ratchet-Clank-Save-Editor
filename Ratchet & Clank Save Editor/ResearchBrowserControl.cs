@@ -28,6 +28,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(new("Overview", TodResearch.Scope + $"\r\n\r\n32 native inventory IDs; 28 shipped configuration definitions; 204 nodes including 15 starts; 15 grids; 60 skill points; 5 armor IDs; {TodResearch.Map.GetProperty("annotations").GetArrayLength()} ELF annotations and 118 imports.\r\n\r\nSelect a topic or search for a name/address. All content is embedded and read-only; original game files and private saves are not bundled. File offsets, save offsets and ELF virtual addresses must not be interchanged.\r\n\r\nResize the window for more reading space. Ctrl+C copies selected text.", new()));
             topics.Add(JsonTopic("Progression & armor", TodResearch.Map.GetProperty("progression"), 0));
             topics.Add(JsonTopic("Skill awards, collectible scans & ammo purchase gates", TodResearch.Map.GetProperty("skill_award"), 0));
+            topics.Add(JsonTopic("Skill menu groups & additional runtime award conditions", TodResearch.Map.GetProperty("skill_producers"), 0));
             topics.Add(JsonTopic("Armor purchase, delayed equip & skin charge rules", TodResearch.Map.GetProperty("armor_consumer"), 0));
             topics.Add(JsonTopic("Hero XP, collectibles & skins", TodResearch.Map.GetProperty("collectibles"), 0));
             topics.Add(JsonTopic("Currency update paths & separate runtime reward caches", TodResearch.Map.GetProperty("currency_mutation"), 0));
@@ -53,6 +54,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Object reset/restore, Souls award & quick-select mutation", TodResearch.Map.GetProperty("inventory_aux"), 0));
             topics.Add(JsonTopic("Inventory reset footprint & opaque prefix-byte ownership", TodResearch.Map.GetProperty("inventory_reset"), 0));
             topics.Add(JsonTopic("Weapon XP, level boundaries & ammo updates", TodResearch.Map.GetProperty("weapon_progression"), 0));
+            topics.Add(JsonTopic("Upgrade purchase: mask, ammo refill & payment order", TodResearch.Map.GetProperty("upgrade_purchase"), 0));
+            topics.Add(JsonTopic("Shipped vendor purchase method fingerprints", TodResearch.Map.GetProperty("upgrade_purchase_assets"), 0));
             topics.Add(JsonTopic("Opaque final word & settings initialization/copy ownership", TodResearch.Map.GetProperty("final_tail_fields"), 0));
             topics.Add(JsonTopic("Mission lists & flags", TodResearch.Map.GetProperty("mission_lists"), 0));
             topics.Add(JsonTopic("Mission completion, retained flags & list boundaries", TodResearch.Map.GetProperty("mission_mutation"), 0));
@@ -63,6 +66,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Opaque segment fields: ownership audit & limits", TodResearch.Map.GetProperty("segment_opaque"), 0));
             topics.Add(JsonTopic("Saved segment slots, runtime mapping & independent lifecycle gates", TodResearch.Map.GetProperty("world_consumers"), 0));
             topics.Add(JsonTopic("Blueprints & bonuses", TodResearch.Map.GetProperty("bonuses"), 0));
+            topics.Add(JsonTopic("Blueprint level-selector grants & qualified script checks", TodResearch.Map.GetProperty("blueprint_producers"), 0));
+            topics.Add(JsonTopic("Shipped blueprint predicate survey fingerprints", TodResearch.Map.GetProperty("blueprint_producers_assets"), 0));
             topics.Add(JsonTopic("Six bonus-state consumers & qualified runtime effects", TodResearch.Map.GetProperty("bonus_effects"), 0));
             topics.Add(JsonTopic("Bonus art/movie queries & runtime language selection", TodResearch.Map.GetProperty("bonus_remaining"), 0));
             topics.Add(JsonTopic("Shipped bonus content-query fingerprints", TodResearch.Map.GetProperty("bonus_remaining_assets"), 0));
@@ -115,7 +120,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             searchBar.Controls.Add(wrap, 2, 0);
             Controls.Add(split);
             Controls.Add(searchBar);
-            tree.AfterSelect += (_, args) => text.Text = ((Topic)args.Node.Tag).Body.Replace("\r\n", "\n").Replace("\n", "\r\n");
+            tree.AfterSelect += (_, args) =>
+            {
+                var selected = (Topic)args.Node.Tag;
+                text.Text = (selected.Name + "\r\n\r\n" + selected.Body).Replace("\r\n", "\n").Replace("\n", "\r\n");
+            };
             search.TextChanged += (_, _) => Populate();
             Populate();
         }

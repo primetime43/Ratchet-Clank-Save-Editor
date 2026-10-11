@@ -69,7 +69,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Armor" => "Ownership, equipped ID and the saved unlock byte are independent. Raw flags and native availability caveats are below.",
                     "Special bolts" => "Counts are from native per-level masks; labels are internal level identifiers. Select a row for overall collected/spent balance and exact bits.",
                     "Skins" => "Labels are formatted native identifiers. Shipped prices use special bolts; ownership and selected ID are saved separately.",
-                    "Blueprints" => "Shows native all-grant IDs plus any unexpected set bits. Pickup/planet names are not confirmed; Technical retains all32 bits.",
+                    "Blueprints" => "Shows native all-grant IDs plus unexpected set bits. Details include qualified level-selector associations, not pickup locations or history. Technical retains all32 bits.",
                     "Bonuses & cheats" => "Physical saved states and shipped score requirements; not current menu availability or confirmed on/off labels. Runtime language can remap menu indices.",
                     "Stored state blocks" => "Native map-label associations for 21 persistent 512×512 grids; several slots can share a level. Not a completion percentage. Select a row for copied header, seven group flags, exact histogram/hash and clipping evidence.",
                     "Game settings" => "Saved options, read-only. Percentages are display conversions of volume floats, not measured audio loudness. Technical retains unknown fields and exact raw bytes.",

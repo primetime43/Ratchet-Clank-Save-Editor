@@ -105528,6 +105528,3296 @@
     ],
     "warning": "Producer context is not an event cause/name or a death total. Numeric boundaries are confirmed for USA v02.00 only. No full switch execution, callback invocation, saved edits or gameplay validation."
   },
+  "blueprint_producers": {
+    "confidence": "code-backed",
+    "warning": "Exact USA BCUS98127 v02.00 static evidence only. No actor execution, pickup coordinates/history, runtime planet equality, edit or in-game acceptance claim.",
+    "selector_grant": {
+      "grant_va": "0x303220",
+      "selector_getter_va": "0x2d1490",
+      "selector_save_offset": "0x906e8",
+      "mask_save_offset": "0x86f4",
+      "state_base_va": "0x101efb20",
+      "grant_call_va": "0x30322c",
+      "write_va": "0x30324c",
+      "rule": "Reached 303220 obtains the saved level/destination selector through 2D1490 and ORs 1<<selector into 86F4. No other saved field is written by this leaf. Saved selector is not guaranteed to equal the currently loaded runtime planet during deferred transitions.",
+      "dispatch_limit": "Descriptors 86DEC0/86DEC8 are stored in native table 84E40C/84E3C8. No direct branch caller of 303220 was recovered; table membership alone does not establish the event that dispatches this grant."
+    },
+    "paired_initializer": {
+      "function_va": "0x303260",
+      "selector_call_va": "0x3032cc",
+      "mask_read_va": "0x3032e8",
+      "test_branch_va": "0x3032f4",
+      "rule": "After earlier initialization helpers, rereads the saved selector and tests the same selector-indexed bit. Present takes 303388 to 24F6D8(actor+14,0); absent can copy entry+30/+38 and call 24F4F8(actor+14,0) only after native generated-handle validation. Neither branch writes the saved blueprint mask.",
+      "limits": "Alternate callback meanings, object name/class, dispatch trigger and physical location remain unresolved. Do not describe all actor initialization as collection."
+    },
+    "named_wrapper_argument": {
+      "grant_wrapper_va": "0x2ba3f8",
+      "predicate_wrapper_va": "0x2ba520",
+      "grant_native_call_va": "0x2ba4fc",
+      "predicate_native_call_va": "0x2ba62c",
+      "rule": "On admitted wrapper arguments and a non-null handle, numeric script argument 2 is read via 251C78, converted with fctiwz and passed as r4 to individual grant/predicate. The grant wrapper does not substitute 2D1490 or require argument==saved selector. No general floating conversion model is supplied."
+    },
+    "level_index_associations": {
+      "native_grant_all_mask": "0x0007DEE4",
+      "count": 13,
+      "rows": [
+        {
+          "bit_id": 2,
+          "level_enum": "LEVEL_STRATUS_CITY",
+          "level_name_va": "0x10000530",
+          "export_call_va": "0x28a10",
+          "byte_offset": "0x86f7",
+          "byte_mask": "0x04"
+        },
+        {
+          "bit_id": 5,
+          "level_enum": "LEVEL_IMPERIAL_FIGHT_FEST",
+          "level_name_va": "0x10000570",
+          "export_call_va": "0x28a4c",
+          "byte_offset": "0x86f7",
+          "byte_mask": "0x20"
+        },
+        {
+          "bit_id": 6,
+          "level_enum": "LEVEL_APOGEE_SPACE_STATION",
+          "level_name_va": "0x10000590",
+          "export_call_va": "0x28a60",
+          "byte_offset": "0x86f7",
+          "byte_mask": "0x40"
+        },
+        {
+          "bit_id": 7,
+          "level_enum": "LEVEL_PIRATE_BASE",
+          "level_name_va": "0x100005b0",
+          "export_call_va": "0x28a74",
+          "byte_offset": "0x86f7",
+          "byte_mask": "0x80"
+        },
+        {
+          "bit_id": 9,
+          "level_enum": "LEVEL_RYKAN_V",
+          "level_name_va": "0x100005e0",
+          "export_call_va": "0x28a9c",
+          "byte_offset": "0x86f6",
+          "byte_mask": "0x02"
+        },
+        {
+          "bit_id": 10,
+          "level_enum": "LEVEL_SARGASSO",
+          "level_name_va": "0x100005f0",
+          "export_call_va": "0x28ab0",
+          "byte_offset": "0x86f6",
+          "byte_mask": "0x04"
+        },
+        {
+          "bit_id": 11,
+          "level_enum": "LEVEL_IRIS",
+          "level_name_va": "0x10000600",
+          "export_call_va": "0x28ac4",
+          "byte_offset": "0x86f6",
+          "byte_mask": "0x08"
+        },
+        {
+          "bit_id": 12,
+          "level_enum": "LEVEL_ZORDOOM_PRISON",
+          "level_name_va": "0x10000610",
+          "export_call_va": "0x28ad8",
+          "byte_offset": "0x86f6",
+          "byte_mask": "0x10"
+        },
+        {
+          "bit_id": 14,
+          "level_enum": "LEVEL_KERCHU_CITY",
+          "level_name_va": "0x10000640",
+          "export_call_va": "0x28b00",
+          "byte_offset": "0x86f6",
+          "byte_mask": "0x40"
+        },
+        {
+          "bit_id": 15,
+          "level_enum": "LEVEL_SLAGS_FLEET",
+          "level_name_va": "0x10000658",
+          "export_call_va": "0x28b14",
+          "byte_offset": "0x86f6",
+          "byte_mask": "0x80"
+        },
+        {
+          "bit_id": 16,
+          "level_enum": "LEVEL_CRAGMITE_RUINS",
+          "level_name_va": "0x10000670",
+          "export_call_va": "0x28b28",
+          "byte_offset": "0x86f5",
+          "byte_mask": "0x01"
+        },
+        {
+          "bit_id": 17,
+          "level_enum": "LEVEL_MERIDIAN_CITY",
+          "level_name_va": "0x10000688",
+          "export_call_va": "0x28b3c",
+          "byte_offset": "0x86f5",
+          "byte_mask": "0x02"
+        },
+        {
+          "bit_id": 18,
+          "level_enum": "LEVEL_FASTOON_II",
+          "level_name_va": "0x100006a0",
+          "export_call_va": "0x28b50",
+          "byte_offset": "0x86f5",
+          "byte_mask": "0x04"
+        }
+      ],
+      "rule": "The inline producer demonstrably indexes by the saved LEVEL/destination selector; these 13 bit IDs are also native LEVEL enum values and native grant-all bits. This is a qualified selector/bit association, not thirteen recovered physical pickup coordinates or proof each world asset dispatches the grant.",
+      "unknowns": "Which actor/table event invokes 303220, exact source-instance/UID/position bindings, collection chronology and whether all thirteen levels use this same producer are unresolved."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x303220",
+        "kind": "function",
+        "name": "TOD_blueprint_grant_saved_level_selector_bit_verified",
+        "comment": "Reached leaf reads 2D1490 saved 906E8 level/destination selector; ORs the corresponding slw bit into 86F4. Saved selector need not equal the currently loaded planet; descriptor dispatch trigger and physical pickup remain unresolved."
+      },
+      {
+        "va": "0x303260",
+        "kind": "function",
+        "name": "TOD_blueprint_actor_init_saved_selector_gate_verified",
+        "comment": "After initialization helpers, rereads 2D1490 saved 906E8; an existing 86F4 bit takes 24F6D8(actor+14,0), absence can restore entry+30/+38 and call 24F4F8 after handle validation. No saved mask write; class, dispatch trigger and pickup location remain unresolved."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x2850c",
+        "bytes": "C3828770"
+      },
+      {
+        "va": "0x28524",
+        "bytes": "C3628778"
+      },
+      {
+        "va": "0x2853c",
+        "bytes": "C3A28780"
+      },
+      {
+        "va": "0x28554",
+        "bytes": "C3E28788"
+      },
+      {
+        "va": "0x2856c",
+        "bytes": "C3C28790"
+      },
+      {
+        "va": "0x28584",
+        "bytes": "C3228798"
+      },
+      {
+        "va": "0x2859c",
+        "bytes": "C30287A0"
+      },
+      {
+        "va": "0x285b4",
+        "bytes": "C34287A8"
+      },
+      {
+        "va": "0x285cc",
+        "bytes": "C22287B0"
+      },
+      {
+        "va": "0x285e4",
+        "bytes": "C20287B8"
+      },
+      {
+        "va": "0x285fc",
+        "bytes": "C2A287C0"
+      },
+      {
+        "va": "0x28614",
+        "bytes": "C28287C8"
+      },
+      {
+        "va": "0x2862c",
+        "bytes": "C26287D0"
+      },
+      {
+        "va": "0x28644",
+        "bytes": "C24287D8"
+      },
+      {
+        "va": "0x2865c",
+        "bytes": "C2E287E0"
+      },
+      {
+        "va": "0x28674",
+        "bytes": "C2C287E8"
+      },
+      {
+        "va": "0x2868c",
+        "bytes": "C1E287F0"
+      },
+      {
+        "va": "0x286b8",
+        "bytes": "C1C28800"
+      },
+      {
+        "va": "0x289e0",
+        "bytes": "808288D4"
+      },
+      {
+        "va": "0x289e4",
+        "bytes": "C02298A4"
+      },
+      {
+        "va": "0x289e8",
+        "bytes": "4BFE9FA9"
+      },
+      {
+        "va": "0x289f0",
+        "bytes": "FC20E090"
+      },
+      {
+        "va": "0x289f4",
+        "bytes": "808288D8"
+      },
+      {
+        "va": "0x289fc",
+        "bytes": "4BFE9F95"
+      },
+      {
+        "va": "0x28a04",
+        "bytes": "FC20D890"
+      },
+      {
+        "va": "0x28a08",
+        "bytes": "808288DC"
+      },
+      {
+        "va": "0x28a10",
+        "bytes": "4BFE9F81"
+      },
+      {
+        "va": "0x28a18",
+        "bytes": "FC20E890"
+      },
+      {
+        "va": "0x28a1c",
+        "bytes": "808288E0"
+      },
+      {
+        "va": "0x28a24",
+        "bytes": "4BFE9F6D"
+      },
+      {
+        "va": "0x28a2c",
+        "bytes": "FC20F890"
+      },
+      {
+        "va": "0x28a30",
+        "bytes": "808288E4"
+      },
+      {
+        "va": "0x28a38",
+        "bytes": "4BFE9F59"
+      },
+      {
+        "va": "0x28a40",
+        "bytes": "FC20F090"
+      },
+      {
+        "va": "0x28a44",
+        "bytes": "808288E8"
+      },
+      {
+        "va": "0x28a4c",
+        "bytes": "4BFE9F45"
+      },
+      {
+        "va": "0x28a54",
+        "bytes": "FC20C890"
+      },
+      {
+        "va": "0x28a58",
+        "bytes": "808288EC"
+      },
+      {
+        "va": "0x28a60",
+        "bytes": "4BFE9F31"
+      },
+      {
+        "va": "0x28a68",
+        "bytes": "FC20C090"
+      },
+      {
+        "va": "0x28a6c",
+        "bytes": "808288F0"
+      },
+      {
+        "va": "0x28a74",
+        "bytes": "4BFE9F1D"
+      },
+      {
+        "va": "0x28a7c",
+        "bytes": "FC20D090"
+      },
+      {
+        "va": "0x28a80",
+        "bytes": "808288F4"
+      },
+      {
+        "va": "0x28a88",
+        "bytes": "4BFE9F09"
+      },
+      {
+        "va": "0x28a90",
+        "bytes": "FC208890"
+      },
+      {
+        "va": "0x28a94",
+        "bytes": "808288F8"
+      },
+      {
+        "va": "0x28a9c",
+        "bytes": "4BFE9EF5"
+      },
+      {
+        "va": "0x28aa4",
+        "bytes": "FC208090"
+      },
+      {
+        "va": "0x28aa8",
+        "bytes": "808288FC"
+      },
+      {
+        "va": "0x28ab0",
+        "bytes": "4BFE9EE1"
+      },
+      {
+        "va": "0x28ab8",
+        "bytes": "FC20A890"
+      },
+      {
+        "va": "0x28abc",
+        "bytes": "80828900"
+      },
+      {
+        "va": "0x28ac4",
+        "bytes": "4BFE9ECD"
+      },
+      {
+        "va": "0x28acc",
+        "bytes": "FC20A090"
+      },
+      {
+        "va": "0x28ad0",
+        "bytes": "80828904"
+      },
+      {
+        "va": "0x28ad8",
+        "bytes": "4BFE9EB9"
+      },
+      {
+        "va": "0x28ae0",
+        "bytes": "FC209890"
+      },
+      {
+        "va": "0x28ae4",
+        "bytes": "80828908"
+      },
+      {
+        "va": "0x28aec",
+        "bytes": "4BFE9EA5"
+      },
+      {
+        "va": "0x28af4",
+        "bytes": "FC209090"
+      },
+      {
+        "va": "0x28af8",
+        "bytes": "8082890C"
+      },
+      {
+        "va": "0x28b00",
+        "bytes": "4BFE9E91"
+      },
+      {
+        "va": "0x28b08",
+        "bytes": "FC20B890"
+      },
+      {
+        "va": "0x28b0c",
+        "bytes": "80828910"
+      },
+      {
+        "va": "0x28b14",
+        "bytes": "4BFE9E7D"
+      },
+      {
+        "va": "0x28b1c",
+        "bytes": "FC20B090"
+      },
+      {
+        "va": "0x28b20",
+        "bytes": "80828914"
+      },
+      {
+        "va": "0x28b28",
+        "bytes": "4BFE9E69"
+      },
+      {
+        "va": "0x28b30",
+        "bytes": "FC207890"
+      },
+      {
+        "va": "0x28b34",
+        "bytes": "80828918"
+      },
+      {
+        "va": "0x28b3c",
+        "bytes": "4BFE9E55"
+      },
+      {
+        "va": "0x28b48",
+        "bytes": "8082891C"
+      },
+      {
+        "va": "0x28b4c",
+        "bytes": "C02287F8"
+      },
+      {
+        "va": "0x28b50",
+        "bytes": "4BFE9E41"
+      },
+      {
+        "va": "0x28b58",
+        "bytes": "FC207090"
+      },
+      {
+        "va": "0x28b5c",
+        "bytes": "80828920"
+      },
+      {
+        "va": "0x28b64",
+        "bytes": "4BFE9E2D"
+      },
+      {
+        "va": "0x27a5d8",
+        "bytes": "80C29030386000013CA600017C69203038600000800586F47D2B00382C0B000041820008386000017C6307B44E800020"
+      },
+      {
+        "va": "0x27af90",
+        "bytes": "80C2903038A000013D6600017CA92030806B86F47C604B78900B86F44E800020"
+      },
+      {
+        "va": "0x27afb0",
+        "bytes": "80A290303D250001808986F4648300076060DEE4900986F44E80002060000000"
+      },
+      {
+        "va": "0x27afbc",
+        "bytes": "64830007"
+      },
+      {
+        "va": "0x27afc0",
+        "bytes": "6060DEE4"
+      },
+      {
+        "va": "0x2ba3f8",
+        "bytes": "F821FF517C0802A6FBC100A03BC1007080A29740FBA100987BDD002038C00000388000017FA7EB78FBE100A8F80100C07C7F1B784BF95F0DE84100282F8300007FA6EB783880000238A000007FE3FB78409E00387FE3FB788082EDB87FC5F3784BF96FB1E8410028E88100C038600000EBA10098EBC100A07C8803A6EBE100A8382100B04E8000204BF98829E84100287FA5EB782C030000388000037FE3FB784182FFB44BF9874DE84100282C8300004186FFA438A00000388000017FE3FB784BF97411E841002838800002C022E9107C651B787FE3FB782F05000078BD0020419A003083BD00004BF97799E8410028FC20081E392100807FA3EB787C204FAE808100804BFC0A95600000004BFFFF5C7FE3FB788082E94438A000004BF96EF5E84100284BFFFF44"
+      },
+      {
+        "va": "0x2ba4c0",
+        "bytes": "38800002"
+      },
+      {
+        "va": "0x2ba4e0",
+        "bytes": "4BF97799"
+      },
+      {
+        "va": "0x2ba4e8",
+        "bytes": "FC20081E"
+      },
+      {
+        "va": "0x2ba4f8",
+        "bytes": "80810080"
+      },
+      {
+        "va": "0x2ba4fc",
+        "bytes": "4BFC0A95"
+      },
+      {
+        "va": "0x2ba520",
+        "bytes": "F821FF517C0802A6FBC100A03BC1007080A29740FBA100987BDD002038C00000388000017FA7EB78FBE100A8F80100C07C7F1B784BF95DE5E84100282F8300007FA6EB783880000238A000007FE3FB78409E00407FE3FB788082EDBC7FC5F3784BF96E89E841002838600000E88100C07C6307B4EBA10098EBC100A07C8803A6EBE100A8382100B04E800020600000004BF986F9E84100287FA5EB782C030000388000037FE3FB784182FFAC4BF9861DE84100282C8300004186FF9C38A00000388000017FE3FB784BF972E1E841002838800002C022E9107C651B78787D00202F0500007FE3FB78419A004483BD00004BF97669E8410028FC20081E392100807FA3EB787C204FAE808100804BFBFFAD60000000786406207FE3FB784BF95DFDE8410028386000014BFFFF447FE3FB788082E94438A000004BF96DB1E8410028386000004BFFFF28"
+      },
+      {
+        "va": "0x2ba5f0",
+        "bytes": "38800002"
+      },
+      {
+        "va": "0x2ba610",
+        "bytes": "4BF97669"
+      },
+      {
+        "va": "0x2ba618",
+        "bytes": "FC20081E"
+      },
+      {
+        "va": "0x2ba628",
+        "bytes": "80810080"
+      },
+      {
+        "va": "0x2ba62c",
+        "bytes": "4BFBFFAD"
+      },
+      {
+        "va": "0x2d1490",
+        "bytes": "8062F2683D230009806906E84E800020"
+      },
+      {
+        "va": "0x2d1494",
+        "bytes": "3D230009"
+      },
+      {
+        "va": "0x2d1498",
+        "bytes": "806906E8"
+      },
+      {
+        "va": "0x303220",
+        "bytes": "F821FF917CE802A6F8E100804BFCE2656000000080C2010438A000013D6600017CA91830808B86F47C834B78906B86F4E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x30322c",
+        "bytes": "4BFCE265"
+      },
+      {
+        "va": "0x303234",
+        "bytes": "80C20104"
+      },
+      {
+        "va": "0x303238",
+        "bytes": "38A00001"
+      },
+      {
+        "va": "0x30323c",
+        "bytes": "3D660001"
+      },
+      {
+        "va": "0x303240",
+        "bytes": "7CA91830"
+      },
+      {
+        "va": "0x303244",
+        "bytes": "808B86F4"
+      },
+      {
+        "va": "0x303248",
+        "bytes": "7C834B78"
+      },
+      {
+        "va": "0x30324c",
+        "bytes": "906B86F4"
+      },
+      {
+        "va": "0x303260",
+        "bytes": "F821FF717D2802A6FBE100887C7F1B78C0620108F92100A0FBA10078787D0020C022010CC0420110817F00147FA3EB78D06B00D04BFFCABD600000007FA3EB784800479960000000399F009081420114798300203900000038E000019103000098E30008C00A00B4D00300044BFCE1C56000000080C201043CA60001388000017C80183038800000812586F47C0B48382C0B00004082009480E20118811F00AC5500043E80A700105404482C540638307F8500407D462050419C005881670000388000007CEA5A1478E90020800900647FA040507D8800507D88EB787D0AFE707CE350782C830000786900204186002480BF0014E8690030E8C90038F8650030F8C50038807F00144BF4C191E8410028EBE100A0EBA100787FE803A6EBE10088382100904E800020807F00144BF4C34DE8410028EBE100A0EBA100787FE803A6EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x3032cc",
+        "bytes": "4BFCE1C5"
+      },
+      {
+        "va": "0x3032d4",
+        "bytes": "80C20104"
+      },
+      {
+        "va": "0x3032d8",
+        "bytes": "3CA60001"
+      },
+      {
+        "va": "0x3032dc",
+        "bytes": "38800001"
+      },
+      {
+        "va": "0x3032e0",
+        "bytes": "7C801830"
+      },
+      {
+        "va": "0x3032e8",
+        "bytes": "812586F4"
+      },
+      {
+        "va": "0x3032ec",
+        "bytes": "7C0B4838"
+      },
+      {
+        "va": "0x3032f0",
+        "bytes": "2C0B0000"
+      },
+      {
+        "va": "0x3032f4",
+        "bytes": "40820094"
+      },
+      {
+        "va": "0x303368",
+        "bytes": "4BF4C191"
+      },
+      {
+        "va": "0x30338c",
+        "bytes": "4BF4C34D"
+      },
+      {
+        "va": "0x84e3c8",
+        "bytes": "0086DEC8"
+      },
+      {
+        "va": "0x84e40c",
+        "bytes": "0086DEC0"
+      },
+      {
+        "va": "0x86be28",
+        "bytes": "002BA3F80089FF20"
+      },
+      {
+        "va": "0x86be30",
+        "bytes": "002BA5200089FF20"
+      },
+      {
+        "va": "0x86dec0",
+        "bytes": "00303220"
+      },
+      {
+        "va": "0x86dec4",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x86dec8",
+        "bytes": "00303260"
+      },
+      {
+        "va": "0x86decc",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x8886a8",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x8886b0",
+        "bytes": "40000000"
+      },
+      {
+        "va": "0x8886b8",
+        "bytes": "40400000"
+      },
+      {
+        "va": "0x8886c0",
+        "bytes": "40800000"
+      },
+      {
+        "va": "0x8886c8",
+        "bytes": "40A00000"
+      },
+      {
+        "va": "0x8886d0",
+        "bytes": "40C00000"
+      },
+      {
+        "va": "0x8886d8",
+        "bytes": "40E00000"
+      },
+      {
+        "va": "0x8886e0",
+        "bytes": "41000000"
+      },
+      {
+        "va": "0x8886e8",
+        "bytes": "41100000"
+      },
+      {
+        "va": "0x8886f0",
+        "bytes": "41200000"
+      },
+      {
+        "va": "0x8886f8",
+        "bytes": "41300000"
+      },
+      {
+        "va": "0x888700",
+        "bytes": "41400000"
+      },
+      {
+        "va": "0x888708",
+        "bytes": "41500000"
+      },
+      {
+        "va": "0x888710",
+        "bytes": "41600000"
+      },
+      {
+        "va": "0x888718",
+        "bytes": "41700000"
+      },
+      {
+        "va": "0x888720",
+        "bytes": "41800000"
+      },
+      {
+        "va": "0x888728",
+        "bytes": "41880000"
+      },
+      {
+        "va": "0x888730",
+        "bytes": "41900000"
+      },
+      {
+        "va": "0x888738",
+        "bytes": "41980000"
+      },
+      {
+        "va": "0x88880c",
+        "bytes": "10000508"
+      },
+      {
+        "va": "0x888810",
+        "bytes": "10000520"
+      },
+      {
+        "va": "0x888814",
+        "bytes": "10000530"
+      },
+      {
+        "va": "0x888818",
+        "bytes": "10000548"
+      },
+      {
+        "va": "0x88881c",
+        "bytes": "10000558"
+      },
+      {
+        "va": "0x888820",
+        "bytes": "10000570"
+      },
+      {
+        "va": "0x888824",
+        "bytes": "10000590"
+      },
+      {
+        "va": "0x888828",
+        "bytes": "100005B0"
+      },
+      {
+        "va": "0x88882c",
+        "bytes": "100005C8"
+      },
+      {
+        "va": "0x888830",
+        "bytes": "100005E0"
+      },
+      {
+        "va": "0x888834",
+        "bytes": "100005F0"
+      },
+      {
+        "va": "0x888838",
+        "bytes": "10000600"
+      },
+      {
+        "va": "0x88883c",
+        "bytes": "10000610"
+      },
+      {
+        "va": "0x888840",
+        "bytes": "10000628"
+      },
+      {
+        "va": "0x888844",
+        "bytes": "10000640"
+      },
+      {
+        "va": "0x888848",
+        "bytes": "10000658"
+      },
+      {
+        "va": "0x88884c",
+        "bytes": "10000670"
+      },
+      {
+        "va": "0x888850",
+        "bytes": "10000688"
+      },
+      {
+        "va": "0x888854",
+        "bytes": "100006A0"
+      },
+      {
+        "va": "0x888858",
+        "bytes": "100006B8"
+      },
+      {
+        "va": "0x8897dc",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x89df20",
+        "bytes": "1001FC380086BE30"
+      },
+      {
+        "va": "0x89df28",
+        "bytes": "1001FC500086BE28"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a0024",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x10000508",
+        "bytes": "4C4556454C5F4D4554524F504F4C495300"
+      },
+      {
+        "va": "0x10000520",
+        "bytes": "4C4556454C5F434F42414C494100"
+      },
+      {
+        "va": "0x10000530",
+        "bytes": "4C4556454C5F535452415455535F4349545900"
+      },
+      {
+        "va": "0x10000548",
+        "bytes": "4C4556454C5F464153544F4F4E00"
+      },
+      {
+        "va": "0x10000558",
+        "bytes": "4C4556454C5F53504143455F434F4D4241545F4900"
+      },
+      {
+        "va": "0x10000570",
+        "bytes": "4C4556454C5F494D50455249414C5F46494748545F4645535400"
+      },
+      {
+        "va": "0x10000590",
+        "bytes": "4C4556454C5F41504F4745455F53504143455F53544154494F4E00"
+      },
+      {
+        "va": "0x100005b0",
+        "bytes": "4C4556454C5F5049524154455F4241534500"
+      },
+      {
+        "va": "0x100005c8",
+        "bytes": "4C4556454C5F53504143455F434F4D4241545F494900"
+      },
+      {
+        "va": "0x100005e0",
+        "bytes": "4C4556454C5F52594B414E5F5600"
+      },
+      {
+        "va": "0x100005f0",
+        "bytes": "4C4556454C5F534152474153534F00"
+      },
+      {
+        "va": "0x10000600",
+        "bytes": "4C4556454C5F4952495300"
+      },
+      {
+        "va": "0x10000610",
+        "bytes": "4C4556454C5F5A4F52444F4F4D5F505249534F4E00"
+      },
+      {
+        "va": "0x10000628",
+        "bytes": "4C4556454C5F53504143455F434F4D4241545F49494900"
+      },
+      {
+        "va": "0x10000640",
+        "bytes": "4C4556454C5F4B45524348555F4349545900"
+      },
+      {
+        "va": "0x10000658",
+        "bytes": "4C4556454C5F534C4147535F464C45455400"
+      },
+      {
+        "va": "0x10000670",
+        "bytes": "4C4556454C5F435241474D4954455F5255494E5300"
+      },
+      {
+        "va": "0x10000688",
+        "bytes": "4C4556454C5F4D4552494449414E5F4349545900"
+      },
+      {
+        "va": "0x100006a0",
+        "bytes": "4C4556454C5F464153544F4F4E5F494900"
+      },
+      {
+        "va": "0x100006b8",
+        "bytes": "4C4556454C5F434F554E5400"
+      },
+      {
+        "va": "0x1001fc38",
+        "bytes": "6865726F5F6861735F626C75657072696E7400"
+      },
+      {
+        "va": "0x1001fc50",
+        "bytes": "6865726F5F676976655F626C75657072696E7400"
+      }
+    ]
+  },
+  "blueprint_producers_assets": {
+    "archive_entry_count": 3297,
+    "compiled_script_count": 524,
+    "source_catalog_sha256": "9E66E9BF10DF565AB94F70965CCF50BAD5196D0FF88994412A795F64E7656DD4",
+    "api_getglobal_count": 39,
+    "api_getglobals": [
+      {
+        "asset": "/built/game/scripts/globalhelp.lc",
+        "prototype": "root",
+        "pc": 0,
+        "api": "hero_get_blueprints",
+        "word": "00000005"
+      },
+      {
+        "asset": "/built/game/scripts/globalhelp.lc",
+        "prototype": "root",
+        "pc": 205,
+        "api": "hero_get_blueprints",
+        "word": "02000005"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root",
+        "pc": 399,
+        "api": "hero_get_blueprints",
+        "word": "1F001AC5"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root",
+        "pc": 433,
+        "api": "hero_get_blueprints",
+        "word": "1F001AC5"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root",
+        "pc": 438,
+        "api": "hero_get_blueprints",
+        "word": "1F001AC5"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root",
+        "pc": 462,
+        "api": "hero_get_blueprints",
+        "word": "1F001AC5"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root.3",
+        "pc": 18,
+        "api": "hero_get_blueprints",
+        "word": "01000385"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root.4",
+        "pc": 3,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root.4",
+        "pc": 38,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root.4",
+        "pc": 73,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "prototype": "root.4",
+        "pc": 108,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root",
+        "pc": 644,
+        "api": "hero_get_blueprints",
+        "word": "0E002505"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root",
+        "pc": 678,
+        "api": "hero_get_blueprints",
+        "word": "0E002505"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root",
+        "pc": 683,
+        "api": "hero_get_blueprints",
+        "word": "0E002505"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root",
+        "pc": 707,
+        "api": "hero_get_blueprints",
+        "word": "0E002505"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root.5",
+        "pc": 18,
+        "api": "hero_get_blueprints",
+        "word": "01000385"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root.6",
+        "pc": 3,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root.6",
+        "pc": 38,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root.6",
+        "pc": 73,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "prototype": "root.6",
+        "pc": 108,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root",
+        "pc": 348,
+        "api": "hero_get_blueprints",
+        "word": "0A001285"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root",
+        "pc": 382,
+        "api": "hero_get_blueprints",
+        "word": "0A001285"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root",
+        "pc": 387,
+        "api": "hero_get_blueprints",
+        "word": "0A001285"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root",
+        "pc": 411,
+        "api": "hero_get_blueprints",
+        "word": "0A001285"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root.3",
+        "pc": 18,
+        "api": "hero_get_blueprints",
+        "word": "01000385"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root.4",
+        "pc": 3,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root.4",
+        "pc": 38,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root.4",
+        "pc": 73,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "prototype": "root.4",
+        "pc": 108,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root",
+        "pc": 171,
+        "api": "hero_get_blueprints",
+        "word": "02000F05"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root",
+        "pc": 205,
+        "api": "hero_get_blueprints",
+        "word": "02000F05"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root",
+        "pc": 210,
+        "api": "hero_get_blueprints",
+        "word": "02000F05"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root",
+        "pc": 234,
+        "api": "hero_get_blueprints",
+        "word": "02000F05"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root.2",
+        "pc": 18,
+        "api": "hero_get_blueprints",
+        "word": "01000385"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root.3",
+        "pc": 3,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root.3",
+        "pc": 38,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root.3",
+        "pc": 73,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "prototype": "root.3",
+        "pc": 108,
+        "api": "hero_get_blueprints",
+        "word": "01000085"
+      },
+      {
+        "asset": "/built/levels/stratus city/scripts/traversal.lc",
+        "prototype": "root",
+        "pc": 13,
+        "api": "hero_has_blueprint",
+        "word": "00000185"
+      }
+    ],
+    "source_fingerprints": [
+      {
+        "asset": "/built/game/scripts/globalhelp.lc",
+        "size": 3221,
+        "sha256": "C48BD0DA9F5012D387E5F932A2E44374C5DD79ECDB11F5704D8CD2D8CD94A49F"
+      },
+      {
+        "asset": "/built/levels/apogee space station/scripts/asteroid.lc",
+        "size": 22940,
+        "sha256": "3ADFC396046E956F80348BB778FFD1202D26B8B8E9756636DC749633ECF3422F"
+      },
+      {
+        "asset": "/built/levels/cobalia/scripts/tradeport.lc",
+        "size": 20238,
+        "sha256": "47BD7EF67D9151DC5AE063D20B9E1BCFDBA10A7DB6813AB62B0640784F1333AE"
+      },
+      {
+        "asset": "/built/levels/rykan v/scripts/b1_magcycle_vendor_dialog.lc",
+        "size": 10780,
+        "sha256": "9BD4B1DF159F1F9CE8A1A398FEEA84BBF9DDA60B49B0C6456576E5CA1D7EF896"
+      },
+      {
+        "asset": "/built/levels/sargasso/scripts/smuggler.lc",
+        "size": 11131,
+        "sha256": "1120A7E6CA5EAAE3E1CC87F1CBEB4EB1AB947A326AD4900527ECCF8CB9F9F5C4"
+      },
+      {
+        "asset": "/built/levels/stratus city/scripts/traversal.lc",
+        "size": 4515,
+        "sha256": "ECEED55B969A5D33D8FBD4A84646BCB51A801123B0250374604D6270D598F368"
+      }
+    ],
+    "selected_consumer": {
+      "asset": "/built/levels/stratus city/scripts/traversal.lc",
+      "prototype": "root",
+      "getglobal_pc": 13,
+      "argument_pc": 15,
+      "call_pc": 16,
+      "test_pc": 17,
+      "branch_pc": 18,
+      "branch_target_pc": 38,
+      "argument": "LEVEL_STRATUS_CITY",
+      "level_id": 2,
+      "guard": {
+        "offset": "0xa8b",
+        "bytes": "85010000C501000105020002998001001800000094048000"
+      },
+      "semantics": "Reached adjacent bytecode calls hero_has_blueprint(Ratchet1, LEVEL_STRATUS_CITY), then TEST/JMP gates the following block. The global argument is native enum 2, hence saved blueprint bit 2. This is a consumer, not proof this script grants or places a pickup.",
+      "confidence_limit": "Syntactic operands and selected branch are confirmed; enclosing thread execution, actor validity and in-game history are not observed."
+    },
+    "survey_limit": "Bounded direct GETGLOBAL operands in global_cached .lc only. Zero direct grant GETGLOBAL occurrences do not exclude aliases, indirect calls, native callbacks or other archives. No script executed; no placement identity inferred from an object symbol."
+  },
+  "upgrade_purchase": {
+    "confidence": "code-backed purchase admission and ordered mask/ammo/wallet publication",
+    "warning": "Exact USA v02.00 static native/optional shipped script evidence only. No native/Lua execution, runtime configuration capture, newly editable field or gameplay acceptance proof.",
+    "api": {
+      "name": "purchase_mod",
+      "registration_call_va": "0x2ac04",
+      "lua_wrapper_va": "0x32b48",
+      "scalar_wrapper_va": "0x26400",
+      "transaction_thunk_va": "0x12a20",
+      "transaction_va": "0x2d2878",
+      "argument_boundary": "After wrapper argument validation, values1/2 go through13080 then fctiwz, low32 stores and signed extension.26400 narrows the second argument to low32 and forwards. Nonfinite/out-of-range conversion behavior and validation helper internals are not modeled.",
+      "result_boundary": "26400 narrows transaction0/1 to a byte.32B48 pushes it via106A0 and returns1 as the Lua RESULT COUNT, not an independent purchase-success flag. The shipped onSelect tests the pushed result."
+    },
+    "saved_fields": {
+      "record_stride": "0x14",
+      "modifier_mask_member": "0xc",
+      "ammo_member": "0x8",
+      "ownership_member": "0x10",
+      "stored_level_member": "0x11",
+      "raritanium_offset": "0x420"
+    },
+    "admission": {
+      "hero_lookup_va": "0x24fb88",
+      "cost_getter_va": "0x2d1e80",
+      "wallet_comparison_va": "0x2d28e4",
+      "record_ownership_va": "0x2d2920",
+      "rule": "Missing hero returns0. With resolved hero inventory+1A68, cost is obtained first; signed32 wallet420 must be >= signed32 cost, then record ownership byte10 must be nonzero. Equality admits; ownership is nonzero, not strictly1.",
+      "signed_edge": "High-bit raw wallet words compare as negative, not huge balances. High-bit cost words compare as negative; if admitted, low32 negated cost can become a credit rather than an ordinary debit. These synthetic malformed-state implications are not legitimate shipped costs or safe edits.",
+      "missing_checks": "Transaction body does not invoke2D1EF8 availability, test the already-set node bit, reject node0, check grid adjacency, or independently validate node/item bounds. Valid pointers/definition resolution are prerequisites to any preview, not proven by admission.",
+      "cost_boundary": "Cost getter uses an UNSIGNED node<NumMods test at config+6A4, then reads config+470+node*18. Missing definition/config or out-of-count node gives0 locally; zero cost is not a validity/safety certificate."
+    },
+    "publication": {
+      "modifier_helper_va": "0x465d00",
+      "maximum_helper_va": "0x463de0",
+      "mask_store_va": "0x465d4c",
+      "ammo_store_va": "0x465d60",
+      "debit_call_va": "0x2d2948",
+      "order": [
+        "resolve OLD maximum ammo from record ID, stored level and OLD mask",
+        "OR selected node bit and store mask at record+C",
+        "resolve NEW maximum ammo using the published mask",
+        "if fcmpu is not equal, store new maximum to ammo+8",
+        "negate captured cost and call24F748\u219223D840 wallet mutation",
+        "send runtime request4 through250FA8\u2192694A70; ignore result; return1"
+      ],
+      "ammo_rule": "Equal maxima skip the ammo write, regardless of current ammo. Unequal maxima store the new maximum absolutely, not old ammo plus capacity difference. fcmpu unordered also falls through to the store; NaN exception/payload preservation is not established. Maximum resolution depends on record ID, stored level+11 and mask+C through466500.",
+      "repeat_rule": "A repeated native transaction can pass the same local gates and charge again even when OR does not change the already-set bit. With equal recomputed maxima, ammo remains untouched. Normal vendor availability prevents this at its own boundary, not through native transaction duplicate rejection.",
+      "debit_rule": "Captured cost is negated low32. Wallet leaf computes wrapped sum, selecting999999999 only when wrapped(cap-sum) bit31 is set. No lower clamp or rollback is implemented in this local chain; mask/ammo publication precedes wallet mutation.",
+      "scope": "Order of guarded native operations only; not concurrency/atomicity, crash recovery or proof all callers use vendor constraints."
+    },
+    "availability": {
+      "va": "0x2d1ef8",
+      "rule": "Separate predicate requires unsigned node<NumMods, nonzero ownership via2D1C10 and unset mask bit via2D1C48. This predicate is not called by2D2878 itself. It does not check wallet or adjacency; null/invalid definition safety is not independently established."
+    },
+    "runtime_request": {
+      "thunk_va": "0x250fa8",
+      "target_va": "0x694a70",
+      "request": 4,
+      "rule": "If runtime context+E0 !=1, request4 stores1 at+104 then returns0. Transaction ignores that return and still returns1. If E0==1 it dispatches case4 through the relative table at694AF4 to694C14: EC==FFFFFFFF skips to common completion; otherwise clears104 then delegates6952D8 and continues. The context pointer comes from an uninitialized runtime pointer holder, not a resolved saved-field address.",
+      "scope": "No original notification/menu name or current runtime context is inferred. Downstream6952D8 and the remainder of the generic state machine are not fully reversed here."
+    },
+    "script_boundary": {
+      "asset": "/built/anark/weaponvendor/built.dat",
+      "reference_sha256": "294BA05A607BC5C4C59B60E85C57515DBBD8CDEECC9CB6BF570AE4AE937627D5",
+      "rule": "Shipped onSelect calls is_mod_available, canBePurchased, and excludes node0 before purchase_mod; it tests purchase_mod's result before success UI updates. Ordinary neighbor reachability, start-node convention and special movement/icon checks are separate script layers, not native transaction admission.",
+      "start_rule": "beenPurchased treats node0 as true without saved bit0. Native ownership still belongs to the weapon record, not that script start convention.",
+      "special_boundary": "canBePurchased returns true for the special node directly; all-positive-neighbor specialCheck calls belong to movement/icon gating instead. A synthetic special canBePurchased result is not full menu eligibility.",
+      "scope": "Prior grid evidence is context, not new204-node discovery. Optional asset observation rechecks exact method code/fingerprints without executing scripts."
+    },
+    "limitations": [
+      "No new safe editing range, edited-save round trip or gameplay transaction has been validated.",
+      "No current runtime cost, maximum ammo, definition/pointer validity or purchase permission is inferred from a detached save.",
+      "Invalid node/item safety, floating conversion exceptions and complete downstream request effects remain unproved."
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x465d00",
+        "kind": "function",
+        "name": "TOD_apply_modifier_bit_and_conditional_ammo_refresh_verified",
+        "comment": "Resolves old max ammo, OR/stores saved record+C node bit, resolves new max; non-EQ fcmpu (including unordered) writes NEW maximum absolutely to record+8. Equal maxima leave ammo untouched. No local duplicate/index/ownership admission; caller purchase debits afterward."
+      },
+      {
+        "va": "0x32b48",
+        "kind": "function",
+        "name": "TOD_Lua_purchase_mod_result_wrapper_verified",
+        "comment": "Named export registration2AC04. Validated values1/2 through13080\u2192fctiwz low32 sign extension, call26400\u219212A20\u21922D2878, push transaction byte via106A0. Return1 is Lua result count, not separate success verdict."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x12a20",
+        "bytes": "F84100283C4200013842FFE8482BFE4C"
+      },
+      {
+        "va": "0x12a2c",
+        "bytes": "482BFE4C"
+      },
+      {
+        "va": "0x26400",
+        "bytes": "788400207CA802A6F821FF91F8A100804BFEC611E8410028E8010080786306207C0803A6382100704E80002060000000"
+      },
+      {
+        "va": "0x26410",
+        "bytes": "4BFEC611"
+      },
+      {
+        "va": "0x2641c",
+        "bytes": "78630620"
+      },
+      {
+        "va": "0x2abfc",
+        "bytes": "80829454"
+      },
+      {
+        "va": "0x2ac00",
+        "bytes": "80A29458"
+      },
+      {
+        "va": "0x2ac04",
+        "bytes": "4BFE82BD"
+      },
+      {
+        "va": "0x32b48",
+        "bytes": "F821FF517C0802A6FBA100903BA10070DBE100A8FBE100A07BBF0020388000017FE6FB7838A00000FBC10098F80100C07C7E1B784BFE0475E84100282F8300007FE6FB783880000238A000007FC3F378409E00407FC3F37880829AC87FA5EB784BFDE6D9E841002838600000E8A100C07C6307B4EBA10090EBC100987CA803A6EBE100A0CBE100A8382100B04E8000204BFE0419E84100287FE5FB782C030000388000037FC3F3784182FFAC4BFDFC8DE841002838800001C02298A42C8300007FC3F3784186FF904BFE0471E84100287FC3F378FFE00890C02298A4388000024BFE0459E841002839210080FC20081EFFE0F81E7FE04FAE806100807C204FAE808100807C6307B47C8407B44BFF37AD60000000786406207FC3F3784BFDDA3DE8410028386000014BFFFF4460000000"
+      },
+      {
+        "va": "0x32c34",
+        "bytes": "FC20081E"
+      },
+      {
+        "va": "0x32c38",
+        "bytes": "FFE0F81E"
+      },
+      {
+        "va": "0x32c4c",
+        "bytes": "7C6307B4"
+      },
+      {
+        "va": "0x32c50",
+        "bytes": "7C8407B4"
+      },
+      {
+        "va": "0x32c54",
+        "bytes": "4BFF37AD"
+      },
+      {
+        "va": "0x32c5c",
+        "bytes": "78640620"
+      },
+      {
+        "va": "0x32c64",
+        "bytes": "4BFDDA3D"
+      },
+      {
+        "va": "0x32c6c",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x23d840",
+        "bytes": "81631A683D003B9A6106C9FF80EB04207C643A147CA330507CA9FE707CA048387C830214908B04204E80002060000000"
+      },
+      {
+        "va": "0x23d844",
+        "bytes": "3D003B9A"
+      },
+      {
+        "va": "0x23d848",
+        "bytes": "6106C9FF"
+      },
+      {
+        "va": "0x23d84c",
+        "bytes": "80EB0420"
+      },
+      {
+        "va": "0x23d850",
+        "bytes": "7C643A14"
+      },
+      {
+        "va": "0x23d854",
+        "bytes": "7CA33050"
+      },
+      {
+        "va": "0x23d858",
+        "bytes": "7CA9FE70"
+      },
+      {
+        "va": "0x23d85c",
+        "bytes": "7CA04838"
+      },
+      {
+        "va": "0x23d864",
+        "bytes": "908B0420"
+      },
+      {
+        "va": "0x24f748",
+        "bytes": "F84100283C42FFFF384200184BFEE0EC"
+      },
+      {
+        "va": "0x24f754",
+        "bytes": "4BFEE0EC"
+      },
+      {
+        "va": "0x250fa8",
+        "bytes": "F84100283C4200013842FF3C48443ABC"
+      },
+      {
+        "va": "0x250fb4",
+        "bytes": "48443ABC"
+      },
+      {
+        "va": "0x2d1c10",
+        "bytes": "546720368122F2985466103A396000007CA63A14388500107C8307B47C0918AE2F800000419E0008396000017D6307B44E80002060000000"
+      },
+      {
+        "va": "0x2d1c2c",
+        "bytes": "7C0918AE"
+      },
+      {
+        "va": "0x2d1c48",
+        "bytes": "546A203680A2F2985468103A38E000017CC852147CE920307CC407B4394000007C642A148003000C7D2B00382C0B000041820008394000017D4307B44E800020"
+      },
+      {
+        "va": "0x2d1c5c",
+        "bytes": "7CE92030"
+      },
+      {
+        "va": "0x2d1c6c",
+        "bytes": "8003000C"
+      },
+      {
+        "va": "0x2d1c70",
+        "bytes": "7D2B0038"
+      },
+      {
+        "va": "0x2d1e80",
+        "bytes": "F821FF817C0802A6FBE10078F80100907C9F2378481912FD600000002F83000039000000419E003C808300482C040000788A00204182002C57E52834816A06A457E618387C8BF8407C662850392304607D2007B44085000C7CEA02148107001079030020E9010090EBE10078382100807D0803A64E800020"
+      },
+      {
+        "va": "0x2d1e94",
+        "bytes": "481912FD"
+      },
+      {
+        "va": "0x2d1ea8",
+        "bytes": "80830048"
+      },
+      {
+        "va": "0x2d1ebc",
+        "bytes": "816A06A4"
+      },
+      {
+        "va": "0x2d1ec4",
+        "bytes": "7C8BF840"
+      },
+      {
+        "va": "0x2d1ecc",
+        "bytes": "39230460"
+      },
+      {
+        "va": "0x2d1ed4",
+        "bytes": "4085000C"
+      },
+      {
+        "va": "0x2d1edc",
+        "bytes": "81070010"
+      },
+      {
+        "va": "0x2d1ef8",
+        "bytes": "F821FF817CA802A6FBC10070FBE100787C9E23787C7F1B78F8A100904819127D60000000812300487FE3FB78800906A47F80F040419D0024E881009038600000EBC100707C6307B4EBE100787C8803A6382100804E8000204BFFFCC17BC400202C2300007FE3FB783BE000004182FFCC4BFFFCE12CA30000418600287FE3FB78E88100907C6307B4EBC10070EBE100787C8803A6382100804E800020600000003BE000017FE3FB784BFFFFD860000000"
+      },
+      {
+        "va": "0x2d1f14",
+        "bytes": "4819127D"
+      },
+      {
+        "va": "0x2d1f1c",
+        "bytes": "81230048"
+      },
+      {
+        "va": "0x2d1f24",
+        "bytes": "800906A4"
+      },
+      {
+        "va": "0x2d1f28",
+        "bytes": "7F80F040"
+      },
+      {
+        "va": "0x2d1f2c",
+        "bytes": "419D0024"
+      },
+      {
+        "va": "0x2d1f50",
+        "bytes": "4BFFFCC1"
+      },
+      {
+        "va": "0x2d1f68",
+        "bytes": "4BFFFCE1"
+      },
+      {
+        "va": "0x2d2878",
+        "bytes": "F821FF617C0802A6FB810080FBA10088FBC100907C9D2378FBE10098FB6100787C7F1B78F80100B04BF7D2E9E84100287C7E1B787BBC00202F9E00007FE307B47F84E378419E003483BE1A684BFFF5BD817E1A6857E9203657E6103A7C7B1B787CA64A14806B04207C9D2A147C03D8007889002040800034E98100B038600000EB6100787C6307B4EB810080EBA100887D8803A6EBC10090EBE10098382100A04E8000206000000088E900107D234B787F84E3782C8700004186FFC0481933CD600000007D5B00D07BC300207D4407B44BF7CE01E84100288102F2B438800004806800004BF7E64DE8410028E98100B0EB61007838600001EB810080EBA100887D8803A67C6307B4EBC10090EBE10098382100A04E800020"
+      },
+      {
+        "va": "0x2d28a0",
+        "bytes": "4BF7D2E9"
+      },
+      {
+        "va": "0x2d28b0",
+        "bytes": "2F9E0000"
+      },
+      {
+        "va": "0x2d28bc",
+        "bytes": "419E0034"
+      },
+      {
+        "va": "0x2d28c0",
+        "bytes": "83BE1A68"
+      },
+      {
+        "va": "0x2d28c4",
+        "bytes": "4BFFF5BD"
+      },
+      {
+        "va": "0x2d28cc",
+        "bytes": "57E92036"
+      },
+      {
+        "va": "0x2d28d0",
+        "bytes": "57E6103A"
+      },
+      {
+        "va": "0x2d28d8",
+        "bytes": "7CA64A14"
+      },
+      {
+        "va": "0x2d28dc",
+        "bytes": "806B0420"
+      },
+      {
+        "va": "0x2d28e4",
+        "bytes": "7C03D800"
+      },
+      {
+        "va": "0x2d28ec",
+        "bytes": "40800034"
+      },
+      {
+        "va": "0x2d28f4",
+        "bytes": "38600000"
+      },
+      {
+        "va": "0x2d2920",
+        "bytes": "88E90010"
+      },
+      {
+        "va": "0x2d292c",
+        "bytes": "2C870000"
+      },
+      {
+        "va": "0x2d2930",
+        "bytes": "4186FFC0"
+      },
+      {
+        "va": "0x2d2934",
+        "bytes": "481933CD"
+      },
+      {
+        "va": "0x2d293c",
+        "bytes": "7D5B00D0"
+      },
+      {
+        "va": "0x2d2944",
+        "bytes": "7D4407B4"
+      },
+      {
+        "va": "0x2d2948",
+        "bytes": "4BF7CE01"
+      },
+      {
+        "va": "0x2d2950",
+        "bytes": "8102F2B4"
+      },
+      {
+        "va": "0x2d2954",
+        "bytes": "38800004"
+      },
+      {
+        "va": "0x2d2958",
+        "bytes": "80680000"
+      },
+      {
+        "va": "0x2d295c",
+        "bytes": "4BF7E64D"
+      },
+      {
+        "va": "0x2d296c",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x463de0",
+        "bytes": "F821FF717C8802A6FBA10078F88100A07C7D1B78806300007C6307B44BFFF3957863002080BD000C889D0011480026F560000000E80100A0EBA100787C0803A6382100904E800020"
+      },
+      {
+        "va": "0x463df4",
+        "bytes": "80630000"
+      },
+      {
+        "va": "0x463dfc",
+        "bytes": "4BFFF395"
+      },
+      {
+        "va": "0x463e04",
+        "bytes": "80BD000C"
+      },
+      {
+        "va": "0x463e08",
+        "bytes": "889D0011"
+      },
+      {
+        "va": "0x463e0c",
+        "bytes": "480026F5"
+      },
+      {
+        "va": "0x465d00",
+        "bytes": "F821FF617CA802A6FBA10080787D0020DBE10098FBE100907C7F1B787FA3EB78FB810078F8A100B07C9C23784BFFE0B560000000FFE00890809F000C386000017C60E0307FA3EB787C890378913F000C4BFFE09160000000FF9F0800419E0008D03F0008E8C100B0EB810078EBA100807CC803A6EBE10090CBE10098382100A04E80002060000000"
+      },
+      {
+        "va": "0x465d2c",
+        "bytes": "4BFFE0B5"
+      },
+      {
+        "va": "0x465d38",
+        "bytes": "809F000C"
+      },
+      {
+        "va": "0x465d3c",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x465d40",
+        "bytes": "7C60E030"
+      },
+      {
+        "va": "0x465d48",
+        "bytes": "7C890378"
+      },
+      {
+        "va": "0x465d4c",
+        "bytes": "913F000C"
+      },
+      {
+        "va": "0x465d50",
+        "bytes": "4BFFE091"
+      },
+      {
+        "va": "0x465d58",
+        "bytes": "FF9F0800"
+      },
+      {
+        "va": "0x465d5c",
+        "bytes": "419E0008"
+      },
+      {
+        "va": "0x465d60",
+        "bytes": "D03F0008"
+      },
+      {
+        "va": "0x694a70",
+        "bytes": "2F8400047C0802A6F821FF71FBA10078FBE10088FBC10080F80100A07C9D23787C7F1B78419E00F438BF00E03860000078BE0020813E00002C89000141860024EBA100A07C6307B4EBC100807FA803A6EBE10088EBA10078382100904E8000202B1D0006419900748162A5E07BAA17887D0A582E7D0707B47CC75A147CC903A64E80042000000054000000AC0000016C0000015000000120000000E40000001C387F00203880000078630020909F010048032C79600000008162A5E43800000339200001901E0000993E0008C04B00B4D05E00046000000080BE00002C8500014186000C3BC0000093DF00F093BF00F8EBA100A038600001EBC100807C6307B47FA803A6EBE10088EBA10078382100904E80002060000000806300E02C0300014182FF0838800001909F01044BFFFEFC"
+      },
+      {
+        "va": "0x694a94",
+        "bytes": "419E00F4"
+      },
+      {
+        "va": "0x694aa4",
+        "bytes": "813E0000"
+      },
+      {
+        "va": "0x694aac",
+        "bytes": "41860024"
+      },
+      {
+        "va": "0x694b04",
+        "bytes": "00000120"
+      },
+      {
+        "va": "0x694b88",
+        "bytes": "806300E0"
+      },
+      {
+        "va": "0x694b8c",
+        "bytes": "2C030001"
+      },
+      {
+        "va": "0x694b90",
+        "bytes": "4182FF08"
+      },
+      {
+        "va": "0x694b94",
+        "bytes": "38800001"
+      },
+      {
+        "va": "0x694b98",
+        "bytes": "909F0104"
+      },
+      {
+        "va": "0x694c14",
+        "bytes": "80BF00EC2F85FFFF419EFF4038FF000838C0000078E3002090DF0104480006A9600000008162A5E4380000024BFFFEF0"
+      },
+      {
+        "va": "0x694c18",
+        "bytes": "2F85FFFF"
+      },
+      {
+        "va": "0x694c1c",
+        "bytes": "419EFF40"
+      },
+      {
+        "va": "0x694c2c",
+        "bytes": "90DF0104"
+      },
+      {
+        "va": "0x694c30",
+        "bytes": "480006A9"
+      },
+      {
+        "va": "0x85a1a0",
+        "bytes": "000264000088FF38"
+      },
+      {
+        "va": "0x85a8a0",
+        "bytes": "00032B480088FF38"
+      },
+      {
+        "va": "0x86ca48",
+        "bytes": "002D28780089FF20"
+      },
+      {
+        "va": "0x88938c",
+        "bytes": "10003058"
+      },
+      {
+        "va": "0x889390",
+        "bytes": "0085A8A0"
+      },
+      {
+        "va": "0x89f1b8",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8aa43c",
+        "bytes": "00694AF4"
+      },
+      {
+        "va": "0x10003058",
+        "bytes": "70757263686173655F6D6F6400"
+      }
+    ]
+  },
+  "skill_producers": {
+    "confidence": "code-backed definition filter and nine additional named producer requests",
+    "warning": "Exact USA v02.00 static paths only. Runtime predicates/callbacks are not reconstructed from saved bits; no native or Lua execution, edits, event-history names or safe-edit contract.",
+    "storage": {
+      "bits_offset": "0x8710",
+      "score_offset": "0x8708",
+      "normal_ids": [
+        0,
+        59
+      ],
+      "retained_unknown_bits": [
+        60,
+        63
+      ]
+    },
+    "level_selector_source": {
+      "getter_va": "0x2d1490",
+      "saved_offset": "0x906e8",
+      "saved_root_pointer_slot_va": "0x89f188",
+      "saved_root_va": "0x101efb20",
+      "qualification": "Native currentlevel shorthand below denotes the saved906E8 destination/level selector read by2D1490, not proof of the currently loaded runtime world. It can differ from loaded assets during selection/loading; numeric branches are qualified by this source."
+    },
+    "definition_filter": {
+      "table_va": "0x10026654",
+      "stride": 16,
+      "group_member": "0xc",
+      "physical_type": "u32 BE",
+      "confirmed_role": "equality filter/group selector",
+      "getter_va": "0x35eb18",
+      "thunk_va": "0x11120",
+      "count_va": "0x255b8",
+      "points_nth_va": "0x25638",
+      "description_nth_va": "0x256f8",
+      "name_nth_va": "0x257b8",
+      "completion_nth_va": "0x27268",
+      "rule": "Count and nth consumers scan all60 definitions in ascending globalID. The nth argument is one-based within the equal-group matches, not a global skillID; ordinal0/out-of-range gives a fallback.27268 then tests the selectedglobalID in saved8710 and returns0 for either no match or an unset bit.",
+      "fallbacks": "25638 returns0 points when no match;256F8/257B8 return their existing fallback text pointer, not a saved title. Each nth getter calls the appropriate points/description/name thunk after selecting the globalID.",
+      "group19": "Definitions44..59 all have group19 (16 entries). Numeric19 also equals the separately known LEVEL_COUNT sentinel; it is not proof of a twentieth native world or an award prerequisite. Actual equality filtering is confirmed; arbitrary caller labeling/world ownership is not.",
+      "scope": "Definition metadata, not an additional save field. Legacy unknown_definition_0c keys can remain for compatibility, qualified by this confirmed narrow role.",
+      "catalog": [
+        {
+          "id": 0,
+          "enum": "SKILLPOINT_COBALIA_SMASH",
+          "points": 10,
+          "definition_va": "0x10026654",
+          "filter_group_word": 1,
+          "name_tag": 1235,
+          "description_tag": 1306
+        },
+        {
+          "id": 1,
+          "enum": "SKILLPOINT_COBALIA_BARREL",
+          "points": 10,
+          "definition_va": "0x10026664",
+          "filter_group_word": 1,
+          "name_tag": 1236,
+          "description_tag": 1307
+        },
+        {
+          "id": 2,
+          "enum": "SKILLPOINT_COBALIA_HUNTER",
+          "points": 10,
+          "definition_va": "0x10026674",
+          "filter_group_word": 1,
+          "name_tag": 1237,
+          "description_tag": 1308
+        },
+        {
+          "id": 3,
+          "enum": "SKILLPOINT_STRATUS_WRENCH",
+          "points": 10,
+          "definition_va": "0x10026684",
+          "filter_group_word": 2,
+          "name_tag": 1238,
+          "description_tag": 1309
+        },
+        {
+          "id": 4,
+          "enum": "SKILLPOINT_STRATUS_BRIDGES",
+          "points": 10,
+          "definition_va": "0x10026694",
+          "filter_group_word": 2,
+          "name_tag": 1239,
+          "description_tag": 1310
+        },
+        {
+          "id": 5,
+          "enum": "SKILLPOINT_STRATUS_BEASTS",
+          "points": 10,
+          "definition_va": "0x100266a4",
+          "filter_group_word": 2,
+          "name_tag": 1240,
+          "description_tag": 1311
+        },
+        {
+          "id": 6,
+          "enum": "SKILLPOINT_STRATUS_AROUND",
+          "points": 10,
+          "definition_va": "0x100266b4",
+          "filter_group_word": 2,
+          "name_tag": 1241,
+          "description_tag": 1312
+        },
+        {
+          "id": 7,
+          "enum": "SKILLPOINT_IFF_SICK",
+          "points": 10,
+          "definition_va": "0x100266c4",
+          "filter_group_word": 5,
+          "name_tag": 1242,
+          "description_tag": 1313
+        },
+        {
+          "id": 8,
+          "enum": "SKILLPOINT_IFF_FIRE",
+          "points": 10,
+          "definition_va": "0x100266d4",
+          "filter_group_word": 5,
+          "name_tag": 1243,
+          "description_tag": 1314
+        },
+        {
+          "id": 9,
+          "enum": "SKILLPOINT_IFF_PEEP",
+          "points": 10,
+          "definition_va": "0x100266e4",
+          "filter_group_word": 5,
+          "name_tag": 1244,
+          "description_tag": 1315
+        },
+        {
+          "id": 10,
+          "enum": "SKILLPOINT_APOGEE_ALPHABET",
+          "points": 10,
+          "definition_va": "0x100266f4",
+          "filter_group_word": 6,
+          "name_tag": 1245,
+          "description_tag": 1316
+        },
+        {
+          "id": 11,
+          "enum": "SKILLPOINT_APOGEE_WRENCH",
+          "points": 10,
+          "definition_va": "0x10026704",
+          "filter_group_word": 6,
+          "name_tag": 1246,
+          "description_tag": 1317
+        },
+        {
+          "id": 12,
+          "enum": "SKILLPOINT_APOGEE_DANCING",
+          "points": 10,
+          "definition_va": "0x10026714",
+          "filter_group_word": 6,
+          "name_tag": 1247,
+          "description_tag": 1318
+        },
+        {
+          "id": 13,
+          "enum": "SKILLPOINT_PIRATE_MEDICINE",
+          "points": 10,
+          "definition_va": "0x10026724",
+          "filter_group_word": 7,
+          "name_tag": 1248,
+          "description_tag": 1319
+        },
+        {
+          "id": 14,
+          "enum": "SKILLPOINT_PIRATE_STRIKE",
+          "points": 10,
+          "definition_va": "0x10026734",
+          "filter_group_word": 7,
+          "name_tag": 1249,
+          "description_tag": 1320
+        },
+        {
+          "id": 15,
+          "enum": "SKILLPOINT_PIRATE_MUTANT",
+          "points": 10,
+          "definition_va": "0x10026744",
+          "filter_group_word": 7,
+          "name_tag": 1250,
+          "description_tag": 1321
+        },
+        {
+          "id": 16,
+          "enum": "SKILLPOINT_RYKAN_CONSUMER",
+          "points": 10,
+          "definition_va": "0x10026754",
+          "filter_group_word": 9,
+          "name_tag": 1251,
+          "description_tag": 1322
+        },
+        {
+          "id": 17,
+          "enum": "SKILLPOINT_RYKAN_STRONG",
+          "points": 10,
+          "definition_va": "0x10026764",
+          "filter_group_word": 9,
+          "name_tag": 1252,
+          "description_tag": 1323
+        },
+        {
+          "id": 18,
+          "enum": "SKILLPOINT_RYKAN_UNTOUCHABLE",
+          "points": 10,
+          "definition_va": "0x10026774",
+          "filter_group_word": 9,
+          "name_tag": 1253,
+          "description_tag": 1324
+        },
+        {
+          "id": 19,
+          "enum": "SKILLPOINT_SARGASSO_TRAIN",
+          "points": 10,
+          "definition_va": "0x10026784",
+          "filter_group_word": 10,
+          "name_tag": 1254,
+          "description_tag": 1325
+        },
+        {
+          "id": 20,
+          "enum": "SKILLPOINT_SARGASSO_EXAMINER",
+          "points": 10,
+          "definition_va": "0x10026794",
+          "filter_group_word": 10,
+          "name_tag": 1255,
+          "description_tag": 1326
+        },
+        {
+          "id": 21,
+          "enum": "SKILLPOINT_SARGASSO_EXTINCTION",
+          "points": 10,
+          "definition_va": "0x100267a4",
+          "filter_group_word": 10,
+          "name_tag": 1256,
+          "description_tag": 1327
+        },
+        {
+          "id": 22,
+          "enum": "SKILLPOINT_IRIS_COLD",
+          "points": 10,
+          "definition_va": "0x100267b4",
+          "filter_group_word": 11,
+          "name_tag": 1257,
+          "description_tag": 1328
+        },
+        {
+          "id": 23,
+          "enum": "SKILLPOINT_IRIS_TURRETS",
+          "points": 10,
+          "definition_va": "0x100267c4",
+          "filter_group_word": 11,
+          "name_tag": 1258,
+          "description_tag": 1329
+        },
+        {
+          "id": 24,
+          "enum": "SKILLPOINT_IRIS_WRENCH",
+          "points": 10,
+          "definition_va": "0x100267d4",
+          "filter_group_word": 11,
+          "name_tag": 1259,
+          "description_tag": 1330
+        },
+        {
+          "id": 25,
+          "enum": "SKILLPOINT_ZORDOOM_DANCING",
+          "points": 10,
+          "definition_va": "0x100267e4",
+          "filter_group_word": 12,
+          "name_tag": 1260,
+          "description_tag": 1331
+        },
+        {
+          "id": 26,
+          "enum": "SKILLPOINT_ZORDOOM_SEARED",
+          "points": 10,
+          "definition_va": "0x100267f4",
+          "filter_group_word": 12,
+          "name_tag": 1261,
+          "description_tag": 1332
+        },
+        {
+          "id": 27,
+          "enum": "SKILLPOINT_KERCHU_AIM",
+          "points": 10,
+          "definition_va": "0x10026804",
+          "filter_group_word": 14,
+          "name_tag": 1263,
+          "description_tag": 1334
+        },
+        {
+          "id": 28,
+          "enum": "SKILLPOINT_KERCHU_FIRE",
+          "points": 10,
+          "definition_va": "0x10026814",
+          "filter_group_word": 14,
+          "name_tag": 1264,
+          "description_tag": 1335
+        },
+        {
+          "id": 29,
+          "enum": "SKILLPOINT_FLEET_SALUTE",
+          "points": 10,
+          "definition_va": "0x10026824",
+          "filter_group_word": 15,
+          "name_tag": 1268,
+          "description_tag": 1339
+        },
+        {
+          "id": 30,
+          "enum": "SKILLPOINT_CRAGMITE_CATCH",
+          "points": 10,
+          "definition_va": "0x10026834",
+          "filter_group_word": 16,
+          "name_tag": 1269,
+          "description_tag": 1340
+        },
+        {
+          "id": 31,
+          "enum": "SKILLPOINT_MERIDIAN_STRAFE",
+          "points": 10,
+          "definition_va": "0x10026844",
+          "filter_group_word": 17,
+          "name_tag": 1272,
+          "description_tag": 1343
+        },
+        {
+          "id": 32,
+          "enum": "SKILLPOINT_MERIDIAN_BOARDING",
+          "points": 10,
+          "definition_va": "0x10026854",
+          "filter_group_word": 17,
+          "name_tag": 1273,
+          "description_tag": 1344
+        },
+        {
+          "id": 33,
+          "enum": "SKILLPOINT_MERIDIAN_FLYING",
+          "points": 10,
+          "definition_va": "0x10026864",
+          "filter_group_word": 17,
+          "name_tag": 1274,
+          "description_tag": 1345
+        },
+        {
+          "id": 34,
+          "enum": "SKILLPOINT_FASTOON_HIDE",
+          "points": 10,
+          "definition_va": "0x10026874",
+          "filter_group_word": 18,
+          "name_tag": 1277,
+          "description_tag": 1348
+        },
+        {
+          "id": 35,
+          "enum": "SKILLPOINT_SC1_COLLECTOR",
+          "points": 10,
+          "definition_va": "0x10026884",
+          "filter_group_word": 4,
+          "name_tag": 1278,
+          "description_tag": 1349
+        },
+        {
+          "id": 36,
+          "enum": "SKILLPOINT_SC1_MINESWEEPER",
+          "points": 10,
+          "definition_va": "0x10026894",
+          "filter_group_word": 4,
+          "name_tag": 1279,
+          "description_tag": 1350
+        },
+        {
+          "id": 37,
+          "enum": "SKILLPOINT_SC1_ROLL",
+          "points": 10,
+          "definition_va": "0x100268a4",
+          "filter_group_word": 4,
+          "name_tag": 1280,
+          "description_tag": 1351
+        },
+        {
+          "id": 38,
+          "enum": "SKILLPOINT_SC2_BATTLESHIP",
+          "points": 10,
+          "definition_va": "0x100268b4",
+          "filter_group_word": 8,
+          "name_tag": 1281,
+          "description_tag": 1352
+        },
+        {
+          "id": 39,
+          "enum": "SKILLPOINT_SC2_PRETTY",
+          "points": 10,
+          "definition_va": "0x100268c4",
+          "filter_group_word": 8,
+          "name_tag": 1282,
+          "description_tag": 1353
+        },
+        {
+          "id": 40,
+          "enum": "SKILLPOINT_SC2_BOSS",
+          "points": 10,
+          "definition_va": "0x100268d4",
+          "filter_group_word": 8,
+          "name_tag": 1283,
+          "description_tag": 1354
+        },
+        {
+          "id": 41,
+          "enum": "SKILLPOINT_SC3_MARKSMAN",
+          "points": 10,
+          "definition_va": "0x100268e4",
+          "filter_group_word": 13,
+          "name_tag": 1284,
+          "description_tag": 1355
+        },
+        {
+          "id": 42,
+          "enum": "SKILLPOINT_SC3_TOUCH",
+          "points": 10,
+          "definition_va": "0x100268f4",
+          "filter_group_word": 13,
+          "name_tag": 1285,
+          "description_tag": 1356
+        },
+        {
+          "id": 43,
+          "enum": "SKILLPOINT_SC3_PYOO",
+          "points": 10,
+          "definition_va": "0x10026904",
+          "filter_group_word": 13,
+          "name_tag": 1286,
+          "description_tag": 1357
+        },
+        {
+          "id": 44,
+          "enum": "SKILLPOINT_ARSENAL",
+          "points": 40,
+          "definition_va": "0x10026914",
+          "filter_group_word": 19,
+          "name_tag": 1287,
+          "description_tag": 1358
+        },
+        {
+          "id": 45,
+          "enum": "SKILLPOINT_ROFLCOPTER",
+          "points": 20,
+          "definition_va": "0x10026924",
+          "filter_group_word": 19,
+          "name_tag": 1288,
+          "description_tag": 1359
+        },
+        {
+          "id": 46,
+          "enum": "SKILLPOINT_GOLDEN",
+          "points": 40,
+          "definition_va": "0x10026934",
+          "filter_group_word": 19,
+          "name_tag": 1290,
+          "description_tag": 1361
+        },
+        {
+          "id": 47,
+          "enum": "SKILLPOINT_CHEAPSKATE",
+          "points": 10,
+          "definition_va": "0x10026944",
+          "filter_group_word": 19,
+          "name_tag": 1292,
+          "description_tag": 1363
+        },
+        {
+          "id": 48,
+          "enum": "SKILLPOINT_DANCE",
+          "points": 40,
+          "definition_va": "0x10026954",
+          "filter_group_word": 19,
+          "name_tag": 1293,
+          "description_tag": 1364
+        },
+        {
+          "id": 49,
+          "enum": "SKILLPOINT_CHORUS",
+          "points": 10,
+          "definition_va": "0x10026964",
+          "filter_group_word": 19,
+          "name_tag": 1295,
+          "description_tag": 1366
+        },
+        {
+          "id": 50,
+          "enum": "SKILLPOINT_HAPPY",
+          "points": 10,
+          "definition_va": "0x10026974",
+          "filter_group_word": 19,
+          "name_tag": 1296,
+          "description_tag": 1367
+        },
+        {
+          "id": 51,
+          "enum": "SKILLPOINT_DISCO",
+          "points": 10,
+          "definition_va": "0x10026984",
+          "filter_group_word": 19,
+          "name_tag": 1297,
+          "description_tag": 1368
+        },
+        {
+          "id": 52,
+          "enum": "SKILLPOINT_SOULS",
+          "points": 10,
+          "definition_va": "0x10026994",
+          "filter_group_word": 19,
+          "name_tag": 1298,
+          "description_tag": 1369
+        },
+        {
+          "id": 53,
+          "enum": "SKILLPOINT_PENGUINS",
+          "points": 10,
+          "definition_va": "0x100269a4",
+          "filter_group_word": 19,
+          "name_tag": 1299,
+          "description_tag": 1370
+        },
+        {
+          "id": 54,
+          "enum": "SKILLPOINT_RYNO",
+          "points": 10,
+          "definition_va": "0x100269b4",
+          "filter_group_word": 19,
+          "name_tag": 1300,
+          "description_tag": 1371
+        },
+        {
+          "id": 55,
+          "enum": "SKILLPOINT_ITEMS",
+          "points": 10,
+          "definition_va": "0x100269c4",
+          "filter_group_word": 19,
+          "name_tag": 1301,
+          "description_tag": 1372
+        },
+        {
+          "id": 56,
+          "enum": "SKILLPOINT_GADGETS",
+          "points": 10,
+          "definition_va": "0x100269d4",
+          "filter_group_word": 19,
+          "name_tag": 1302,
+          "description_tag": 1373
+        },
+        {
+          "id": 57,
+          "enum": "SKILLPOINT_WEAPONS",
+          "points": 20,
+          "definition_va": "0x100269e4",
+          "filter_group_word": 19,
+          "name_tag": 1303,
+          "description_tag": 1374
+        },
+        {
+          "id": 58,
+          "enum": "SKILLPOINT_CHALLENGE",
+          "points": 40,
+          "definition_va": "0x100269f4",
+          "filter_group_word": 19,
+          "name_tag": 1304,
+          "description_tag": 1375
+        },
+        {
+          "id": 59,
+          "enum": "SKILLPOINT_HARDCORE",
+          "points": 20,
+          "definition_va": "0x10026a04",
+          "filter_group_word": 19,
+          "name_tag": 1305,
+          "description_tag": 1376
+        }
+      ]
+    },
+    "iris_wrench_producer": {
+      "function_va": "0x2eb9b8",
+      "skill_id": 24,
+      "enum": "SKILLPOINT_IRIS_WRENCH",
+      "runtime_gate_pointer_slot_va": "0x89f94c",
+      "runtime_gate_byte_va": "0x10063028",
+      "pool_pointer_slot_va": "0x89f954",
+      "pool_root_va": "0x1064fc80",
+      "saved_award_argument_slot_va": "0x89f958",
+      "saved_substructure_va": "0x101f5048",
+      "level_source": "2D1490 reads saved906E8 selector after preceding calls/effects; selector11 is not independently confirmed as the loaded runtime world.",
+      "rule": "After preceding effects and input+2C=1, requires nonzero runtime gate byte and currentlevel11. Iterates occupied180-byte runtimepool entries through root highwater+10, excluding input+14. Another nonnull config+40 with nonzero low-byte24F208(tag695) result AND config+2C==0 aborts the producer. Otherwise requests skill24 through35D5D0.",
+      "boundary": "A negative highwater or no qualifying other entry permits the request. This is not evidence that all physical enemies were destroyed or that input/config2C is savedworld/segment completion. Pool classes/handles and tag-helper side effects are runtime; the global gate name and config2C gameplay meaning are unresolved. A request can be deduplicated by the already-mapped award setter."
+    },
+    "space_context_producer": {
+      "function_va": "0x363ee8",
+      "runtime_owner": "incoming object, not savedroot",
+      "level_source": "Both branches call2D1490 for saved906E8 destination/level selector, not an independently observed loaded world. Nonzero+FC reaches the selector read after formatting/notification callbacks; zero+FC has an earlier read without that work.",
+      "prelude": "Stores1 at input+14C and a native float at+150. Nonzero input+FC reaches formatting/notification callbacks before currentlevel is reread; zero+FC skips that work. These are runtime owner fields, not inferred save offsets.",
+      "ratio_threshold_va": "0x8a1af0",
+      "ratio_threshold_bits": "3F400000",
+      "ratio_threshold": 0.75,
+      "ratio_rule": "Requires denominator unsignedword nonzero; each u32 is converted tofloat32 before fdivs rounds the ratio tofloat32. fcmpu plusGT|EQ admits ordered ratio>=0.75. Exact rational percentage shortcuts can differ at float32 rounding boundaries. Python samples assume nearest-even rounding; current native FPSCR mode is not reconstructed.",
+      "predicates": [
+        {
+          "skill_id": 35,
+          "enum": "SKILLPOINT_SC1_COLLECTOR",
+          "call_va": "0x3642ec",
+          "level_branch": "currentlevel4",
+          "condition": "runtime word+100==0"
+        },
+        {
+          "skill_id": 36,
+          "enum": "SKILLPOINT_SC1_MINESWEEPER",
+          "call_va": "0x3641a8",
+          "level_branch": "currentlevel4",
+          "condition": "runtime unsignedword+104>9"
+        },
+        {
+          "skill_id": 38,
+          "enum": "SKILLPOINT_SC2_BATTLESHIP",
+          "call_va": "0x364278",
+          "level_branch": "currentlevel8",
+          "condition": "runtime unsignedword+10C nonzero and float32(+110)/float32(+10C)>=0.75"
+        },
+        {
+          "skill_id": 39,
+          "enum": "SKILLPOINT_SC2_PRETTY",
+          "call_va": "0x36428c",
+          "level_branch": "currentlevel8",
+          "condition": "runtime byte+F8==0"
+        },
+        {
+          "skill_id": 40,
+          "enum": "SKILLPOINT_SC2_BOSS",
+          "call_va": "0x364208",
+          "level_branch": "currentlevel8",
+          "condition": "runtime unsignedword+138<=300; no time unit established"
+        },
+        {
+          "skill_id": 41,
+          "enum": "SKILLPOINT_SC3_MARKSMAN",
+          "call_va": "0x363fe0",
+          "level_branch": "else:currentlevel neither4 nor8",
+          "condition": "runtime unsignedword+114 nonzero and float32(+118)/float32(+114)>=0.75"
+        },
+        {
+          "skill_id": 42,
+          "enum": "SKILLPOINT_SC3_TOUCH",
+          "call_va": "0x36421c",
+          "level_branch": "else:currentlevel neither4 nor8",
+          "condition": "runtime byte+F9==0"
+        },
+        {
+          "skill_id": 43,
+          "enum": "SKILLPOINT_SC3_PYOO",
+          "call_va": "0x363ff4",
+          "level_branch": "else:currentlevel neither4 nor8",
+          "condition": "runtime byte+FA==0"
+        }
+      ],
+      "scope": "The SC3 enums are not proof this guarded function restricts the else branch tolevel13; it does not. Prior callbacks and earlier award notifications may change later runtime fields. Predicate rows are encountered native call sites, not simultaneous snapshot guarantees, savedhistory, actor identities or player-facing condition descriptions."
+    },
+    "callback_order": [
+      "Nonzero input+FC path:2511B8 formatting at364128, virtual notification at364170, then2D1490 saved selector reread364178. Zero+FC instead calls2D1490 at363F30.",
+      "Selector4:word100 is read at364188; a requested skill35 at3642EC returns to364194, which freshly reads word104 before testing skill36. Notifications can alter that later value.",
+      "Selector8:skill38 request364278 returns to3641E8, freshly reading byteF8 for skill39; skill39 request36428C returns to3641F4, freshly reading word138 for skill40.",
+      "Else:skill41 request363FE0 returns to363F54, freshly reading byteF9 for skill42. After skill42 request36421C, byteFA is freshly read364224 for skill43; the no42 path instead readsFA at363F60.",
+      "Each award request invokes the existing35D5D0 setter, whose runtime notifications may be reentrant. No simultaneous eligibility list or callback-free post-state is inferred."
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x35eb18",
+        "name": "TOD_skill_definition_filter_group_word",
+        "kind": "function",
+        "comment": "Returns definition[id*10+0C]. Five equality-filter consumers scan IDs0..59; nth selection is one-based within the group. Metadata selector, not saved field or confirmed award prerequisite."
+      },
+      {
+        "va": "0x27268",
+        "name": "TOD_skill_filter_group_nth_saved_bit",
+        "kind": "function",
+        "comment": "Equality-filters definition0C, selects one-based nth matching globalID in ascending0..59 order, then tests saved8710 bit. No match and unset bit both return0."
+      },
+      {
+        "va": "0x2eb9b8",
+        "name": "TOD_iris_wrench_runtime_other_entry_scan_award_request",
+        "kind": "function",
+        "comment": "Runtime gate10063028 and saved906E8 selector11 via2D1490 required after prior effects, not loadedworldproof. Occupiedpool scan excludes inputentry; another config/tag695 and config2C==0 aborts. Otherwise requests skill24. Not all-physical-enemies or serialized2C proof."
+      },
+      {
+        "va": "0x363ee8",
+        "name": "TOD_space_context_numeric_skill_award_requests",
+        "kind": "function",
+        "comment": "Runtime owner gates for IDs35/36 atsaved906E8 selector4,38/39/40 at8,41/42/43 in else(neither4nor8), not loadedworldproof. Float32 ratio>=.75 and rawfield predicates only; rereadsaftercallbacks matter. No timeunits, SC3 level13 restriction, savedruntime fields or callback-free guarantee."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x10540",
+        "bytes": "F84100283C4200013842FFE84834E78C"
+      },
+      {
+        "va": "0x1054c",
+        "bytes": "4834E78C"
+      },
+      {
+        "va": "0x11120",
+        "bytes": "F84100283C4200013842FFE84834D9EC"
+      },
+      {
+        "va": "0x1112c",
+        "bytes": "4834D9EC"
+      },
+      {
+        "va": "0x11f60",
+        "bytes": "F84100283C4200013842FFE84834CC04"
+      },
+      {
+        "va": "0x11f6c",
+        "bytes": "4834CC04"
+      },
+      {
+        "va": "0x13780",
+        "bytes": "F84100283C4200013842FFE84834B374"
+      },
+      {
+        "va": "0x1378c",
+        "bytes": "4834B374"
+      },
+      {
+        "va": "0x255b8",
+        "bytes": "F821FF717C0802A6FBA10078FBC10080FBE100887C7D1B783BC000003BE00000F80100A0600000007BE300204BFEBB3DE84100282F9F003B7C67EA783BFF00017CE6FE707CC53A787C8628503864FFFF54690FFE7FDE4A1440FEFFD0E90100A07FC307B4EBA10078EBC100807D0803A6EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x255e4",
+        "bytes": "4BFEBB3D"
+      },
+      {
+        "va": "0x25638",
+        "bytes": "F821FF617C0802A6FB610078FB810080FBA10088FBE100987C7D1B787C9B23783B8000003BE00000FBC10090F80100B07BFE00207FC3F3784BFEBAB1E84100282F1F003B7F83E8003BFF0001419E003440FAFFE0E88100B038600000EB6100787C6307B4EB810080EBA100887C8803A6EBC10090EBE10098382100A04E8000203B9C00017C1CD8004082FFC87FC3F3784BFEE0B9E8410028E88100B0EB6100787C6307B4EB810080EBA100887C8803A6EBC10090EBE10098382100A04E800020"
+      },
+      {
+        "va": "0x25670",
+        "bytes": "4BFEBAB1"
+      },
+      {
+        "va": "0x256c8",
+        "bytes": "4BFEE0B9"
+      },
+      {
+        "va": "0x256f8",
+        "bytes": "F821FF617C0802A6FB610078FB810080FBA10088FBE100987C7D1B787C9B23783B8000003BE00000FBC10090F80100B07BFE00207FC3F3784BFEB9F1E84100282F1F003B7F83E8003BFF0001419E003440FAFFE0E88100B080628728EB6100787C8803A678630020EB810080EBA10088EBC10090EBE10098382100A04E8000203B9C00017C1CD8004082FFC87FC3F3784BFEADB9E8410028E88100B0EB61007878630020EB810080EBA100887C8803A6EBC10090EBE10098382100A04E800020"
+      },
+      {
+        "va": "0x25730",
+        "bytes": "4BFEB9F1"
+      },
+      {
+        "va": "0x25788",
+        "bytes": "4BFEADB9"
+      },
+      {
+        "va": "0x257b8",
+        "bytes": "F821FF617C0802A6FB610078FB810080FBA10088FBE100987C7D1B787C9B23783B8000003BE00000FBC10090F80100B07BFE00207FC3F3784BFEB931E84100282F1F003B7F83E8003BFF0001419E003440FAFFE0E88100B080628728EB6100787C8803A678630020EB810080EBA10088EBC10090EBE10098382100A04E8000203B9C00017C1CD8004082FFC87FC3F3784BFEC719E8410028E88100B0EB61007878630020EB810080EBA100887C8803A6EBC10090EBE10098382100A04E800020"
+      },
+      {
+        "va": "0x257f0",
+        "bytes": "4BFEB931"
+      },
+      {
+        "va": "0x25848",
+        "bytes": "4BFEC719"
+      },
+      {
+        "va": "0x27268",
+        "bytes": "F821FF617C0802A6FB610078FB810080FBA10088FBC10090FBE100987C7E1B78836286EC7C9C23783BA000003BE00000F80100B04800000C3BFF000141DA00887BE300204BFE9E75E84100282F1F003B7F83F000409EFFE43BBD00017C1DE0004082FFD857ECE8F857EA06BE3C6C00013900000138E387007D0B50367CE607B4386000007CA6DA14E88500107D6920382CA9000041860034EB6100B038600001EB8100807C6307B47F6803A6EBA10088EB610078EBC10090EBE10098382100A04E80002038600000EB6100B07C6307B4EB8100807F6803A6EBA10088EB610078EBC10090EBE10098382100A04E800020"
+      },
+      {
+        "va": "0x27288",
+        "bytes": "836286EC"
+      },
+      {
+        "va": "0x272ac",
+        "bytes": "4BFE9E75"
+      },
+      {
+        "va": "0x272c0",
+        "bytes": "3BBD0001"
+      },
+      {
+        "va": "0x272c4",
+        "bytes": "7C1DE000"
+      },
+      {
+        "va": "0x272f0",
+        "bytes": "E8850010"
+      },
+      {
+        "va": "0x2a12e0",
+        "bytes": "8082D740"
+      },
+      {
+        "va": "0x2a12e4",
+        "bytes": "C0229814"
+      },
+      {
+        "va": "0x2a12e8",
+        "bytes": "4BFB1BD1"
+      },
+      {
+        "va": "0x2a13bc",
+        "bytes": "8082D76C"
+      },
+      {
+        "va": "0x2a13c0",
+        "bytes": "C0229938"
+      },
+      {
+        "va": "0x2a13c4",
+        "bytes": "4BFB1AF5"
+      },
+      {
+        "va": "0x2a13d0",
+        "bytes": "8082D770"
+      },
+      {
+        "va": "0x2a13d4",
+        "bytes": "C0229940"
+      },
+      {
+        "va": "0x2a13d8",
+        "bytes": "4BFB1AE1"
+      },
+      {
+        "va": "0x2a13f8",
+        "bytes": "8082D778"
+      },
+      {
+        "va": "0x2a13fc",
+        "bytes": "C0229950"
+      },
+      {
+        "va": "0x2a1400",
+        "bytes": "4BFB1AB9"
+      },
+      {
+        "va": "0x2a140c",
+        "bytes": "8082D77C"
+      },
+      {
+        "va": "0x2a1410",
+        "bytes": "C0229958"
+      },
+      {
+        "va": "0x2a1414",
+        "bytes": "4BFB1AA5"
+      },
+      {
+        "va": "0x2a1420",
+        "bytes": "8082D780"
+      },
+      {
+        "va": "0x2a1424",
+        "bytes": "C0229960"
+      },
+      {
+        "va": "0x2a1428",
+        "bytes": "4BFB1A91"
+      },
+      {
+        "va": "0x2a1434",
+        "bytes": "8082D784"
+      },
+      {
+        "va": "0x2a1438",
+        "bytes": "C0229968"
+      },
+      {
+        "va": "0x2a143c",
+        "bytes": "4BFB1A7D"
+      },
+      {
+        "va": "0x2a1448",
+        "bytes": "8082D788"
+      },
+      {
+        "va": "0x2a144c",
+        "bytes": "C0229970"
+      },
+      {
+        "va": "0x2a1450",
+        "bytes": "4BFB1A69"
+      },
+      {
+        "va": "0x2a145c",
+        "bytes": "8082D78C"
+      },
+      {
+        "va": "0x2a1460",
+        "bytes": "C0229978"
+      },
+      {
+        "va": "0x2a1464",
+        "bytes": "4BFB1A55"
+      },
+      {
+        "va": "0x2d1490",
+        "bytes": "8062F2683D230009806906E84E800020"
+      },
+      {
+        "va": "0x2d1494",
+        "bytes": "3D230009"
+      },
+      {
+        "va": "0x2d1498",
+        "bytes": "806906E8"
+      },
+      {
+        "va": "0x2eb9b8",
+        "bytes": "F821FEA17C8802A6FB610138FB810140FBC10150FBE10158F8810170FBA10148810300147C7B1B783B800001388000003BC000003BE00000E9680118796007A4F80801188063001483A30054E8E30118813D00687F8A4836398AFFFF79860FA47CE53078F8A30118817B00147D635B78810B005483A80068381DFFFF780500204BF64851E8410028811B0014393B001E388000007923002081480054E8A80118818A006C88EC00007F8638367CAB3378F96801184BF675DDE8410028386100A0787D0020388000107FA3EB784BF673A5E8410028801B0014386100907FA4EB78900100A0938101044BF63649E8410028817B001479690020806900C82F830000419E009C786300204BF63EC9E84100282C03000041820084813B0014806900C84BF63EB1E841002838800000786300204BF65DA1E8410028786300204BF669D5E8410028C002FA30E9830000E94300087985002291410120C0810120795C002290A10120EDA40032C061012091810120ED830032C0410120EC220032D02101208101012093810120C1610120EC0B0032817B00144800001C817B00143900000091010120C1A10120FC006890C1810120D1A101207D044378C03B002838000000C05B0024789E002C8061012039200010D00101203940FFFF83810120787F002CD181012079630020810101207B9F000EF8010088791E000E7FE6FB787FC5F37839000001F8010070F80100784800A4A56000000083E2FA2C3BA0000193BB002C8BDF00002C9E000040860028EB610170EB8101407F6803A6EBA10148EB610138EBC10150EBE10158382101604E8000204BFE5889600000002F03000B409AFFD083A2FA34811D00102F880000419C005880DD0000398000003BE0000078CB00206185FFFF39460180A0EB00507C0728007CEB3B78418200184800004060000000A3C900507C9E5800408600343BFF00017D4653787F1F400079490020394A01804099FFE08062FA38388000184807194D600000004BFFFF583BE000002F860000419E004C815B00147C0A30004182004078DE0020807E00402C8300004186003078630020388006954BF63549E84100285466063E2F060000419A0014813E00408009002C2F800000419EFF0438FF000180BD00107C0728004181FF8C54E93830811D000054E6482C396000007C09305057EA38307CC8021457FE482C78CC0020617FFFFF7C6AF0507C834214A38C0050392403007C9CF8007F8AE378418600184800003060000000A3EB00507F1F5000409A002038E70001792B00207F8728007D264B7839290180409DFFE04BFFFF187CFF3B784BFFFF28"
+      },
+      {
+        "va": "0x2ebbd4",
+        "bytes": "93BB002C"
+      },
+      {
+        "va": "0x2ebbd8",
+        "bytes": "8BDF0000"
+      },
+      {
+        "va": "0x2ebc08",
+        "bytes": "4BFE5889"
+      },
+      {
+        "va": "0x2ebc10",
+        "bytes": "2F03000B"
+      },
+      {
+        "va": "0x2ebc1c",
+        "bytes": "811D0010"
+      },
+      {
+        "va": "0x2ebc24",
+        "bytes": "419C0058"
+      },
+      {
+        "va": "0x2ebc40",
+        "bytes": "A0EB0050"
+      },
+      {
+        "va": "0x2ebc80",
+        "bytes": "38800018"
+      },
+      {
+        "va": "0x2ebc84",
+        "bytes": "4807194D"
+      },
+      {
+        "va": "0x2ebca0",
+        "bytes": "7C0A3000"
+      },
+      {
+        "va": "0x2ebca4",
+        "bytes": "41820040"
+      },
+      {
+        "va": "0x2ebcbc",
+        "bytes": "38800695"
+      },
+      {
+        "va": "0x2ebcc0",
+        "bytes": "4BF63549"
+      },
+      {
+        "va": "0x2ebcc8",
+        "bytes": "5466063E"
+      },
+      {
+        "va": "0x2ebcd8",
+        "bytes": "8009002C"
+      },
+      {
+        "va": "0x2ebce0",
+        "bytes": "419EFF04"
+      },
+      {
+        "va": "0x35eb18",
+        "bytes": "5465203680021A6C7CA407B47C6402148063000C4E800020"
+      },
+      {
+        "va": "0x35eb1c",
+        "bytes": "80021A6C"
+      },
+      {
+        "va": "0x35eb28",
+        "bytes": "8063000C"
+      },
+      {
+        "va": "0x363ee8",
+        "bytes": "F821FF417C8802A6FBE100B8FB210088FB410090FB610098FB8100A0FBA100A8FBC100B0F88100D0800300FC392000017C7F1B782F8000009123014C409E0104C0221BCCD02301504BF6D561600000002C0300044182024C2F830008419E0298801F01142C0000004082004C88BF00F92F050000419A02B88B3F00FA2F990000419E008460000000EBE100D0EB2100887FE803A6EB410090EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E80002078040020813F0118C1021BD0F8810070C8410070F9210070FDA0169CC8210070FC000E9CFD606818FD400018ED2A5824FC8940004CC533824086FF8080621BA0388000294BFF95F1600000004BFFFF6C80621BA03880002B4BFF95DD60000000EBE100D0EB2100887FE803A6EB410090EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E800020C0021BC43B80000080621BACD01F01504BEEEDE1E8410028786300204BEEE655E8410028813F011C2C0900003C6300013B238D5C4182004838E9FFFF815F00FC3960000078E600203900000138A600017CA903A6600000007D005830396B00017C1E50387FDDFE707FBBF2787F5BE850574C0FFE7F9C62144200FFE083A21B583D5F00023B4A4768891D00002C8800004186020483C21B5C7BDE0020388006497FC3F3784BEEE1CDE8410028893D00002F0900007C7B1B78419A01B87FC3F3787B64002038A000004BEECDB9E84100282F830000419E01FC786500208065000883BF011C7B5B0020786500207F5CE8507BA700207B4600207F64DB78386000024BEED091E84100287B270020C0221BCC38C0FFFF7CE33B787F64DB788187000078C6002038E00000390000013920000139400000832C004483990000F84100287F8903A6805900044E800421E84100284BF6D319600000002C0300044082FDBC807F01002C8300004186015483DF01042B1E00094099FDD480621BA0388000244BFF942960000000EBE100D0EB2100887FE803A6EB410090EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E800020801F010C2C00000040820050895F00F82F0A0000419A0094817F01382B8B012C419DFD7480621BA0388000284BFF93C9600000004BFFFD6080621BA03880002A4BFF93B5600000008B3F00FA2F990000409EFD444BFFFDBC78000020811F0110C1A21BD0F8010070C8E10070F9010070FCC03E9CC8A10070FC802E9CFD803018FC602018EC436024FC8268004CC533824086FF7C80621BA0388000264BFF9359600000004BFFFF6880621BA0388000274BFF9345600000004BFFFF607FC3F3784BEECCFDE84100283880000180621B60989D00004BEEB3D9E84100284BFFFE2C83C21B5C7BC300204BEECCD5E84100283960000180621B60997D00004BEEB3B1E84100284BFFFDE080621BA0388000234BFF92E5600000004BFFFEA080621BC84BFFFE0C"
+      },
+      {
+        "va": "0x363f20",
+        "bytes": "9123014C"
+      },
+      {
+        "va": "0x363f30",
+        "bytes": "4BF6D561"
+      },
+      {
+        "va": "0x363f38",
+        "bytes": "2C030004"
+      },
+      {
+        "va": "0x363f40",
+        "bytes": "2F830008"
+      },
+      {
+        "va": "0x363f48",
+        "bytes": "801F0114"
+      },
+      {
+        "va": "0x363f54",
+        "bytes": "88BF00F9"
+      },
+      {
+        "va": "0x363f60",
+        "bytes": "8B3F00FA"
+      },
+      {
+        "va": "0x363fc0",
+        "bytes": "FD606818"
+      },
+      {
+        "va": "0x363fc4",
+        "bytes": "FD400018"
+      },
+      {
+        "va": "0x363fc8",
+        "bytes": "ED2A5824"
+      },
+      {
+        "va": "0x363fcc",
+        "bytes": "FC894000"
+      },
+      {
+        "va": "0x363fd0",
+        "bytes": "4CC53382"
+      },
+      {
+        "va": "0x363fdc",
+        "bytes": "38800029"
+      },
+      {
+        "va": "0x363fe0",
+        "bytes": "4BFF95F1"
+      },
+      {
+        "va": "0x363ff0",
+        "bytes": "3880002B"
+      },
+      {
+        "va": "0x363ff4",
+        "bytes": "4BFF95DD"
+      },
+      {
+        "va": "0x364170",
+        "bytes": "4E800421"
+      },
+      {
+        "va": "0x364178",
+        "bytes": "4BF6D319"
+      },
+      {
+        "va": "0x364188",
+        "bytes": "807F0100"
+      },
+      {
+        "va": "0x364194",
+        "bytes": "83DF0104"
+      },
+      {
+        "va": "0x364198",
+        "bytes": "2B1E0009"
+      },
+      {
+        "va": "0x3641a4",
+        "bytes": "38800024"
+      },
+      {
+        "va": "0x3641a8",
+        "bytes": "4BFF9429"
+      },
+      {
+        "va": "0x3641dc",
+        "bytes": "801F010C"
+      },
+      {
+        "va": "0x3641e8",
+        "bytes": "895F00F8"
+      },
+      {
+        "va": "0x3641f4",
+        "bytes": "817F0138"
+      },
+      {
+        "va": "0x3641f8",
+        "bytes": "2B8B012C"
+      },
+      {
+        "va": "0x364204",
+        "bytes": "38800028"
+      },
+      {
+        "va": "0x364208",
+        "bytes": "4BFF93C9"
+      },
+      {
+        "va": "0x364218",
+        "bytes": "3880002A"
+      },
+      {
+        "va": "0x36421c",
+        "bytes": "4BFF93B5"
+      },
+      {
+        "va": "0x364224",
+        "bytes": "8B3F00FA"
+      },
+      {
+        "va": "0x364258",
+        "bytes": "FD803018"
+      },
+      {
+        "va": "0x36425c",
+        "bytes": "FC602018"
+      },
+      {
+        "va": "0x364260",
+        "bytes": "EC436024"
+      },
+      {
+        "va": "0x364264",
+        "bytes": "FC826800"
+      },
+      {
+        "va": "0x364268",
+        "bytes": "4CC53382"
+      },
+      {
+        "va": "0x364274",
+        "bytes": "38800026"
+      },
+      {
+        "va": "0x364278",
+        "bytes": "4BFF9359"
+      },
+      {
+        "va": "0x364288",
+        "bytes": "38800027"
+      },
+      {
+        "va": "0x36428c",
+        "bytes": "4BFF9345"
+      },
+      {
+        "va": "0x3642e8",
+        "bytes": "38800023"
+      },
+      {
+        "va": "0x3642ec",
+        "bytes": "4BFF92E5"
+      },
+      {
+        "va": "0x888624",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x899734",
+        "bytes": "41C00000"
+      },
+      {
+        "va": "0x899858",
+        "bytes": "420C0000"
+      },
+      {
+        "va": "0x899860",
+        "bytes": "42100000"
+      },
+      {
+        "va": "0x899870",
+        "bytes": "42180000"
+      },
+      {
+        "va": "0x899878",
+        "bytes": "421C0000"
+      },
+      {
+        "va": "0x899880",
+        "bytes": "42200000"
+      },
+      {
+        "va": "0x899888",
+        "bytes": "42240000"
+      },
+      {
+        "va": "0x899890",
+        "bytes": "42280000"
+      },
+      {
+        "va": "0x899898",
+        "bytes": "422C0000"
+      },
+      {
+        "va": "0x89d660",
+        "bytes": "1001EFB8"
+      },
+      {
+        "va": "0x89d68c",
+        "bytes": "1001F0F0"
+      },
+      {
+        "va": "0x89d690",
+        "bytes": "1001F110"
+      },
+      {
+        "va": "0x89d698",
+        "bytes": "1001F148"
+      },
+      {
+        "va": "0x89d69c",
+        "bytes": "1001F168"
+      },
+      {
+        "va": "0x89d6a0",
+        "bytes": "1001F180"
+      },
+      {
+        "va": "0x89d6a4",
+        "bytes": "1001F198"
+      },
+      {
+        "va": "0x89d6a8",
+        "bytes": "1001F1B0"
+      },
+      {
+        "va": "0x89d6ac",
+        "bytes": "1001F1C8"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f94c",
+        "bytes": "10063028"
+      },
+      {
+        "va": "0x89f954",
+        "bytes": "1064FC80"
+      },
+      {
+        "va": "0x89f958",
+        "bytes": "101F5048"
+      },
+      {
+        "va": "0x8a198c",
+        "bytes": "10026654"
+      },
+      {
+        "va": "0x8a1ac0",
+        "bytes": "101F5048"
+      },
+      {
+        "va": "0x8a1af0",
+        "bytes": "3F400000"
+      },
+      {
+        "va": "0x1001efb8",
+        "bytes": "534B494C4C504F494E545F495249535F5752454E434800"
+      },
+      {
+        "va": "0x1001f0f0",
+        "bytes": "534B494C4C504F494E545F5343315F434F4C4C4543544F5200"
+      },
+      {
+        "va": "0x1001f110",
+        "bytes": "534B494C4C504F494E545F5343315F4D494E455357454550455200"
+      },
+      {
+        "va": "0x1001f148",
+        "bytes": "534B494C4C504F494E545F5343325F424154544C455348495000"
+      },
+      {
+        "va": "0x1001f168",
+        "bytes": "534B494C4C504F494E545F5343325F50524554545900"
+      },
+      {
+        "va": "0x1001f180",
+        "bytes": "534B494C4C504F494E545F5343325F424F535300"
+      },
+      {
+        "va": "0x1001f198",
+        "bytes": "534B494C4C504F494E545F5343335F4D41524B534D414E00"
+      },
+      {
+        "va": "0x1001f1b0",
+        "bytes": "534B494C4C504F494E545F5343335F544F55434800"
+      },
+      {
+        "va": "0x1001f1c8",
+        "bytes": "534B494C4C504F494E545F5343335F50594F4F00"
+      },
+      {
+        "va": "0x10026654",
+        "bytes": "0000000A000004D30000051A000000010000000A000004D40000051B000000010000000A000004D50000051C000000010000000A000004D60000051D000000020000000A000004D70000051E000000020000000A000004D80000051F000000020000000A000004D900000520000000020000000A000004DA00000521000000050000000A000004DB00000522000000050000000A000004DC00000523000000050000000A000004DD00000524000000060000000A000004DE00000525000000060000000A000004DF00000526000000060000000A000004E000000527000000070000000A000004E100000528000000070000000A000004E200000529000000070000000A000004E30000052A000000090000000A000004E40000052B000000090000000A000004E50000052C000000090000000A000004E60000052D0000000A0000000A000004E70000052E0000000A0000000A000004E80000052F0000000A0000000A000004E9000005300000000B0000000A000004EA000005310000000B0000000A000004EB000005320000000B0000000A000004EC000005330000000C0000000A000004ED000005340000000C0000000A000004EF000005360000000E0000000A000004F0000005370000000E0000000A000004F40000053B0000000F0000000A000004F50000053C000000100000000A000004F80000053F000000110000000A000004F900000540000000110000000A000004FA00000541000000110000000A000004FD00000544000000120000000A000004FE00000545000000040000000A000004FF00000546000000040000000A0000050000000547000000040000000A0000050100000548000000080000000A0000050200000549000000080000000A000005030000054A000000080000000A000005040000054B0000000D0000000A000005050000054C0000000D0000000A000005060000054D0000000D00000028000005070000054E0000001300000014000005080000054F00000013000000280000050A00000551000000130000000A0000050C0000055300000013000000280000050D00000554000000130000000A0000050F00000556000000130000000A0000051000000557000000130000000A0000051100000558000000130000000A0000051200000559000000130000000A000005130000055A000000130000000A000005140000055B000000130000000A000005150000055C000000130000000A000005160000055D0000001300000014000005170000055E0000001300000028000005180000055F0000001300000014000005190000056000000013"
+      }
+    ]
+  },
+  "upgrade_purchase_assets": {
+    "asset": "/built/anark/weaponvendor/built.dat",
+    "size": 390796,
+    "sha256": "294BA05A607BC5C4C59B60E85C57515DBBD8CDEECC9CB6BF570AE4AE937627D5",
+    "methods": [
+      {
+        "name": "onSelect",
+        "code_file_offset": "0x5a7f8",
+        "instruction_count": 142,
+        "code_sha256": "843621500C7E5442031C1D9B0591CECCA188F7B7E0AA6C30F57F0B81342A0E9B"
+      },
+      {
+        "name": "canBePurchased",
+        "code_file_offset": "0x56a8a",
+        "instruction_count": 79,
+        "code_sha256": "DA2B498594AA83B7A8ACE352C4D4164370013C9EDE5115547725E7E0CB2C037F"
+      },
+      {
+        "name": "beenPurchased",
+        "code_file_offset": "0x56cfc",
+        "instruction_count": 41,
+        "code_sha256": "5B9756401AD9A7A4120BD27ED66DDA3646E0E0BA589C1BDCB81152FA1EA4F846"
+      },
+      {
+        "name": "specialCheck",
+        "code_file_offset": "0x56ece",
+        "instruction_count": 39,
+        "code_sha256": "7AC5B7B412AA7046953CF60B4E2A399E5773EB1E8243686C107F460400F2B143"
+      },
+      {
+        "name": "is_valid_movement",
+        "code_file_offset": "0x56781",
+        "instruction_count": 72,
+        "code_sha256": "8FCDCCEFDADAFCD9A0F6561A183066118145C71D416CF3EE3EB2765A502B9DAA"
+      }
+    ],
+    "grid_count": 15,
+    "combuster_synthetic_examples": [
+      {
+        "node": 0,
+        "mask_raw_hex": "00000000",
+        "predicate": {
+          "node_present": true,
+          "orthogonal_neighbors": [
+            2
+          ],
+          "can_be_purchased_predicate": true,
+          "positive_neighbor_checks_satisfied": false,
+          "on_select_excludes_start": true,
+          "warning": "Static literal predicate only. Special canBePurchased and all-positive-neighbor movement/icon checks are separate. Native availability, wallet, hero, navigation state and transaction result are not simulated."
+        }
+      },
+      {
+        "node": 1,
+        "mask_raw_hex": "00000000",
+        "predicate": {
+          "node_present": true,
+          "orthogonal_neighbors": [
+            9,
+            10,
+            12
+          ],
+          "can_be_purchased_predicate": false,
+          "positive_neighbor_checks_satisfied": false,
+          "on_select_excludes_start": false,
+          "warning": "Static literal predicate only. Special canBePurchased and all-positive-neighbor movement/icon checks are separate. Native availability, wallet, hero, navigation state and transaction result are not simulated."
+        }
+      },
+      {
+        "node": 2,
+        "mask_raw_hex": "00000000",
+        "predicate": {
+          "node_present": true,
+          "orthogonal_neighbors": [
+            0,
+            7
+          ],
+          "can_be_purchased_predicate": true,
+          "positive_neighbor_checks_satisfied": false,
+          "on_select_excludes_start": false,
+          "warning": "Static literal predicate only. Special canBePurchased and all-positive-neighbor movement/icon checks are separate. Native availability, wallet, hero, navigation state and transaction result are not simulated."
+        }
+      },
+      {
+        "node": 12,
+        "mask_raw_hex": "00000000",
+        "predicate": {
+          "node_present": true,
+          "orthogonal_neighbors": [
+            1,
+            5,
+            13
+          ],
+          "can_be_purchased_predicate": true,
+          "positive_neighbor_checks_satisfied": false,
+          "on_select_excludes_start": false,
+          "warning": "Static literal predicate only. Special canBePurchased and all-positive-neighbor movement/icon checks are separate. Native availability, wallet, hero, navigation state and transaction result are not simulated."
+        }
+      }
+    ],
+    "asset_guards": [
+      {
+        "file_offset": "0x56bb2",
+        "bytes": "02800003"
+      },
+      {
+        "file_offset": "0x56d54",
+        "bytes": "55BF0100"
+      },
+      {
+        "file_offset": "0x56d5c",
+        "bytes": "02800003"
+      },
+      {
+        "file_offset": "0x5a7f8",
+        "bytes": "05000001"
+      },
+      {
+        "file_offset": "0x5a824",
+        "bytes": "99800101"
+      },
+      {
+        "file_offset": "0x5a844",
+        "bytes": "99000201"
+      },
+      {
+        "file_offset": "0x5a874",
+        "bytes": "55C00001"
+      },
+      {
+        "file_offset": "0x5a87c",
+        "bytes": "05020001"
+      },
+      {
+        "file_offset": "0x5a8a8",
+        "bytes": "99800101"
+      },
+      {
+        "file_offset": "0x5a8ac",
+        "bytes": "18800001"
+      },
+      {
+        "file_offset": "0x5a8b0",
+        "bytes": "D4088000"
+      }
+    ],
+    "warning": "Exact shipped static code and synthetic mask0 examples, not runtime menu execution or purchase permission. File offsets are not ELF VAs or save offsets; original full asset payload is not bundled."
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -106021,6 +109311,13 @@
     ]
   },
   "annotations": [
+{"va":"0x0035EB18","name":"TOD_skill_definition_filter_group_word","kind":"function","confidence":"confirmed","bytes":"5465203680021A6C","comment":"Returns definition[id*10+0C]. Five equality-filter consumers scan IDs0..59; nth selection is one-based within the group. Metadata selector, not saved field or confirmed award prerequisite.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; skill_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00027268","name":"TOD_skill_filter_group_nth_saved_bit","kind":"function","confidence":"confirmed","bytes":"F821FF617C0802A6","comment":"Equality-filters definition0C, selects one-based nth matching globalID in ascending0..59 order, then tests saved8710 bit. No match and unset bit both return0.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; skill_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002EB9B8","name":"TOD_iris_wrench_runtime_other_entry_scan_award_request","kind":"function","confidence":"confirmed","bytes":"F821FEA17C8802A6","comment":"Runtime gate10063028 and saved906E8 selector11 via2D1490 required after prior effects, not loadedworldproof. Occupiedpool scan excludes inputentry; another config/tag695 and config2C==0 aborts. Otherwise requests skill24. Not all-physical-enemies or serialized2C proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; skill_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00363EE8","name":"TOD_space_context_numeric_skill_award_requests","kind":"function","confidence":"confirmed","bytes":"F821FF417C8802A6","comment":"Runtime owner gates for IDs35/36 atsaved906E8 selector4,38/39/40 at8,41/42/43 in else(neither4nor8), not loadedworldproof. Float32 ratio>=.75 and rawfield predicates only; rereadsaftercallbacks matter. No timeunits, SC3 level13 restriction, savedruntime fields or callback-free guarantee.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; skill_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00032B48","name":"TOD_Lua_purchase_mod_result_wrapper_verified","kind":"function","confidence":"confirmed","bytes":"F821FF517C0802A6","comment":"Named export registration2AC04. Validated values1/2 through13080\u2192fctiwz low32 sign extension, call26400\u219212A20\u21922D2878, push transaction byte via106A0. Return1 is Lua result count, not separate success verdict.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; upgrade_purchase native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00303220","name":"TOD_blueprint_grant_saved_level_selector_bit_verified","kind":"function","confidence":"confirmed","bytes":"F821FF917CE802A6","comment":"Reached leaf reads 2D1490 saved 906E8 level/destination selector; ORs the corresponding slw bit into 86F4. Saved selector need not equal the currently loaded planet; descriptor dispatch trigger and physical pickup remain unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; blueprint_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00303260","name":"TOD_blueprint_actor_init_saved_selector_gate_verified","kind":"function","confidence":"confirmed","bytes":"F821FF717D2802A6","comment":"After initialization helpers, rereads 2D1490 saved 906E8; an existing 86F4 bit takes 24F6D8(actor+14,0), absence can restore entry+30/+38 and call 24F4F8 after handle validation. No saved mask write; class, dispatch trigger and pickup location remain unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; blueprint_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0068FF68","name":"TOD_actor_mark_runtime_entry_flag20_before_category_context","kind":"function","confidence":"confirmed","bytes":"8123001480690068","comment":"Actor+14 is runtime entry pointer; ORs entry+68 flags with20, used via11370 before category2/4/6 callbacks. No saved-bit write, reset admission or gameplay flag name established.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00043438","name":"TOD_reset_context2_state_relative_dispatch","kind":"data","confidence":"confirmed","bytes":"000000F80000043C000003E0000003E0000000F8000004E800000310000005C8000002580000015800000158000005080000052800000158000000F8000006F4000005F8000000F80000068C00000288000001580000015800000158000003300000037000000390000003C00000017800000158000000F8000001980000008400000210","comment":"33 signed BE32 offsets relative to43438, states0..32. Signed430<=28 selection precedes unsigned dispatch bound; negative raw states can select2 but reject dispatch. Targets are not gameplay state names.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0004BBBC","name":"TOD_reset_context4_state_relative_dispatch","kind":"data","confidence":"confirmed","bytes":"000003B800000528000003B8000003B8000003B8000003B800000500000005140000055400000A2800000AE800000D2400000D2400000EA0000003C4000003F800000418000004800000019C000011C0000011D8000011F000000ECC00000ECC00000ECC00000ECC00000ECC00000ECC00000F7800000F7800000F7800000F7800000F7800000F780000109800001368000013B400000390000013CC000003B8000003B800001194000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B80000133C0000120400001310","comment":"103 signed BE32 offsets relative to4BBBC; dispatcher rereads4A4 after intervening helpers, separately from initial!=2 category4 selection. Repeated targets retained; no actor/death names.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

@@ -486,10 +486,15 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     uint bit = 1u << id;
                     bool mapped = (known & bit) != 0;
                     string note = mapped ? "ID included in the native all-grant mask." : "ID outside the native all-grant mask; meaning not mapped.";
+                    string association = "";
+                    foreach (var link in TodResearch.Map.GetProperty("blueprint_producers").GetProperty("level_index_associations").GetProperty("rows").EnumerateArray())
+                        if (link.GetProperty("bit_id").GetInt32() == id)
+                            association = "\r\nNative selector association: " + link.GetProperty("level_enum").GetString() + ". This relates a selector value to a bit, not an identified physical pickup or proof of the currently loaded world.";
                     rows.Add(new(new[] { id.ToString(), (mask & bit) != 0 ? "Yes" : "No", mapped ? "Yes" : "No",
                         $"0x{bit:X8}", $"0x{mask:X8}", TodResearch.Hex(offset), note },
                         summary + $"\r\nBlueprint ID {id}: integer bit {id}, file byte {TodResearch.Hex(offset + 3 - id / 8)}, byte mask0x{1 << (id % 8):X2}.\r\n" +
-                        note + " Physical pickup/planet names are not confirmed. Native count includes all32 bits; grant-all ORs its mask and preserves other bits. This is read-only inspection, not gameplay-validated editing."));
+                        note + " Exact pickup locations and collection history are not confirmed. Native count includes all32 bits; grant-all ORs its mask and preserves other bits. " +
+                        "A separate native grant uses the saved level/destination selector at906E8 as its bit ID, not proof of the current runtime planet or pickup coordinates. The matching initializer checks that same selector before choosing its restore path. See Research for qualified named level associations. This is read-only inspection, not gameplay-validated editing." + association));
                 }
                 return new(new[] { "ID", "Collected", "In all-grant mask", "Bit", "Raw mask", "Offset", "Notes" }, rows.AsReadOnly());
             }
@@ -710,8 +715,15 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         $"Unknown high bits: 0x{bits & 0xF000000000000000UL:X16}. Unknown alignment bytes at 0x870C: {Convert.ToHexString(data, 0x870C, 4)}.\r\n" +
                         "Static meanings are code-backed; no edit or in-game compatibility claim.\r\n" + TodResearch.Pretty(skill);
                     detail += "\r\nAward order: publish the bit, add definition points to the saved score modulo32, notify runtime, then check the automatic final award. An already-set bit returns before all those steps, so a duplicate does not repair score mismatches or a missing final award. Notifications are not simulated and the sequence is not proven atomic.";
+                    var grouped = TodResearch.Map.GetProperty("skill_producers").GetProperty("definition_filter").GetProperty("catalog")[id];
+                    int group = grouped.GetProperty("filter_group_word").GetInt32();
+                    detail += $"\r\nMenu filter group: {group} (definition+0C). Native nth matching selection is one-based in ascending skill-ID order. " +
+                        (group == 19 ? "Group19 contains sixteen global definitions; it is not a twentieth playable world. " : "") +
+                        "This is definition metadata, not a new saved field or an award prerequisite.";
                     if (id == 46) detail += "\r\nGolden producer: duplicate collectibles and unsigned local IDs above31 still run the native all-world count scan, even without a new bit. Counts include unexpected bits and are compared >= shipped totals; this does not identify actual pickups or prove wrapper acceptance of invalid IDs.";
                     if (id == 47) detail += "\r\nCheapskate producer: an admitted Combuster ammo purchase tests the ORIGINAL request <=1 after adding ammo and deducting bolts, not the clamped quantity. Zero/negative requests select missing ammo in this leaf yet meet that award comparison; caller acceptance and current purchase eligibility are not inferred from this save.";
+                    if (id == 24) detail += "\r\nIris Wrench producer: a qualified runtime pool scan requests this skill only with its runtime gate set, selector11, and no other occupied qualifying object whose config+2C is zero. This is not a saved enemy-kill history or a reconstruction of all actual enemies.";
+                    if (id is 35 or 36 or 38 or 39 or 40 or 41 or 42 or 43) detail += "\r\nAdditional native award predicates are mapped in Research. They read runtime words/bytes, including ratio comparisons, not fields reconstructed from this save. The producer's final branch is not explicitly restricted to level13; menu grouping is not an award eligibility gate.";
                     rows.Add(new(new[] { id.ToString(), skill.GetProperty("enum").GetString(), complete ? "Yes" : "No",
                         skill.GetProperty("points").ToString(), skill.GetProperty("name_tag").ToString(),
                         skill.GetProperty("description_tag").ToString(), TodResearch.Hex(offset), $"0x{1 << (id % 8):X2}" }, detail));
@@ -779,6 +791,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                             "Read-only. Effects and costs come from game definitions; they are not a purchase-eligibility check.\r\n\r\n" +
                             $"Technical details: node {index}. {purchased}; raw mask 0x{item.ModifierMask:X8}; script-owned: {item.ScriptOwned}.\r\n" +
                             "Type/value/cost/tags are shipped definitions, not captured runtime values or a purchase-eligibility verdict.\r\n" +
+                            "Native purchase checks script ownership and a signed32 raritanium comparison; vendor adjacency/start-node rules are separate. It publishes mask+0C, conditionally refills ammo+08 when old/new max-ammo compare unequal (including unordered), then debits raritanium and notifies. It does not locally reject an already-set bit, so a repeated admitted call can charge again. None of this is simulated by viewing the save.\r\n" +
                             $"Grid position: {cell}; orthogonal nonnegative neighbors: [{neighbors}]; special node: {special}.\r\n" +
                             TodResearch.Pretty(mod) + "\r\n" + TodResearch.Pretty(layouts.GetProperty("rules"));
                         rows.Add(new(new[] { item.Name, effect, status, shownCost }, detail));

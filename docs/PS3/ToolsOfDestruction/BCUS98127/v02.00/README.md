@@ -2,6 +2,9 @@
 
 ## Findings and definitions
 
+- [Blueprint selector grants](ElfMap.md#blueprint-selector-grants-and-qualified-level-associations): saved-destination indexed native grant, thirteen qualified level associations and a shipped Stratus City predicate; not pickup locations or history.
+- [Upgrade purchase ordering](ElfMap.md#upgrade-purchase-publication-ammo-refill-and-payment-order): signed32 wallet admission, modifier publication, conditional absolute ammo refill, later payment and separate vendor constraints.
+- [Skill groups and additional producers](ElfMap.md#skill-definition-groups-and-additional-runtime-award-producers): definition+0C equality filtering, one-based matching selection and nine additional named runtime-dependent award requests.
 - [Entry-latched option exits](ElfMap.md#entry-latched-option-exits-and-callback-qualified-camera-cleanup): mode cleanup across16 records, wildcard selectors and callback ordering without a hold/toggle claim.
 - [Reset-category producer boundaries](ElfMap.md#reset-category-producer-contexts-and-separate-dispatch-bounds): selection versus signed/unsigned dispatch ranges, runtime window refresh and separate saved-counter recording.
 - [Opaque-field ownership audit](ElfMap.md#opaque-segment-and-world-fields-bounded-ownership-audit): eliminated offset-only matches, preserved raw fields and explicit unresolved meanings.
@@ -32,7 +35,7 @@
 - [Object/reset/restore and opaque-tail ownership](ElfMap.md#object-counter-lifecycles-quick-select-mutation-and-opaque-tail-ownership): selected three-bank resets, six restore assignments, signed Souls skill-point consumer, quick-select mutation and final-word/settings copy boundaries.
 - [Arena indexing and shipped display order](ElfMap.md#arena-native-ids-source-indices-and-display-rows): native count/inverse lookups and completion-dependent source-index routing; runtime table contents remain unresolved.
 - [Pack/boot state, reference segment names and opaque-byte ownership](ElfMap.md#saved-packboot-state-ordered-segment-names-and-initializer-ownership): three newly named words,56 asset-backed segment associations across19 worlds and exact initialization/copy boundaries.
-- [Native address/structure map](maps/NativeMap.json): 1366 annotations, 118 imports and 45 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1373 annotations, 118 imports and 45 structure definitions.
 - [Decryptor, timing and copied-handle findings](ElfMap.md#decryptor-state-saved-timing-aggregates-and-copied-runtime-handles): named wins/Sixaxis losses/spark-speed multiplier, four saved timing floats and runtime generation/slot handles;19 original shipped grid bodies match the actual save.
 - [Health and checkpoint ammo lifecycle](ElfMap.md#runtime-health-and-checkpoint-ammo-qualifying-restoration-paths): runtime health identity/upper bound, conditional XP-driven refresh,32-slot ammo capture, qualified vendor merge and clamped restoration.
 - [Saved auxiliary words](ElfMap.md#three-saved-auxiliary-words-event-branch-sixaxis-gate-and-bounded-modifier): three typed Decryptor words at8758/875C/8760, wrapping counters, Sixaxis gate and native finite spark-speed modifier bounds; retained native state, not universal lifetime statistics.

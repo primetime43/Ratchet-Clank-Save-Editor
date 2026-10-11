@@ -36,6 +36,42 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Blueprint selector provenance does not become current planet or pickup history", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x86F4, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906E8, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Blueprints");
+            Equal(32, table.Rows.Count);
+            True(table.Rows[31].Details.Contains("saved level/destination selector") && table.Rows[31].Details.Contains("not proof of the current runtime planet"), "Native selector association must not imply placement or completed pickups.");
+            True(table.Rows[2].Details.Contains("LEVEL_STRATUS_CITY") && !table.Rows[31].Details.Contains("Native selector association:"), "Only confirmed selector links should receive native level labels.");
+            True(TodResearch.Map.GetProperty("blueprint_producers").GetProperty("instruction_guards").GetArrayLength() > 0, "Blueprint producer evidence must be embedded.");
+            True(bytes.SequenceEqual(before), "Blueprint research must preserve unknown bits and selectors.");
+        });
+        Check("Upgrade purchase ordering remains descriptive and does not spend or refill", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x420, 4), 0x80000000);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Upgrade nodes");
+            Equal(4, table.Columns.Length);
+            True(table.Rows[1].Details.Contains("signed32 raritanium") && table.Rows[1].Details.Contains("including unordered") && table.Rows[1].Details.Contains("charge again"), "Native admission, ammo side effects and duplicate charging must be qualified separately from vendor rules.");
+            True(TodResearch.Map.GetProperty("upgrade_purchase").GetProperty("instruction_guards").GetArrayLength() > 0, "Upgrade transaction evidence must be embedded.");
+            True(bytes.SequenceEqual(before), "Upgrade viewing must never invoke a purchase.");
+        });
+        Check("Skill producer runtime conditions do not become earned-history or eligibility claims", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x8710, 8), ulong.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Skill points");
+            True(table.Rows[24].Details.Contains("not a saved enemy-kill history"), "Pool scan conditions must not imply complete enemy history.");
+            True(table.Rows[41].Details.Contains("not explicitly restricted to level13") && table.Rows[41].Details.Contains("menu grouping is not an award eligibility gate"), "Definition groups must not narrow an unguarded native else branch.");
+            True(table.Rows[44].Details.Contains("Menu filter group: 19") && table.Rows[44].Details.Contains("not a twentieth playable world"), "Group metadata must not invent another world.");
+            True(TodResearch.Map.GetProperty("skill_producers").GetProperty("instruction_guards").GetArrayLength() > 0, "Skill producer evidence must be embedded.");
+            True(bytes.SequenceEqual(before), "Skill viewing must preserve high bits and score mismatches.");
+        });
         Check("Option exits remain latched, callback-qualified and separate from saved option edits", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -925,7 +961,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1366, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1373, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -1296,7 +1332,8 @@ internal static partial class Program
             True(tree.Nodes.Count > 0 && text.ReadOnly && tabs.SelectedTab.Enabled, "Embedded research should be usable without a save.");
             search.Text = "Combuster";
             True(tree.Nodes.Count > 0, "Search should find names.");
-            True(text.Text.Contains("Combuster"), "Search should select a matching finding, not only a parent section.");
+            True(text.Text.Contains("Combuster", StringComparison.OrdinalIgnoreCase), "Case-insensitive search should visibly identify a matching finding, including title-only matches and native uppercase enums.");
+            True(text.Text.StartsWith(tree.SelectedNode.Text + "\r\n\r\n", StringComparison.Ordinal), "Details must identify the selected research title even when the query appears only in the title.");
             search.Text = "no-such-research-finding-XYZ";
             Equal(0, tree.Nodes.Count);
             Equal("No matching findings.", text.Text);

@@ -502,7 +502,11 @@ python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonuses.py --
 python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
 ```
 
-The program exposes this as simple read-only Blueprints and Bonuses & cheats views. Physical pickup/planet names and localized bonus/state labels have not been recovered; no new editable fields or gameplay-compatibility claim is introduced.
+The program exposes this as simple read-only Blueprints and Bonuses & cheats views. A separate native grant uses the saved level/destination selector `906E8` as the blueprint bit ID; thirteen qualified native level associations and a Stratus City script predicate are now mapped. They do not establish physical pickup coordinates, collection history, a universal producer for all worlds, or equality with the currently loaded planet. Localized bonus/state labels remain unresolved; no new editable fields or gameplay-compatibility claim is introduced. See [selector grants](BCUS98127/v02.00/ElfMap.md#blueprint-selector-grants-and-qualified-level-associations).
+
+Skill definition `+0C` is now confirmed as an equality menu-filter/group selector, not another save field or an award prerequisite. Group19 contains sixteen global definitions, not a twentieth playable world. Nine additional named native award requests depend on runtime pool/object fields rather than reconstructed saved history. See [skill grouping and producers](BCUS98127/v02.00/ElfMap.md#skill-definition-groups-and-additional-runtime-award-producers).
+
+Weapon-upgrade purchase order is also qualified: modifier word at record `+0C`, conditional absolute ammo refill at `+08`, then raritanium debit and runtime notification. Native signed32 wallet admission and script ownership are distinct from vendor adjacency and duplicate-node rejection; the transaction itself can charge again for an already-set bit. Viewing remains read-only and does not simulate those operations. See [purchase ordering](BCUS98127/v02.00/ElfMap.md#upgrade-purchase-publication-ammo-refill-and-payment-order).
 
 ## Confirmed equipment history and compressed blocks
 
