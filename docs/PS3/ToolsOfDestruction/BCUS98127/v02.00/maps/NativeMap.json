@@ -108818,6 +108818,577 @@
     ],
     "warning": "Exact shipped static code and synthetic mask0 examples, not runtime menu execution or purchase permission. File offsets are not ELF VAs or save offsets; original full asset payload is not bundled."
   },
+  "weapon_purchase": {
+    "confidence": "code-backed purchase routing, saved-state admission and publication order",
+    "warning": "Exact USA BCUS98127 v02.00 static evidence only. No native/Lua execution, runtime definition reconstruction, pointer/index safety, purchase simulation or newly editable field.",
+    "saved_fields": {
+      "ownership_member": "0x10",
+      "stored_level_member": "0x11",
+      "xp_member": "0x4",
+      "ammo_member": "0x8",
+      "record_stride": "0x14",
+      "bolts_offset": "0x41c",
+      "replay_offset": "0x906ec",
+      "acquisition_counter_offset": "0x280"
+    },
+    "level_five_gate": {
+      "va": "0x2d20c8",
+      "global_saved_root_slot_va": "0x89f1b8",
+      "global_saved_root_va": "0x101efb20",
+      "ordered_checks": [
+        "record ownership byte nonzero",
+        "465CC0: stored level>3",
+        "465CE0: stored level must NOT be>4",
+        "463270: definition flags&3==0",
+        "2D1860: saved replay906EC!=0",
+        "4631F8: definition num_levels unsigned>5"
+      ],
+      "rule": "The two level tests together require exactly stored level4, not any level>=4 or5. Nonzero replay accepts any raw32 word, including high-bit values; it is not a new challenge-mode boolean or a local counter bound. Definitions/pointers and matching record-ID assumptions remain necessary.",
+      "contrast": "The bridge helper465E78 alone admits definition num_levels>4. The purchase gate requires>5; num_levels5 would satisfy the leaf bridge condition but fail this purchase gate."
+    },
+    "routing": {
+      "purchase_dispatch_va": "0x26638",
+      "availability_dispatch_va": "0x265c8",
+      "purchase_rule": "26638 samples the low byte of2D20C8 first. Nonzero selects2D21A8; zero selects normal2D2D38, not automatic rejection.2D21A8 requires a hero then samples2D20C8 again. If the second gate fails it returns0 without falling back to normal purchase. Samples need not agree; caller routing is not atomic admission.",
+      "availability_rule": "Named is_weapon_available goes through265C8: normal2D24C0 is checked first, returning1 when nonzero; only otherwise is2D20C8 evaluated. This union is distinct from the purchase dispatch order and is not itself a wallet or full vendor eligibility check.",
+      "lua_boundary": "Named purchase_weapon converts admitted numeric argument1 with fctiwz/low32 signed extension, calls26638, pushes its low-byte boolean via106A0 and returns1 as Lua RESULT COUNT. Invalid-ID/conversion and validation-helper internals are not emulated."
+    },
+    "level_five_transaction": {
+      "va": "0x2d21a8",
+      "price_va": "0x2d1fa8",
+      "price_field": "Vendor.MegaPrice, definition data+6B0",
+      "price_rule": "2D1FA8 returns raw unsigned data+6B0 when config/data exists and flags&3==0, otherwise0 locally. The previously mapped vendor schema names this MegaPrice; no localized Omega name or safe zero-price validity contract is inferred.",
+      "order": [
+        "hero lookup",
+        "repeat level-five gate",
+        "capture MegaPrice",
+        "signed32 saved bolts>=signed32 captured cost",
+        "465E78 stores level5 then XP from threshold5(+244), then adds new maximum ammo through465E18",
+        "negate captured cost low32 and update bolts24FCB8",
+        "qualified hero subsystem virtual+1C callback",
+        "runtime request4 via250FA8, ignore its return, return1"
+      ],
+      "local_write_scope": "Bridge writes level/XP/ammo, not local ownership, unlock, modifier mask or acquisition-counter stores. Later helpers/callbacks remain qualified; this is not a promise that all other fields remain unchanged through the full runtime transaction. There is no local rollback/atomicity guarantee.",
+      "funds_rule": "Both purchase branches use signed32 comparisons. High-bit wallets/costs are not large legitimate unsigned funds. Captured-cost negation and hero wallet mutation are not a universal subtract-with-lower-clamp contract."
+    },
+    "normal_transaction": {
+      "va": "0x2d2d38",
+      "price_va": "0x2d2058",
+      "price_rule": "Definition flag2 chooses AmmoPrice(+6AC); otherwise BasePrice(+6A8). Missing config/data yields0 locally, not a safe invalid-definition API contract.",
+      "admission": "Requires hero. Item19 additionally must have low-byte24F7B8(hero,11)==0. Then signed saved bolts must be>=signed captured price. The leaf does not invoke normal availability/unlock or independently reject an already-owned item.",
+      "order": [
+        "capture definition/price and compare signed funds",
+        "466B70 acquire with refill1",
+        "252B08 hero inventory integration(item,-1)",
+        "24FCB8 captured-cost debit",
+        "qualified virtual callback for low definition flags clear",
+        "35D358 checkpoint ammo merge",
+        "250FA8 runtime request4; return1"
+      ],
+      "repeat_scope": "Repeated normal calls can charge an already-owned record. Acquisition can refill before its ownership test; already-owned records skip the local ownership/XP initialization and acquisition-counter increment. This does not establish gameplay exploitability, universal refill or preservation across later callbacks.",
+      "special_id19": "The additional numeric11 predicate is explicitly recorded without naming its unresolved runtime meaning. It is not an invented saved availability byte."
+    },
+    "named_bindings": [
+      {
+        "name": "purchase_weapon",
+        "slot_va": "0x889334",
+        "wrapper_va": "0x337d8"
+      },
+      {
+        "name": "is_weapon_available",
+        "slot_va": "0x8892fc",
+        "wrapper_va": "0x33e68"
+      }
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x2d20c8",
+        "name": "TOD_level_five_purchase_gate_verified",
+        "kind": "function",
+        "comment": "Global save ownership nonzero, stored level exactly4 (separate>3 and NOT>4 tests), definition flags&3 clear, saved906EC nonzero, num_levels unsigned>5. Not funds/full vendor eligibility; raw replay nonzero is not a new mode-bound contract."
+      },
+      {
+        "va": "0x26638",
+        "name": "TOD_purchase_weapon_dispatch_and_recheck_boundary_verified",
+        "kind": "function",
+        "comment": "Low-byte2D20C8 true selects2D21A8; false selects normal2D2D38, not rejection. Extended transaction separately requires hero and rechecks gate; failure there returns0 without normal fallback. Definition/callback samples not proven atomic."
+      },
+      {
+        "va": "0x2d21a8",
+        "name": "TOD_purchase_weapon_level_five_publication_before_payment_verified",
+        "kind": "function",
+        "comment": "Hero+repeat2D20C8 gate, captureMegaPrice, signed32 bolt admission.465E78 stores level5/threshold5 XP then additive ammo path before captured-cost debit. Qualified virtual callback and request4 afterward; no atomicity/rollback or new safe-edit claim."
+      },
+      {
+        "va": "0x265c8",
+        "name": "TOD_weapon_availability_normal_or_level_five_verified",
+        "kind": "function",
+        "comment": "Checks normal2D24C0 first; nonzero returns1, else samples2D20C8 low byte. Named availability is OR of two predicates, distinct from purchase routing and absent local wallet test."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x11340",
+        "bytes": "F84100283C4200013842FFE8482C0E5C"
+      },
+      {
+        "va": "0x1134c",
+        "bytes": "482C0E5C"
+      },
+      {
+        "va": "0x119e0",
+        "bytes": "F84100283C4200013842FFE8482C0AD4"
+      },
+      {
+        "va": "0x119ec",
+        "bytes": "482C0AD4"
+      },
+      {
+        "va": "0x12010",
+        "bytes": "F84100283C4200013842FFE8482C0D1C"
+      },
+      {
+        "va": "0x1201c",
+        "bytes": "482C0D1C"
+      },
+      {
+        "va": "0x13eb0",
+        "bytes": "F84100283C4200013842FFE8482BE20C"
+      },
+      {
+        "va": "0x13ebc",
+        "bytes": "482BE20C"
+      },
+      {
+        "va": "0x265c8",
+        "bytes": "F821FF717C8802A6FBA10078F88100A07C7D1B784BFEB405E84100285460063E7FA3EB782F80000038000001419E001CE8A100A07C0307B4EBA10078382100907CA803A64E8000204BFED8A1E8410028E8A100A0EBA100785460063E7CA803A6382100907C0307B44E80002060000000"
+      },
+      {
+        "va": "0x265dc",
+        "bytes": "4BFEB405"
+      },
+      {
+        "va": "0x265f4",
+        "bytes": "419E001C"
+      },
+      {
+        "va": "0x26610",
+        "bytes": "4BFED8A1"
+      },
+      {
+        "va": "0x26638",
+        "bytes": "F821FF817C8802A6FBE10078F88100907C7F1B784BFED865E84100285460063E7FE3FB782F800000419E00284BFEACDDE8410028E8A10090EBE100785463063E7CA803A6382100807C6307B44E8000207FE3FB784BFEB985E8410028E8A10090EBE100785463063E7CA803A6382100807C6307B44E800020"
+      },
+      {
+        "va": "0x2664c",
+        "bytes": "4BFED865"
+      },
+      {
+        "va": "0x26654",
+        "bytes": "5460063E"
+      },
+      {
+        "va": "0x26660",
+        "bytes": "419E0028"
+      },
+      {
+        "va": "0x26664",
+        "bytes": "4BFEACDD"
+      },
+      {
+        "va": "0x2668c",
+        "bytes": "4BFEB985"
+      },
+      {
+        "va": "0x337d8",
+        "bytes": "F821FF617C8802A638010070FBE10098781F0020F88100B038A00000388000017FE6FB78FBC100907C7E1B784BFDF7EDE84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F37880829AF47FE5FB784BFDDA55E841002838600000E8A100B07C6307B4EBC10090EBE100987CA803A6382100A04E800020600000004BFDF029E841002838800001C02298A42C0300007FC3F3784182FFB04BFDF80DE841002839210080FC20081E7C204FAE806100807C6307B44BFF2DA960000000786406207FC3F3784BFDCE01E8410028386000014BFFFF8C"
+      },
+      {
+        "va": "0x33880",
+        "bytes": "FC20081E"
+      },
+      {
+        "va": "0x33890",
+        "bytes": "4BFF2DA9"
+      },
+      {
+        "va": "0x338a0",
+        "bytes": "4BFDCE01"
+      },
+      {
+        "va": "0x338a8",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x33e68",
+        "bytes": "F821FF617C8802A638010070FBE10098781F0020F88100B038A00000388000017FE6FB78FBC100907C7E1B784BFDF15DE84100282F8300007FE5FB78388000027FC3F378409E003C7FC3F37880829B107FE5FB784BFDD3C5E841002838600000E8A100B07C6307B4EBC10090EBE100987CA803A6382100A04E800020600000004BFDE999E841002838800001C02298A42C0300007FC3F3784182FFB04BFDF17DE841002839210080FC20081E7C204FAE806100807C6307B44BFF26A960000000786406207FC3F3784BFDC771E8410028386000014BFFFF8C"
+      },
+      {
+        "va": "0x33f20",
+        "bytes": "4BFF26A9"
+      },
+      {
+        "va": "0xb4a10",
+        "bytes": "38A000007C0802A638800001F821FF71FBC10080FBE10088F80100A07C7F1B784BF5D4F1E84100282F8300007C7E1B7838A000007FE3FB78419E00487BC900207FE3FB7880A90008F8A10070C8210070FC000E9CFC2000184BF5F749E8410028E88100A0EBC1008038600001EBE100887C8803A6382100904E80002060000000808200F04BF5C7EDE84100287BC900207FE3FB7880A90008F8A10070C8210070FC000E9CFC2000184BF5F6F9E8410028E88100A0EBC1008038600001EBE100887C8803A6382100904E80002060000000"
+      },
+      {
+        "va": "0xb4a54",
+        "bytes": "80A90008"
+      },
+      {
+        "va": "0x2d1860",
+        "bytes": "8082F268386000003D240009800906EC2F800000419E0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x2d186c",
+        "bytes": "800906EC"
+      },
+      {
+        "va": "0x2d1870",
+        "bytes": "2F800000"
+      },
+      {
+        "va": "0x2d1874",
+        "bytes": "419E0008"
+      },
+      {
+        "va": "0x2d1fa8",
+        "bytes": "F821FF917C0802A6F8010080481911DD600000002F83000039600000419E0028812300482C0900004182001C8083001879290020548307BE2C83000040860008816906B0E8A1008079630020382100707CA803A64E800020"
+      },
+      {
+        "va": "0x2d1fe8",
+        "bytes": "816906B0"
+      },
+      {
+        "va": "0x2d2058",
+        "bytes": "F821FF917C0802A6F80100804819112D600000002F83000038000000419E0028812300482C0900004182001C80A30018792B002054A407BC2C8400004086001C800B06A8E8C1008078030020382100707CC803A64E800020E8C1008038210070800B06AC7CC803A6780300204E800020"
+      },
+      {
+        "va": "0x2d2090",
+        "bytes": "2C840000"
+      },
+      {
+        "va": "0x2d2098",
+        "bytes": "800B06A8"
+      },
+      {
+        "va": "0x2d20b8",
+        "bytes": "800B06AC"
+      },
+      {
+        "va": "0x2d20c8",
+        "bytes": "5465103A8162F298546920367CC802A6F821FF817C854A14FBC100707C7E1B787C645A14FBE10078787F0020F8C100907FE3FB78881F00102F800000409E002438600000EBC100907C6307B4EBE100787FC803A6EBC10070382100804E80002048193B99600000005467063E7FE3FB782C0700004182FFCC48193BA1600000007FDF07B45468063E7FE3FB782C8800004086FFB04819111560000000546A063E2F0A0000419AFF9C4BFFF6F160000000546C063E7FE3FB782F8C0000419EFF84481910716000000028030005386000004081FF74386000014BFFFF6C60000000"
+      },
+      {
+        "va": "0x2d20cc",
+        "bytes": "8162F298"
+      },
+      {
+        "va": "0x2d20fc",
+        "bytes": "881F0010"
+      },
+      {
+        "va": "0x2d2104",
+        "bytes": "409E0024"
+      },
+      {
+        "va": "0x2d2128",
+        "bytes": "48193B99"
+      },
+      {
+        "va": "0x2d213c",
+        "bytes": "4182FFCC"
+      },
+      {
+        "va": "0x2d2140",
+        "bytes": "48193BA1"
+      },
+      {
+        "va": "0x2d2158",
+        "bytes": "4086FFB0"
+      },
+      {
+        "va": "0x2d215c",
+        "bytes": "48191115"
+      },
+      {
+        "va": "0x2d216c",
+        "bytes": "419AFF9C"
+      },
+      {
+        "va": "0x2d2170",
+        "bytes": "4BFFF6F1"
+      },
+      {
+        "va": "0x2d2184",
+        "bytes": "419EFF84"
+      },
+      {
+        "va": "0x2d2188",
+        "bytes": "48191071"
+      },
+      {
+        "va": "0x2d2190",
+        "bytes": "28030005"
+      },
+      {
+        "va": "0x2d2198",
+        "bytes": "4081FF74"
+      },
+      {
+        "va": "0x2d21a8",
+        "bytes": "F821FF617C0802A6FBA10088FBC10090FBE10098FB6100787C7F1B78FB810080F80100B04BF7D9BDE84100282F8300007FFD07B47C7E1B787FA3EB78419E00144BFFFEE15463063E2C0300004082003438600000EBA100B07C6307B4EB6100787FA803A6EB810080EBA10088EBC10090EBE10098382100A04E800020600000007FA3EB78837E1A684BFFFD797C7C1B78807E1A688003041C7F00E0004198FFB457EA203657E8103A7CE852147CDB3A1478C3002048193C1D600000007CBC00D07BC300207CA407B44BF7DA49E84100287FA3EB7848190FF560000000389E1E005469063E788B00202C8900007FA4EB787D635B7838A00000408600208382F2B438800004807C00004BF7ECF9E8410028386000014BFFFF40836B0000817B001C818B0000F84100287D8903A6804B00044E800421E84100284BFFFFC460000000"
+      },
+      {
+        "va": "0x2d21cc",
+        "bytes": "4BF7D9BD"
+      },
+      {
+        "va": "0x2d21e8",
+        "bytes": "4BFFFEE1"
+      },
+      {
+        "va": "0x2d21ec",
+        "bytes": "5463063E"
+      },
+      {
+        "va": "0x2d21f4",
+        "bytes": "40820034"
+      },
+      {
+        "va": "0x2d2230",
+        "bytes": "4BFFFD79"
+      },
+      {
+        "va": "0x2d223c",
+        "bytes": "8003041C"
+      },
+      {
+        "va": "0x2d2240",
+        "bytes": "7F00E000"
+      },
+      {
+        "va": "0x2d2244",
+        "bytes": "4198FFB4"
+      },
+      {
+        "va": "0x2d225c",
+        "bytes": "48193C1D"
+      },
+      {
+        "va": "0x2d2264",
+        "bytes": "7CBC00D0"
+      },
+      {
+        "va": "0x2d2270",
+        "bytes": "4BF7DA49"
+      },
+      {
+        "va": "0x2d22b0",
+        "bytes": "4BF7ECF9"
+      },
+      {
+        "va": "0x2d22b8",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x2d24c0",
+        "bytes": "38A357408162F298546920367CE802A67CA407B45466103A7C645A14F821FF81FBE10078F8E100907D464A1488030014392000002F800000409E0020E96100907D2307B4EBE10078382100807D6803A64E8000206000000083E2F2987C6AFA14787F0020801F00007C0307B448190C656000000039600000786C002039200001814C0018554807BC2C0800004082FFB0889F00102C840000418600207D695B78E96100907D2307B4EBE10078382100807D6803A64E800020396000017D695B784BFFFFE060000000"
+      },
+      {
+        "va": "0x2d2d38",
+        "bytes": "F821FF617C0802A6FBA10088FBE10098FB610078FB810080FBC10090F80100B07C7D1B784BF7CE2DE84100282F8300007C7F1B78419E00402C1D0013418200FC7FBE07B47FC3F378481904116000000083BF1A687C7B1B787FC3F3784BFFF2C57C7C1B78807F1A688003041C7F80E000409C0030EB6100B038600000EB8100807C6307B47F6803A6EBA10088EB610078EBC10090EBE10098382100A04E8000207BA300207FC4F37838A000017BFD002048193D896000000038A0FFFF7FA3EB787FC4F3784BF7FD0DE84100287CDC00D07FA3EB787CC407B44BF7CEA9E841002880BB001854A407BE2F040000419A006C4808A531600000008182F2B438800004806C00004BF7E16DE8410028EB6100B0EB810080386000017F6803A6EBA100887C6307B4EB610078EBC10090EBE10098382100A04E800020786300203880000B4BF7C941E84100285463063E2C8300004186FEF04BFFFF20391F1E007FC4F3787909002038A000007D234B7881690000814B001C80EA0000F84100287CE903A6804A00044E800421E84100284BFFFF64"
+      },
+      {
+        "va": "0x2d2d70",
+        "bytes": "2C1D0013"
+      },
+      {
+        "va": "0x2d2d94",
+        "bytes": "4BFFF2C5"
+      },
+      {
+        "va": "0x2d2da4",
+        "bytes": "7F80E000"
+      },
+      {
+        "va": "0x2d2de0",
+        "bytes": "38A00001"
+      },
+      {
+        "va": "0x2d2de8",
+        "bytes": "48193D89"
+      },
+      {
+        "va": "0x2d2dfc",
+        "bytes": "4BF7FD0D"
+      },
+      {
+        "va": "0x2d2e04",
+        "bytes": "7CDC00D0"
+      },
+      {
+        "va": "0x2d2e10",
+        "bytes": "4BF7CEA9"
+      },
+      {
+        "va": "0x2d2e28",
+        "bytes": "4808A531"
+      },
+      {
+        "va": "0x2d2e3c",
+        "bytes": "4BF7E16D"
+      },
+      {
+        "va": "0x2d2e74",
+        "bytes": "3880000B"
+      },
+      {
+        "va": "0x2d2e78",
+        "bytes": "4BF7C941"
+      },
+      {
+        "va": "0x2d2e88",
+        "bytes": "4186FEF0"
+      },
+      {
+        "va": "0x4631f8",
+        "bytes": "F821FF917C8802A6F88100804BFFFF8D81230048E8010080382100707C0803A6806904604E800020"
+      },
+      {
+        "va": "0x463218",
+        "bytes": "80690460"
+      },
+      {
+        "va": "0x463270",
+        "bytes": "F821FF917CA802A6F8A100804BFFFF158083001838600000548007BE2F800000409E000838600001E8C100807C6307B4382100707CC803A64E80002060000000"
+      },
+      {
+        "va": "0x463280",
+        "bytes": "80830018"
+      },
+      {
+        "va": "0x463288",
+        "bytes": "548007BE"
+      },
+      {
+        "va": "0x465cc0",
+        "bytes": "88030011386000002B800003409D0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x465cc8",
+        "bytes": "2B800003"
+      },
+      {
+        "va": "0x465ce0",
+        "bytes": "88030011386000002B800004409D0008386000017C6307B44E80002060000000"
+      },
+      {
+        "va": "0x465ce8",
+        "bytes": "2B800004"
+      },
+      {
+        "va": "0x465d88",
+        "bytes": "F821FF717C8802A6FBA100787C7D1B7878630020F88100A04BFFE04160000000D03D0008E80100A0EBA10078382100907C0803A64E800020"
+      },
+      {
+        "va": "0x465da8",
+        "bytes": "D03D0008"
+      },
+      {
+        "va": "0x465e18",
+        "bytes": "F821FF717C8802A6DBE10088FFE00890FBA100707C7D1B7878630020F88100A04BFFDFA960000000C1825FD4C09D0008EFFF202AFC7F6028FC0367EEFC400828FDA2006ED1BD0008E80100A0EBA10070CBE100887C0803A6382100904E800020"
+      },
+      {
+        "va": "0x465e78",
+        "bytes": "F821FF817C8802A6FBC10070FBE10078F8810090787E00207C7F1B78806300007C6307B44BFFD41560000000786900207FC3F378800904602B800004419D001CE8E10090EBC10070EBE100787CE803A6382100804E80002038C0000598DF0011C0090244D01F00044BFFDF0160000000E8A10090EBE100787FC3F378EBC10070382100807CA803A64BFFFF1860000000"
+      },
+      {
+        "va": "0x465eac",
+        "bytes": "80090460"
+      },
+      {
+        "va": "0x465eb0",
+        "bytes": "2B800004"
+      },
+      {
+        "va": "0x465ed4",
+        "bytes": "98DF0011"
+      },
+      {
+        "va": "0x465ed8",
+        "bytes": "C0090244"
+      },
+      {
+        "va": "0x465edc",
+        "bytes": "D01F0004"
+      },
+      {
+        "va": "0x465ee0",
+        "bytes": "4BFFDF01"
+      },
+      {
+        "va": "0x465f00",
+        "bytes": "4BFFFF18"
+      },
+      {
+        "va": "0x466b70",
+        "bytes": "F821FF617CC802A6FB8100807C7C1B787C8307B4FB410070FB6100787C9A2378FBA10088FBC10090FBE10098F8C100B07CBE2B784BFFC5ED600000007C7B1B78574420365743103A7FA32214817B00187D3CEA14556005AC793F00202F800000409E00102C1E00004082003C6000000088FF00102F070000419A0058EB8100B0EB4100707F8803A6EB610078EB810080EBA10088EBC10090EBE10098382100A04E800020556507BC2C85000040860108793F00207FE3FB784BFFF1616000000088FF00102F070000409AFFB46000000039400001C0225FEC7FE3FB78995F00104BFFF4596000000083425FF4E93A55285528056A2FA80000409E0088819B0018558B07BC2C0B0000418200783BC000003BE000007F9DE37848000014600000002F1F001F3BFF0001419A00447BA300203BBD00148B6300102C9B00004186FFE480C300007CC307B44BFFC4D9600000002F1F001F786300203BFF0001808300187880FFE27FDE0214409AFFC42F9E0001409D0010EBFA552863FE0400FBDA5528835C02803BBA000193BC0280EB8100B0EB4100707F8803A6EB610078EB810080EBA10088EBC10090EBE10098382100A04E8000207FE3FB78C0225FF04BFFF0ED600000004BFFFEAC"
+      },
+      {
+        "va": "0x466c28",
+        "bytes": "4BFFF161"
+      },
+      {
+        "va": "0x466c38",
+        "bytes": "409AFFB4"
+      },
+      {
+        "va": "0x466c4c",
+        "bytes": "995F0010"
+      },
+      {
+        "va": "0x466c50",
+        "bytes": "4BFFF459"
+      },
+      {
+        "va": "0x466cf8",
+        "bytes": "93BC0280"
+      },
+      {
+        "va": "0x85a8f8",
+        "bytes": "000337D80088FF38"
+      },
+      {
+        "va": "0x85a930",
+        "bytes": "00033E680088FF38"
+      },
+      {
+        "va": "0x8892fc",
+        "bytes": "10002F000085A930"
+      },
+      {
+        "va": "0x889334",
+        "bytes": "10002F980085A8F8"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89f1b8",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x10002f00",
+        "bytes": "69735F776561706F6E5F617661696C61626C6500"
+      },
+      {
+        "va": "0x10002f98",
+        "bytes": "70757263686173655F776561706F6E00"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -109311,6 +109882,10 @@
     ]
   },
   "annotations": [
+{"va":"0x002D20C8","name":"TOD_level_five_purchase_gate_verified","kind":"function","confidence":"confirmed","bytes":"5465103A8162F298","comment":"Global save ownership nonzero, stored level exactly4 (separate>3 and NOT>4 tests), definition flags&3 clear, saved906EC nonzero, num_levels unsigned>5. Not funds/full vendor eligibility; raw replay nonzero is not a new mode-bound contract.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_purchase native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00026638","name":"TOD_purchase_weapon_dispatch_and_recheck_boundary_verified","kind":"function","confidence":"confirmed","bytes":"F821FF817C8802A6","comment":"Low-byte2D20C8 true selects2D21A8; false selects normal2D2D38, not rejection. Extended transaction separately requires hero and rechecks gate; failure there returns0 without normal fallback. Definition/callback samples not proven atomic.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_purchase native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002D21A8","name":"TOD_purchase_weapon_level_five_publication_before_payment_verified","kind":"function","confidence":"confirmed","bytes":"F821FF617C0802A6","comment":"Hero+repeat2D20C8 gate, captureMegaPrice, signed32 bolt admission.465E78 stores level5/threshold5 XP then additive ammo path before captured-cost debit. Qualified virtual callback and request4 afterward; no atomicity/rollback or new safe-edit claim.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_purchase native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x000265C8","name":"TOD_weapon_availability_normal_or_level_five_verified","kind":"function","confidence":"confirmed","bytes":"F821FF717C8802A6","comment":"Checks normal2D24C0 first; nonzero returns1, else samples2D20C8 low byte. Named availability is OR of two predicates, distinct from purchase routing and absent local wallet test.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_purchase native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0035EB18","name":"TOD_skill_definition_filter_group_word","kind":"function","confidence":"confirmed","bytes":"5465203680021A6C","comment":"Returns definition[id*10+0C]. Five equality-filter consumers scan IDs0..59; nth selection is one-based within the group. Metadata selector, not saved field or confirmed award prerequisite.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; skill_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00027268","name":"TOD_skill_filter_group_nth_saved_bit","kind":"function","confidence":"confirmed","bytes":"F821FF617C0802A6","comment":"Equality-filters definition0C, selects one-based nth matching globalID in ascending0..59 order, then tests saved8710 bit. No match and unset bit both return0.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; skill_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x002EB9B8","name":"TOD_iris_wrench_runtime_other_entry_scan_award_request","kind":"function","confidence":"confirmed","bytes":"F821FEA17C8802A6","comment":"Runtime gate10063028 and saved906E8 selector11 via2D1490 required after prior effects, not loadedworldproof. Occupiedpool scan excludes inputentry; another config/tag695 and config2C==0 aborts. Otherwise requests skill24. Not all-physical-enemies or serialized2C proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; skill_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

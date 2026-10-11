@@ -36,6 +36,19 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Weapon purchase gates and ordered writes remain read-only and runtime-qualified", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            bytes[0x24] = 255; bytes[0x25] = 4;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906EC, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Weapons & gadgets");
+            string details = table.Rows[1].Details;
+            True(details.Contains("stored level exactly4") && details.Contains("raw0xFFFFFFFF") && details.Contains("not full purchase eligibility"), "Gate details must distinguish saved prerequisites from runtime definition/caller state.");
+            True(details.Contains("without a normal fallback") && details.Contains("before charging bolts") && details.Contains("charge again"), "Routing, publication/payment order and duplicate acquisition must stay qualified.");
+            Equal(115, TodResearch.Map.GetProperty("weapon_purchase").GetProperty("instruction_guards").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Purchase research must never promote levels, spend bolts, refill ammo or normalize replay state.");
+        });
         Check("Blueprint selector provenance does not become current planet or pickup history", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -961,7 +974,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1373, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1377, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
