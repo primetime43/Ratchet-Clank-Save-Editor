@@ -2,7 +2,53 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
-Latest completed pass confirms the canonical inventory-owner pointer, runtime weapon borrowed-record binding, a separate ammo admission predicate and the negated-request clamped-add debit path. Representative469018 checks request0 before a later request1 debit behind an intervening helper and runtime member gate.87 guard ranges,14 focused tests and four new annotations cover the evidence. Saved values do not establish current eligibility, exact delta or per-shot cost. Existing inventory details and Research remain read-only with unchanged columns. All795 native/asset/organization checks and196 app regressions pass, including raw-value preservation, UI resizing/DPI, original-save loading and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1470 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1471 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage. Runtime definition overrides, pointer lifetime, anonymous global meaning, FPSCR behavior, larger callback effects, phase units, target identities/counts and event names remain unresolved.
+Latest completed pass confirms saved-setting publication before runtime application: original control index versus three eleven-halfword runtime copy routes, rumble flag before eight-port stop requests, surround capability/engine gates and three separately sampled audio buses.258 guard ranges,15 focused tests and five new annotations cover seven named setters and their bounded helper paths. Stored preferences do not establish successful hardware apply. Existing settings details and Research remain read-only with unchanged columns and rows. All810 native/asset/organization checks and197 app regressions pass, including raw-value preservation, UI resizing/DPI, original-save loading and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1475 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1476 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage. Runtime input-member names/table state, speaker-mode meanings, hardware/callback outcomes, definition overrides, pointer lifetime, FPSCR behavior, phase units, target identities/counts and event names remain unresolved.
+
+## Settings saved publication versus runtime application
+
+[Inspect-TodSettingsApply.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSettingsApply.py) adds258 exact-build guard ranges and fifteen focused tests. Seven named setter registrations, saved-root pointers, cross-TOC thunks, native store/call order, runtime copy operands and apply gates reproduce `settings_apply` in NativeMap.json. Optional `--save` reads detached raw values only. This pass adds no new saved fields or editing permission; it distinguishes stored preferences from current runtime/device state.
+
+### Control scheme preserves the supplied index before runtime dispatch
+
+Named `set_control_scheme` reaches **271B0**, which writes the original low32 index at **saved114BC** before128B0→**6966B8**. Exactly1 requests runtime selector1, exactly2 requests2, and **all other raw indices request0 without rewriting the saved word to0**. Thus the count2 returned by `get_num_control_schemes` is not a setter-side range check. Neither selector2 nor unknown indices are locally rejected here; this does not establish legitimate menu inputs or scheme names.
+
+Complete call-free6966B8 resolves slot8AA4D0→runtime root10731648, its pointed table, byte+12 count and stride8 pointer entries. Count0 skips the halfword stores even though the caller already saved the index. All routes copy eleven halfwords into runtime object members1C206..1C21A. Selectors1/2 contain duplicated final-loop tail sites for the same last pair, not extra members. Sources and destinations below are **runtime object offsets, not GAME.SAV fields or recovered button/action names**:
+
+| Runtime destination | Selector0 source | Selector1 source | Selector2 source |
+| --- | --- | --- | --- |
+| 1C206 | 1C006 | 1C006 | 1C006 |
+| 1C208 | 1C002 | 1C016 | 1C002 |
+| 1C20A | 1C004 | 1C004 | 1C004 |
+| 1C20C | 1C008 | 1C008 | 1C008 |
+| 1C20E | 1C018 | 1C018 | 1C018 |
+| 1C210 | 1C00E | 1C010 | 1C00E |
+| 1C212 | 1C010 | 40 | 40 |
+| 1C214 | 1C014 | 1C014 | 1C014 |
+| 1C216 | 1C01C | 1C01C | 1C01C |
+| 1C218 | 1C00C | 1C00C | 1C00C |
+| 1C21A | 1C00A | 1C00A | 1C00A |
+
+Valid runtime pointers and stable count/records remain required. The saved scheme does not reconstruct this table, its count, current copied halfwords or accepted hardware behavior. These runtime routes are also separate from the previously mapped shipped pause-menu inversion API tables, which only have scheme0/1 entries.
+
+### Rumble publishes a saved byte before enable or eight-port stop requests
+
+Named `set_rumble_on` wrapper2C7C0 validates its argument and normalizes Boolean conversion to0/1. Native **26D18** stores low8 at **saved114D4**, then branches on the argument's **full64 zero test** computed earlier. Nonzero reaches12020→**60B7D0**, whose complete body only sets runtime1071F458+4 to1. It does not directly issue an actuator command.
+
+Zero reaches11C20→**60C568**: clear the same runtime flag first, then issue eight explicit **cellPadSetActDirect** import requests for ports0..7 with the first two request bytes zero. The stub839A2C is independently mapped to sys_io NIDF65544EE. External results are not tested; a failure does not locally stop later port requests or undo the saved byte. This is not eight connected devices, a guaranteed successful hardware stop or atomic rollback. Raw direct-native256 stores byte0 but selects enable; a high64-only nonzero also selects enable. Such probes expose instruction boundaries, not accepted named-Lua inputs or a history recovered from a saved byte.
+
+### Surround publication survives skipped or failed local apply
+
+Named `set_surround_on` wrapper2C5B8 supplies normalized0/1. Native **26CD0** first stores low8 at **saved114D5**, then calls103D0→**696128**. Low32 argument0 skips the capability query and requests mode1. Nonzero calls5B4988→6141E0, then requests mode4 for returned6, mode5 for8, mode3 otherwise. These mode numbers and probe results are not promoted to speaker-layout names.
+
+Every selected mode goes to **5B51B8**, which requires runtime engine1067BF3C+14 flag10000 and a nonnull5B3EB8 lookup. Either missing prerequisite returns0 locally. Otherwise virtual+30 receives the selected mode.696128 normalizes the low32 result to nonzero/zero, but26CD0 does not test it or locally restore saved114D5. Hardware capability, dynamic callback behavior and actual success remain outside the saved snapshot. Raw native256 stores byte0 but chooses the enabled query; high64-only nonzero has low32 zero and selects mode1. Named normalized Boolean calls do not exhibit that raw-argument discrepancy.
+
+### One audio setting replays three separately sampled saved volumes
+
+Voice **276D0**, effects **24E90** and music **27718** store their respective ordinary-finite0..1-clamped value at **114C4/114C8/114CC**, then all call **7FC98**. That routine loads and applies **effects→bus1, voice→bus6, music→bus12**, in that order. Each value is loaded immediately before its own114A0→**5ADEF0** call; this is not one atomic captured triple. Other saved values are not reclamped by that leaf.
+
+Complete call-free5ADEF0 requires runtime engine1067BF3C+14 flag10000 and unsigned busID≤63. Admitted input stores the supplied float at runtime table base+busID×B0; otherwise it returns0 without that local store.7FC98 ignores the results. A preference therefore can be saved while the runtime bus store is skipped, with no local rollback. These runtime records are not new saved floats, measured loudness or proof of playback. Runtime pointer validity, FPR/FPSCR and nonfinite payload conversion remain qualified. In contrast, camera-speed **276A8** stores its finite-clamped value at saved114B0 and returns **without calls**; no camera sensitivity unit or current camera outcome is inferred.
+
+The original detached save contains scheme00000000, rumble01, surround01 and all three volumes3F666666. These are snapshots, not proof these setters ran or hardware apply succeeded. The app adds these distinctions to existing settings details and a searchable Research topic while retaining five technical columns and all17 rows. Unusual words, raw flags, nonfinite floats and opaque114D6/114D7 stay unchanged.
 
 ## Weapon borrowed inventory record, local ammo admission and debit
 

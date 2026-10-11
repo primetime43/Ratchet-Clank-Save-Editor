@@ -117201,6 +117201,1426 @@
       }
     ]
   },
+  "settings_apply": {
+    "confidence": "exact-build-saved-publication-and-runtime-apply-boundaries",
+    "warning": "USA BCUS98127 v02.00 static read-only evidence. No native settings apply, hardware probing, SDK calls, Lua execution or new editing permission.",
+    "named_setters": [
+      {
+        "name": "set_control_scheme",
+        "native_va": "0x271b0",
+        "wrapper_va": "0x2dbc0",
+        "slot_va": "0x889644"
+      },
+      {
+        "name": "set_surround_on",
+        "native_va": "0x26cd0",
+        "wrapper_va": "0x2c5b8",
+        "slot_va": "0x889724"
+      },
+      {
+        "name": "set_rumble_on",
+        "native_va": "0x26d18",
+        "wrapper_va": "0x2c7c0",
+        "slot_va": "0x88970c"
+      },
+      {
+        "name": "set_voice_vol",
+        "native_va": "0x276d0",
+        "wrapper_va": "0x2cd40",
+        "slot_va": "0x8896cc"
+      },
+      {
+        "name": "set_sound_vol",
+        "native_va": "0x24e90",
+        "wrapper_va": "0x2cfe0",
+        "slot_va": "0x8896ac"
+      },
+      {
+        "name": "set_music_vol",
+        "native_va": "0x27718",
+        "wrapper_va": "0x2ce90",
+        "slot_va": "0x8896bc"
+      },
+      {
+        "name": "set_camera_speed",
+        "native_va": "0x276a8",
+        "wrapper_va": "0x2c008",
+        "slot_va": "0x889764"
+      }
+    ],
+    "control_scheme": {
+      "saved_offset": "0x114bc",
+      "rule": "271B0 stores the supplied low32 index at saved114BC BEFORE runtime128B0->6966B8. Exactly1 requests selector1; exactly2 selector2; ALL other indices selector0 while the original saved word remains unnormalized. Named get_num_control_schemes returns2, not proof setter2 or raw unknown indices are rejected.",
+      "runtime_rule": "Call-free6966B8 resolves8AA4D0=10731648, then its pointed runtime table, byte+12 count and pointer entries stride8. Count0 skips its halfword stores, after the caller already published the saved index. Each selected route copies eleven halfword source members to runtime object1C206..1C21A; repeated final-loop tail sites in selectors1/2 have the same last pair. The source/destination members are runtime, NOT GAME.SAV offsets, button names, a device-count guarantee or stored control mappings. Valid pointers and stable observed counts/records remain required; no runtime table inferred from a save.",
+      "copies": [
+        {
+          "selector": 0,
+          "pairs": [
+            {
+              "source_offset": "0x1c006",
+              "destination_offset": "0x1c206",
+              "store_sites": [
+                "0x696700"
+              ]
+            },
+            {
+              "source_offset": "0x1c002",
+              "destination_offset": "0x1c208",
+              "store_sites": [
+                "0x696740"
+              ]
+            },
+            {
+              "source_offset": "0x1c004",
+              "destination_offset": "0x1c20a",
+              "store_sites": [
+                "0x696780"
+              ]
+            },
+            {
+              "source_offset": "0x1c008",
+              "destination_offset": "0x1c20c",
+              "store_sites": [
+                "0x6967c0"
+              ]
+            },
+            {
+              "source_offset": "0x1c018",
+              "destination_offset": "0x1c20e",
+              "store_sites": [
+                "0x696800"
+              ]
+            },
+            {
+              "source_offset": "0x1c00e",
+              "destination_offset": "0x1c210",
+              "store_sites": [
+                "0x696840"
+              ]
+            },
+            {
+              "source_offset": "0x1c010",
+              "destination_offset": "0x1c212",
+              "store_sites": [
+                "0x696880"
+              ]
+            },
+            {
+              "source_offset": "0x1c014",
+              "destination_offset": "0x1c214",
+              "store_sites": [
+                "0x6968c0"
+              ]
+            },
+            {
+              "source_offset": "0x1c01c",
+              "destination_offset": "0x1c216",
+              "store_sites": [
+                "0x696900"
+              ]
+            },
+            {
+              "source_offset": "0x1c00c",
+              "destination_offset": "0x1c218",
+              "store_sites": [
+                "0x696940"
+              ]
+            },
+            {
+              "source_offset": "0x1c00a",
+              "destination_offset": "0x1c21a",
+              "store_sites": [
+                "0x696980"
+              ]
+            }
+          ]
+        },
+        {
+          "selector": 1,
+          "pairs": [
+            {
+              "source_offset": "0x1c006",
+              "destination_offset": "0x1c206",
+              "store_sites": [
+                "0x6969d0"
+              ]
+            },
+            {
+              "source_offset": "0x1c016",
+              "destination_offset": "0x1c208",
+              "store_sites": [
+                "0x696a10"
+              ]
+            },
+            {
+              "source_offset": "0x1c004",
+              "destination_offset": "0x1c20a",
+              "store_sites": [
+                "0x696a50"
+              ]
+            },
+            {
+              "source_offset": "0x1c008",
+              "destination_offset": "0x1c20c",
+              "store_sites": [
+                "0x696a90"
+              ]
+            },
+            {
+              "source_offset": "0x1c018",
+              "destination_offset": "0x1c20e",
+              "store_sites": [
+                "0x696ad0"
+              ]
+            },
+            {
+              "source_offset": "0x1c010",
+              "destination_offset": "0x1c210",
+              "store_sites": [
+                "0x696b10"
+              ]
+            },
+            {
+              "source_offset": "0x40",
+              "destination_offset": "0x1c212",
+              "store_sites": [
+                "0x696b50"
+              ]
+            },
+            {
+              "source_offset": "0x1c014",
+              "destination_offset": "0x1c214",
+              "store_sites": [
+                "0x696b90"
+              ]
+            },
+            {
+              "source_offset": "0x1c01c",
+              "destination_offset": "0x1c216",
+              "store_sites": [
+                "0x696bd0"
+              ]
+            },
+            {
+              "source_offset": "0x1c00c",
+              "destination_offset": "0x1c218",
+              "store_sites": [
+                "0x696c10"
+              ]
+            },
+            {
+              "source_offset": "0x1c00a",
+              "destination_offset": "0x1c21a",
+              "store_sites": [
+                "0x696c50",
+                "0x696c80"
+              ]
+            }
+          ]
+        },
+        {
+          "selector": 2,
+          "pairs": [
+            {
+              "source_offset": "0x1c006",
+              "destination_offset": "0x1c206",
+              "store_sites": [
+                "0x696cd0"
+              ]
+            },
+            {
+              "source_offset": "0x1c002",
+              "destination_offset": "0x1c208",
+              "store_sites": [
+                "0x696d10"
+              ]
+            },
+            {
+              "source_offset": "0x1c004",
+              "destination_offset": "0x1c20a",
+              "store_sites": [
+                "0x696d50"
+              ]
+            },
+            {
+              "source_offset": "0x1c008",
+              "destination_offset": "0x1c20c",
+              "store_sites": [
+                "0x696d90"
+              ]
+            },
+            {
+              "source_offset": "0x1c018",
+              "destination_offset": "0x1c20e",
+              "store_sites": [
+                "0x696dd0"
+              ]
+            },
+            {
+              "source_offset": "0x1c00e",
+              "destination_offset": "0x1c210",
+              "store_sites": [
+                "0x696e10"
+              ]
+            },
+            {
+              "source_offset": "0x40",
+              "destination_offset": "0x1c212",
+              "store_sites": [
+                "0x696e50"
+              ]
+            },
+            {
+              "source_offset": "0x1c014",
+              "destination_offset": "0x1c214",
+              "store_sites": [
+                "0x696e90"
+              ]
+            },
+            {
+              "source_offset": "0x1c01c",
+              "destination_offset": "0x1c216",
+              "store_sites": [
+                "0x696ed0"
+              ]
+            },
+            {
+              "source_offset": "0x1c00c",
+              "destination_offset": "0x1c218",
+              "store_sites": [
+                "0x696f10"
+              ]
+            },
+            {
+              "source_offset": "0x1c00a",
+              "destination_offset": "0x1c21a",
+              "store_sites": [
+                "0x696f50",
+                "0x696f80"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "rumble": {
+      "saved_offset": "0x114d4",
+      "rule": "26D18 stores low8 at saved114D4 BEFORE a FULL64 zero test's selected helper. Nonzero calls12020->60B7D0, whose complete body only sets runtime1071F458+4 to1. Zero calls11C20->60C568: first clears that runtime flag, then issues eight cellPadSetActDirect requests for ports0..7 with both first actuator bytes zero. External return codes are not checked; all eight requests remain explicit even if an earlier one fails. No attached-port count, successful stop, hardware availability or save rollback is proven.",
+      "wrapper_limit": "Named set_rumble_on wrapper2C7C0 validates its argument and normalizes boolean conversion to0/1 before26D18. Raw direct-native256 would store byte0 but select enable, and high64-only nonzero also selects enable; these are instruction boundaries, not accepted named-Lua calls or saved-byte history.",
+      "port_requests": [
+        {
+          "port": 0,
+          "call_va": "0x60c5b4"
+        },
+        {
+          "port": 1,
+          "call_va": "0x60c5e0"
+        },
+        {
+          "port": 2,
+          "call_va": "0x60c60c"
+        },
+        {
+          "port": 3,
+          "call_va": "0x60c638"
+        },
+        {
+          "port": 4,
+          "call_va": "0x60c664"
+        },
+        {
+          "port": 5,
+          "call_va": "0x60c690"
+        },
+        {
+          "port": 6,
+          "call_va": "0x60c6bc"
+        },
+        {
+          "port": 7,
+          "call_va": "0x60c6e8"
+        }
+      ]
+    },
+    "surround": {
+      "saved_offset": "0x114d5",
+      "rule": "26CD0 stores low8 at saved114D5 BEFORE103D0->696128. That helper tests LOW32 argument: zero selects mode1 without the capability query; nonzero calls5B4988->6141E0, then selects mode4 for result6, mode5 for result8, mode3 otherwise. All delegate5B51B8. Mode numbers are not proven speaker-layout names; selected requests are not hardware success.",
+      "apply_boundary": "5B51B8 requires runtime engine1067BF3C+14 flag0x10000, then a nonnull5B3EB8 lookup. Either failure returns0 locally; admitted lookup calls virtual+30 with the selected mode.696128 normalizes the low32 helper result to nonzero/zero, but26CD0 ignores that result and does not locally undo saved114D5. Named set_surround_on wrapper2C5B8 supplies normalized0/1. Raw native256 stores byte0 while selecting enabled query; high64-only nonzero has low32 zero and selects mode1. No inferred layout, supported hardware or full callback final-state model."
+    },
+    "audio_volumes": {
+      "saved_offsets": [
+        "0x114c4",
+        "0x114c8",
+        "0x114cc"
+      ],
+      "rule": "Voice276D0, effects24E90 and music27718 first store their respective ordinary-finite0..1-clamped value, then ALL call7FC98. That routine reapplies effects to bus1, voice to bus6, music to bus12 IN THAT ORDER. Each saved float is loaded immediately before its own114A0->5ADEF0 call, not captured as one atomic triple; later samples can differ. Original remaining values are not clamped again by this leaf.",
+      "runtime_boundary": "Complete call-free5ADEF0 writes supplied float at runtime table base+busID*B0 only if engine1067BF3C+14 flag0x10000 is set AND unsigned busID<=63. Otherwise it returns0 without this store.7FC98 does not test those return values; saved publication is not rolled back locally. This is runtime storage, not extra saved floats or proof of measured volume/playback. Valid runtime pointers, FPR conversion/FPSCR and nonfinite payload behavior remain qualified.",
+      "camera_contrast": "Camera-speed276A8 stores its ordinary-finite0..1-clamped value at saved114B0 and returns with no calls, unlike the three audio setters. No guessed sensitivity unit, runtime camera effect or safe edit range."
+    },
+    "snapshot_limit": "Saved scheme/rumble/surround/volume values survive failed or skipped local apply paths. GAME.SAV does not reveal engine gates, attached ports, active runtime halfwords, capability query results, callback outcomes or whether these setters ever executed. Viewing preserves raw values and opaque bytes; does not normalize or apply them.",
+    "recommended_annotations": [
+      {
+        "va": "0x271d4",
+        "kind": "comment",
+        "name": "TOD_control_scheme_saved_publish_before_runtime_selector",
+        "comment": "Stores original low32 to saved114BC before128B0->6966B8: exactly1/2 request selector1/2, all other raw indices selector0 without rewriting saved word. Runtime table/count may skip apply; not scheme names or accepted edit range."
+      },
+      {
+        "va": "0x6966b8",
+        "name": "TOD_control_scheme_runtime_halfword_copy_routes",
+        "comment": "Call-free runtime table10731648, count byte12, pointer-entry stride8. Three routes copy eleven halfwords to object1C206..1C21A, count0 skips; exact source pairs in settings_apply. Not saved mappings, button names or hardware success."
+      },
+      {
+        "va": "0x60c568",
+        "name": "TOD_rumble_disable_runtime_flag_then_eight_port_requests",
+        "comment": "Clears runtime1071F458+4 then unrolled cellPadSetActDirect ports0..7 with first actuator bytes zero. External returns ignored, no attached-port count, confirmed stop or rollback. Saved114D4 caller publishes first."
+      },
+      {
+        "va": "0x696128",
+        "name": "TOD_surround_runtime_probe_select_and_apply_mode",
+        "comment": "Low32 zero->mode1, otherwise capability query result6->4/8->5/other->3.5B51B8 engine flag10000/non-null lookup gates and virtual30. Caller already stores saved114D5 and ignores normalized return; numeric modes not layout names."
+      },
+      {
+        "va": "0x5adef0",
+        "name": "TOD_audio_bus_runtime_float_store_if_engine_ready",
+        "comment": "Call-free engine1067BF3C+14 flag10000 and unsigned bus<=63 select runtime base+bus*B0 float store; otherwise0/no store. Saved-volume setters publish before7FC98 replays effects1/voice6/music12 and ignores these returns. Not playback or extra saved state."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x103d0",
+        "bytes": "F84100283C4200023842FF2448685D4C"
+      },
+      {
+        "va": "0x114a0",
+        "bytes": "F84100283C4200023842FF244859CA44"
+      },
+      {
+        "va": "0x11c20",
+        "bytes": "F84100283C4200023842FF24485FA93C"
+      },
+      {
+        "va": "0x12020",
+        "bytes": "F84100283C4200023842FF24485F97A4"
+      },
+      {
+        "va": "0x128b0",
+        "bytes": "F84100283C4200023842FF2448683DFC"
+      },
+      {
+        "va": "0x24e90",
+        "bytes": "806286EC7C8802A6F821FF913D230001C1828724F8810080C162870CFC416028FC02606EFC205828FDA102EED1A914C84805ADD960000000E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x24ebc",
+        "bytes": "D1A914C8"
+      },
+      {
+        "va": "0x24ec0",
+        "bytes": "4805ADD9"
+      },
+      {
+        "va": "0x26cd0",
+        "bytes": "80A286EC7C641B78F821FF917CC802A63D250001F8C10080988914D54BFE96E5E8410028E8010080382100707C0803A64E80002060000000"
+      },
+      {
+        "va": "0x26ce8",
+        "bytes": "988914D5"
+      },
+      {
+        "va": "0x26cec",
+        "bytes": "4BFE96E5"
+      },
+      {
+        "va": "0x26d18",
+        "bytes": "808286EC2FA30000F821FF917C0802A63D240001F8010080986914D4419E001C4BFEB2E9E8410028E8610080382100707C6803A64E8000204BFEAED1E8410028E8610080382100707C6803A64E800020"
+      },
+      {
+        "va": "0x26d1c",
+        "bytes": "2FA30000"
+      },
+      {
+        "va": "0x26d30",
+        "bytes": "986914D4"
+      },
+      {
+        "va": "0x26d38",
+        "bytes": "4BFEB2E9"
+      },
+      {
+        "va": "0x26d50",
+        "bytes": "4BFEAED1"
+      },
+      {
+        "va": "0x271b0",
+        "bytes": "7C6B1B78806286ECF821FF917C8802A63D2300012F8B0001F8810080386000012F0B0002916914BC419E000C38600000419A00204BFEB6CDE8410028E8A10080382100707CA803A64E80002060000000386000024BFEB6ADE8410028E8A10080382100707CA803A64E80002060000000"
+      },
+      {
+        "va": "0x271c4",
+        "bytes": "2F8B0001"
+      },
+      {
+        "va": "0x271cc",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x271d0",
+        "bytes": "2F0B0002"
+      },
+      {
+        "va": "0x271d4",
+        "bytes": "916914BC"
+      },
+      {
+        "va": "0x271dc",
+        "bytes": "38600000"
+      },
+      {
+        "va": "0x271e4",
+        "bytes": "4BFEB6CD"
+      },
+      {
+        "va": "0x27200",
+        "bytes": "38600002"
+      },
+      {
+        "va": "0x27204",
+        "bytes": "4BFEB6AD"
+      },
+      {
+        "va": "0x276a8",
+        "bytes": "806286ECC18287243D230001C162870CFC416028FC02606EFC205828FDA102EED1A914B04E800020"
+      },
+      {
+        "va": "0x276c8",
+        "bytes": "D1A914B0"
+      },
+      {
+        "va": "0x276d0",
+        "bytes": "806286EC7C8802A6F821FF913D230001C1828724F8810080C162870CFC416028FC02606EFC205828FDA102EED1A914C44805859960000000E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x276fc",
+        "bytes": "D1A914C4"
+      },
+      {
+        "va": "0x27700",
+        "bytes": "48058599"
+      },
+      {
+        "va": "0x27718",
+        "bytes": "806286EC7C8802A6F821FF913D230001C1828724F8810080C162870CFC416028FC02606EFC205828FDA102EED1A914CC4805855160000000E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x27744",
+        "bytes": "D1A914CC"
+      },
+      {
+        "va": "0x27748",
+        "bytes": "48058551"
+      },
+      {
+        "va": "0x2c008",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE6FBDE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298DC7FC5F3784BFE5225E8410028E8A100A038600000EBC10080EBE100887CA803A6382100904E8000204BFE6801E841002838800001C02298A42C0300007FE3FB784182FFB84BFE6FE5E84100284BFFB605600000004BFFFFB8"
+      },
+      {
+        "va": "0x2c5b8",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE596DE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808298FC7FC5F3784BFE4C75E8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE6251E8410028388000012C03000038A000007FE3FB784182FFB84BFE4845E84100287C66FE707CC51A787C65305078630FE24BFFA66D600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c660",
+        "bytes": "78630FE2"
+      },
+      {
+        "va": "0x2c664",
+        "bytes": "4BFFA66D"
+      },
+      {
+        "va": "0x2c7c0",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE5765E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299087FC5F3784BFE4A6DE8410028E8E100A038600000EBC10080EBE100887CE803A6382100904E8000204BFE6049E8410028388000012C03000038A000007FE3FB784182FFB84BFE463DE84100287C66FE707CC51A787C65305078630FE24BFFA4AD600000004BFFFFA8"
+      },
+      {
+        "va": "0x2c868",
+        "bytes": "78630FE2"
+      },
+      {
+        "va": "0x2c86c",
+        "bytes": "4BFFA4AD"
+      },
+      {
+        "va": "0x2cd40",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE6285E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299287FC5F3784BFE44EDE8410028E8A100A038600000EBC10080EBE100887CA803A6382100904E8000204BFE5AC9E841002838800001C02298A42C0300007FE3FB784182FFB84BFE62ADE84100284BFFA8F5600000004BFFFFB8"
+      },
+      {
+        "va": "0x2ce90",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE6135E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299307FC5F3784BFE439DE8410028E8A100A038600000EBC10080EBE100887CA803A6382100904E8000204BFE5979E841002838800001C02298A42C0300007FE3FB784182FFB84BFE615DE84100284BFFA7ED600000004BFFFFB8"
+      },
+      {
+        "va": "0x2cfe0",
+        "bytes": "F821FF717C8802A638010070FBC10080781E0020F88100A038A00000388000017FC6F378FBE100887C7F1B784BFE5FE5E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB78808299387FC5F3784BFE424DE8410028E8A100A038600000EBC10080EBE100887CA803A6382100904E8000204BFE5829E841002838800001C02298A42C0300007FE3FB784182FFB84BFE600DE84100284BFF7E15600000004BFFFFB8"
+      },
+      {
+        "va": "0x2dbc0",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BFE5405E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082996C7FC5F3784BFE366DE8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BFE4C49E841002838800001C02298A42C0300007FE3FB784182FFB84BFE542DE841002839210080FC20081E7C204FAE806100807C6307B44BFF9541600000004BFFFFA460000000"
+      },
+      {
+        "va": "0x7fc98",
+        "bytes": "8082B2EC7C6802A6F821FF71FBA100783FA40001F86100A038600001C03D14C84BF917E9E841002838600006C03D14C44BF917D9E84100283860000CC03D14CC4BF917C9E8410028E80100A0EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x7fcb0",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x7fcb4",
+        "bytes": "C03D14C8"
+      },
+      {
+        "va": "0x7fcb8",
+        "bytes": "4BF917E9"
+      },
+      {
+        "va": "0x7fcc0",
+        "bytes": "38600006"
+      },
+      {
+        "va": "0x7fcc4",
+        "bytes": "C03D14C4"
+      },
+      {
+        "va": "0x7fcc8",
+        "bytes": "4BF917D9"
+      },
+      {
+        "va": "0x7fcd0",
+        "bytes": "3860000C"
+      },
+      {
+        "va": "0x7fcd4",
+        "bytes": "C03D14CC"
+      },
+      {
+        "va": "0x7fcd8",
+        "bytes": "4BF917C9"
+      },
+      {
+        "va": "0x5adef0",
+        "bytes": "8122827C2B03003F3940000080890014548003DE2F800000419E00244199002080E2826C394000011CA300B080C700007C653214786B0020D02B0000794307E04E80002060000000"
+      },
+      {
+        "va": "0x5adef4",
+        "bytes": "2B03003F"
+      },
+      {
+        "va": "0x5adf00",
+        "bytes": "548003DE"
+      },
+      {
+        "va": "0x5adf08",
+        "bytes": "419E0024"
+      },
+      {
+        "va": "0x5adf0c",
+        "bytes": "41990020"
+      },
+      {
+        "va": "0x5adf18",
+        "bytes": "1CA300B0"
+      },
+      {
+        "va": "0x5adf28",
+        "bytes": "D02B0000"
+      },
+      {
+        "va": "0x5b4988",
+        "bytes": "F821FF917C6802A6F86100804805F84D60000000E8010080786300207C0803A6382100704E800020"
+      },
+      {
+        "va": "0x5b4994",
+        "bytes": "4805F84D"
+      },
+      {
+        "va": "0x5b51b8",
+        "bytes": "812283187C8802A6F821FF81FBE10078F88100907C7F1B78806900143880000039600000546003DE2F800000409E001CE8E1009079630020EBE10078382100807CE803A64E800020806283244BFFECB5600000007BE400202C03000078690020396000007D234B784182FFC880C900008166003080AB0000F8410028804B00047CA903A64E800421E8410028E8E100907C6B1B78EBE100787CE803A679630020382100804E800020"
+      },
+      {
+        "va": "0x5b51dc",
+        "bytes": "546003DE"
+      },
+      {
+        "va": "0x5b51e4",
+        "bytes": "409E001C"
+      },
+      {
+        "va": "0x5b5204",
+        "bytes": "4BFFECB5"
+      },
+      {
+        "va": "0x5b5220",
+        "bytes": "4182FFC8"
+      },
+      {
+        "va": "0x5b5228",
+        "bytes": "81660030"
+      },
+      {
+        "va": "0x5b523c",
+        "bytes": "4E800421"
+      },
+      {
+        "va": "0x60b7d0",
+        "bytes": "8122926C38000001900900044E800020"
+      },
+      {
+        "va": "0x60b7d4",
+        "bytes": "38000001"
+      },
+      {
+        "va": "0x60b7d8",
+        "bytes": "90090004"
+      },
+      {
+        "va": "0x60c568",
+        "bytes": "F821FF617C8802A68122926C38610070FBA10088787D0020FB8100803B800000F88100B038A00008388000007FA3EB78938900044BF920B5E84100287FA4EB78386000009B8100709B8100714822D479E841002838A000087FA3EB78388000004BF92089E84100287FA4EB78386000019B8100709B8100714822D44DE841002838A000087FA3EB78388000004BF9205DE84100287FA4EB78386000029B8100709B8100714822D421E841002838A000087FA3EB78388000004BF92031E84100287FA4EB78386000039B8100709B8100714822D3F5E841002838A000087FA3EB78388000004BF92005E84100287FA4EB78386000049B8100709B8100714822D3C9E841002838A000087FA3EB78388000004BF91FD9E84100287FA4EB78386000059B8100709B8100714822D39DE841002838A000087FA3EB78388000004BF91FADE84100287FA4EB78386000069B8100709B8100714822D371E84100287FA3EB783880000038A000084BF91F81E84100287FA4EB78386000079B8100719B8100704822D345E8410028E80100B0EB810080EBA100887C0803A6382100A04E800020"
+      },
+      {
+        "va": "0x60c598",
+        "bytes": "93890004"
+      },
+      {
+        "va": "0x60c5a8",
+        "bytes": "38600000"
+      },
+      {
+        "va": "0x60c5ac",
+        "bytes": "9B810070"
+      },
+      {
+        "va": "0x60c5b0",
+        "bytes": "9B810071"
+      },
+      {
+        "va": "0x60c5b4",
+        "bytes": "4822D479"
+      },
+      {
+        "va": "0x60c5d4",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x60c5d8",
+        "bytes": "9B810070"
+      },
+      {
+        "va": "0x60c5dc",
+        "bytes": "9B810071"
+      },
+      {
+        "va": "0x60c5e0",
+        "bytes": "4822D44D"
+      },
+      {
+        "va": "0x60c600",
+        "bytes": "38600002"
+      },
+      {
+        "va": "0x60c604",
+        "bytes": "9B810070"
+      },
+      {
+        "va": "0x60c608",
+        "bytes": "9B810071"
+      },
+      {
+        "va": "0x60c60c",
+        "bytes": "4822D421"
+      },
+      {
+        "va": "0x60c62c",
+        "bytes": "38600003"
+      },
+      {
+        "va": "0x60c630",
+        "bytes": "9B810070"
+      },
+      {
+        "va": "0x60c634",
+        "bytes": "9B810071"
+      },
+      {
+        "va": "0x60c638",
+        "bytes": "4822D3F5"
+      },
+      {
+        "va": "0x60c658",
+        "bytes": "38600004"
+      },
+      {
+        "va": "0x60c65c",
+        "bytes": "9B810070"
+      },
+      {
+        "va": "0x60c660",
+        "bytes": "9B810071"
+      },
+      {
+        "va": "0x60c664",
+        "bytes": "4822D3C9"
+      },
+      {
+        "va": "0x60c684",
+        "bytes": "38600005"
+      },
+      {
+        "va": "0x60c688",
+        "bytes": "9B810070"
+      },
+      {
+        "va": "0x60c68c",
+        "bytes": "9B810071"
+      },
+      {
+        "va": "0x60c690",
+        "bytes": "4822D39D"
+      },
+      {
+        "va": "0x60c6b0",
+        "bytes": "38600006"
+      },
+      {
+        "va": "0x60c6b4",
+        "bytes": "9B810070"
+      },
+      {
+        "va": "0x60c6b8",
+        "bytes": "9B810071"
+      },
+      {
+        "va": "0x60c6bc",
+        "bytes": "4822D371"
+      },
+      {
+        "va": "0x60c6dc",
+        "bytes": "38600007"
+      },
+      {
+        "va": "0x60c6e0",
+        "bytes": "9B810071"
+      },
+      {
+        "va": "0x60c6e4",
+        "bytes": "9B810070"
+      },
+      {
+        "va": "0x60c6e8",
+        "bytes": "4822D345"
+      },
+      {
+        "va": "0x696128",
+        "bytes": "2F8300007C0802A6F821FF91F801008038000001409E0034780307604BF1F07560000000E88100807C67FE707C8803A6382100707CE61A787CA6385054A30FFE7C6307B44E8000204BF1E81960000000380000042C0300062F0300084182FFBC38000003409AFFB4380000054BFFFFAC"
+      },
+      {
+        "va": "0x696138",
+        "bytes": "38000001"
+      },
+      {
+        "va": "0x696144",
+        "bytes": "4BF1F075"
+      },
+      {
+        "va": "0x696170",
+        "bytes": "4BF1E819"
+      },
+      {
+        "va": "0x696178",
+        "bytes": "38000004"
+      },
+      {
+        "va": "0x69617c",
+        "bytes": "2C030006"
+      },
+      {
+        "va": "0x696180",
+        "bytes": "2F030008"
+      },
+      {
+        "va": "0x696188",
+        "bytes": "38000003"
+      },
+      {
+        "va": "0x696190",
+        "bytes": "38000005"
+      },
+      {
+        "va": "0x6966b8",
+        "bytes": "2F830001419E02D82C030002418205D080C2A674390000008146000088AA00122F8500004D9E002055091838816A0000390800017C695A14786C002080CC00003CA60002A005C006B005C206880A00127F0040404199FFD42F80000041DE007C3900000060000000800A000055031838390800017D8302147986002080A600003CE50002A087C002B087C208880A00127C0040404181FFD42C8000004DC600203900000060000000550C1838806A0000390800017CCC1A1478C50020808500003D640002A0EBC004B0EBC20A892A00127F0940404199FFD4890A00122F8800004DDE0020390000005505183880CA0000390800017C853214788B002080EB00003D270002A009C008B009C20C880A00127C0040404181FFD42C8000004DC600203900000060000000800A000055041838390800017D64021479670020812700003D890002A06CC018B06CC20E880A00127F0040404199FFD42F8000004DDE0020390000006000000055071838816A0000390800017D275A1479230020818300003CAC0002A0C5C00EB0C5C210880A00127C0040404181FFD42C8000004DC60020390000006000000055031838812A0000390800017D834A147986002080A600003C850002A004C010B004C212880A00127F0040404199FFD42F8000004DDE00203900000060000000800A0000550C1838390800017CCC021478C50020808500003CE40002A167C014B167C214880A00127C0040404181FFD42C8000004DC6002039000000600000005505183880CA0000390800017C853214788B0020812B00003C690002A0E3C01CB0E3C216880A00127F0040404199FFD42F8000004DDE00203900000060000000550B1838808A0000390800017D2B221479270020806700003D830002A00CC00CB00CC218880A00127C0040404181FFD42C8000004DC600203900000060000000550B1838800A0000390800017D2B021479270020806700003CC30002A186C00AB186C21A88AA00127F0540404199FFD44E8000208122A6743940000081090000880800122C8000004D860020600000008008000055441838394A00017C64021478690020818900003CEC0002A167C006B167C206880800127C0050404181FFD42C80000041C6007C39400000600000005549183880680000394A00017D891A14798B002080EB00003CA70002A0C5C016B0C5C208880800127F0050404199FFD42F8000004DDE00203940000060000000554C183881280000394A00017D6C4A147967002080C700003CA60002A005C004B005C20A888800127C0450404181FFD4894800122C8A00004DC600203940000080080000554B1838394A00017CEB021478E6002080A600003C650002A083C008B083C20C880800127F0050404199FFD42F8000004DDE002039400000600000005546183880E80000394A00017CA63A1478A40020812400003D890002A06CC018B06CC20E880800127C0050404181FFD42C8000004DC6002039400000600000005544183880A80000394A00017D242A1479230020818300003D6C0002A00BC010B00BC210880800127F0050404199FFD42F8000004DDE002038E00000600000008008000054E9183838E700017C690214786C0020816C00003D4B0002A0CB0040B0CAC212880800127C0038404181FFD42C8000004DC600203940000060000000554C183880680000394A00017D6C1A147966002080A600003CE50002A087C014B087C214880800127F0050404199FFD42F8000004DDE002039400000600000005546183881680000394A00017CA65A1478A4002080E400003D270002A009C01CB009C216880800127C0050404181FFD42C8000004DC6002039400000600000008008000055451838394A00017C85021478870020812700003D890002A06CC00CB06CC218880800127F0050404199FFD42F8000004DDE002039400000600000005544183880A80000394A00017CE42A1478E90020806900003D630002A18BC00AB18BC21A88C800127C0650404C8100205544183880A80000394A00017CE42A1478E90020806900003D630002A18BC00AB18BC21A88C800127C0650404181FFA44E8000208082A6743940000081040000886800122F0300004D9A0020600000005549183880E80000394A00017C693A14786B0020818B00003CCC0002A006C006B006C206880800127C8050404185FFD42F00000041DA007C39400000600000008008000055431838394A00017D630214796C002080CC00003C860002A0A4C002B0A4C208880800127F805040419DFFD42C0000004DC200203940000060000000554B183880680000394A00017D8B1A147986002080A600003CE50002A087C004B087C20A892800127C8950404185FFD4894800122F0A00004DDA0020394000005546183881880000394A00017CA6621478A4002080E400003D270002A009C008B009C20C880800127F805040419DFFD42C0000004DC2002039400000600000008008000055451838394A00017C85021478870020812700003D690002A06BC018B06BC20E880800127C8050404185FFD42F0000004DDA002039400000600000005547183880880000394A00017D272214792B0020806B00003CC30002A186C00EB186C210880800127F805040419DFFD42C0000004DC2002038E00000600000008008000054EB183838E700017C6B0214786C002080CC00003D460002A0A60040B0AAC212880800127C8038404185FFD42F0000004DDA00203940000060000000554C183880680000394A00017CCC1A1478C50020808500003D240002A0E9C014B0E9C214880800127F805040419DFFD42C0000004DC2002039400000600000005545183880C80000394A00017C85321478870020812700003D690002A00BC01CB00BC216880800127C8050404185FFD42F0000004DDA002039400000600000008008000055441838394A00017CE4021478EB0020812B00003D890002A06CC00CB06CC218880800127F805040419DFFD42C0000004DC2002039400000600000005547183880880000394A00017D67221479690020806900003CC30002A186C00AB186C21A88A800127C8550404C8500205547183880880000394A00017D67221479690020806900003CC30002A186C00AB186C21A88A800127C8550404185FFA44E80002060000000"
+      },
+      {
+        "va": "0x6966bc",
+        "bytes": "419E02D8"
+      },
+      {
+        "va": "0x6966c0",
+        "bytes": "2C030002"
+      },
+      {
+        "va": "0x6966c4",
+        "bytes": "418205D0"
+      },
+      {
+        "va": "0x6966d4",
+        "bytes": "88AA0012"
+      },
+      {
+        "va": "0x6966dc",
+        "bytes": "4D9E0020"
+      },
+      {
+        "va": "0x6966f8",
+        "bytes": "3CA60002"
+      },
+      {
+        "va": "0x6966fc",
+        "bytes": "A005C006"
+      },
+      {
+        "va": "0x696700",
+        "bytes": "B005C206"
+      },
+      {
+        "va": "0x696738",
+        "bytes": "3CE50002"
+      },
+      {
+        "va": "0x69673c",
+        "bytes": "A087C002"
+      },
+      {
+        "va": "0x696740",
+        "bytes": "B087C208"
+      },
+      {
+        "va": "0x696778",
+        "bytes": "3D640002"
+      },
+      {
+        "va": "0x69677c",
+        "bytes": "A0EBC004"
+      },
+      {
+        "va": "0x696780",
+        "bytes": "B0EBC20A"
+      },
+      {
+        "va": "0x6967b8",
+        "bytes": "3D270002"
+      },
+      {
+        "va": "0x6967bc",
+        "bytes": "A009C008"
+      },
+      {
+        "va": "0x6967c0",
+        "bytes": "B009C20C"
+      },
+      {
+        "va": "0x6967f8",
+        "bytes": "3D890002"
+      },
+      {
+        "va": "0x6967fc",
+        "bytes": "A06CC018"
+      },
+      {
+        "va": "0x696800",
+        "bytes": "B06CC20E"
+      },
+      {
+        "va": "0x696838",
+        "bytes": "3CAC0002"
+      },
+      {
+        "va": "0x69683c",
+        "bytes": "A0C5C00E"
+      },
+      {
+        "va": "0x696840",
+        "bytes": "B0C5C210"
+      },
+      {
+        "va": "0x696878",
+        "bytes": "3C850002"
+      },
+      {
+        "va": "0x69687c",
+        "bytes": "A004C010"
+      },
+      {
+        "va": "0x696880",
+        "bytes": "B004C212"
+      },
+      {
+        "va": "0x6968b8",
+        "bytes": "3CE40002"
+      },
+      {
+        "va": "0x6968bc",
+        "bytes": "A167C014"
+      },
+      {
+        "va": "0x6968c0",
+        "bytes": "B167C214"
+      },
+      {
+        "va": "0x6968f8",
+        "bytes": "3C690002"
+      },
+      {
+        "va": "0x6968fc",
+        "bytes": "A0E3C01C"
+      },
+      {
+        "va": "0x696900",
+        "bytes": "B0E3C216"
+      },
+      {
+        "va": "0x696938",
+        "bytes": "3D830002"
+      },
+      {
+        "va": "0x69693c",
+        "bytes": "A00CC00C"
+      },
+      {
+        "va": "0x696940",
+        "bytes": "B00CC218"
+      },
+      {
+        "va": "0x696978",
+        "bytes": "3CC30002"
+      },
+      {
+        "va": "0x69697c",
+        "bytes": "A186C00A"
+      },
+      {
+        "va": "0x696980",
+        "bytes": "B186C21A"
+      },
+      {
+        "va": "0x6969c8",
+        "bytes": "3CEC0002"
+      },
+      {
+        "va": "0x6969cc",
+        "bytes": "A167C006"
+      },
+      {
+        "va": "0x6969d0",
+        "bytes": "B167C206"
+      },
+      {
+        "va": "0x696a08",
+        "bytes": "3CA70002"
+      },
+      {
+        "va": "0x696a0c",
+        "bytes": "A0C5C016"
+      },
+      {
+        "va": "0x696a10",
+        "bytes": "B0C5C208"
+      },
+      {
+        "va": "0x696a48",
+        "bytes": "3CA60002"
+      },
+      {
+        "va": "0x696a4c",
+        "bytes": "A005C004"
+      },
+      {
+        "va": "0x696a50",
+        "bytes": "B005C20A"
+      },
+      {
+        "va": "0x696a88",
+        "bytes": "3C650002"
+      },
+      {
+        "va": "0x696a8c",
+        "bytes": "A083C008"
+      },
+      {
+        "va": "0x696a90",
+        "bytes": "B083C20C"
+      },
+      {
+        "va": "0x696ac8",
+        "bytes": "3D890002"
+      },
+      {
+        "va": "0x696acc",
+        "bytes": "A06CC018"
+      },
+      {
+        "va": "0x696ad0",
+        "bytes": "B06CC20E"
+      },
+      {
+        "va": "0x696b08",
+        "bytes": "3D6C0002"
+      },
+      {
+        "va": "0x696b0c",
+        "bytes": "A00BC010"
+      },
+      {
+        "va": "0x696b10",
+        "bytes": "B00BC210"
+      },
+      {
+        "va": "0x696b48",
+        "bytes": "3D4B0002"
+      },
+      {
+        "va": "0x696b4c",
+        "bytes": "A0CB0040"
+      },
+      {
+        "va": "0x696b50",
+        "bytes": "B0CAC212"
+      },
+      {
+        "va": "0x696b88",
+        "bytes": "3CE50002"
+      },
+      {
+        "va": "0x696b8c",
+        "bytes": "A087C014"
+      },
+      {
+        "va": "0x696b90",
+        "bytes": "B087C214"
+      },
+      {
+        "va": "0x696bc8",
+        "bytes": "3D270002"
+      },
+      {
+        "va": "0x696bcc",
+        "bytes": "A009C01C"
+      },
+      {
+        "va": "0x696bd0",
+        "bytes": "B009C216"
+      },
+      {
+        "va": "0x696c08",
+        "bytes": "3D890002"
+      },
+      {
+        "va": "0x696c0c",
+        "bytes": "A06CC00C"
+      },
+      {
+        "va": "0x696c10",
+        "bytes": "B06CC218"
+      },
+      {
+        "va": "0x696c48",
+        "bytes": "3D630002"
+      },
+      {
+        "va": "0x696c4c",
+        "bytes": "A18BC00A"
+      },
+      {
+        "va": "0x696c50",
+        "bytes": "B18BC21A"
+      },
+      {
+        "va": "0x696c78",
+        "bytes": "3D630002"
+      },
+      {
+        "va": "0x696c7c",
+        "bytes": "A18BC00A"
+      },
+      {
+        "va": "0x696c80",
+        "bytes": "B18BC21A"
+      },
+      {
+        "va": "0x696cc8",
+        "bytes": "3CCC0002"
+      },
+      {
+        "va": "0x696ccc",
+        "bytes": "A006C006"
+      },
+      {
+        "va": "0x696cd0",
+        "bytes": "B006C206"
+      },
+      {
+        "va": "0x696d08",
+        "bytes": "3C860002"
+      },
+      {
+        "va": "0x696d0c",
+        "bytes": "A0A4C002"
+      },
+      {
+        "va": "0x696d10",
+        "bytes": "B0A4C208"
+      },
+      {
+        "va": "0x696d48",
+        "bytes": "3CE50002"
+      },
+      {
+        "va": "0x696d4c",
+        "bytes": "A087C004"
+      },
+      {
+        "va": "0x696d50",
+        "bytes": "B087C20A"
+      },
+      {
+        "va": "0x696d88",
+        "bytes": "3D270002"
+      },
+      {
+        "va": "0x696d8c",
+        "bytes": "A009C008"
+      },
+      {
+        "va": "0x696d90",
+        "bytes": "B009C20C"
+      },
+      {
+        "va": "0x696dc8",
+        "bytes": "3D690002"
+      },
+      {
+        "va": "0x696dcc",
+        "bytes": "A06BC018"
+      },
+      {
+        "va": "0x696dd0",
+        "bytes": "B06BC20E"
+      },
+      {
+        "va": "0x696e08",
+        "bytes": "3CC30002"
+      },
+      {
+        "va": "0x696e0c",
+        "bytes": "A186C00E"
+      },
+      {
+        "va": "0x696e10",
+        "bytes": "B186C210"
+      },
+      {
+        "va": "0x696e48",
+        "bytes": "3D460002"
+      },
+      {
+        "va": "0x696e4c",
+        "bytes": "A0A60040"
+      },
+      {
+        "va": "0x696e50",
+        "bytes": "B0AAC212"
+      },
+      {
+        "va": "0x696e88",
+        "bytes": "3D240002"
+      },
+      {
+        "va": "0x696e8c",
+        "bytes": "A0E9C014"
+      },
+      {
+        "va": "0x696e90",
+        "bytes": "B0E9C214"
+      },
+      {
+        "va": "0x696ec8",
+        "bytes": "3D690002"
+      },
+      {
+        "va": "0x696ecc",
+        "bytes": "A00BC01C"
+      },
+      {
+        "va": "0x696ed0",
+        "bytes": "B00BC216"
+      },
+      {
+        "va": "0x696f08",
+        "bytes": "3D890002"
+      },
+      {
+        "va": "0x696f0c",
+        "bytes": "A06CC00C"
+      },
+      {
+        "va": "0x696f10",
+        "bytes": "B06CC218"
+      },
+      {
+        "va": "0x696f48",
+        "bytes": "3CC30002"
+      },
+      {
+        "va": "0x696f4c",
+        "bytes": "A186C00A"
+      },
+      {
+        "va": "0x696f50",
+        "bytes": "B186C21A"
+      },
+      {
+        "va": "0x696f78",
+        "bytes": "3CC30002"
+      },
+      {
+        "va": "0x696f7c",
+        "bytes": "A186C00A"
+      },
+      {
+        "va": "0x696f80",
+        "bytes": "B186C21A"
+      },
+      {
+        "va": "0x839a2c",
+        "bytes": "39800000658C0085"
+      },
+      {
+        "va": "0x85a4c8",
+        "bytes": "0002C0080088FF38"
+      },
+      {
+        "va": "0x85a508",
+        "bytes": "0002C5B80088FF38"
+      },
+      {
+        "va": "0x85a520",
+        "bytes": "0002C7C00088FF38"
+      },
+      {
+        "va": "0x85a560",
+        "bytes": "0002CD400088FF38"
+      },
+      {
+        "va": "0x85a570",
+        "bytes": "0002CE900088FF38"
+      },
+      {
+        "va": "0x85a580",
+        "bytes": "0002CFE00088FF38"
+      },
+      {
+        "va": "0x85a5e8",
+        "bytes": "0002DBC00088FF38"
+      },
+      {
+        "va": "0x888624",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x888644",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x88865c",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x889644",
+        "bytes": "100037880085A5E8"
+      },
+      {
+        "va": "0x8896ac",
+        "bytes": "100038880085A580"
+      },
+      {
+        "va": "0x8896bc",
+        "bytes": "100038A80085A570"
+      },
+      {
+        "va": "0x8896cc",
+        "bytes": "100038C80085A560"
+      },
+      {
+        "va": "0x88970c",
+        "bytes": "100039780085A520"
+      },
+      {
+        "va": "0x889724",
+        "bytes": "100039B00085A508"
+      },
+      {
+        "va": "0x889764",
+        "bytes": "10003A480085A4C8"
+      },
+      {
+        "va": "0x88b224",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a80c8",
+        "bytes": "1067BE9C"
+      },
+      {
+        "va": "0x8a80d8",
+        "bytes": "1067BF3C"
+      },
+      {
+        "va": "0x8a8174",
+        "bytes": "1067BF3C"
+      },
+      {
+        "va": "0x8a90c8",
+        "bytes": "1071F458"
+      },
+      {
+        "va": "0x8aa4d0",
+        "bytes": "10731648"
+      },
+      {
+        "va": "0x10003788",
+        "bytes": "7365745F636F6E74726F6C5F736368656D6500"
+      },
+      {
+        "va": "0x10003888",
+        "bytes": "7365745F736F756E645F766F6C00"
+      },
+      {
+        "va": "0x100038a8",
+        "bytes": "7365745F6D757369635F766F6C00"
+      },
+      {
+        "va": "0x100038c8",
+        "bytes": "7365745F766F6963655F766F6C00"
+      },
+      {
+        "va": "0x10003978",
+        "bytes": "7365745F72756D626C655F6F6E00"
+      },
+      {
+        "va": "0x100039b0",
+        "bytes": "7365745F737572726F756E645F6F6E00"
+      },
+      {
+        "va": "0x10003a48",
+        "bytes": "7365745F63616D6572615F737065656400"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -117694,6 +119114,11 @@
     ]
   },
   "annotations": [
+{"va":"0x000271D4","name":"TOD_control_scheme_saved_publish_before_runtime_selector","kind":"comment","confidence":"confirmed","bytes":"916914BC","comment":"Stores original low32 to saved114BC before128B0->6966B8: exactly1/2 request selector1/2, all other raw indices selector0 without rewriting saved word. Runtime table/count may skip apply; not scheme names or accepted edit range.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; settings_apply native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x006966B8","name":"TOD_control_scheme_runtime_halfword_copy_routes","kind":"function","confidence":"confirmed","bytes":"2F830001419E02D8","comment":"Call-free runtime table10731648, count byte12, pointer-entry stride8. Three routes copy eleven halfwords to object1C206..1C21A, count0 skips; exact source pairs in settings_apply. Not saved mappings, button names or hardware success.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; settings_apply native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0060C568","name":"TOD_rumble_disable_runtime_flag_then_eight_port_requests","kind":"function","confidence":"confirmed","bytes":"F821FF617C8802A6","comment":"Clears runtime1071F458+4 then unrolled cellPadSetActDirect ports0..7 with first actuator bytes zero. External returns ignored, no attached-port count, confirmed stop or rollback. Saved114D4 caller publishes first.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; settings_apply native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00696128","name":"TOD_surround_runtime_probe_select_and_apply_mode","kind":"function","confidence":"confirmed","bytes":"2F8300007C0802A6","comment":"Low32 zero->mode1, otherwise capability query result6->4/8->5/other->3.5B51B8 engine flag10000/non-null lookup gates and virtual30. Caller already stores saved114D5 and ignores normalized return; numeric modes not layout names.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; settings_apply native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x005ADEF0","name":"TOD_audio_bus_runtime_float_store_if_engine_ready","kind":"function","confidence":"confirmed","bytes":"8122827C2B03003F","comment":"Call-free engine1067BF3C+14 flag10000 and unsigned bus<=63 select runtime base+bus*B0 float store; otherwise0/no store. Saved-volume setters publish before7FC98 replays effects1/voice6/music12 and ignores these returns. Not playback or extra saved state.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; settings_apply native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00463AD0","name":"TOD_weapon_create_and_bind_borrowed_inventory_record","kind":"function","confidence":"confirmed","bytes":"F821FF517D0802A6","comment":"Resolves definition from supplied record ID; after250528 creation installs same record at object+40->weapon+2C and definition+30. Canonical owner path1F5DB8/466D38/4675A0 established. Qualified creation/index/instance lifetime, not copied save or ownership admission.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_ammo_debit native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0046AD80","name":"TOD_weapon_ammo_negated_request_to_clamped_add","kind":"function","confidence":"confirmed","bytes":"F821FF917C8802A6","comment":"Null borrowed record+2C skips. Otherwise FNEG supplied FPR then465E18 clamped ADD to saved+8; no local availability/sign/ownership check. Negative request adds; not universal per-shot cost or exact delta.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_ammo_debit native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0046A420","name":"TOD_weapon_ammo_local_admission_predicate","kind":"function","confidence":"confirmed","bytes":"812260AC80090000","comment":"Runtime global nonzero/recordless/definition flag10 bypass. Ordered positive request requires ammo>=request; zero/negative/unordered request requires ordered ammo>0. No ownership/max/mutation; not full firing eligibility or native exception model.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; weapon_ammo_debit native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

@@ -1191,6 +1191,28 @@ internal static partial class Program
             Array.Clear(bytes);
             Equal("80000000", inspection.Table("Arena challenges").Rows[7].Cells[6]);
         });
+        Check("Settings apply details separate saved publication from runtime mappings and hardware success", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114BC, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114C4, 4), 0x7F800001);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114C8, 4), 0xFF800000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114CC, 4), 0x80000000);
+            bytes[0x114D4] = 0xFE; bytes[0x114D5] = 0xFF; bytes[0x114D6] = 0xAB; bytes[0x114D7] = 0xCD;
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Game settings");
+            string At(string offset) => table.Rows.Single(r => r.Cells[2] == offset).Details;
+            True(At("0x114BC").Contains("ALL other indices selector0") && At("0x114BC").Contains("NOT GAME.SAV offsets"), "Stored indices and runtime copy tables must not be merged or renamed.");
+            True(At("0x114D4").Contains("ports0..7") && At("0x114D4").Contains("External return codes are not checked"), "Rumble port requests are not attached devices or guaranteed successful stops.");
+            True(At("0x114D5").Contains("Either failure returns0") && At("0x114D5").Contains("does not locally undo saved114D5"), "Saved surround must not become a hardware success indicator.");
+            True(At("0x114C4").Contains("IN THAT ORDER") && At("0x114C8").Contains("unsigned busID<=63") && At("0x114CC").Contains("not captured as one atomic triple"), "Volume publication and three separate runtime samples must remain distinct.");
+            True(At("0x114B0").Contains("returns with no calls") && !At("0x114D0").Contains("runtime and hardware apply"), "Camera contrast must be specific, not attached to unrelated flags.");
+            Equal("FFFFFFFF", table.Rows.Single(r => r.Cells[2] == "0x114BC").Cells[4]);
+            Equal("7F800001", table.Rows.Single(r => r.Cells[2] == "0x114C4").Cells[4]);
+            Equal("ABCD", table.Rows.Single(r => r.Cells[2] == "0x114D6").Cells[4]);
+            Equal(5, table.Columns.Length); Equal(17, table.Rows.Count);
+            True(bytes.SequenceEqual(before), "Viewing must not probe hardware, invoke settings setters, normalize indices or clear ports.");
+        });
         Check("Saved settings preserve raw flags, nonfinite floats, unknown bytes and detached input", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1237,7 +1259,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1471, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1476, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

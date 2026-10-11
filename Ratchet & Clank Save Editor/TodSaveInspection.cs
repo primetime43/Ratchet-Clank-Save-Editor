@@ -496,6 +496,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     }
                     else value = "Index " + bits.ToString(CultureInfo.InvariantCulture);
                     string raw = Convert.ToHexString(data.AsSpan(offset, width));
+                    var apply = TodResearch.Map.GetProperty("settings_apply");
                     string details = $"Save offset {TodResearch.Hex(offset)}; {type}; raw {raw}.\r\n" +
                         $"Named APIs: {field.GetProperty("get_api").GetString()} / {field.GetProperty("set_api").GetString()}.\r\n" +
                         $"Native getter {field.GetProperty("getter_va").GetString()}, setter {field.GetProperty("setter_va").GetString()}.\r\n" +
@@ -503,6 +504,23 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "Boolean getters test nonzero. Float setters clamp ordinary finite inputs to0..1; no safe edit range is asserted. Control-scheme names are not recovered.\r\n" + Message;
                     if (name.EndsWith("_inverted", StringComparison.Ordinal) || name == "control_scheme_index")
                         details += "\r\nShipped pause-menu axis dispatch: scheme 0 selects normal-camera APIs; scheme 1 selects look/first-person APIs for both display and adjustment. This selects an API, not saved-flag polarity. Stored scheme bits: " + $"0x{U32(0x114BC):X8}. Entries for other schemes are not inferred. " + TodResearch.Map.GetProperty("settings_menu").GetProperty("actions").GetProperty("activation_filter").GetString();
+                    if (name == "control_scheme_index")
+                        details += "\r\nControl-scheme saved publication: " + apply.GetProperty("control_scheme").GetProperty("rule").GetString() +
+                            "\r\n" + apply.GetProperty("control_scheme").GetProperty("runtime_rule").GetString();
+                    if (name == "rumble_enabled")
+                        details += "\r\nRumble saved publication and runtime requests: " + apply.GetProperty("rumble").GetProperty("rule").GetString() +
+                            "\r\n" + apply.GetProperty("rumble").GetProperty("wrapper_limit").GetString();
+                    if (name == "surround_enabled")
+                        details += "\r\nSurround saved publication and runtime requests: " + apply.GetProperty("surround").GetProperty("rule").GetString() +
+                            "\r\n" + apply.GetProperty("surround").GetProperty("apply_boundary").GetString();
+                    if (name.EndsWith("_volume", StringComparison.Ordinal))
+                        details += "\r\nAudio saved publication and three-bus apply: " + apply.GetProperty("audio_volumes").GetProperty("rule").GetString() +
+                            "\r\n" + apply.GetProperty("audio_volumes").GetProperty("runtime_boundary").GetString();
+                    if (name == "camera_speed")
+                        details += "\r\nCamera-speed setter boundary: " + apply.GetProperty("audio_volumes").GetProperty("camera_contrast").GetString();
+                    if (name == "control_scheme_index" || name == "rumble_enabled" || name == "surround_enabled" ||
+                        name.EndsWith("_volume", StringComparison.Ordinal) || name == "camera_speed")
+                        details += "\r\n" + apply.GetProperty("snapshot_limit").GetString();
                     if (name.EndsWith("_volume", StringComparison.Ordinal) || name == "camera_speed")
                         details += "\r\nShipped menu percentage adjustment divides input delta by 10: +1/-1 requests +0.1/-0.1 before the native setter. Descriptor presence does not establish current menu visibility.";
                     rows.Add(new(new[] { InspectionPresentation.Label(name), value, TodResearch.Hex(offset), type, raw }, details));
