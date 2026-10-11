@@ -2,6 +2,59 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
+## Object-counter lifecycles, quick-select mutation and opaque-tail ownership
+
+This parallel pass strengthens existing storage mappings rather than assigning names to every opaque byte. `inventory_aux` and `final_tail_fields` independently reproduce the exact native reset/restore/consumer relationships. All observations are scoped to the hash-verified USA BCUS98127 v02.00 executable. The program shows the new explanations read-only; no restart, item insertion, skill award or initializer is executed.
+
+### Three object-counter banks: reset is not lifetime accumulation
+
+The already-mapped 23-word banks begin at `304` (signed current count), `360` (unsigned high-water count) and `3BC` (raw positive-addition bits). In selective restart `3CED40`, call `3CEDD0` copies the first `484` bytes from current state into staging **before** the clearing loops. The object loop covers IDs1..22; mask `BFF` preserves IDs1..9 and11, while ID0 is outside that loop and retains its copied words.
+
+| Object IDs | Effect at this reset boundary |
+| --- | --- |
+| `0..9, 11` | All three copied words preserved |
+| `10, 12..22` | Current, high-water and positive-addition words cleared together |
+
+The reached hero-restore assignment block in `1E33C8` separately calls setter `23D970` with count1 for IDs `0,1,2,3,4,9`. The setter writes current1, raises the peak only by unsigned comparison, and does not increment additions. A saved `1/1/0` combination can therefore come from restoration, not a witnessed pickup. Earlier runtime gates and subsequent callbacks still apply; this is not an unconditional specification for every load.
+
+Getter `23D920` returns additions with signed extension. Within the guarded hero-update routine `1E5C28`, calls `1E6038/1E6050` and comparisons `1E6040/1E6058` require **signed additions for `OBJ_SOULS` (ID16) >25 and current Souls count ==0** before the skill path at `1E636C → 122E0 → 35D5D0`. Independent native exports identify skill52 as `SKILLPOINT_SOULS`. High-bit raw additions are not large positive counts for this particular consumer. Other runtime gates apply; the inspector does not predict an award.
+
+The supplied save has Souls current/high-water/additions `0/0/0`, while skill52 is already set. This confirms the saved fields and independent retained skill bit, not a captured award or the cause of those values. Reset counters must not revoke a previously earned skill in the inspector. [Inspect-TodInventoryAux.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodInventoryAux.py) reproduces211 guards and optional bounded snapshot observations; its detached preview helpers exercise generated fixtures only. `TOD_SaveObjectCounterBanks_verified` describes the three banks without automatic application or replacing analyst types.
+
+### Quick-select: duplicate removal and a bounded insertion domain
+
+Saved words `284..304` remain32 signed item-ID slots. Native membership/removal routines `1E22F8/1E22A8` scan all32. Automatic insertion `1E26F0` returns unchanged when the item exists anywhere, including slots24..31; otherwise it searches only the first24 for `-1`. A full first24 cannot use an empty tail slot. Definition lookup and flags `1040` qualify the path; saved ownership is not a separate check here.
+
+Explicit valid insertion into slot0..23 first removes **all** copies of the same item across32 slots, then overwrites the chosen slot without compacting or relocating displaced items. Slot arguments above23 take the automatic branch. The pure fixture model deliberately excludes invalid/negative item IDs rather than inventing their native behavior. A no-slot branch can send message126 and set saved warning latch8738 depending on8734; this does not create an insertion.
+
+The selective restart scans all32 quick-select words, clearing stored IDs `24,26..31` to `-1` while retaining other slot positions. These are physical storage indices, not a reconstructed live wheel order or new editing permission.
+
+### Opaque final word and two unwritten settings bytes
+
+Word `906E4` still has no established gameplay name. Initializer `35E110` stores zero at `35E1B8`; the last of21 grid blocks ends at `906E4` **exclusively**. Every explicit current-state preservation destination in selective restart excludes this word, so the final staging-to-live copy at `3CF158` transfers zero there under the observed separate staging/current-state arrangement. This statement ends at that copy boundary; later destination callbacks are outside its scope.
+
+Snapshot capture `35E710`, initial restore `35E508`, and alternate staging copy `3CF1B8` instead include all `906F0` bytes, transferring the raw word verbatim at their copy boundaries. A bounded aligned-word census finds no embedded absolute pointer to `10280204` in the four file-backed LOAD ranges; this is **not** proof that no computed, indirect, dynamic or relocated consumer exists.
+
+Leaf settings initializer `35EE40` writes exactly46 of48 bytes: members `00..2D`, leaving opaque save bytes `114D6/114D7` untouched. Selective restart's full `30`-byte settings preservation includes both, and its later help-byte clear at `114D0` does not overlap them. Actual word/bytes are allzero, which does not establish padding, unused storage or defaultzero. Technical view now exposes the final word and explains these boundaries without normalizing any input. [Inspect-TodFinalTail.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodFinalTail.py) reproduces37 guards, the decoded write footprint and the bounded copy/pointer census.
+
+### Arena native IDs, source indices and display rows
+
+The native and shipped-UI pass confirms three distinct index spaces:
+
+| Index space | Role | Relationship |
+| --- | --- | --- |
+| Native challenge ID | Exported `IFF_*` enum / saved win counter | Counter address `56D8 + 4*id` |
+| Lua source index | One-based `ARENA_CHALLENGE_DATA` row | `.id` resolves to the native ID; UI preserves this index as `chalNum` |
+| Display row | Current position in shipped UI `challengeArray` | Completion-dependent partition; routes selection/images through `chalNum` |
+
+Named `get_num_challenges` chain `31EF8 → 26298 → 13B80 → 275268` reads `ARENA_CHALLENGE_DATA.num`, converted to signed32 by truncation toward zero. This is not literal23, a raw table length or a recovered count of valid saved IDs. Resolver `2756F8` reads the source row's `.id`; consumer `279B8` loads the saved counter and sign-extends it. The resolver's ordinary nonnegative cap23 is not a safe counter bound: only IDs0..22 occupy the bank, and ID23 aliases independent reset category0 at5734. Missing-row result0 and absent lower-bound validation do not authorize arbitrary source indices.
+
+Default chain `31408 → 26048 → 11100 → 275438` starts with a native ID from runtime object `101AEFF8+D8`, **outside the saved block**. The inverse helper scans contiguous source rows from1, returns the first matching truncated `.id`, and stops with-1 at the first non-table. Its caller converts negative results to0. It does not use `.num` as the scan bound.
+
+Original `global_cached.psarc` entry `/built/anark/arenachallenge/built.dat` is103,692 bytes, SHA-256 `3DFD3B6231D06B1C7EE106BD521D263FC4D2B167B3D755280D70E635C38E1BF3`. Embedded Lua `ListUpdater` spans asset offsets `12A7A..15B5C`. Four function digests and20 instruction guards establish that initialization enumerates source indices1..`get_num_challenges()`, preserves each as `chalNum`, and stably partitions **non-positive signed completion counts first, positive counts second**. Source order is retained within each group. Negative counts are not misread as unsigned-large wins or equalzero. `isActive` does not remove a row from the list; selection checks it before passing `row.chalNum` to `select_challenge`. Default selection searches current display rows by `chalNum`, and image lookup also uses `chalNum`, not display position. No Lua is executed.
+
+The runtime source table's actual initializer, index-to-ID values, `.num` and labels remain unrecovered. All23 actual native-ID counters arezero, but that snapshot cannot assign source indices or reconstruct the current menu. The inspector keeps native-ID rows and explains the distinction instead of reordering them or guessing a current default. [Inspect-TodArenaMenu.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodArenaMenu.py) independently reproduces31 native guards, optional `arena_menu_assets`, and bounded plaintext observations. This pass did not establish a new saved segment`+28` consumer or name; that word remains opaque.
+
 ## Decryptor state, saved timing aggregates and copied runtime handles
 
 Three parallel tasks added126 native byte guards,17 ELF annotations and three narrow types. The new `adaptation_context`, `tail_aux_fields` and `grid_aux_fields` sections reproduce named Decryptor behavior, four newly typed saved floats and the formerly opaque grid-header word. `grid_aux_assets` embeds only non-private resource fingerprints/descriptor metadata; original binaries and saves are not bundled. All findings are scoped to the exact USA v02.00 ELF and remain read-only.
@@ -181,7 +234,7 @@ Reproduction tools (all read-only; `--save` accepts the detached plaintext worki
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1272 annotations, 118 imports, evidence, byte signatures and 41 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1278 annotations, 118 imports, evidence, byte signatures and 42 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -379,7 +432,7 @@ Word `0x280` is updated as an acquisition/removal counter, but it is **not asser
 
 The total unlock-array length is not established. The comparison tool decodes only the 32 IDs whose inventory records are mapped; the larger byte region still contains unknown state. Named `purchase_weapon` wrapper `0x337D8 → 0x26638` branches through thunks to `0x2D21A8` or `0x2D2D38`. The latter is now traced: it requires a hero, applies an extra condition for ID `0x13`, obtains price via `0x2D2058`, checks inventory bolts at `+0x41C`, calls acquisition/refill `0x466B70`, delegates hero inventory integration through `0x252B08`, and deducts the price through `0x24FCB8`. It also conditionally dispatches through a virtual method and sends further notifications. This leaf does not establish every vendor prerequisite or the complete semantics of those downstream calls. A one-byte edit is not a complete purchase.
 
-The auxiliary initializer `0x35DC80` clears currency and initializes a 32-word sentinel list at `0x284`, three 23-word arrays at `0x304/0x360/0x3BC`, and other state. Their complete meanings remain unknown. The restart-style routine `0x3CED40` copies and selectively resets state, including some records, then increments/clamps word `0x906EC`; **native engine replay terminology is now confirmed by the `-replay` CLI store; localized challenge-mode interpretation remains unverified**, not a confirmed editable field. These are additional leads, not imported original function names.
+The auxiliary initializer `0x35DC80` clears currency and initializes the 32-word quick-select item-ID list at `0x284`, plus the three 23-word object-counter arrays at `0x304/0x360/0x3BC`: current count, recorded high-water count and positive additions. Later named-API passes establish those roles; initialization alone did not. Their runtime/UI lifecycle still has qualified limits. The restart-style routine `0x3CED40` copies and selectively resets state, including some records, then increments/clamps word `0x906EC`; **native engine replay terminology is now confirmed by the `-replay` CLI store; localized challenge-mode interpretation remains unverified**, not a confirmed editable field. These are analyst descriptions, not imported original function names.
 
 ### Progression, skill points and armor
 
@@ -1184,7 +1237,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1271 mapped annotations (the third TOC reference base is unmapped), 41 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry/save-tail/reward-channel/mission-key/pack-boot/segment-loader/world-footprint/health-checkpoint/auxiliary-word/first-person-coupling/decryptor-context/segment-aggregate-gate/definition-handle instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1277 mapped annotations (the third TOC reference base is unmapped), 42 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry/save-tail/reward-channel/mission-key/pack-boot/segment-loader/world-footprint/health-checkpoint/auxiliary-word/first-person-coupling/decryptor-context/segment-aggregate-gate/definition-handle/object-lifecycle/final-tail-ownership/arena-menu instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

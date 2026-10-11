@@ -39,6 +39,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Saved segment aggregates & countdown gates", TodResearch.Map.GetProperty("tail_aux_fields"), 0));
             topics.Add(JsonTopic("Per-world object bits & spawn rules", TodResearch.Map.GetProperty("world_object_flags"), 0));
             topics.Add(JsonTopic("Object counters & equipment", TodResearch.Map.GetProperty("objects"), 0));
+            topics.Add(JsonTopic("Object reset/restore, Souls award & quick-select mutation", TodResearch.Map.GetProperty("inventory_aux"), 0));
+            topics.Add(JsonTopic("Opaque final word & settings initialization/copy ownership", TodResearch.Map.GetProperty("final_tail_fields"), 0));
             topics.Add(JsonTopic("Mission lists & flags", TodResearch.Map.GetProperty("mission_lists"), 0));
             topics.Add(JsonTopic("Native mission lookup keys & segment naming limits", TodResearch.Map.GetProperty("segment_bindings"), 0));
             topics.Add(JsonTopic("Segment-name configuration loader & hash collisions", TodResearch.Map.GetProperty("segment_configuration"), 0));
@@ -55,6 +57,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("First-person camera coupling & unknown option limits", TodResearch.Map.GetProperty("first_person_option"), 0));
             topics.Add(JsonTopic("Shipped pause-menu settings & API dispatch", TodResearch.Map.GetProperty("settings_menu"), 0));
             topics.Add(JsonTopic("Arena challenges, recorded wins & reward rules", TodResearch.Map.GetProperty("arena_challenges"), 0));
+            topics.Add(JsonTopic("Arena source indices, native IDs & default-selection lookup", TodResearch.Map.GetProperty("arena_menu"), 0));
+            topics.Add(JsonTopic("Shipped arena UI display partition & chalNum routing", TodResearch.Map.GetProperty("arena_menu_assets"), 0));
             topics.Add(JsonTopic("Reset-event categories & runtime countdown", TodResearch.Map.GetProperty("reset_categories"), 0));
             topics.Add(JsonTopic("Global event flags & native bit addressing", TodResearch.Map.GetProperty("global_flags"), 0));
             topics.Add(new("Weapons & gadgets", TodResearch.Scope, TodResearch.Inventory.Select(item =>

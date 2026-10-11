@@ -36,6 +36,72 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Arena display research never substitutes source indices or menu order for saved native IDs", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x56D8 + 4, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x5734, 4), 123);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Arena challenges");
+            Equal(23, table.Rows.Count); Equal("1", table.Rows[1].Cells[0]); Equal("-1", table.Rows[1].Cells[3]);
+            True(table.Rows[1].Details.Contains("non-positive signed counts before positive counts") && table.Rows[1].Details.Contains("does not reconstruct or reorder"), "Shipped partition must not imply a recovered current menu or a zero-only test.");
+            var native = TodResearch.Map.GetProperty("arena_menu");
+            Equal(3, native.GetProperty("index_spaces").GetArrayLength());
+            True(native.GetProperty("id_resolver").GetProperty("bounds_warning").GetString().Contains("ID23 addresses5734"), "Resolver cap must not become a safe 24th arena counter.");
+            Equal(20, TodResearch.Map.GetProperty("arena_menu_assets").GetProperty("asset_byte_guards").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Arena inspection must not execute scripts, follow runtime IDs, resort storage or change adjacent reset counters.");
+        });
+        Check("Object lifecycle distinguishes reset banks, seeded equipment and signed Souls comparisons", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x304, 4), 7);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x360, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x3BC, 4), 0x80000000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x344, 4), 0);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x3FC, 4), 0xFFFFFFFF);
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x8710, 8), 1UL << 52);
+            BinaryPrimitives.WriteInt32BigEndian(bytes.AsSpan(0x284 + 31 * 4, 4), 1);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var objects = inspection.Table("Objects & equipment");
+            Equal("7", objects.Rows[0].Cells[2]); Equal("4294967295", objects.Rows[0].Cells[3]);
+            True(objects.Rows[0].Details.Contains("preserves this object's three") && objects.Rows[0].Details.Contains("sets this current count to 1"), "Preserved banks and later seeded assignments must not be conflated.");
+            True(objects.Rows[10].Details.Contains("clears this object's current, high-water and positive-additions"), "Reset IDs must distinguish all three banks.");
+            True(objects.Rows[16].Details.Contains("signed additions -1") && objects.Rows[16].Details.Contains("Additional runtime gates") && objects.Rows[16].Details.Contains("neither grants nor revokes"), "Unsigned storage must not become an unsigned Souls threshold or a computed award.");
+            var quick = inspection.Table("Quick select");
+            Equal("1", quick.Rows[31].Cells[1]);
+            True(quick.Rows[31].Details.Contains("removes all duplicate occurrences") && quick.Rows[31].Details.Contains("empty tail slots do not help"), "Raw extra slots must retain their qualified insertion/removal behavior.");
+            True(bytes.SequenceEqual(before), "Inspection must not perform a restart, object seed, award or quick-select mutation.");
+        });
+        Check("Opaque settings footprint and final-tail copy rules do not create defaults or execute resets", () =>
+        {
+            byte[] bytes = ResearchFixture(); bytes[0x114D6] = 0xAB; bytes[0x114D7] = 0xCD;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906E4, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var tail = inspection.Table("Game settings").Rows.Single(r => r.Cells[2] == "0x114D6");
+            Equal("ABCD", tail.Cells[1]);
+            True(tail.Details.Contains("46 of 48") && tail.Details.Contains("Not proven padding or default zero"), "Unwritten leaf bytes must not be assigned whole-lifecycle defaults.");
+            var word = inspection.Table("Counters & nearby fields").Rows.Single(r => r.Cells[0] == "0x906E4");
+            Equal("FFFFFFFF", word.Cells[4]);
+            True(word.Details.Contains("ends at 906E4 exclusively") && word.Details.Contains("raw bits verbatim") && word.Details.Contains("Subsequent callbacks"), "Final-tail zeroing must be confined to the selected copy boundary.");
+            Equal(46, TodResearch.Map.GetProperty("final_tail_fields").GetProperty("settings_initializer_footprint").GetProperty("covered_byte_count").GetInt32());
+            True(bytes.SequenceEqual(before), "Viewing opaque fields must preserve every raw byte.");
+        });
+        Check("Unknown final tail word stays visible only in Technical and is never repaired", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906E4, 4), 0xDEADBEEF);
+            byte[] before = bytes.ToArray();
+            var raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            var word = raw.Rows.Single(r => r.Cells[0] == "0x906E4");
+            Equal("3735928559", word.Cells[2]); Equal("DEADBEEF", word.Cells[4]);
+            True(word.Details.Contains("meaning remains unresolved") && word.Details.Contains("not proof of padding"), "Copied tail words must remain semantically qualified.");
+            var summary = InspectionPresentation.Simplify("Counters & nearby fields", raw);
+            Equal(21, summary.Rows.Count);
+            True(!summary.Rows.Any(r => r.Cells[0] == "Unknown final tail word"), "Unknown words must stay out of the simple summary.");
+            True(bytes.SequenceEqual(before), "Viewing must not reproduce initialization or overwrite the unknown tail word.");
+        });
         Check("Decryptor summary uses named outcomes and spark scaling, not generic difficulty or lifetime statistics", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -477,7 +543,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1272, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1278, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

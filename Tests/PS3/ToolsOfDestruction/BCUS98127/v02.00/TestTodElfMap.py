@@ -240,7 +240,10 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["health_persistence"]["instruction_guards"]
                 + MAPPING["adaptation_context"]["instruction_guards"]
                 + MAPPING["tail_aux_fields"]["instruction_guards"]
-                + MAPPING["grid_aux_fields"]["instruction_guards"]):
+                + MAPPING["grid_aux_fields"]["instruction_guards"]
+                + MAPPING["inventory_aux"]["instruction_guards"]
+                + MAPPING["final_tail_fields"]["instruction_guards"]
+                + MAPPING["arena_menu"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

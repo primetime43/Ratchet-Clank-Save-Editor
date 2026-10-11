@@ -192,6 +192,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x8708, "Weighted skill-point total", "code-backed", "Not completion count. Native setter adds the shipped definition value for a newly earned bit."),
                     (0x8740, "Next-level selection", "code-backed", "Named set_next_level/get_next_level store/read this word. Not necessarily the current planet; unknown IDs are retained."),
                     (0x8754, "First-restart segment median", "code-backed", "Float32 BE. 3CED40 writes the median of positive finalized segment scalars through3CEB10 only when old906EC is zero. Units unverified; later restarts skip recomputing it in this path. Empty native input reads undefined scratch; this inspector does not recompute it or invent a zero default."),
+                    (0x906E4, "Unknown final tail word", "code-backed storage; meaning unknown", "Initializer 35E110 explicitly clears this BE32 word. Full 906F0-byte snapshot/initial restore copies include its raw bits; zero is not proof of padding or an unused field. Selective restart 3CED40 initializes staging, and its preservation ranges exclude this word (last grid ends at 906E4 exclusively), so the final copy transfers zero at that boundary. Full staging restore 3CF1B8 instead copies its raw bits verbatim. Subsequent callbacks are outside this claim. Gameplay meaning remains unresolved, and viewing never clears or repairs the word."),
                     (0x906E8, "Saved load destination", "code-backed", "Named set_save_level stores this word. Restore passes it to the level-change routine; not necessarily the current runtime planet or SFO subtitle."),
                     (0x906EC, "Engine replay/restart word", "code-backed", "Native -replay CLI option writes1; selective restart increments with unsigned wrap then caps at1000. Nonzero gates multiplier, final armor and segment scaling. Not a confirmed localized Challenge Mode label or count of completed playthroughs.") })
                 {
@@ -255,6 +256,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     string details = "Recorded successes for a direct native ID, not a runtime menu index or completion percentage. " +
                         "The description is a shipped config comment, not a confirmed localized title. Base bolts are not the current payout: repeat wins and weapon rewards affect it.\r\n" +
                         "Counter reads are signed32; raw bits are preserved. Incrementing a counter alone does not grant currency or weapon/quick-select state.\r\n" +
+                        "Arena indexing has three spaces: Lua source index, native challenge ID, and current display row. The shipped UI keeps source index as chalNum and stably places non-positive signed counts before positive counts; selection and image lookup use chalNum, not display row. Inactive rows are still present but selection checks isActive.\r\n" +
+                        "get_num_challenges reads runtime table.num, not a fixed 23. Default selection converts a runtime native ID back to its first matching source index, then the UI finds its display row. The source-index-to-ID table remains unresolved, so this native-ID view does not reconstruct or reorder the current menu.\r\n" +
                         "Separate reset-event category counters at 0x5734–0x5754 (not per-challenge failures; category names unknown): " + Convert.ToHexString(data.AsSpan(0x5734, 32)) + "\r\n" +
                         (mapped ? TodResearch.Pretty(entry) : "ID0 is the native INVALID sentinel, not a playable challenge.");
                     rows.Add(new(new[] { id.ToString(CultureInfo.InvariantCulture), name, label, count, bolts,
@@ -313,7 +316,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 rows.Add(new(new[] { "Unknown settings word", U32(0x114C0).ToString(CultureInfo.InvariantCulture), "0x114C0", "unmapped u32", Convert.ToHexString(data.AsSpan(0x114C0, 4)) },
                     "Initializer writes1. Consumers20F3F0/2108D8 compare with zero and select runtime modes0F/10;20F3F0 sets independently named HERO_FIRST_PERSON bit6. Their update methods20F598/210B80 use the zero-derived runtime flags: nonzero saved values permit the qualified camera0x10 transform-update paths through778C8; zero skips those paths. Other runtime conditions still apply. This is a behavior relationship, not a currently active camera or a hold/toggle verdict. The option name and polarity remain unresolved, including after shipped pause-menu analysis. get_button_layout returns constant0 and set_button_layout is a no-op; this is not a confirmed button-layout word."));
                 rows.Add(new(new[] { "Unknown settings tail", Convert.ToHexString(data.AsSpan(0x114D6, 2)), "0x114D6", "unmapped bytes", Convert.ToHexString(data.AsSpan(0x114D6, 2)) },
-                    "Two preserved bytes. Not proven padding; not normalized or interpreted."));
+                    "Two opaque bytes. Leaf initializer 35EE40 writes 46 of 48 settings bytes and leaves these two untouched. Selective restart copies the entire 30-byte settings block before clearing only help byte 114D0, preserving 114D6/114D7 at the copy boundary. Full snapshot/initial restore copies also include both bytes. Not proven padding or default zero; not normalized or interpreted."));
                 return new(new[] { "Setting", "Value", "Offset", "Storage", "Raw bytes" }, rows.AsReadOnly());
             }
             if (view == "Stored state blocks")
@@ -447,6 +450,15 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         $"Unsigned high-water count {U32(peakOffset)} at {TodResearch.Hex(peakOffset)}; positive additions {U32(addedOffset)} at {TodResearch.Hex(addedOffset)}.\r\n" +
                         "Set writes current and raises the peak by unsigned comparison; it does not change positive additions. Add wraps32 bits, increments additions only for positive signed deltas, then raises peak.\r\n" +
                         "Labels are native object enums, not weapon IDs or localized titles. Timer/arena units and gameplay usability are not established. Positive additions are not unique lifetime pickups; no repair or safe edit range inferred.\r\n" + TodResearch.Pretty(obj);
+                    var lifecycle = TodResearch.Map.GetProperty("inventory_aux");
+                    bool reset = lifecycle.GetProperty("restart_lifecycle").GetProperty("object_arrays").GetProperty("cleared_ids").EnumerateArray().Any(value => value.GetInt32() == id);
+                    detail += reset
+                        ? "\r\nSelective restart 3CED40 clears this object's current, high-water and positive-additions words after copying the old banks. This path does not retain lifetime totals."
+                        : "\r\nSelective restart 3CED40 preserves this object's three copied words at that reset boundary; later hero restoration and runtime events can still change them.";
+                    if (lifecycle.GetProperty("hero_restore_assignments").GetProperty("assignments").EnumerateArray().Any(value => value.GetProperty("id").GetInt32() == id))
+                        detail += "\r\nThe reached hero-restore assignment block sets this current count to 1 through 23D970, raises the high-water value only by unsigned comparison, and leaves additions unchanged. A 1/1/0 snapshot does not prove a pickup.";
+                    if (id == lifecycle.GetProperty("souls_award_consumer").GetProperty("object_id").GetInt32())
+                        detail += $"\r\nSouls skill-point check: signed additions {unchecked((int)U32(addedOffset))}; native 1E5C28 checks signed additions >25 and current count ==0 before the SKILLPOINT_SOULS ID52 award path. Additional runtime gates apply. The separately saved skill bit can remain set after these counters are reset; this view neither grants nor revokes it.";
                     rows.Add(new(new[] { id.ToString(), obj.GetProperty("enum").GetString(), unchecked((int)bits).ToString(CultureInfo.InvariantCulture),
                         U32(peakOffset).ToString(CultureInfo.InvariantCulture), U32(addedOffset).ToString(CultureInfo.InvariantCulture), bits != 0 ? "Yes" : "No",
                         TodResearch.Hex(currentOffset), TodResearch.Hex(peakOffset), TodResearch.Hex(addedOffset) }, detail));
@@ -551,6 +563,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     string note = id is < -1 or > 31 ? "Outside mapped item IDs; preserved." : "";
                     string detail = $"Stored slot {slot}; signed item ID {id}, bits 0x{U32(offset):X8} at {TodResearch.Hex(offset)}. -1 means empty. {note}\r\n" +
                         "Membership/removal scan all32 words; automatic insertion searches only slots0..23 and filters item configuration flags0x1040.\r\n" +
+                        "An occurrence in slots24..31 prevents automatic insertion too; empty tail slots do not help when the first24 are full. Explicit insertion removes all duplicate occurrences across32 words, then overwrites its chosen slot without compacting displaced items.\r\n" +
+                        "Selective restart scans all32 stored words and clears IDs24,26..31 to -1, preserving retained slot positions. This view does not execute insertion or restart.\r\n" +
                         "Stored indices are not a proven physical wheel order. Empty storage does not prove the live menu is empty. Player0 block only; no edit or runtime usability claim.";
                     rows.Add(new(new[] { slot.ToString(), id.ToString(CultureInfo.InvariantCulture), item, slot < 24 ? "Yes" : "No", TodResearch.Hex(offset), note }, detail));
                 }

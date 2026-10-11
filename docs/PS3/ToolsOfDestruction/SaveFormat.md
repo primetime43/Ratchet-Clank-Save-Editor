@@ -4,6 +4,18 @@ Offset map checked against the PS3 `BCES00052_SAVE_1` plaintext sample and the s
 
 **Status:** the wrapper headers are mapped; game-state structures are partially mapped. A byte pattern is not enough to establish a field's gameplay meaning. No new fields are enabled for editing.
 
+## Object reset/restore, quick-select mutation and opaque-tail ownership
+
+The three 23-word object banks at `304/360/3BC` are independently saved current/high-water/positive-addition values. Selective restart copies them first, then preserves IDs `0..9,11` and clears all three words for IDs `10,12..22`. The reached hero-restore block separately sets current counts to 1 for IDs `0,1,2,3,4,9`, raises high-water values by unsigned comparison, and leaves additions unchanged. These are not universal lifetime pickup counters.
+
+The native Souls consumer reads additions as **signed32 >25**, requires current Souls count 0, and reaches `SKILLPOINT_SOULS` ID52 under additional runtime gates. Actual Souls counters are 0/0/0 while the independent skill bit is set; this is preserved without recomputing awards or inferring a captured event. Quick-select searches/removes across 32 slots but inserts automatically only into the first 24; explicit insertion removes duplicates before replacement without compaction. Selective restart clears item IDs24,26..31 across all 32 stored slots.
+
+Unknown word `906E4` is zeroed at the selective restart's staging-copy boundary because no preservation range includes it; full snapshot/initial restore and alternate staging copy instead transfer its raw bits. Its gameplay meaning is still unknown. Settings initializer writes 46/48 bytes and leaves `114D6/114D7` untouched; full settings preservation copies include both. Zero observations do not prove padding or defaults. The program adds read-only detail explanations and a Technical-only raw final-word row. See [exact-build lifecycle evidence](BCUS98127/v02.00/ElfMap.md#object-counter-lifecycles-quick-select-mutation-and-opaque-tail-ownership).
+
+### Arena counter IDs are not menu rows
+
+Native saved win counters remain23 signed words at `56D8..5734`, distinct from one-based Lua source indices and current display rows. The shipped arena UI stably places non-positive completion counts before positive counts, preserving source order within each partition, and routes selection/images through retained source index `chalNum`. Default selection translates a runtime native ID back to its first matching source index; `get_num_challenges` reads runtime table `.num`, not a fixed counter-bank count. The current source-index-to-ID table is unresolved, so the program explains these distinctions without reconstructing menu order from the save. [Native and fingerprinted UI evidence](BCUS98127/v02.00/ElfMap.md#arena-native-ids-source-indices-and-display-rows).
+
 ## Decryptor, saved timing aggregates and copied definition handles
 
 The latest parallel pass names previously behavior-qualified words: `8758` is the native Decryptor wins counter in the traced success path; `875C` counts Sixaxis-enabled losses since success, not all attempts; `8760` is a Decryptor spark-speed multiplier. Named WIN/LOSE exports and `dc_set_spark_speed` provenance establish the context. Actual values remain0/0/1.0; these are retained native fields, not guaranteed lifetime statistics. The simple player summary now includes these three named values. No new editing is enabled.
@@ -82,7 +94,7 @@ These ranges cover the entire sample, including unknown areas. The whole-buffer 
 | --- | ---: | --- | --- |
 | `0x00000–0x00280` | `0x280` | 32 item/weapon records with IDs 0–31, stride `0x14` | Count, stride and several fields code-backed |
 | `0x00280–0x00284` | 4 | Acquisition/removal counter, sample 46 | Code-backed updates; not equated to flagged-record count |
-| `0x00284–0x0041C` | `0x198` | Integer lists and flags; hero XP word at `0x418` | XP code-backed; other meanings unknown |
+| `0x00284–0x0041C` | `0x198` | 32 quick-select IDs; three 23-word object-counter banks; hero XP at `0x418` | Named-API and lifecycle evidence; runtime usability is not inferred |
 | `0x0041C–0x00420` | 4 | Bolts, uint32 BE | Documented |
 | `0x00420–0x00424` | 4 | Raritanium, uint32 BE | Documented |
 | `0x00424–0x00428` | 4 | Special bolts spent; both samples 32 | Code-backed balance getter and skin purchase |
