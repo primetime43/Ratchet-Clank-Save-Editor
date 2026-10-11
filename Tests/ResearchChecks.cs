@@ -148,7 +148,7 @@ internal static partial class Program
                 }
                 True(bytes.SequenceEqual(before), "Viewing must not increment, reset or normalize either counter.");
             }
-            Equal(101, TodResearch.Map.GetProperty("saved_event_counters").GetProperty("instruction_guards").GetArrayLength());
+            Equal(120, TodResearch.Map.GetProperty("saved_event_counters").GetProperty("instruction_guards").GetArrayLength());
         });
         Check("Bonus-target progress stays separate from current pending targets and collection eligibility", () =>
         {
@@ -167,6 +167,7 @@ internal static partial class Program
                 True(friendly.Details.Contains("not the current runtime pending-target set") && friendly.Details.Contains("total target count remain unknown") && friendly.Details.Contains("Viewing never dispatches collection"), "Summary must not invent remaining targets, reward eligibility or a percentage.");
                 True(friendly.Details.Contains("Neighbor meanings") && friendly.Details.Contains("zero does not prove no previously recorded targets"), "Native reset evidence must not assign neighbor names or lifetime retention.");
                 True(friendly.Details.Contains("Restoration362C20") && friendly.Details.Contains("leaving saved progress unchanged") && friendly.Details.Contains("still return true"), "Restore registration must not invent target totals or modify saved progress.");
+                True(friendly.Details.Contains("10330730") && friendly.Details.Contains("any nonzero byte returns") && friendly.Details.Contains("rejected registrations still consume"), "Initializer admission, pointer-base reconciliation and index ordering must remain explicit.");
                 True(inspection.Table("Special bolts").Rows[0].Details.Contains("no explicit duplicate-bit precheck") && inspection.Table("Special bolts").Rows[0].Details.Contains("separately reread runtime pending mask"), "The two grant paths must stay distinct.");
                 True(bytes.SequenceEqual(before), "Viewing must preserve progress, destination and unrelated saved bits.");
             }
@@ -1157,7 +1158,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1447, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1450, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

@@ -1,4 +1,4 @@
-"""Exact-build saved event counters, bounded consumers and bonus-target restoration.
+"""Exact-build saved counters, bounded consumers and bonus-target registration lifecycle.
 
 Read-only static evidence. Counter event names and in-game acceptance remain unknown.
 """
@@ -55,6 +55,18 @@ def registration_preview(progress, pending, next_index):
             "qualification": "Runtime registration leaf only; no saved target identity or total recovered. Zero shift bit still returns true. Caller375C48 replaces a rejected assigned index with FFFFFFFF."}
 
 
+def initialization_store_preview(admission_byte, next_index, pending):
+    """Selected explicit stores only; native helpers are intentionally not simulated."""
+    if type(admission_byte) is not int or not 0 <= admission_byte <= 255:
+        raise ValueError("Expected raw runtime byte")
+    next_index, pending = word(next_index), word(pending)
+    return {"reaches_initialization": admission_byte == 0,
+            "admission_byte": 1 if admission_byte == 0 else admission_byte,
+            "next_index": 0 if admission_byte == 0 else next_index,
+            "pending": 0 if admission_byte == 0 else pending,
+            "qualification": "Explicit-store projection only, not complete callback effects or a prediction of live runtime state. No saved progress is supplied or changed."}
+
+
 def inspect(elf_path, save_path=None):
     elf = BINDINGS["Elf"](elf_path)
     expected = {
@@ -89,6 +101,14 @@ def inspect(elf_path, save_path=None):
         0x380FB8: 0x81698730, 0x380FBC: 0x2B8B0002, 0x380FC0: 0x419D0718,
         0x3816E0: 0x239D0002, 0x381754: 0xED8DE83A,
         0x489FF0: 0x939D8730, 0x489FF4: 0x939D8728, 0x489FF8: 0x939D872C,
+        0x8A19B8: 0x10330730, 0x8A1C24: 0x10330740,
+        0x3620DC: 0x7C7F1B78, 0x3620F4: 0x8BDF00F4,
+        0x362100: 0x2F9E0000, 0x362108: 0x419E0028,
+        0x362188: 0x38600001, 0x3621A4: 0x987F00F4,
+        0x3621CC: 0x93DF011C, 0x3621D0: 0x93DF00FC,
+        0x35F490: 0x80621A98, 0x35F49C: 0x38630010,
+        0x362098: 0x7C691B78, 0x3620A0: 0x38630010,
+        0x3620A4: 0x38800000, 0x3620B4: 0x988900F4,
     }
     guards = {}
     for address, value in expected.items():
@@ -96,13 +116,15 @@ def inspect(elf_path, save_path=None):
             raise ValueError(f"Saved event evidence changed at {address:#x}")
         guards[address] = elf.read(address, 4)
     for address, target in ((0x375C84, 0x362C20), (0x36FCEC, 0x36C578),
-                            (0x36C648, 0x24F4F8)):
+                            (0x36C648, 0x24F4F8), (0x36A964, 0x3620D0),
+                            (0x35F4A4, 0x362098)):
         raw = elf.u32(address)
         if BINDINGS["branch_target"](raw, address) != target or not raw & 1:
             raise ValueError("Saved event call changed")
         guards[address] = elf.read(address, 4)
     for function in (0x362C20, 0x375C48, 0x36A908, 0x36C578, 0x36F6A0,
-                     0x379F60, 0x37CD88, 0x380F60, 0x489F68):
+                     0x379F60, 0x37CD88, 0x380F60, 0x489F68,
+                     0x3620D0, 0x35F490, 0x362098):
         if elf.descriptors[function] != 0x89FF20:
             raise ValueError("Saved event TOC changed")
         end = elf.functions[elf.functions.index(function) + 1]
@@ -125,9 +147,20 @@ def inspect(elf_path, save_path=None):
                        "rule": "Unsigned count<=2 selects1.0; otherwise step=min(count-2,3), factor=fmadds(float(step),float32(-0.1),1). Three selected setup bodies multiply config-derived runtime fields by this factor. Current definitions, final callback results and a universal combat-difficulty meaning are not inferred."},
             "preview_limit": "Finite small-step nearest-even arithmetic only; live FPSCR rounding and current runtime parameters are unknown."},
         "registration": "Native362C20 always consumes old owner+11C index, stores incremented low32 back and assigns old index to target+324. It tests slw(1,index) against saved8728. If set, return0 without pending OR; otherwise OR into runtime owner+FC and return1. Saved progress is not modified. Counts32..63 select zero and still return1;64 aliases0. These are raw instruction cases, not known legitimate target indices or counts.",
+        "registration_initialization": {
+            "owner": "0x10330740", "initializer": "0x3620D0",
+            "admission_byte_va": "0x10330834", "next_index_va": "0x1033085C",
+            "pending_mask_va": "0x1033083C",
+            "rule": "Selected caller36A908 loads root8A1C24=10330740 and calls3620D0 at36A964. Initializer reads owner+F4 once into r30: any nonzero byte returns before helpers or initialization stores. Zero reaches361D10, writes1 to owner+F4 at3621A4, calls251AD8, then uses preserved zero r30 to clear owner+11C at3621CC and owner+FC at3621D0. It finally tail-calls361948. These explicit stores establish a zero-based registration starting point, not an unconditional reset on every caller invocation. Helper side effects/final runtime state are not reconstructed.",
+            "index_identity_limit": "362C20 assigns the old sequential index and increments it even for saved-bit rejection. Starting from the explicit zero stores, the first registration gets0, and rejected registrations still consume their index. This is registration-order evidence, not a fixed named target catalog, stable cross-load order, legitimate32-target limit or current mission count. Saved8728 alone cannot reconstruct owner+11C or owner+FC.",
+            "reinitialization_admission": "35F490 loads container8A19B8=10330730, adds10 and passes10330740 to362098 at35F4A4. This equals the initialization owner loaded directly by36A908 through8A1C24, despite differing pointer slots and base values. Explicit byte clear3620B4 addresses argument+F4=10330834, the same admission byte read by3620D0. It then calls3645E0 with10330750. The explicit clear enables the initializer admission test if no intervening write changes the byte; helper effects, next invocation timing and complete lifecycle are unverified. This path itself does not explicitly clear next-index+11C or pending+FC.",
+            "save_boundary": "Selected explicit initialization stores are in runtime owner10330740, outside serialized101EFB20..10280210. No direct saved8728/872C/8730 store occurs in the guarded initializer body. This is not proof that every called helper preserves them. Supplied GAME.SAV does not contain these runtime admission/index/pending values."},
         "restoration_caller": "375C48 starts with target+324=FFFFFFFF, runs384758, then calls362C20. A zero low-byte result replaces the assigned index withFFFFFFFF and returns before the explicit type5 request. Nonzero retains the assigned index and follows that request. No saved identity, physical target location or successful request outcome is recovered.",
         "reset": "Previously confirmed489F68 clears8730,8728,872C after2CDBB0 and before465DC0. Counter event names, all reset causes and surrounding callback effects remain unverified. Snapshot zero is not absence of past events.",
         "recommended_annotations": [
+            {"va": "0x362108", "kind": "comment", "name": "TOD_bonus_registration_initialization_admission", "comment": "3620D0 reads runtime owner+F4 once. Zero reaches initialization; any nonzero returns before helpers/stores. Selected36A908 passes10330740. Not a saved option or unconditional mission reset."},
+            {"va": "0x3621cc", "kind": "comment", "name": "TOD_bonus_registration_index_zero", "comment": "Reached initializer suffix clears runtime owner+11C using original zero admission byte in preserved r30; next instruction clears pending+FC. Registration362C20 consumes sequential indices even on saved8728 rejection. No fixed target names/count or full callback effects."},
+            {"va": "0x3620b4", "kind": "comment", "name": "TOD_bonus_registration_reinitialize_admission_clear", "comment": "35F490 loads container8A19B8=10330730 and adds10: argument10330740 matches36A908 direct root8A1C24. This +F4 zero store addresses initializer admission byte10330834. Enables later admission absent intervening changes; helper3645E0/timing unverified. Not direct pending/index/saved-progress reset."},
             {"va": "0x362c40", "kind": "comment", "name": "TOD_bonus_target_restore_saved_bit_test", "comment": "362C20 consumes runtime index+11C and assigns target+324 before testing saved8728. Set bit returns0 without pending OR; clear/zero bit returns1 and ORs runtime+FC. Saved progress unchanged; no target identity/count."},
             {"va": "0x375ca8", "kind": "comment", "name": "TOD_bonus_target_restore_rejected_sentinel", "comment": "Zero low-byte result from362C20 restores raw FFFFFFFF to target+324 and returns before explicit type5 request. Previously recorded bit prevents pending registration; not proof request/gameplay success."},
             {"va": "0x36c678", "kind": "comment", "name": "TOD_saved_event_counter_wrapping_increment", "comment": "Reached36C578 suffix stores old saved872C+1 low32 before runtime handle resolution. Earlier helpers/callbacks precede this. BE32 counter, not mask; event identity/death/kill meaning unconfirmed."},

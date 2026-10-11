@@ -2,6 +2,7 @@
 
 ## Findings and definitions
 
+- [Bonus-target initialization and admission](ElfMap.md#bonus-target-registration-initialization-and-reinitialization-admission): conditional zero-based runtime indices, pending-mask initialization and distinct pointer bases resolving the same admission byte; no fixed target names/count or new saved fields.
 - [Quick-select assignment and warning state](ElfMap.md#quick-select-direct-assignment-warning-counter-and-byte-latch): named direct32-slot setter, counter before native rejection branches, one-byte repeat-warning gate and distinct initialization/preservation; not successful assignments or playback history.
 - [Saved event counters and target restoration](ElfMap.md#saved-event-counters-bounded-consumers-and-bonus-target-restoration): wrapping872C/8730 counters, qualified runtime handle gate, bounded config-parameter factors and recorded-target registration suppression; gameplay event names remain unknown.
 - [Weapon purchase routing and level-five gate](ElfMap.md#weapon-purchase-routing-and-saved-level-five-gate): exact stored level4/replay/definition prerequisites, independent dispatch/recheck samples, level/XP/ammo before payment and qualified duplicate normal acquisition.
@@ -41,7 +42,7 @@
 - [Dance skill progress bank](ElfMap.md#dance-skill-progress-bank-and-independent-earned-award): five native saved8720 update paths, exact64-bit completion test, signed/shift boundaries and independent earned bit48.
 - [Dance actor index/name catalog](ElfMap.md#dance-progress-actor-indices-and-named-configuration-associations): all28 selected runtime index assignments and named configuration associations, including the qualified Shingle Pirate shared-vtable link; not localized names, live actors or exhaustive variants.
 - [Space statistics versus saved progress](ElfMap.md#named-space-statistics-and-persistent-counter-boundaries): eight native numeric stat routes, named reset, runtime pending versus saved8728 and reset-before-persistent-counter ordering; no synthesized live statistics.
-- [Native address/structure map](maps/NativeMap.json): 1447 annotations, 118 imports and 45 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1450 annotations, 118 imports and 45 structure definitions.
 - [Bonus-target progress and collection paths](ElfMap.md#bonus-target-progress-and-qualified-special-bolt-producers): saved8728 publication versus reread runtime pending, flag278 message latch, localID0 reward precheck and direct runtime-local-ID grant. Individual targets and total count remain unknown.
 - [Bolt multiplier mutation and paired XP messages](ElfMap.md#bolt-multiplier-health-sampling-accumulator-and-paired-xp-messages): replay-gated sampled health reset, runtime-only half-step accumulator, strict float32 threshold and additive6A/6B XP paths; no timer or per-kill cadence inferred.
 - [Hero XP/HP reference arrays](ElfMap.md#named-hero-xphp-arrays-and-shipped-progression-reference): named100-entry native banks and98 fingerprinted shipped rows, separate from live level/health; includes unclamped progress arithmetic.

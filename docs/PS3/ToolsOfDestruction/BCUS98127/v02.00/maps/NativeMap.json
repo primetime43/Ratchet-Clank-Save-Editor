@@ -111687,9 +111687,38 @@
       "preview_limit": "Finite small-step nearest-even arithmetic only; live FPSCR rounding and current runtime parameters are unknown."
     },
     "registration": "Native362C20 always consumes old owner+11C index, stores incremented low32 back and assigns old index to target+324. It tests slw(1,index) against saved8728. If set, return0 without pending OR; otherwise OR into runtime owner+FC and return1. Saved progress is not modified. Counts32..63 select zero and still return1;64 aliases0. These are raw instruction cases, not known legitimate target indices or counts.",
+    "registration_initialization": {
+      "owner": "0x10330740",
+      "initializer": "0x3620D0",
+      "admission_byte_va": "0x10330834",
+      "next_index_va": "0x1033085C",
+      "pending_mask_va": "0x1033083C",
+      "rule": "Selected caller36A908 loads root8A1C24=10330740 and calls3620D0 at36A964. Initializer reads owner+F4 once into r30: any nonzero byte returns before helpers or initialization stores. Zero reaches361D10, writes1 to owner+F4 at3621A4, calls251AD8, then uses preserved zero r30 to clear owner+11C at3621CC and owner+FC at3621D0. It finally tail-calls361948. These explicit stores establish a zero-based registration starting point, not an unconditional reset on every caller invocation. Helper side effects/final runtime state are not reconstructed.",
+      "index_identity_limit": "362C20 assigns the old sequential index and increments it even for saved-bit rejection. Starting from the explicit zero stores, the first registration gets0, and rejected registrations still consume their index. This is registration-order evidence, not a fixed named target catalog, stable cross-load order, legitimate32-target limit or current mission count. Saved8728 alone cannot reconstruct owner+11C or owner+FC.",
+      "reinitialization_admission": "35F490 loads container8A19B8=10330730, adds10 and passes10330740 to362098 at35F4A4. This equals the initialization owner loaded directly by36A908 through8A1C24, despite differing pointer slots and base values. Explicit byte clear3620B4 addresses argument+F4=10330834, the same admission byte read by3620D0. It then calls3645E0 with10330750. The explicit clear enables the initializer admission test if no intervening write changes the byte; helper effects, next invocation timing and complete lifecycle are unverified. This path itself does not explicitly clear next-index+11C or pending+FC.",
+      "save_boundary": "Selected explicit initialization stores are in runtime owner10330740, outside serialized101EFB20..10280210. No direct saved8728/872C/8730 store occurs in the guarded initializer body. This is not proof that every called helper preserves them. Supplied GAME.SAV does not contain these runtime admission/index/pending values."
+    },
     "restoration_caller": "375C48 starts with target+324=FFFFFFFF, runs384758, then calls362C20. A zero low-byte result replaces the assigned index withFFFFFFFF and returns before the explicit type5 request. Nonzero retains the assigned index and follows that request. No saved identity, physical target location or successful request outcome is recovered.",
     "reset": "Previously confirmed489F68 clears8730,8728,872C after2CDBB0 and before465DC0. Counter event names, all reset causes and surrounding callback effects remain unverified. Snapshot zero is not absence of past events.",
     "recommended_annotations": [
+      {
+        "va": "0x362108",
+        "kind": "comment",
+        "name": "TOD_bonus_registration_initialization_admission",
+        "comment": "3620D0 reads runtime owner+F4 once. Zero reaches initialization; any nonzero returns before helpers/stores. Selected36A908 passes10330740. Not a saved option or unconditional mission reset."
+      },
+      {
+        "va": "0x3621cc",
+        "kind": "comment",
+        "name": "TOD_bonus_registration_index_zero",
+        "comment": "Reached initializer suffix clears runtime owner+11C using original zero admission byte in preserved r30; next instruction clears pending+FC. Registration362C20 consumes sequential indices even on saved8728 rejection. No fixed target names/count or full callback effects."
+      },
+      {
+        "va": "0x3620b4",
+        "kind": "comment",
+        "name": "TOD_bonus_registration_reinitialize_admission_clear",
+        "comment": "35F490 loads container8A19B8=10330730 and adds10: argument10330740 matches36A908 direct root8A1C24. This +F4 zero store addresses initializer admission byte10330834. Enables later admission absent intervening changes; helper3645E0/timing unverified. Not direct pending/index/saved-progress reset."
+      },
       {
         "va": "0x362c40",
         "kind": "comment",
@@ -111728,6 +111757,70 @@
       }
     ],
     "instruction_guards": [
+      {
+        "va": "0x35f490",
+        "bytes": "80621A987C8802A6F821FF9138630010F881008048002BF560000000E8010080382100707C0803A64E80002060000000"
+      },
+      {
+        "va": "0x35f49c",
+        "bytes": "38630010"
+      },
+      {
+        "va": "0x35f4a4",
+        "bytes": "48002BF5"
+      },
+      {
+        "va": "0x362098",
+        "bytes": "7C691B787CA802A63863001038800000F821FF9178630020F8A10080988900F44800252960000000E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x3620a0",
+        "bytes": "38630010"
+      },
+      {
+        "va": "0x3620a4",
+        "bytes": "38800000"
+      },
+      {
+        "va": "0x3620b4",
+        "bytes": "988900F4"
+      },
+      {
+        "va": "0x3620d0",
+        "bytes": "F821FF617C0802A6FBE100907C7F1B78DBE10098FB810078FBA10080FBC10088F80100B08BDF00F4787D00203B8000002F9E00007FA3EB78419E0028EB8100B0EBA100807F8803A6EBC10088EB810078EBE10090CBE10098382100A04E80002080A21B48C3E500004BFFFBD9C0821B70381F0010EFFF013281421B7878090020C0221B6C388A0030C0621B68398A0010C0421B74396A0020391F008038FF0090D069004038DF00A0D049005038BF00B0D0290048D029004438600001D3E9004C7D8020CE7C0050CE7C2060CE7DA058CE7C0041CE987F00F47C2039CE939F00C07DA031CE7D8029CE4BEEF921E84100283D3D000293DF000093DF000493DF011C93DF00FC93DF010093DF010493DF010893DF010C93DF01109BDF00F893DF011493DF01189BDF00F99BDF00FA93DF012093DF012493DF012893DF012C93DF013093DF013493DF013893DF013C93DF014093DF014493DF014893DF014C939F01509BDF00F79BDF00F693DF00D8939F00C4939F00CC9BDF00F593DF0154C1821B847FA3EB78C0021B7CC1A21B80D19F00F093C94764939F00D0D01F00E4D1BF00E893DF00D4D01F00DCD1BF00E0D19F00EC93C94760E88100B0EB810078EBA100807C8803A6EBC10088EBE10090CBE10098382100A04BFFF6A4"
+      },
+      {
+        "va": "0x3620dc",
+        "bytes": "7C7F1B78"
+      },
+      {
+        "va": "0x3620f4",
+        "bytes": "8BDF00F4"
+      },
+      {
+        "va": "0x362100",
+        "bytes": "2F9E0000"
+      },
+      {
+        "va": "0x362108",
+        "bytes": "419E0028"
+      },
+      {
+        "va": "0x362188",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x3621a4",
+        "bytes": "987F00F4"
+      },
+      {
+        "va": "0x3621cc",
+        "bytes": "93DF011C"
+      },
+      {
+        "va": "0x3621d0",
+        "bytes": "93DF00FC"
+      },
       {
         "va": "0x362c20",
         "bytes": "80E21BA438C0000180A3011C3D670001394500017CC828309143011C90A40324800B872838E000007D0900382C09000040820014818300FC38E000017D046378908300FC7CE307B44E80002060000000"
@@ -111783,6 +111876,10 @@
       {
         "va": "0x36a908",
         "bytes": "F821FE417C0802A6FBA10190787D0020DBA101A8FBE101A07C7F1B78DBC101B07FA3EB78DBE101B8F80101D0FAC10158FAE10160FB010168FB210170FB410178FB610180FB810188FBC101984BEE8685E841002880621D043B2000004BFF776D60000000807F001480C21D503880000138E00001390000009883006E815F00147FA4EB7880621D543AE000003B4000003B0000003BC00000838A00543BBF0038E98A0118837C00687CF6D8363976FFFF79650FA47D892878F92A011890DF0030991F04C390FF0024991F04C04BEE6AE5E841002838000010396000007C0903A67CEBEA14396B000478E8002093C800004200FFF07BBD00203980FFFF7FA3EB783880000038A00080999D0047999D0040999D0041999D0042999D0043999D0044999D0045999D00464BEE5269E84100287FA3EB783880000138A000403B9F00804BEE5251E84100287FA3EB783880000538A000107B9B00204BEE5239E84100287FA3EB783880000438A000203AC000004BEE5221E84100287FA3EB783880000038A000007ADA002C4BEE5379E84100287FA3EB783880000138A000017AD7002C4BEE5361E841002838C000017FA3EB783880000038A000004BEE5B09E84100287FA3EB783880000238A000024BEE5335E84100287FA3EB783880000338A000034BEE5321E84100287FA3EB7838C000033880000138A000024BEE5AC9E84100287F63DB783880000138A000004802190560000000815B000883A21D5838EA0001C1A21D5C7EC5B37854E9383090FB000838C9FF90397D00107F9C32143B7D00307B860020399D00207EC4B37878B8002C3900FFFF93C6006093C6006C3800000139260010394600203BC600307AD8000E7EC3B37882C21D487899002C9106006898060070910600647C2058CE78BA000E7D80D8CE7899000E7C00E8CE7877000E7DA060CE38A000037C0031CEFB2600407C2049CEFAE600507DA051CE90A600607D80F1CEFB460048FB060058C0360000EC01037283221D50831F00143EF90001D01800D08177872C2B8B0002409D0308388BFFFD78870020236700047F60FE767C08D8387C644214396300017D6B07B47D7EAE76797905603B1E00013AF907FF283800027EFA5B787B4A0524418002C0F9410140C8A10140FC802E9CC0621D60C3A21D08FC402018EDA2E8FA83621D64391F02C038A00000C3E21D383D7B0001790300203BC100C03B4000017BD80020C16B0FD4EC2D02F24BEE7AC9E841002838610070C0221D0C388100784BFF435D60000000C0E10078C1021D68ECC70232389F03C07F03C378789900203880003ED3F90008D3F90000D0D900044BEE8165E841002882FF0014398000017F04C378386100749981013E92E100C0934101244BEE4401E841002881421D34FC20F890393F02AC83A1007438A0000080C21D1079230020D3FF048893BF039CFC40E8909B5F04BE9B5F04BFC3C21D6C90A30000FC60F0909B430008C0AA00B4D0A3000498BF04C290BF04C898BF04BC98BF04C198BF04BDD3FF04ACD3FF04A4D3BF04A8D3FF0490D3FF0498D3FF049CD3FF04B0D3FF04B4D3FF04A0EB860000807F0014FB9F03B0E806000098BF04C4F81F03B8D3FF048CD3FF04B880E3005483670040391B00A079040020481295A960000000817F0014FC40E890FC60F0907D635B78FC20F890808B005483C400403B3E00407B2400204812877D60000000831F00147B0600203AF800103B5800207AEC00207B5D0020C086000038A10080C1A600043880057FC0660008386000ACC046000CD0810090D1A10094D0610098D041009CC3AC000CC02C0004C3CC0008C00C0000D00100A0D02100A4D3C100A8D3A100ACC17D000CC15D0000C13D0004C19D0008D14100B0D12100B4D18100B8D16100BCE9260030E946003838C10090C0221D70F9210080F94100884BEE5D89E84100287C7C1B783880000078630020939F002C4BEE4851E8410028C0F60000C1021D4CECC7023238BF040078B60020D3F60004D3F60000D0D60008EBE101D0EAC101587FE803A6EAE10160EB010168EB210170EB410178EB610180EB810188EBA10190EBC10198EBE101A0CBA101A8CBC101B0CBE101B8382101C04E8000207D6A5B784BFFFD40C3A21D08FDA0E8904BFFFD50"
+      },
+      {
+        "va": "0x36a964",
+        "bytes": "4BFF776D"
       },
       {
         "va": "0x36abec",
@@ -112065,8 +112162,16 @@
         "bytes": "939D872C"
       },
       {
+        "va": "0x8a19b8",
+        "bytes": "10330730"
+      },
+      {
         "va": "0x8a1ac4",
         "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a1c24",
+        "bytes": "10330740"
       },
       {
         "va": "0x8a1c28",
@@ -116076,6 +116181,9 @@
     ]
   },
   "annotations": [
+{"va":"0x00362108","name":"TOD_bonus_registration_initialization_admission","kind":"comment","confidence":"confirmed","bytes":"419E0028","comment":"3620D0 reads runtime owner+F4 once. Zero reaches initialization; any nonzero returns before helpers/stores. Selected36A908 passes10330740. Not a saved option or unconditional mission reset.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; saved_event_counters native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x003621CC","name":"TOD_bonus_registration_index_zero","kind":"comment","confidence":"confirmed","bytes":"93DF011C","comment":"Reached initializer suffix clears runtime owner+11C using original zero admission byte in preserved r30; next instruction clears pending+FC. Registration362C20 consumes sequential indices even on saved8728 rejection. No fixed target names/count or full callback effects.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; saved_event_counters native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x003620B4","name":"TOD_bonus_registration_reinitialize_admission_clear","kind":"comment","confidence":"confirmed","bytes":"988900F4","comment":"35F490 loads container8A19B8=10330730 and adds10: argument10330740 matches36A908 direct root8A1C24. This +F4 zero store addresses initializer admission byte10330834. Enables later admission absent intervening changes; helper3645E0/timing unverified. Not direct pending/index/saved-progress reset.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; saved_event_counters native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0017A984","name":"TOD_dance_actor_index_0_17a984","kind":"comment","confidence":"confirmed","bytes":"917F0028","comment":"Original runtime actor+28 receives Dance progress index0; named reference config association EnemyAntaraCentipede. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0017AA10","name":"TOD_dance_actor_index_0_17aa10","kind":"comment","confidence":"confirmed","bytes":"917F0028","comment":"Original runtime actor+28 receives Dance progress index0; named reference config association EnemyAntaraCentipede. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0017D518","name":"TOD_dance_actor_index_1_17d518","kind":"comment","confidence":"confirmed","bytes":"907C0028","comment":"Original runtime actor+28 receives Dance progress index1; named reference config association EnemyAntaraSwarmer. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

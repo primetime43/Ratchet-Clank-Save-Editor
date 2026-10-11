@@ -1,4 +1,4 @@
-"""Saved counter provenance, wrapping, bounded consumers and target restoration."""
+"""Saved counter provenance, wrapping, bounded consumers and target initialization/restoration."""
 import argparse
 import hashlib
 import json
@@ -82,7 +82,7 @@ class SavedEventCounterChecks(unittest.TestCase):
     def test_exact_guard_ranges_and_two_integer_fields(self):
         report = self.native()
         elf = TOOL["BINDINGS"]["Elf"](ELF)
-        self.assertEqual(len(report["instruction_guards"]), 101)
+        self.assertEqual(len(report["instruction_guards"]), 120)
         for guard in report["instruction_guards"]:
             expected = bytes.fromhex(guard["bytes"])
             self.assertEqual(elf.read(int(guard["va"], 0), len(expected)), expected)
@@ -92,7 +92,8 @@ class SavedEventCounterChecks(unittest.TestCase):
         self.native()
         elf = TOOL["BINDINGS"]["Elf"](ELF)
         original = elf.u32
-        for address in (0x8A1C70, 0x8A1C48, 0x8A1C80, 0x8A206C, 0x36C678, 0x36C69C, 0x36C6D4, 0x375C84, 0x362C50, 0x36FCEC):
+        for address in (0x8A1C70, 0x8A1C48, 0x8A1C80, 0x8A206C, 0x36C678, 0x36C69C, 0x36C6D4, 0x375C84, 0x362C50, 0x36FCEC,
+                        0x8A19B8, 0x8A1C24, 0x362108, 0x3621CC, 0x3621D0, 0x35F49C, 0x3620B4, 0x35F4A4, 0x36A964):
             with patch.object(elf, "u32", side_effect=lambda va, target=address: original(va) ^ (4 if va == target else 0)):
                 with patch.dict(TOOL["BINDINGS"], {"Elf": lambda _: elf}):
                     with self.assertRaises(ValueError):
@@ -101,10 +102,53 @@ class SavedEventCounterChecks(unittest.TestCase):
     def test_changed_toc_refused(self):
         self.native()
         elf = TOOL["BINDINGS"]["Elf"](ELF)
-        with patch.dict(elf.descriptors, {0x36C578: 0x88FF38}):
-            with patch.dict(TOOL["BINDINGS"], {"Elf": lambda _: elf}):
+        for function in (0x36C578, 0x3620D0, 0x35F490, 0x362098):
+            with patch.dict(elf.descriptors, {function: 0x88FF38}):
+                with patch.dict(TOOL["BINDINGS"], {"Elf": lambda _: elf}):
+                    with self.assertRaises(ValueError):
+                        TOOL["inspect"](ELF)
+
+    def test_zero_admission_reaches_explicit_initialization_stores(self):
+        result = TOOL["initialization_store_preview"](0, 0xFFFFFFFF, 0x80000001)
+        self.assertTrue(result["reaches_initialization"])
+        self.assertEqual((result["admission_byte"], result["next_index"], result["pending"]), (1, 0, 0))
+        self.assertIn("not complete callback effects", result["qualification"])
+
+    def test_every_nonzero_admission_returns_without_initialization(self):
+        for value in range(1, 256):
+            result = TOOL["initialization_store_preview"](value, 0xFFFFFFFF, 0x80000001)
+            self.assertFalse(result["reaches_initialization"])
+            self.assertEqual((result["admission_byte"], result["next_index"], result["pending"]), (value, 0xFFFFFFFF, 0x80000001))
+
+    def test_initialization_projection_invalid_inputs_refused(self):
+        for bad in (-1, 256, True, 1.0, "0", None):
+            with self.assertRaises(ValueError):
+                TOOL["initialization_store_preview"](bad, 0, 0)
+        for slot in (1, 2):
+            for bad in (-1, 1 << 32, True, 1.0, None):
+                args = [0, 0, 0]
+                args[slot] = bad
                 with self.assertRaises(ValueError):
-                    TOOL["inspect"](ELF)
+                    TOOL["initialization_store_preview"](*args)
+
+    def test_rejected_registration_still_consumes_zero_based_index(self):
+        initialized = TOOL["initialization_store_preview"](0, 99, 0xFFFF)
+        first = TOOL["registration_preview"](1, initialized["pending"], initialized["next_index"])
+        second = TOOL["registration_preview"](1, first["pending_after_store"], first["next_index"])
+        self.assertEqual((first["assigned_index"], first["admitted"], first["next_index"]), (0, False, 1))
+        self.assertEqual((second["assigned_index"], second["admitted"], second["pending_after_store"]), (1, True, 2))
+        self.assertEqual((first["saved_progress"], second["saved_progress"]), (1, 1))
+
+    def test_distinct_pointer_bases_resolve_same_runtime_admission_owner(self):
+        report = self.native()["registration_initialization"]
+        elf = TOOL["BINDINGS"]["Elf"](ELF)
+        self.assertEqual(elf.u32(0x8A19B8) + 0x10, elf.u32(0x8A1C24))
+        self.assertEqual(int(report["owner"], 0) + 0xF4, int(report["admission_byte_va"], 0))
+        self.assertEqual(int(report["owner"], 0) + 0x11C, int(report["next_index_va"], 0))
+        self.assertEqual(int(report["owner"], 0) + 0xFC, int(report["pending_mask_va"], 0))
+        self.assertIn("intervening write", report["reinitialization_admission"])
+        self.assertIn("not a fixed named target catalog", report["index_identity_limit"])
+        self.assertIn("not proof that every called helper preserves", report["save_boundary"])
 
     def test_runtime_pool_and_event_identity_caveats(self):
         report = self.native()
