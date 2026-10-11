@@ -45,6 +45,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Per-world object bits & spawn rules", TodResearch.Map.GetProperty("world_object_flags"), 0));
             topics.Add(JsonTopic("Object callbacks, pending restore & saved-bit publication", TodResearch.Map.GetProperty("object_flag_mutation"), 0));
             topics.Add(JsonTopic("Object definitions, class IDs & allocation limits", TodResearch.Map.GetProperty("object_definitions"), 0));
+            topics.Add(JsonTopic("Object slots: setup, deferred release & reuse", TodResearch.Map.GetProperty("pool_lifecycle"), 0));
+            topics.Add(JsonTopic("Object classes, actor lookup & resource boundaries", TodResearch.Map.GetProperty("object_classes"), 0));
+            topics.Add(JsonTopic("Reference class catalogs (not saved object identities)", TodResearch.Map.GetProperty("object_classes_assets"), 0));
             topics.Add(JsonTopic("Reference object catalogs for 19 worlds", TodResearch.Map.GetProperty("object_definitions_assets"), 0));
             topics.Add(JsonTopic("Object counters & equipment", TodResearch.Map.GetProperty("objects"), 0));
             topics.Add(JsonTopic("Object reset/restore, Souls award & quick-select mutation", TodResearch.Map.GetProperty("inventory_aux"), 0));
@@ -86,6 +89,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Reset-event categories & runtime countdown", TodResearch.Map.GetProperty("reset_categories"), 0));
             topics.Add(JsonTopic("Reset request admission, latch service & counter dependencies", TodResearch.Map.GetProperty("reset_context"), 0));
             topics.Add(JsonTopic("Global event flags & native bit addressing", TodResearch.Map.GetProperty("global_flags"), 0));
+            topics.Add(JsonTopic("Event flags: reset and consume behavior", TodResearch.Map.GetProperty("global_flag_mutation"), 0));
+            topics.Add(JsonTopic("Shipped flag call sites & tutorial dependencies", TodResearch.Map.GetProperty("global_flag_mutation_assets"), 0));
             topics.Add(new("Weapons & gadgets", TodResearch.Scope, TodResearch.Inventory.Select(item =>
                 new Topic(item.GetProperty("id") + " · " + item.GetProperty("config_name"), TodResearch.WeaponDetails(item.GetProperty("id").GetInt32()), new())).ToList()));
             topics.Add(new("Full native research map", TodResearch.Pretty(TodResearch.Map), TodResearch.Map.EnumerateObject().Select(p => JsonTopic(p.Name, p.Value, 0)).ToList()));

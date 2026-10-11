@@ -36,6 +36,40 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Runtime pool setup and slot reuse do not become saved identity or allocation simulation", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x668, 8), ulong.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("World object flags");
+            True(table.Rows[0].Details.Contains("padding slots occupied") && table.Rows[0].Details.Contains("physical slots can be reused") && table.Rows[0].Details.Contains("not additional save data"), "Pool padding, lifecycle and runtime header must stay distinct from saved object identities.");
+            Equal(71, TodResearch.Map.GetProperty("pool_lifecycle").GetProperty("instruction_guards").GetArrayLength());
+            Equal(8, TodResearch.Map.GetProperty("pool_lifecycle").GetProperty("runtime_header").GetProperty("fields").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Pool research must not allocate, release or alter saved object bits.");
+        });
+        Check("Consumed event flags do not become permanent achievements or runtime Lua counters", () =>
+        {
+            byte[] bytes = ResearchFixture(), before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Global event flags");
+            foreach (int id in new[] { 3, 7, 12, 13, 15, 16, 17 })
+                True(table.Rows[id].Details.Contains("Clear does not mean the action never happened"), "A consumed event must not become an action-history verdict.");
+            True(!table.Rows[219].Details.Contains("These are event latches"), "A dependency flag must not inherit another flag's reset behavior.");
+            True(table.Rows[13].Details.Contains("no confirmed save offset") && table.Rows[12].Details.Contains("not atomic"), "Script counters and mission side effects must stay qualified.");
+            Equal("UNMAPPED_BIT_319", table.Rows[319].Cells[1]);
+            Equal(510, TodResearch.Map.GetProperty("global_flag_mutation").GetProperty("instruction_guards").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Event research must not clear flags, run tutorials or complete missions.");
+        });
+        Check("Class resource evidence remains separate from saved slots and unnamed opaque payloads", () =>
+        {
+            var map = TodResearch.Map.GetProperty("object_classes");
+            True(map.GetProperty("instruction_guards").GetArrayLength() > 0, "Class producer evidence must be bundled.");
+            Equal(19, TodResearch.Map.GetProperty("object_classes_assets").GetProperty("named_world_count").GetInt32());
+            Equal(18214, TodResearch.Map.GetProperty("object_classes_assets").GetProperty("definition_count").GetInt32());
+            byte[] bytes = ResearchFixture(), before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("World object flags");
+            True(table.Rows[0].Details.Contains("No object names are recovered for these indices"), "Class resources must not manufacture names for physical saved slots.");
+            True(bytes.SequenceEqual(before), "Class viewing must not execute actor factories or change saves.");
+        });
         Check("Object asset catalogs remain reference-only and do not relabel physical saved slots", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -856,7 +890,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1343, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1356, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

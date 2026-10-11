@@ -312,8 +312,17 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     bool mapped = catalog.TryGetValue(id, out var entry);
                     string name = mapped ? entry.GetProperty("enum").GetString() : "UNMAPPED_BIT_" + id;
                     string category = mapped ? entry.GetProperty("category").GetString() : "Unmapped";
+                    bool consumable = TodResearch.Map.GetProperty("global_flag_mutation_assets")
+                        .GetProperty("selected_consumers").GetProperty("consumable_event_ids")
+                        .EnumerateArray().Any(item => item.GetInt32() == id);
+                    string consumption = consumable
+                        ? "This event has a confirmed script reset/consume path. Clear does not mean the action never happened; set does not prove a tutorial ran or is currently active. These are event latches, not permanent achievements.\r\n"
+                        : "";
+                    if (id == 13) consumption += "The shield consumer increments runtime Lua global hero_shield_hits before clearing this bit. That Lua counter has no confirmed save offset.\r\n";
+                    if (id == 12) consumption += "The Aphelion mission path also requires flag219 and a local first-run guard; it clears event12 before a separate mission-completion call. These actions are not atomic.\r\n";
                     string details = "Recorded global event bit, not a per-level record flag or a current story-completion verdict. " +
                         "Readable names are formatted native identifiers, not recovered localized titles. Set/clear polarity and dependencies require individual script/runtime validation.\r\n" +
+                        consumption +
                         $"ID {id}: BE64 word {TodResearch.Hex(wordOffset)}, integer bit {id % 64}; file byte {TodResearch.Hex(byteOffset)}, mask 0x{byteMask:X2}. Raw word: {word:X16}.\r\n" +
                         "Both named check/set/clear API families target the same bitset. Native leaves do not check the292-name bound; physical bits292–319 remain unknown, not named flags. No flag editing is enabled.\r\n" +
                         (mapped ? TodResearch.Pretty(entry) : "Unknown physical tail bit; GLOBAL_FLAG_COUNT292 is a sentinel, not a flag name.");
@@ -574,6 +583,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         string detail = band.GetProperty("meaning").GetString() + "\r\n" +
                             "Physical runtime object-pool slots, not object UIDs, inventory IDs, collectible names or a completion percentage. No object names are recovered for these indices.\r\n" +
                             "Reference assets contain 72-byte object definitions with class IDs, segment references and load modes. The Research tab has catalogs for19 worlds, but definition ordinal is not a confirmed saved pool slot: rejected load entries reserve slots, and later runtime spawns use the same allocator. Current allocation order/handles are not in this save.\r\n" +
+                            "Normal pool setup starts a fresh bitmap and marks padding slots occupied before selected-root loading. Ordinal-to-slot equality still requires valid capacity arithmetic, one successful allocation/reservation per definition and no nested allocation/free. Deferred release clears occupancy later, so physical slots can be reused. The 32-byte runtime pool header is not additional save data.\r\n" +
                             "Bit ordering: BE64 word offset=base+8*(slot/64), file byte=word+7-(slot%64)/8, mask=1<<(slot%8). Native readers/writers do not establish safe bounds for arbitrary runtime pointers.\r\n" +
                             "Set counts describe stored bits only: zero does not establish that every object is alive, present, uncollected or unfinished. Mode1 spawn suppression is not an unconditional load verdict.\r\n" +
                             (band.GetProperty("id").GetString() == "recorded_object_state"
