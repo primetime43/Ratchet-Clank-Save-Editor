@@ -2,7 +2,45 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
-Latest completed pass confirms saved-setting publication before runtime application: original control index versus three eleven-halfword runtime copy routes, rumble flag before eight-port stop requests, surround capability/engine gates and three separately sampled audio buses.258 guard ranges,15 focused tests and five new annotations cover seven named setters and their bounded helper paths. Stored preferences do not establish successful hardware apply. Existing settings details and Research remain read-only with unchanged columns and rows. All810 native/asset/organization checks and197 app regressions pass, including raw-value preservation, UI resizing/DPI, original-save loading and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1475 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1476 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage. Runtime input-member names/table state, speaker-mode meanings, hardware/callback outcomes, definition overrides, pointer lifetime, FPSCR behavior, phase units, target identities/counts and event names remain unresolved.
+Latest completed pass confirms the CrateAmmo refill producer, separate ordered-below-capacity method, level-zero CrateAmmo versus saved-level/modifier capacity, and post-add ceiling except native ID3 Ravager. Subsequent flag2 acquisition and UI rejection remain distinct from the earlier ammo operation.88 guard ranges,14 focused tests and four annotations cover the native evidence; the fingerprinted original CSV supplies32 constructor-linked declared reference amounts with missing values left unknown. Existing inventory details and two Research topics remain read-only with unchanged columns. All824 native/asset/organization checks and198 app regressions pass, including raw-value preservation, UI resizing/DPI, original-save loading and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1479 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1480 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage. Actual refill context/factor/definition overrides, coupling between predicate and invocation, pointer lifetime, FPSCR/nonfinite conversion, callback/hardware outcomes, phase units, target identities/counts and event names remain unresolved.
+
+## CrateAmmo refill requests versus admission and later rounding
+
+[Inspect-TodAmmoCrate.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodAmmoCrate.py) adds88 exact-build guard ranges, fourteen focused tests and four annotations. `ammo_crate` reproduces the native evidence; optional `--assets` reads the fingerprinted original weapon.csv and independently reproduces the public32-ID `ammo_crate_assets` catalog. Optional `--save` reports detached raw inventory words/bytes only. No Lua, game callbacks, pickup or repair executes, and no new saved offset or editing permission is inferred.
+
+### Two separate dispatch methods select canonical saved ammo
+
+Table **84E24C→86DD30→2FF6C0** identifies the refill producer; adjacent **84E254→86DD20→2FF5F0** identifies a separate comparison method. Both qualify context+40 through24F208(...,211), then select hero+1A68 +20×actor+9C. Previously verified hero23E650 binds canonical101EFB20. For valid matching index/ID i, the ammo member is saved **20×i+8**. Actor/context members are runtime, not save offsets. No universal ID bounds, ownership admission, complete pool/context safety or guaranteed pairing of these methods is established.
+
+Complete **2FF5F0** loads saved ammo **before** calling463DE0, then extracts the ordered LT bit from FCMPU against the returned maximum. Strictly lower ammo passes this local comparison; equality and unordered values reject. The body reads no ownership byte and does not call the refill producer. Conversely,2FF6C0 does not call2FF5F0. External dispatch, stable definitions/samples and final pickup eligibility remain qualified, not reconstructed from the snapshot.
+
+### Refill uses CrateAmmo at index0, not MaxAmmo at level0
+
+Native property registration **88E858** names **CrateAmmo** at10012D08, getter **B8618** indexes data+2D0+4×index. Complete **466528** reads that same array through definition+48; the producer explicitly passes index **0** at2FF7C4. This is a separate property from **MaxAmmo at data+280**, not a level-zero maximum calculation. The original CSV fingerprint is2E9D75D6509F35E75B27626D1D777F4D5414FCBAA1AC553D36AE9D9F4A728F7A. Its declaration gives Combuster CrateAmmo[0]=15, independently associated with native ID1 by config subobject/constructor arguments, not CSV row order. Missing values remain unknown, including absent configuration sections; no zero default is invented.
+
+### The selected request is added before later integer rounding
+
+Producer **2FF6C0** resolves current maximum through466500 using the raw saved level+11 and modifier mask+C. **FSUBS** computes remaining capacity as maximum−saved ammo. Runtime **101E8D70+14** supplies a factor; **FMULS** multiplies it by CrateAmmo[0]. For ordinary finite inputs the FSEL sequence selects:
+
+`request = min(max(binary32(factor × CrateAmmo[0]), 0), binary32(maximum − ammo))`
+
+At **2FF7FC**,465E18 performs clamped **ADD** with that request. There is **no floor1**, local ownership test or local call to the below-capacity method. Direct invocation with negative remaining capacity can therefore request a negative addition.465E18 resolves its own maximum again from record ID/level/mask; exact actual delta/new ammo, unchanged definitions, native nonfinite behavior and FPSCR are not assumed. The detached finite reference plan models nearest-even binary32 product/subtraction and refuses nonfinite, overflowing or excessively large post-rounding inputs. Signed-zero identity is explicitly outside that reference projection.
+
+Only **after**465E18 returns does item-ID3 bypass rounding; the native export independently names3 **WPN_RAVAGER**. Other selected IDs use FCTIDZ/FCFID and FSEL around1.0 to produce ceiling for bounded ordinary finite requests. This later local value is used by downstream integer/helper/message paths; it is **not rounded saved ammo, actual gained amount or guaranteed displayed text**.
+
+| Explicit finite inputs | Add request sent first | Later local value, non-ID3 |
+| --- | --- | --- |
+| Maximum100, ammo80, CrateAmmo15, factor0.5 | 7.5 | 8 |
+| Maximum100, ammo99.75, CrateAmmo15, factor1 | 0.25 | 1 |
+| Direct call: maximum100, ammo100.25, CrateAmmo15, factor1 | −0.25 | 0 |
+
+These are selected-request examples, not actual console outcomes, accepted malformed state, stable runtime maxima or complete saved-result previews. ID3 retains the unrounded local value.
+
+### Acquisition and UI gates occur after the ammo operation
+
+After the add and local rounding, definition+18 flag2 selects **466B70(base,ID,refill0)** at2FFAAC, then252B08(hero,ID,−1). This can perform acquisition/progression work even after an earlier request0; its larger effects are not emulated. The later runtime UI-member+34 gate admits0/3/4 and otherwise returns **after** ammo/acquisition, not before it. Messages, handles and virtual callbacks are outside a complete model; a later presentation return is not a local ammo rollback.
+
+The actual detached save's32 index/ID records match this layout; Combuster ID1 retains raw ammo42C80000 (100), level9 and mask00003FFE. Those values do not expose CrateAmmo overrides, runtime factor, active selected context, whether the comparison ran or pickup history. Existing inventory details now explain these boundaries and show each declared reference CrateAmmo[0]; two searchable Research topics expose the guarded native report and public catalog. Ten technical columns, original raw fields and editing permissions remain unchanged.
 
 ## Settings saved publication versus runtime application
 

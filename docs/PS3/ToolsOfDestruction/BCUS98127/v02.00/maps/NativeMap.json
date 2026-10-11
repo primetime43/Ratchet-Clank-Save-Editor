@@ -118621,6 +118621,562 @@
       }
     ]
   },
+  "ammo_crate": {
+    "confidence": "exact-build-native-crate-refill-request-and-separate-admission",
+    "warning": "USA BCUS98127 v02.00 only. Static read-only evidence, not a pickup-placement catalog, full gameplay simulation, safe edit recipe or new writable field.",
+    "record_selection": "Table84E24C->86DD30->2FF6C0 and adjacent84E254->86DD20->2FF5F0 establish two separate dispatch methods. Both require context+40 nonnull and low-byte24F208(context40,211) nonzero, then select hero+1A68 +20*actor+9C. Hero23E650 installs canonical101EFB20. For valid matching ID/index i, ammo is saved20*i+8. No universal item-ID bounds, ownership gate, complete pool/context safety or guarantee that the two methods are invoked together is proven.",
+    "below_capacity": "2FF5F0 loads saved ammo before calling463DE0 maximum resolution, then extracts the ordered LT bit from FCMPU. Equality and unordered reject; strictly lower ordered ammo admits this local predicate. It does not read ownership or invoke2FF6C0. Helpers can change samples/definitions; saved ammo alone is not full pickup eligibility or active capacity.",
+    "crate_property": "Native property registration88E858 names CrateAmmo at10012D08; getterB8618 reads indexed data+2D0+4*index. Complete466528 reads the same array through definition+48.2FF6C0 explicitly supplies index0, not the saved level. CrateAmmo is distinct from MaxAmmo at data+280 and is not a level-zero maximum-ammo calculation. No pickup-size default is guessed for absent configuration values.",
+    "request_rule": "2FF6C0 first resolves maximum through466500 with raw saved level+11 and mask+C, then computes binary32 missing=max-ammo. It loads runtime101E8D70+14 factor and multiplies it by CrateAmmo[0], rounded by FMULS. For ordinary finite inputs it selects min(max(scaled CrateAmmo,0),missing), then calls465E18 clamped ADD BEFORE subsequent request rounding. There is no local floor1, ownership gate or call to2FF5F0. Negative missing can therefore select a negative addition request on a direct over-capacity invocation.465E18 resolves its own maximum from record ID/level/mask again; exact actual delta/new saved ammo, stable definitions and native nonfinite/FPSCR behavior are not inferred.",
+    "post_add_rounding": "Only AFTER465E18 returns, selected ID3 skips local rounding; native enum independently names3 WPN_RAVAGER. All other selected IDs use FCTIDZ/FCFID and FSEL around constant1.0 to produce mathematical ceiling for bounded ordinary finite requests. This later local value is retained for downstream integer/helper/message work; it is not rounded ammo written by465E18, actual gained ammo, a conserved quantity or guaranteed displayed text. Nonfinite and out-of-range integer conversions remain unmodeled.",
+    "later_publication": "After ammo and local rounding, definition+18 flag2 selects466B70(hero saved base,selected ID,refill0), followed by252B08(hero,ID,-1). These helpers can perform acquisition/progression work even after an earlier request0; no ownership/result final-state prediction. Later runtime UI-member+34 gate admits0/3/4 and otherwise returns AFTER the ammo/acquisition work, not before it. Subsequent messages, handles and callbacks are outside a complete consumer model; presentation rejection is not an ammo rollback.",
+    "snapshot_limit": "CrateAmmo definition, runtime factor, valid context/selected ID, active maximum and invocation history are absent from the saved ammo snapshot. Viewing preserves all raw ammo, levels, masks, ownership and opaque record bytes; does not run the predicate, refill, acquire, normalize or infer pickup counts.",
+    "recommended_annotations": [
+      {
+        "va": "0x2ff5f0",
+        "name": "TOD_ammo_crate_ordered_below_capacity_predicate",
+        "comment": "Qualified hero/type context selects saved20*actor9C+8 and extracts ordered LT against463DE0 max. Equal/unordered false, no ownership read or local refill call; not full pickup eligibility."
+      },
+      {
+        "va": "0x2ff7fc",
+        "kind": "comment",
+        "name": "TOD_ammo_crate_unrounded_request_before_later_rounding",
+        "comment": "Calls465E18 ADD with finite min(max(runtime factor*CrateAmmo[0],0), max-ammo), FMULS/FSUBS rounding. No floor1, local ownership/below-capacity gate, exact delta or stable definition assumption. Rounding below is AFTER this store path."
+      },
+      {
+        "va": "0x2ff810",
+        "kind": "comment",
+        "name": "TOD_ammo_crate_post_add_request_ceiling_except_id3",
+        "comment": "After465E18 returned, ID3 WPN_RAVAGER bypasses; other IDs FCTIDZ/FCFID/FSEL select ceil for bounded finite request. Later local/helper value, not rounded saved ammo or exact acquired amount. Native nonfinite conversion unmodeled."
+      },
+      {
+        "va": "0x2ffaac",
+        "kind": "comment",
+        "name": "TOD_ammo_crate_flag2_acquisition_after_ammo_request",
+        "comment": "Definition flag2 selects466B70(base,ID,refill0) after ammo request and local rounding, then252B08 integration. Later UI gate can return only after these operations; no ownership/final-state or rollback claim."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x80b00",
+        "bytes": "4BF91E91"
+      },
+      {
+        "va": "0xb8618",
+        "bytes": "F821FF517C8802A6FBE100A87C7F1B78F88100C080820150FBA10098FBC100A04BF59709E84100287FE3FB78388000014BF58529E84100283880FFFF7FE3FB784BF5A859E841002838010070781D002038A000007C7E1B78388000027FA6EB787FE3FB784BF5A975E84100287FA5EB782F8300007FE3FB78419E00887FE3FB78C022FBBC388000024BF5A9E1E841002839210080FC20081E7FE3FB7838A000007C204FAE83A10080281D001340810010808201584BF58BB5E841002857A8103A7BCB002038E802D07FE3FB787CE607B47C2B342E4BF5BAC5E8410028E8A100C0EBA1009838600001EBC100A0EBE100A87CA803A6382100B04E80002060000000808201544BF58B65E84100284BFFFF70"
+      },
+      {
+        "va": "0xb86dc",
+        "bytes": "38E802D0"
+      },
+      {
+        "va": "0xb86e8",
+        "bytes": "7C2B342E"
+      },
+      {
+        "va": "0x23e650",
+        "bytes": "F821FED17C0802A6FB0100F03B0311B8FB2100F87B190020FAA100D8FBE101283AA311C07C7F1B78FBA101183BA00000FA8100D07AA300203A9F11C8F8010140FAC100E0FAE100E8FB410100FB610108FB810110FBC1012093B9000493B900004BDD4841E84100283AFF12D07A8300203ADF12DC4BDD482DE84100287AE300204BDD4821E84100287AC300204BDD35F5E8410028399F1320798300207BF500204BDD4801E8410028395F14A0794300203B0000004BDD249DE8410028811F00147EA3AB783B4000003B20000080A800543B6000003A9F112080E5001060E6000290C500104BFA26DD6000000081227C0038600000913F1A68907F1B689BBF1B619BBF001C808904187EA3AB78F88100C0C82100C0FC000E9CFC2000184BFFF92582DF00147AD700207EE3BB784BDD51E5E841002883827C04881C00EF2F800000419E02743BBC00207C00E0CE387C001039370010397700207DA0E8CE3BA000007C2018CE7C00B9CE7C2049CE7DA059CEEBDC0038E89C0030FBD70038F897003083DF1A6860000000807F002057AC103A57A02036546928347D0C02147C89EA147CDE4214548A103A78C3002038EA00503BBD00017CE507B47C3C2C2E4BDD55C5E84100282C3D00204082FFC08BDC00EE2C9E0000408601E07EA3AB783BC000004BFFF7D938BF184838DF18608097006478A3002078C5002038C0000A3BA000404BDD1F11E8410028395F14B0381F14C479430020780500207EE4BB784BDD2685E8410028399F154C83627C0C799C0020C0827C1038FF1B1C3900FFFF90FC0000911C000893BC00049BDF1B60EB5B0000FB5F1A58807700C8C0D700602F830000C0770110FCA62028FD232028FD6521AEFC2920EED1770060D0370110419E001C81627C147863002038A00000808B00004BDD4F91E84100287A9600207EE4BB787EC3B3783BBF1A704BDD4699E841002838BF1AB08156006438DF1AC0C1427BC4399700303917001038F7002078B8002078D900203B9F1A803B7F1A903B5F1AA06140000B3A800000901600647C00B8CE7EA3AB787D8060CE3AA000047C2040CE7DA038CE7C00E9CE7C20E1CE7DA0D9CE7D80D1CE929800009298000492980008D158000C929900009299000492990008D159000C82DF00008096006481240000F84100287D2903A6804400044E800421E8410028387F18407877002092BF10D0929700009BD700069BD700049BD700059BDF1B62EBE10140EA8100D07FE803A6EAA100D8EAC100E0EAE100E8EB0100F0EB2100F8EB410100EB610108EB810110EBA10118EBC10120EBE10128382101304E80002039360010C0227BF838960030792C0020788300203961009038800006797E0020C04C000CC003000CEDA2002AC10C0008D1A100C8C1830008ECE8602AC0CC000480A100C878BB002C38A00001D0E100C8C1430004ECA6502AC08C000080C100C878DB000E38C00001D0A100C8C16300007FC3F378EC64582A814100C8FB610078795A002CC101007CC0C10078D06100C8800100C8781A000EFB410070C12C000CC04C0008ED890072C1AC0004ED420072ED6D0072C00C0000ED200072C0810074C0410070ECE86028ECA65028EC645828EDA24828D0E100C8810100C8D0A100C880E100C87919002CD06100C883A100C878F9000ED1A100C87BB8002C838100C8FB2100887B98000EFB0100804BDD1901E84100288377009038810080C0227C08386100707FC6F37892C100A0936100A44BDD27BDE8410028547A063E2F1A0000409A00147FC3F3784BDD2E15E84100284BFFFCD4830100907FC3F378EB380000EAD80008FB370030FAD700384BDD2DF1E84100284BFFFCB060000000"
+      },
+      {
+        "va": "0x23e744",
+        "bytes": "913F1A68"
+      },
+      {
+        "va": "0x2ff5f0",
+        "bytes": "F821FF717CA802A6FBE100807C9F2378DBE10088FBC10078F8A100A07C7E1B7838800211801F00402F80000078030020419E00184BF4FBE5E84100285463063E2C0300004082002CEBC100A038600000EBE100807C6307B47FC803A6CBE10088EBC10078382100904E80002060000000815F0040819E009C558B20365588103A80EA1A687CC85A147C863A14788900207D234B78C3E900084816475960000000EBC100A0FC9F08007C74002654632FFEEBE100807C6307B47FC803A6CBE10088EBC10078382100904E80002060000000"
+      },
+      {
+        "va": "0x2ff670",
+        "bytes": "80EA1A68"
+      },
+      {
+        "va": "0x2ff684",
+        "bytes": "C3E90008"
+      },
+      {
+        "va": "0x2ff688",
+        "bytes": "48164759"
+      },
+      {
+        "va": "0x2ff694",
+        "bytes": "FC9F0800"
+      },
+      {
+        "va": "0x2ff698",
+        "bytes": "7C740026"
+      },
+      {
+        "va": "0x2ff69c",
+        "bytes": "54632FFE"
+      },
+      {
+        "va": "0x2ff6c0",
+        "bytes": "F821FF217C0802A6FBA100B8FBC100C0DBC100D07C7E1B78DBE100D87C9D2378FAE10088FB010090FB210098FB4100A0FB6100A8FB8100B0FBE100C8F80100F0806400402F830000419E002078630020388002114BF4FAF5E84100285463063E2C03000040820044E8E100F0EAE10088EB0100907CE803A6EB210098EB4100A0EB6100A8EB8100B0EBA100B8EBC100C0EBE100C8CBC100D0CBE100D8382100E04E8000206000000083FD004080FE009C7CE307B483BF1A6848163A196000000080DE009C7C6B1B7854C9203654C5103A7C854A147C7D22142C8300004186FF8C787B0020797900207F23CB7880BB000C889B001148166D4D600000008102FFE0C05B000838800000EFC110287F23CB78C3E8001448166D5560000000EFFF0072C1A2FFDCFC3F6828FC016FEEFD80F028FFEC07AEFC20F8907F63DB784816661D60000000809E009C2F040003419A0028FCA0FE5EFCA02E9CC0E2FFE4FC65F828FCC5382AFC9F29AEFFE327EEFC601850FFE327EE81790018556A07BC2F8A0000409E02607FE3FB784BF52E51E84100283F0300013AF88D5C7AFA0020801A00342C000000418200142C8000034186000C2F000004409AFEB44BF52591E841002838C3FFFE2B860001409D02482F830005419E02402C0300073B00000041820234C102FFE4FC9F40004CC43382418602A883E2FFA888DF00002F060000419A027083A2FFAC7BBD0020388001F17FA3EB784BF529C9E8410028891F00002F8800007C7C1B78419E02247FA3EB787B84002038A000004BF515B5E84100282C03000041820318786B0020806B00088382FFA4786400203BBC02087BBF00207FE3FB784BF527F9E8410028570C063E2C8C0000418601A8831E009C388000027F0307B4481653A1600000007C7D1B787F63DB7848165D3160000000FD40F8907FE4FB78786700207BA60020387C0108FD20565ED9210070EBE100707BE500204BF5378DE84100284BF51FA5E8410028809E009C786300204BF53095E84100282F030000419A008083D9001857D907BC2F990000419E0070808300042C0400004180014480A2FFEC806500002C83000041860134786300207C8407B44BF519E1E84100282F0300007C601B78419A0118387714E0C162FFF43AE00001D17A159038800000D17A158C78630020901A154C909A15949AFA15A49AFA15984BF4FF81E8410028813A00007F43D3783B60FFFFC022FFF8389C01087B66002038E0000083490044390000003920000039400001839A0000F84100287F8903A6805A00044E800421E8410028E8E100F0EAE100887CE803A6EB010090EB210098EB4100A0EB6100A8EB8100B0EBA100B8EBC100C0EBE100C8CBC100D0CBE100D8382100E04E8000207BA300207C8407B438A00000481670C560000000819E009C7FE3FB787D8407B438A0FFFF4BF53045E84100284BFFFD783B0000014BFFFDCC7F63DB7848165BA560000000801E009C7C7D1B78388000027C0307B4481651ED600000004BFFFE5C8002FFF04BFFFEE87FA3EB784BF5148DE8410028394000018062FFB0995F00004BF4FB69E84100284BFFFDC083A2FFAC7BA300204BF51465E841002838E000018062FFB098FF00004BF4FB41E84100284BFFFD748382FFA88BBC00002F1D0000419A010C83A2FFAC7BBF0020388001F27FE3FB784BF52725E8410028881C00002F8000007C7D1B78419E00C07FE3FB787BA4002038A000004BF51311E84100282C030000418200F0787C0020807C00088382FFA47864002038BC000878BF00207FE3FB784BF52555E84100285703063E2C8300004186004C813E009C388000017D2307B4481650FD600000007C7D1B787F63DB7848165A8D60000000786600207FE4FB787BA50020387C01084BF534FDE84100284BFFFD708062FFE84BFFFCF07F63DB7848165A5D60000000837E009C7C7D1B78388000017F6307B4481650A5600000004BFFFFB87FE3FB784BF5134DE8410028388000018062FFB0989C00004BF4FA29E84100284BFFFF2483A2FFAC3BE000017BA300204BF51321E84100288062FFB09BFC00004BF4FA01E84100284BFFFED88062FFE84BFFFF1860000000"
+      },
+      {
+        "va": "0x2ff700",
+        "bytes": "80640040"
+      },
+      {
+        "va": "0x2ff710",
+        "bytes": "38800211"
+      },
+      {
+        "va": "0x2ff714",
+        "bytes": "4BF4FAF5"
+      },
+      {
+        "va": "0x2ff724",
+        "bytes": "40820044"
+      },
+      {
+        "va": "0x2ff76c",
+        "bytes": "80FE009C"
+      },
+      {
+        "va": "0x2ff774",
+        "bytes": "83BF1A68"
+      },
+      {
+        "va": "0x2ff778",
+        "bytes": "48163A19"
+      },
+      {
+        "va": "0x2ff788",
+        "bytes": "54C92036"
+      },
+      {
+        "va": "0x2ff78c",
+        "bytes": "54C5103A"
+      },
+      {
+        "va": "0x2ff794",
+        "bytes": "7C7D2214"
+      },
+      {
+        "va": "0x2ff7ac",
+        "bytes": "80BB000C"
+      },
+      {
+        "va": "0x2ff7b0",
+        "bytes": "889B0011"
+      },
+      {
+        "va": "0x2ff7b4",
+        "bytes": "48166D4D"
+      },
+      {
+        "va": "0x2ff7bc",
+        "bytes": "8102FFE0"
+      },
+      {
+        "va": "0x2ff7c0",
+        "bytes": "C05B0008"
+      },
+      {
+        "va": "0x2ff7c4",
+        "bytes": "38800000"
+      },
+      {
+        "va": "0x2ff7c8",
+        "bytes": "EFC11028"
+      },
+      {
+        "va": "0x2ff7d0",
+        "bytes": "C3E80014"
+      },
+      {
+        "va": "0x2ff7d4",
+        "bytes": "48166D55"
+      },
+      {
+        "va": "0x2ff7dc",
+        "bytes": "EFFF0072"
+      },
+      {
+        "va": "0x2ff7e0",
+        "bytes": "C1A2FFDC"
+      },
+      {
+        "va": "0x2ff7e4",
+        "bytes": "FC3F6828"
+      },
+      {
+        "va": "0x2ff7e8",
+        "bytes": "FC016FEE"
+      },
+      {
+        "va": "0x2ff7ec",
+        "bytes": "FD80F028"
+      },
+      {
+        "va": "0x2ff7f0",
+        "bytes": "FFEC07AE"
+      },
+      {
+        "va": "0x2ff7fc",
+        "bytes": "4816661D"
+      },
+      {
+        "va": "0x2ff808",
+        "bytes": "2F040003"
+      },
+      {
+        "va": "0x2ff80c",
+        "bytes": "419A0028"
+      },
+      {
+        "va": "0x2ff810",
+        "bytes": "FCA0FE5E"
+      },
+      {
+        "va": "0x2ff814",
+        "bytes": "FCA02E9C"
+      },
+      {
+        "va": "0x2ff818",
+        "bytes": "C0E2FFE4"
+      },
+      {
+        "va": "0x2ff81c",
+        "bytes": "FC65F828"
+      },
+      {
+        "va": "0x2ff820",
+        "bytes": "FCC5382A"
+      },
+      {
+        "va": "0x2ff824",
+        "bytes": "FC9F29AE"
+      },
+      {
+        "va": "0x2ff828",
+        "bytes": "FFE327EE"
+      },
+      {
+        "va": "0x2ff82c",
+        "bytes": "FC601850"
+      },
+      {
+        "va": "0x2ff830",
+        "bytes": "FFE327EE"
+      },
+      {
+        "va": "0x2ff834",
+        "bytes": "81790018"
+      },
+      {
+        "va": "0x2ff838",
+        "bytes": "556A07BC"
+      },
+      {
+        "va": "0x2ff840",
+        "bytes": "409E0260"
+      },
+      {
+        "va": "0x2ff85c",
+        "bytes": "801A0034"
+      },
+      {
+        "va": "0x2ff864",
+        "bytes": "41820014"
+      },
+      {
+        "va": "0x2ff86c",
+        "bytes": "4186000C"
+      },
+      {
+        "va": "0x2ff874",
+        "bytes": "409AFEB4"
+      },
+      {
+        "va": "0x2ffaa8",
+        "bytes": "38A00000"
+      },
+      {
+        "va": "0x2ffaac",
+        "bytes": "481670C5"
+      },
+      {
+        "va": "0x2ffac0",
+        "bytes": "38A0FFFF"
+      },
+      {
+        "va": "0x2ffac4",
+        "bytes": "4BF53045"
+      },
+      {
+        "va": "0x465e18",
+        "bytes": "F821FF717C8802A6DBE10088FFE00890FBA100707C7D1B7878630020F88100A04BFFDFA960000000C1825FD4C09D0008EFFF202AFC7F6028FC0367EEFC400828FDA2006ED1BD0008E80100A0EBA10070CBE100887C0803A6382100904E800020"
+      },
+      {
+        "va": "0x465e38",
+        "bytes": "4BFFDFA9"
+      },
+      {
+        "va": "0x466500",
+        "bytes": "7C6B1B785483103A7CA62B783803028038A000097C0407B4812B0048796300207C29242E4BFFFD34"
+      },
+      {
+        "va": "0x466528",
+        "bytes": "5485103A81230048380502D07C0407B47C29242E4E800020"
+      },
+      {
+        "va": "0x46652c",
+        "bytes": "81230048"
+      },
+      {
+        "va": "0x466530",
+        "bytes": "380502D0"
+      },
+      {
+        "va": "0x466538",
+        "bytes": "7C29242E"
+      },
+      {
+        "va": "0x466b70",
+        "bytes": "F821FF617CC802A6FB8100807C7C1B787C8307B4FB410070FB6100787C9A2378FBA10088FBC10090FBE10098F8C100B07CBE2B784BFFC5ED600000007C7B1B78574420365743103A7FA32214817B00187D3CEA14556005AC793F00202F800000409E00102C1E00004082003C6000000088FF00102F070000419A0058EB8100B0EB4100707F8803A6EB610078EB810080EBA10088EBC10090EBE10098382100A04E800020556507BC2C85000040860108793F00207FE3FB784BFFF1616000000088FF00102F070000409AFFB46000000039400001C0225FEC7FE3FB78995F00104BFFF4596000000083425FF4E93A55285528056A2FA80000409E0088819B0018558B07BC2C0B0000418200783BC000003BE000007F9DE37848000014600000002F1F001F3BFF0001419A00447BA300203BBD00148B6300102C9B00004186FFE480C300007CC307B44BFFC4D9600000002F1F001F786300203BFF0001808300187880FFE27FDE0214409AFFC42F9E0001409D0010EBFA552863FE0400FBDA5528835C02803BBA000193BC0280EB8100B0EB4100707F8803A6EB610078EB810080EBA10088EBC10090EBE10098382100A04E8000207FE3FB78C0225FF04BFFF0ED600000004BFFFEAC"
+      },
+      {
+        "va": "0x84e24c",
+        "bytes": "0086DD30"
+      },
+      {
+        "va": "0x84e254",
+        "bytes": "0086DD20"
+      },
+      {
+        "va": "0x85e980",
+        "bytes": "000B8618"
+      },
+      {
+        "va": "0x85e984",
+        "bytes": "0088FF38"
+      },
+      {
+        "va": "0x86dd20",
+        "bytes": "002FF5F0"
+      },
+      {
+        "va": "0x86dd24",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x86dd30",
+        "bytes": "002FF6C0"
+      },
+      {
+        "va": "0x86dd34",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x88b300",
+        "bytes": "10000128"
+      },
+      {
+        "va": "0x88b304",
+        "bytes": "40400000"
+      },
+      {
+        "va": "0x88e858",
+        "bytes": "10012D08"
+      },
+      {
+        "va": "0x88e85c",
+        "bytes": "0085E980"
+      },
+      {
+        "va": "0x897b38",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89fefc",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x89ff00",
+        "bytes": "101E8D70"
+      },
+      {
+        "va": "0x89ff04",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x10000128",
+        "bytes": "57504E5F5241564147455200"
+      },
+      {
+        "va": "0x10012d08",
+        "bytes": "4372617465416D6D6F00"
+      }
+    ]
+  },
+  "ammo_crate_assets": {
+    "weapon_csv_sha256": "2E9D75D6509F35E75B27626D1D777F4D5414FCBAA1AC553D36AE9D9F4A728F7A",
+    "catalog": [
+      {
+        "id": 0,
+        "config": "Wrench",
+        "crate_ammo_level0": null
+      },
+      {
+        "id": 1,
+        "config": "Combuster",
+        "crate_ammo_level0": 15.0
+      },
+      {
+        "id": 2,
+        "config": "Grenade",
+        "crate_ammo_level0": 2.0
+      },
+      {
+        "id": 3,
+        "config": "Ravager",
+        "crate_ammo_level0": 12.0
+      },
+      {
+        "id": 4,
+        "config": "Tornado",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 5,
+        "config": "BuzzBlade",
+        "crate_ammo_level0": 20.0
+      },
+      {
+        "id": 6,
+        "config": "Predator",
+        "crate_ammo_level0": 6.0
+      },
+      {
+        "id": 7,
+        "config": "AlphaNova",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 8,
+        "config": "FlameThrower",
+        "crate_ammo_level0": 6.0
+      },
+      {
+        "id": 9,
+        "config": "GoopMine",
+        "crate_ammo_level0": 2.0
+      },
+      {
+        "id": 10,
+        "config": "Reaper",
+        "crate_ammo_level0": 6.0
+      },
+      {
+        "id": 11,
+        "config": "Rocket",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 12,
+        "config": "RoboHive",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 13,
+        "config": "MagNet",
+        "crate_ammo_level0": 2.0
+      },
+      {
+        "id": 14,
+        "config": "EnergyClaws",
+        "crate_ammo_level0": 6.0
+      },
+      {
+        "id": 15,
+        "config": "Ryno",
+        "crate_ammo_level0": 60.0
+      },
+      {
+        "id": 16,
+        "config": "Zurkon",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 17,
+        "config": "ConfusionGas",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 18,
+        "config": "Slinkonator",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 19,
+        "config": "Groovitron",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 20,
+        "config": "MiniLeech",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 21,
+        "config": "MaxiLeech",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 22,
+        "config": "Morph",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 23,
+        "config": "Copter",
+        "crate_ammo_level0": 1.0
+      },
+      {
+        "id": 24,
+        "config": "Inflatopod",
+        "crate_ammo_level0": 5.0
+      },
+      {
+        "id": 25,
+        "config": "SwingShot",
+        "crate_ammo_level0": 0.0
+      },
+      {
+        "id": 26,
+        "config": "CuttingLaser",
+        "crate_ammo_level0": null
+      },
+      {
+        "id": 27,
+        "config": "Gelanator",
+        "crate_ammo_level0": 0.0
+      },
+      {
+        "id": 28,
+        "config": "RoboWings",
+        "crate_ammo_level0": null
+      },
+      {
+        "id": 29,
+        "config": "MagCycle",
+        "crate_ammo_level0": null
+      },
+      {
+        "id": 30,
+        "config": "PirateGadget",
+        "crate_ammo_level0": null
+      },
+      {
+        "id": 31,
+        "config": "Decryptor",
+        "crate_ammo_level0": null
+      }
+    ],
+    "qualification": "Fingerprint-verified declared CrateAmmo[0] only; missing values stay unknown. Constructor-based IDs, not CSV order. No live runtime overrides/factor, pickup amount, capacity or event history inferred."
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -119114,6 +119670,10 @@
     ]
   },
   "annotations": [
+{"va":"0x002FF5F0","name":"TOD_ammo_crate_ordered_below_capacity_predicate","kind":"function","confidence":"confirmed","bytes":"F821FF717CA802A6","comment":"Qualified hero/type context selects saved20*actor9C+8 and extracts ordered LT against463DE0 max. Equal/unordered false, no ownership read or local refill call; not full pickup eligibility.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_crate native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002FF7FC","name":"TOD_ammo_crate_unrounded_request_before_later_rounding","kind":"comment","confidence":"confirmed","bytes":"4816661D","comment":"Calls465E18 ADD with finite min(max(runtime factor*CrateAmmo[0],0), max-ammo), FMULS/FSUBS rounding. No floor1, local ownership/below-capacity gate, exact delta or stable definition assumption. Rounding below is AFTER this store path.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_crate native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002FF810","name":"TOD_ammo_crate_post_add_request_ceiling_except_id3","kind":"comment","confidence":"confirmed","bytes":"FCA0FE5E","comment":"After465E18 returned, ID3 WPN_RAVAGER bypasses; other IDs FCTIDZ/FCFID/FSEL select ceil for bounded finite request. Later local/helper value, not rounded saved ammo or exact acquired amount. Native nonfinite conversion unmodeled.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_crate native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002FFAAC","name":"TOD_ammo_crate_flag2_acquisition_after_ammo_request","kind":"comment","confidence":"confirmed","bytes":"481670C5","comment":"Definition flag2 selects466B70(base,ID,refill0) after ammo request and local rounding, then252B08 integration. Later UI gate can return only after these operations; no ownership/final-state or rollback claim.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_crate native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x000271D4","name":"TOD_control_scheme_saved_publish_before_runtime_selector","kind":"comment","confidence":"confirmed","bytes":"916914BC","comment":"Stores original low32 to saved114BC before128B0->6966B8: exactly1/2 request selector1/2, all other raw indices selector0 without rewriting saved word. Runtime table/count may skip apply; not scheme names or accepted edit range.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; settings_apply native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x006966B8","name":"TOD_control_scheme_runtime_halfword_copy_routes","kind":"function","confidence":"confirmed","bytes":"2F830001419E02D8","comment":"Call-free runtime table10731648, count byte12, pointer-entry stride8. Three routes copy eleven halfwords to object1C206..1C21A, count0 skips; exact source pairs in settings_apply. Not saved mappings, button names or hardware success.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; settings_apply native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0060C568","name":"TOD_rumble_disable_runtime_flag_then_eight_port_requests","kind":"function","confidence":"confirmed","bytes":"F821FF617C8802A6","comment":"Clears runtime1071F458+4 then unrolled cellPadSetActDirect ports0..7 with first actuator bytes zero. External returns ignored, no attached-port count, confirmed stop or rollback. Saved114D4 caller publishes first.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; settings_apply native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

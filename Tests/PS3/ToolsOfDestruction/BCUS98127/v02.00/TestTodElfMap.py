@@ -241,6 +241,7 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["health_persistence"]["instruction_guards"]
                 + MAPPING["load_reset_dependencies"]["instruction_guards"]
                 + MAPPING["ammo_capacity"]["instruction_guards"]
+                + MAPPING["ammo_crate"]["instruction_guards"]
                 + MAPPING["gelanator_transition"]["instruction_guards"]
                 + MAPPING["weapon_ammo_debit"]["instruction_guards"]
                 + MAPPING["adaptation_context"]["instruction_guards"]

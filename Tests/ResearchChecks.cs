@@ -754,6 +754,25 @@ internal static partial class Program
             Equal("255", table.Rows[27].Cells[3]); Equal("0xFFFFFFFF", table.Rows[27].Cells[6]);
             True(bytes.SequenceEqual(before), "Viewing must not execute or balance a Gelanator transition.");
         });
+        Check("Ammo-crate details preserve raw ammo and separate declared refill inputs from later rounding", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(28, 4), 0x7F800001);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(32, 4), uint.MaxValue);
+            bytes[36] = 0xFE; bytes[37] = 0xFF; bytes[38] = 0xAB; bytes[39] = 0xCD;
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Weapons & gadgets");
+            string detail = table.Rows[1].Details;
+            True(detail.Contains("Ammo-crate refill path (when this record is selected)") && detail.Contains("CrateAmmo[0]"), "Crate requests must stay qualified to a selected record and the distinct refill property.");
+            True(detail.Contains("no local floor1") && detail.Contains("does not read ownership or invoke2FF6C0"), "Admission and request magnitude must not be inferred from the save alone.");
+            True(detail.Contains("Only AFTER465E18 returns") && detail.Contains("not rounded ammo written"), "Later ceiling must not change the saved ammo interpretation.");
+            True(detail.Contains("AFTER the ammo/acquisition work") && detail.Contains("not an ammo rollback"), "A later display return must not undo earlier saved work.");
+            True(detail.Contains("Reference CrateAmmo[0]: 15;") && table.Rows[31].Details.Contains("Not declared; no zero default inferred."), "Reference inputs must distinguish missing values from zero.");
+            Equal("255", table.Rows[1].Cells[3]); Equal("0xFFFFFFFF", table.Rows[1].Cells[6]);
+            True(detail.Contains("ammo bits: 0x7F800001") && detail.Contains("ABCD"), "Raw nonfinite ammo and opaque tails remain intact.");
+            Equal(10, table.Columns.Length);
+            True(bytes.SequenceEqual(before), "Viewing must not run a pickup, round ammo, acquire an item or repair its fields.");
+        });
         Check("Shared weapon ammo explains separate check and debit without inferring eligibility or changing raw records", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1259,7 +1278,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1476, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1480, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
