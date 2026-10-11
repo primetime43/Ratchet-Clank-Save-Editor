@@ -152,7 +152,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
             }
             text.AppendLine("Available is the inverse of complete, not a separate saved bit. Script indices concatenate active then completed and are one-based; stored slots here are zero-based. Unused entries are not interpreted or cleared.");
-            text.AppendLine("Mission initialization clears counts and title/description words, but leaves entry flags intact. Completion copies title/description and sets bit2 in the destination's retained flags; it does not transfer the source's optional or unknown bits. Compaction preserves all12 bytes of survivors and leaves the old last entry as inactive residual storage, not another mission.");
+            text.AppendLine("The constructor's mission loops leave flags intact at that step, but the later nested initializer35E110/35D9A0 zeroes both entire mission-list groups, including counts, IDs and flags. Selective restart reaches those same zero-fills; missions are not retained by that initializer. Completion copies title/description and sets completion mask0x2 in the destination's retained flags; it does not transfer the source's optional or unknown bits. Compaction preserves all12 bytes of survivors and leaves the old last entry as inactive residual storage, not another mission.");
             text.AppendLine("Native title searches use raw counts before the add-capacity check. Completing into a full ten-entry list can overwrite its count word, with later addresses based on the overwritten value. Viewing reads only physical entries and never invokes these unsafe native paths or repairs counts.");
             return text.ToString();
         }
@@ -256,14 +256,15 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 foreach (var field in new[] { (0x280, "Acquisition/removal counter", "confirmed", "Not asserted equal to the owned-item count."),
                     (0x418, "Hero XP", "code-backed", "Named hero_set_xp chain 2BAED0 -> 28A9B0 -> 252C78 -> 23E090 writes integer XP. Runtime fractional XP and level are not this field; no safe editing range inferred."),
-                    (0x41C, "Bolts", "confirmed", "uint32 big endian."), (0x420, "Raritanium", "confirmed", "uint32 big endian."),
+                    (0x41C, "Bolts", "confirmed", "uint32 big endian. Reward-side additions wrap modulo32 and update a separate runtime accumulator first. Hero-side additions use the signed low32(cap-sum) selection with cap999999999, not a universal unsigned minimum or a lower clamp. These native paths do not establish a safe edit range or repair unusual balances."),
+                    (0x420, "Raritanium", "confirmed", "uint32 big endian. Reward-side additions wrap modulo32 and update a separate runtime accumulator first. Hero-side additions use the signed low32(cap-sum) selection with cap999999999, not a universal unsigned minimum or a lower clamp. Runtime reward-cache subtraction can use the full requested amount, not the actual wallet delta; that cache is not saved here."),
                     (0x424, "Special bolts spent", "code-backed", "Owned balance getter 25DB8 subtracts this word from collected bit counts. Skin purchase 27AA0 increments it by the definition cost. Do not normalize it to owned-skin count."),
                     (0x428, "Bolt multiplier", "code-backed", "Float32 BE. Native getter/update 1E2568 / 1E25F0; code clamps updates to 1..20, not a validated edit range."),
                     (0x42C, "Last recorded equipped item", "code-backed", "History updater1F5570 shifts old430 to434, old42C to430, then records native equipped getter11810/466EC0 at42C. Historical snapshot, not necessarily current runtime equipment; no safe editing range inferred."),
                     (0x430, "Previously recorded equipped item", "code-backed", "Previous42C value, not a dual-wield secondary slot. Restore and menu consumers use different fallback rules. The state-entry callback and runtime-only resets are documented in Research; a saved word is not current equipment."),
                     (0x434, "Older recorded equipped item", "code-backed", "Previous430 value; consulted by menu26CE30. Raw item ID and history order retained; unknown IDs are not repaired."),
-                    (0x438, "Pack dispatch selector", "code-backed", "set_pack_type native27A30 stores0 for argument0, otherwise1. Known hero action consumers select the alternate message only when this word equals1; malformed nonzero values are not treated as true or repaired."),
-                    (0x43C, "Saved pack type", "code-backed", "Named set_pack_type/get_pack_type write/read this BE32 word. Native PACK_HELI/THRUSTER/HYDRO/WING IDs0..3; TYPE_COUNT4 is a sentinel, not a mapped saved selection. Saved selection does not prove current runtime availability."),
+                    (0x438, "Pack dispatch selector", "code-backed", "set_pack_type native27A30 stores0 for argument0, otherwise1. Known hero action consumers select the alternate message only when this word equals1; malformed nonzero values are not treated as true or repaired. Selective restart can clear pack type3 while retaining this selector; selector1/type0 is therefore not automatically an invalid pair or repaired by this viewer."),
+                    (0x43C, "Saved pack type", "code-backed", "Named set_pack_type/get_pack_type write/read this BE32 word. Native PACK_HELI/THRUSTER/HYDRO/WING IDs0..3; TYPE_COUNT4 is a sentinel, not a mapped saved selection. Selective restart clears this word only when exactly3, retaining selector438 and boot440 independently. The Lua setter zero-extends its converted low32 argument before the native64-bit zero test; arbitrary high32/low32 mismatches are not produced by that wrapper. Saved selection does not prove current runtime availability."),
                     (0x440, "Saved boot type", "code-backed", "Named get_boot_type reads this BE32 word. Native BOOT_NORMAL/GRIND/GRAV/CHARGE IDs0..3. set_boot_type wrapper converts its argument, but native26F60 ignores it and always writes0. No editing or runtime compatibility inferred."),
                     (0x458, "Equipped armor ID", "code-backed", "Native IDs 0..4; ownership and unlock availability are separate."),
                     (0x480, "Selected skin ID", "code-backed", "Native IDs 0..8. Select 26FC0 requires ownership; purchase 27AA0 also writes this ID."),
@@ -277,7 +278,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 {
                     uint value = U32(field.Item1);
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 },
-                        field.Item4 + (field.Item1 is 0x42C or 0x430 or 0x434 ? EquipmentHistoryDetails() : "")));
+                        field.Item4 + (field.Item1 is 0x42C or 0x430 or 0x434 ? EquipmentHistoryDetails() : "") +
+                        (field.Item1 == 0x906EC ? "\r\nThe restart dispatcher uses an object-local private bank, not a proven alias of the normal save-manager staging buffer. Phase1 captures live bytes once on entry; later polls do not recapture. Phase4 exact selector0/1 invokes selective restart/full private-bank restore before publishing phase5. Selective restart zeroes both mission groups and clears the log count, but retains prior private-bank log bytes8764..10144, not necessarily current live bytes. Runtime phase, choice and capture history are absent from this file; no action is executed here." : "")));
                 }
                 foreach (var field in TodResearch.Map.GetProperty("save_aux_fields").GetProperty("fields").EnumerateArray())
                 {
@@ -571,8 +573,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         string slots = string.Join(", ", setSlots);
                         string detail = band.GetProperty("meaning").GetString() + "\r\n" +
                             "Physical runtime object-pool slots, not object UIDs, inventory IDs, collectible names or a completion percentage. No object names are recovered for these indices.\r\n" +
+                            "Reference assets contain 72-byte object definitions with class IDs, segment references and load modes. The Research tab has catalogs for19 worlds, but definition ordinal is not a confirmed saved pool slot: rejected load entries reserve slots, and later runtime spawns use the same allocator. Current allocation order/handles are not in this save.\r\n" +
                             "Bit ordering: BE64 word offset=base+8*(slot/64), file byte=word+7-(slot%64)/8, mask=1<<(slot%8). Native readers/writers do not establish safe bounds for arbitrary runtime pointers.\r\n" +
                             "Set counts describe stored bits only: zero does not establish that every object is alive, present, uncollected or unfinished. Mode1 spawn suppression is not an unconditional load verdict.\r\n" +
+                            (band.GetProperty("id").GetString() == "recorded_object_state"
+                                ? "Object event leaf: runtime latch1D zero admits a virtual callback BEFORE the saved bit is set and latch1D is published. The saved-bit setter obtains the current world after that callback. Restore consumes pending1E before checking the bit; a set bit alone does not schedule or force the callback. Runtime UID scans clear only the first matching record, without a uniqueness guarantee.\r\n"
+                                : "Object flag10000 gates only the saved suppression write; downstream runtime helper2501C8 runs on either branch. The observed ldarx/plain stdx pair does not establish an atomic OR. No current runtime flag or helper result is inferred.\r\n") +
                             $"Set object slots: [{slots}]\r\n" + wordDetails + "\r\n" + TodResearch.Pretty(band);
                         rows.Add(new(new[] { level.ToString(CultureInfo.InvariantCulture), level < levels.Length ? levels[level].GetProperty("enum").GetString() : "Unmapped physical level slot19",
                             band.GetProperty("label").GetString(), setSlots.Count.ToString(CultureInfo.InvariantCulture), TodResearch.Hex(offset),
@@ -667,6 +673,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         (selected >= 9 ? " (outside the mapped catalog; preserved)" : "") + ".\r\n" +
                         "Cost is a shipped special-bolt price, not a saved value. Availability is true except Jailbird ID7, which requires ownership. Cost0 does not prove unlock eligibility.\r\n" +
                         "Purchase also increases spent word424 and notifies runtime; selecting requires ownership. This view never performs those operations.\r\n" + TodResearch.Pretty(skin);
+                    detail += "\r\nThe native purchase leaf checks signed price against signed special-bolt balance, but does not itself test ownership or availability. An admitted repeat call can charge again; UI/script callers may add other gates. This is code behavior, not demonstrated gameplay or a safe edit rule.";
                     rows.Add(new(new[] { id.ToString(), skin.GetProperty("enum").GetString(), owned != 0 ? "Yes" : "No",
                         selected == id ? "Yes" : "No", skin.GetProperty("cost").ToString(), $"0x{owned:X8}", TodResearch.Hex(offset) }, detail));
                 }
@@ -689,6 +696,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         (U32(0x8708) != expected ? "Mismatch preserved; no repair attempted. " : "") +
                         $"Unknown high bits: 0x{bits & 0xF000000000000000UL:X16}. Unknown alignment bytes at 0x870C: {Convert.ToHexString(data, 0x870C, 4)}.\r\n" +
                         "Static meanings are code-backed; no edit or in-game compatibility claim.\r\n" + TodResearch.Pretty(skill);
+                    detail += "\r\nAward order: publish the bit, add definition points to the saved score modulo32, notify runtime, then check the automatic final award. An already-set bit returns before all those steps, so a duplicate does not repair score mismatches or a missing final award. Notifications are not simulated and the sequence is not proven atomic.";
+                    if (id == 46) detail += "\r\nGolden producer: duplicate collectibles and unsigned local IDs above31 still run the native all-world count scan, even without a new bit. Counts include unexpected bits and are compared >= shipped totals; this does not identify actual pickups or prove wrapper acceptance of invalid IDs.";
+                    if (id == 47) detail += "\r\nCheapskate producer: an admitted Combuster ammo purchase tests the ORIGINAL request <=1 after adding ammo and deducting bolts, not the clamped quantity. Zero/negative requests select missing ammo in this leaf yet meet that award comparison; caller acceptance and current purchase eligibility are not inferred from this save.";
                     rows.Add(new(new[] { id.ToString(), skill.GetProperty("enum").GetString(), complete ? "Yes" : "No",
                         skill.GetProperty("points").ToString(), skill.GetProperty("name_tag").ToString(),
                         skill.GetProperty("description_tag").ToString(), TodResearch.Hex(offset), $"0x{1 << (id % 8):X2}" }, detail));
@@ -707,6 +717,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         $"Equipped ID: {equipped} at 0x458" + (equipped >= 5 ? " (outside the mapped catalog; retained unchanged)" : "") +
                         $". Independent unlock byte: 0x{unlock:X2} at {TodResearch.Hex(0x5774 + id)}.\r\n" +
                         "Availability's native getter can unlock ID4 when word906EC is nonzero; this inspector only reads the saved bytes.\r\n" +
+                        "Purchase writes ownership and calls bolt deduction before direct or queued equip. A successful return can leave the prior equipped ID until the runtime effect consumer runs; ownership, unlock and equipped state remain independent.\r\n" +
+                        "The runtime queue writes its latch before the ID/handle payload, not as a proven atomic update. Its state2 deadline branch rejects ordered <= but admits > or unordered NaN. No queue, animation, current runtime attribute or damage reduction is inferred from this file.\r\n" +
                         TodResearch.Pretty(armor);
                     rows.Add(new(new[] { id.ToString(), armor.GetProperty("enum").GetString(), owned != 0 ? "Yes" : "No",
                         $"0x{owned:X8}", equipped == id ? "Yes" : "No", $"0x{unlock:X2}", TodResearch.Hex(offset) }, detail));

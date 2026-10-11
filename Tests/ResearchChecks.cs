@@ -36,6 +36,115 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Object asset catalogs remain reference-only and do not relabel physical saved slots", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x668, 8), 1UL << 63);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("World object flags");
+            Equal("1", table.Rows[0].Cells[3]);
+            True(table.Rows[0].Details.Contains("definition ordinal is not a confirmed saved pool slot") && table.Rows[0].Details.Contains("later runtime spawns"), "A reference asset catalog must not become a current saved object identity map.");
+            var assets = TodResearch.Map.GetProperty("object_definitions_assets");
+            Equal(19, assets.GetProperty("named_world_count").GetInt32());
+            Equal(18214, assets.GetProperty("definition_count").GetInt32());
+            Equal(69, TodResearch.Map.GetProperty("object_definitions").GetProperty("instruction_guards").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Reference object catalogs must not allocate objects, execute scripts or change saved bits.");
+        });
+        Check("Currency mutation evidence preserves raw balances without applying native caps or cache updates", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x41C, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x420, 4), 0x80000000);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            var bolts = table.Rows.Single(row => row.Cells[0] == "0x41C");
+            var minerals = table.Rows.Single(row => row.Cells[0] == "0x420");
+            Equal("4294967295", bolts.Cells[2]);
+            Equal("2147483648", minerals.Cells[2]);
+            True(bolts.Details.Contains("not a universal unsigned minimum") && minerals.Details.Contains("not the actual wallet delta"), "Native cap selection and runtime cache bookkeeping must not become a saved-value repair or current reward calculation.");
+            True(TodResearch.Map.GetProperty("currency_mutation").GetProperty("instruction_guards").GetArrayLength() > 0, "Currency producer evidence must be bundled.");
+            True(bytes.SequenceEqual(before), "Currency research must not mutate balances or invoke reward/purchase paths.");
+        });
+        Check("Equipment restart filters preserve independent selector, pack and boot values", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x438, 4), 1);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x43C, 4), 0);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x440, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            var selector = table.Rows.Single(row => row.Cells[0] == "0x438");
+            var pack = table.Rows.Single(row => row.Cells[0] == "0x43C");
+            var boot = table.Rows.Single(row => row.Cells[0] == "0x440");
+            Equal("1", selector.Cells[2]);
+            Equal("0", pack.Cells[2]);
+            Equal("4294967295", boot.Cells[2]);
+            True(selector.Details.Contains("selector1/type0") && pack.Details.Contains("only when exactly3") && pack.Details.Contains("zero-extends"), "Restart filtering and the wrapper's argument boundary must not become a selector repair, arbitrary native64 payload or equip verdict.");
+            True(TodResearch.Map.GetProperty("equipment_mutation").GetProperty("instruction_guards").GetArrayLength() > 0, "Equipment transition evidence must be bundled.");
+            True(bytes.SequenceEqual(before), "Equipment viewing must not filter history, clear pack type or change unknown boot values.");
+        });
+        Check("Object lifecycle explanations keep callbacks and runtime latches separate from saved bits", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x668, 8), 1UL << 63);
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x768, 8), ulong.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("World object flags");
+            Equal("1", table.Rows[0].Cells[3]);
+            Equal("64", table.Rows[1].Cells[3]);
+            True(table.Rows[0].Details.Contains("BEFORE the saved bit") && table.Rows[0].Details.Contains("consumes pending1E") && table.Rows[0].Details.Contains("first matching record"), "Stored bits must not imply scheduled callbacks, current-world identity or unique UID records.");
+            True(table.Rows[1].Details.Contains("runs on either branch") && table.Rows[1].Details.Contains("does not establish an atomic OR"), "Saved-write admission must not become downstream-helper admission or atomicity.");
+            True(TodResearch.Map.GetProperty("object_flag_mutation").GetProperty("instruction_guards").GetArrayLength() > 0, "Object publication evidence must be bundled.");
+            True(bytes.SequenceEqual(before), "Object viewing must not execute callbacks, consume latches, resolve handles or alter saved bits.");
+        });
+        Check("Restart-bank research distinguishes nested mission clearing from retained private log bytes", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x906EC, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x10148 + 8, 4), 0xDEADBEEF);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var replay = inspection.Table("Counters & nearby fields").Rows.Single(row => row.Cells[0] == "0x906EC");
+            Equal("4294967295", replay.Cells[2]);
+            True(replay.Details.Contains("not a proven alias") && replay.Details.Contains("prior private-bank log bytes8764..10144"), "Private captured data must not become current live data or standard manager staging.");
+            True(inspection.Table("World progress").Rows[0].Details.Contains("zeroes both entire mission-list groups"), "Constructor loop ownership must not be confused with the final nested zero-fill result.");
+            var ownership = TodResearch.Map.GetProperty("restart_execution").GetProperty("nested_initializer_ownership");
+            Equal("0x10148", ownership.GetProperty("mission_zero_fills")[0].GetProperty("start").GetString());
+            Equal("0x8764", ownership.GetProperty("log").GetProperty("start").GetString());
+            True(bytes.SequenceEqual(before), "Research viewing must not capture state, clear missions/logs, increment replay or execute UI choices.");
+        });
+        Check("Award producer explanations retain inconsistent scores, missing final awards and raw bits", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8708, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x8710, 8), 0xF7FFFFFFFFFFFFFFUL);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Skill points");
+            Equal("No", table.Rows[59].Cells[2]);
+            True(table.Rows[59].Details.Contains("4294967295") && table.Rows[59].Details.Contains("does not repair score mismatches"), "Duplicate award evidence must not repair a missing final bit or mismatched score.");
+            True(table.Rows[46].Details.Contains("even without a new bit") && table.Rows[47].Details.Contains("ORIGINAL request <=1"), "Producer call predicates must not become inferred pickups or clamped-quantity award rules.");
+            Equal(47, TodResearch.Map.GetProperty("skill_award").GetProperty("cheapskate_producer").GetProperty("skill_id").GetInt32());
+            Equal(3, InspectionPresentation.Simplify("Skill points", table).Columns.Length);
+            True(bytes.SequenceEqual(before), "Award viewing must not invoke producers, recompute score or normalize unknown high bits.");
+        });
+        Check("Armor and skin purchase research preserves independent saved states without runtime queue inference", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x444 + 4 * 4, 4), 0x80000000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x458, 4), 0);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x480, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var armor = inspection.Table("Armor");
+            Equal("Yes", armor.Rows[4].Cells[2]);
+            Equal("No", armor.Rows[4].Cells[4]);
+            True(armor.Rows[4].Details.Contains("prior equipped ID") && armor.Rows[4].Details.Contains("unordered NaN"), "Queued effect admission must not become an immediate equip or current runtime deadline verdict.");
+            var skins = inspection.Table("Skins");
+            True(skins.Rows[0].Details.Contains("4294967295") && skins.Rows[0].Details.Contains("does not itself test ownership or availability"), "Leaf purchase evidence must preserve unknown selected IDs and distinguish caller gates.");
+            Equal("0x2170", TodResearch.Map.GetProperty("armor_consumer").GetProperty("queued_effect").GetProperty("runtime_hero_member").GetString());
+            Equal(3, InspectionPresentation.Simplify("Armor", armor).Columns.Length);
+            True(bytes.SequenceEqual(before), "Purchase research must not charge, queue, equip or normalize ownership/selection.");
+        });
         Check("Snapshot and load gates do not become a current worker or acceptance verdict", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -747,7 +856,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1323, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1343, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

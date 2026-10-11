@@ -257,7 +257,14 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["arena_binding"]["instruction_guards"]
                 + MAPPING["weapon_progression"]["instruction_guards"]
                 + MAPPING["mission_mutation"]["instruction_guards"]
-                + MAPPING["snapshot_lifecycle"]["instruction_guards"]):
+                + MAPPING["snapshot_lifecycle"]["instruction_guards"]
+                + MAPPING["skill_award"]["instruction_guards"]
+                + MAPPING["armor_consumer"]["instruction_guards"]
+                + MAPPING["restart_execution"]["instruction_guards"]
+                + MAPPING["currency_mutation"]["instruction_guards"]
+                + MAPPING["object_flag_mutation"]["instruction_guards"]
+                + MAPPING["object_definitions"]["instruction_guards"]
+                + MAPPING["equipment_mutation"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

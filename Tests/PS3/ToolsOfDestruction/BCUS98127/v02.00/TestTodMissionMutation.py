@@ -44,7 +44,7 @@ class MissionMutationChecks(unittest.TestCase):
             raw = bytes.fromhex(guard["bytes"])
             self.assertEqual(elf.read(int(guard["va"], 0), len(raw)), raw)
 
-    def test_initialization_retains_every_flag_word_even_with_corrupt_count(self):
+    def test_constructor_loop_preview_retains_flags_not_final_nested_initializer(self):
         original = mission_list([(562, 641, 1)], 0xABCD1235)
         struct.pack_into(">I", original, 0x78, 0xFFFFFFFF)
         before = bytes(original)

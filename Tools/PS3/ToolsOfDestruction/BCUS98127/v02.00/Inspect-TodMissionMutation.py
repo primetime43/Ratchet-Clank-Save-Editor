@@ -142,7 +142,7 @@ def inspect(elf_path, save_path=None):
             "function_va": "0x35c760", "loop_vas": ["0x35c8cc", "0x35c92c"],
             "entry_stores": init_stores, "gating": "This initializer branch requires low32 first argument1 and low32 second argument0000FFFF; it is not an unconditional reset call.",
             "rule": "Both20-list groups receive count0 and title/descriptionFFFFFFFF in each of10 physical entries. The mission initialization loops do not write entry flags+8. Unknown and optional bits therefore remain whatever was already in those words at these loop boundaries, not a guaranteed zero default.",
-            "scope": "Pure preview covers the mission loops only, not construction of memory before them or every callback. Following35E110 initializes prefix/world/grid/global-tail ranges rather than the mission-list range. No assertion is made that arbitrary program startup supplies nonzero stale flags.",
+            "scope": "Pure preview covers only the constructor's mission loops. Following35E110 calls35D9A0, whose two nested9B0-byte zero-fills clear BOTH entire mission-list groups, including counts, IDs and flags. The loop's flag retention is not the final initialized-state result. Selective restart also reaches these zero-fills; restart_execution independently guards the call/base/size provenance. No stale startup flags or mission retention through this initializer is asserted.",
         },
         "completion_flags": {
             "function_va": "0x2d0f78", "destination_load_va": "0x2d1070", "destination_store_va": "0x2d1078",
