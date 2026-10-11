@@ -111145,6 +111145,509 @@
       }
     ]
   },
+  "collectible_producers": {
+    "confidence": "exact-build-native-flow",
+    "warning": "Static USA v02.00 evidence only. No target/pickup locations, universal acquisition rule, current runtime pending set, callback effects, message playback success, native execution or edit-safety verdict. Original raw bits are preserved.",
+    "saved_progress": {
+      "offset": "0x8728",
+      "type": "u32 BE",
+      "label": "Bonus-target progress mask",
+      "producer_va": "0x364300",
+      "rule": "Index from runtime object+324 selects a PPC slw bit; clear that bit from runtime owner+FC, then OR it into saved8728. The saved word and pending word are separate. Shift uses low six bits: counts32..63 yield zero; counts64..95 alias0..31. No local target-index range guard, count or identities are recovered."
+    },
+    "dispatch": "375BD8 tests object+324 against raw FFFFFFFF after its preceding helper. Only that sentinel skips364300; it is not a signed nonnegative-index check. Another helper follows the dispatch. Reached native stores are not proof every supplied index is a real target.",
+    "reset": {
+      "va": "0x489f68",
+      "cleared_offsets": [
+        "0x8730",
+        "0x8728",
+        "0x872c"
+      ],
+      "rule": "Canonical saved pointer8A6890 is held across2CDBB0. Instructions489FF0..489FF8 store literal zero to saved8730,8728,872C before465DC0. This is a reached native reset boundary, not a lifetime history bank, default proof or full function simulation. The two neighboring words remain semantically unnamed; preceding/following callbacks and reset invocation causes are outside this leaf claim."
+    },
+    "after_lookup": "After publishing both masks,364358 calls252E18 (TOC89FF20\u219288FF38, target1E1298), then rereads runtime owner+FC at364360. A preview of the pre-lookup ANDC result cannot predict the post-lookup branch. Active pending set and lookup/callback effects are not serialized at8728.",
+    "partial": {
+      "flag_id": 278,
+      "enum": "SC_PLAYED_BONUS_TARGET_MSG",
+      "word_offset": "0x5548",
+      "bit": 22,
+      "message_lookup_id": "0x648",
+      "rule": "If reread pending is nonzero, test saved BE64 bit22 at5548. If already set, return; otherwise store it before runtime lookup/virtual message request. This is a message latch, not a target-completion or gold-bolt ownership bit. Literal648 is a native lookup ID, not recovered text or proof playback succeeded."
+    },
+    "complete": {
+      "local_id": 0,
+      "message_lookup_id": "0x348",
+      "rule": "If reread pending is zero, call2D1490 to read saved destination906E8 and form world record488+selector*408. Test local gold-bolt bit0 through35DE08; if present, return without the explicit grant/message request. Otherwise call35DEB0 with localID0 before the later348 lookup/virtual request. The leaf can separately request skill46. This caller does not test saved8728 for an all-bits mask and does not establish a total target count. Saved destination is not a guaranteed current planet; no native local world bounds clamp is present."
+    },
+    "direct_local_collector": {
+      "producer_va": "0x304c58",
+      "initializer_va": "0x304a40",
+      "rule": "304C58 first clears runtime+AC even when admission later fails. It requires a nonnull context+40 and a nonzero low-byte type predicate for numeric416. A numeric state2F4 triggers a runtime virtual request before the eventual saved-destination read; other states reach the grant directly. Then read localID from runtime collector+C4, sign-extend it and call35DEB0 on488+saved906E8*408. No explicit duplicate-bit precheck exists in this full caller; leaf OR remains idempotent, but its all-world skill scan may still run. Type416/state2F4/local indices are not localized names or physical positions.",
+      "restore_rule": "304A40 checks the saved-destination local bit and calls24F6D8(actor,0) if present before clearing runtime+AC/+B0. Negative initial+C4 follows a separate runtime enumeration path, which can assign indices. That setup does not guarantee final index validity or prove a saved object-identity catalog."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x489ff4",
+        "kind": "comment",
+        "name": "TOD_bonus_target_progress_reset",
+        "comment": "Reached reset489F68 clears saved8730,8728,872C after2CDBB0 and before465DC0, using canonical block pointer8A6890. Neighbors remain unnamed. Zero progress is not proof no past targets or lifetime retention."
+      },
+      {
+        "va": "0x364354",
+        "kind": "comment",
+        "name": "TOD_bonus_target_progress_publication",
+        "comment": "Store saved BE32 mask8728 OR slw(1,object+324), after clearing the same bit from runtime owner+FC. Lookup252E18 follows; pending is reread afterward. Saved progress is not the runtime remaining-target set."
+      },
+      {
+        "va": "0x3643b0",
+        "kind": "comment",
+        "name": "TOD_bonus_target_message_latch",
+        "comment": "Nonzero post-lookup pending: set saved global flag278 SC_PLAYED_BONUS_TARGET_MSG before native648 lookup/virtual request. Existing latch returns without request; not proof message played or target completion."
+      },
+      {
+        "va": "0x3644e0",
+        "kind": "comment",
+        "name": "TOD_bonus_target_local_zero_reward",
+        "comment": "Zero post-lookup pending and absent local bit0: grant local gold bolt0 in world chosen by saved906E8. Precheck35DE08 suppresses duplicate grant/message; later348 request follows. Not saved8728 all-bits completion."
+      },
+      {
+        "va": "0x304d34",
+        "kind": "comment",
+        "name": "TOD_local_collectible_saved_destination_grant",
+        "comment": "After numeric416 type admission and optional state2F4 virtual request, grant runtime+C4 local ID in world selected by saved906E8. No local duplicate precheck; runtime identity/index and current planet not inferred."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x2a384",
+        "bytes": "C02291CC"
+      },
+      {
+        "va": "0x251cbc",
+        "bytes": "3C420001"
+      },
+      {
+        "va": "0x251cc0",
+        "bytes": "3842FF3C"
+      },
+      {
+        "va": "0x251cc4",
+        "bytes": "483C9A54"
+      },
+      {
+        "va": "0x252e1c",
+        "bytes": "3C42FFFF"
+      },
+      {
+        "va": "0x252e20",
+        "bytes": "38420018"
+      },
+      {
+        "va": "0x252e24",
+        "bytes": "4BF8E474"
+      },
+      {
+        "va": "0x297b8c",
+        "bytes": "C022A438"
+      },
+      {
+        "va": "0x2d1490",
+        "bytes": "8062F2683D230009806906E84E800020"
+      },
+      {
+        "va": "0x2d1494",
+        "bytes": "3D230009"
+      },
+      {
+        "va": "0x2d1498",
+        "bytes": "806906E8"
+      },
+      {
+        "va": "0x304a40",
+        "bytes": "F821FF617C8802A6FBC100907C7E1B78C0020208FB810080FB410070FB610078FBA10088FBE10098F88100B0813E0014787C0020C022020C7F83E378C0420210D00900D04BFFB2CD60000000801E00C42F800000419C00AC7F83E37848002F9D600000004BFCC9ED60000000836201FC813E00C45464502A546A18387CAA22147D2407B47F85DA143B5C04887B43002048059339600000005467063E2C8700004086004880DE001439800000919E00AC919E00B0810600686500040090060068EBC100B0EB4100707FC803A6EB610078EB810080EBA10088EBC10090EBE10098382100A04E800020807E0014388000004BF4ABA9E84100284BFFFFAC60000000834201EC80FA00102C0700004180FF4C811A000038C00000396000017903002060C5FFFF39480180A12300507C892800408600DC600000007F8B38007D7F5B7879430020396B0001394A0180419DFF0CA18300507F0C4800419AFFE03B60000083A30040388005C17FA3EB784BF4A65DE84100285463063E2C0300004182000C937D00C43B7B000138FF000180BA00107C8728004185FEC454EB3830815A000054E3482C38C000007D8B185057E4482C7D0A621457E038307903002060CBFFFF38DF00027D202050A3E300507FA952147F1F58007FEAFB78393D0300409A00287C0628007CC733787923002038C60001392901804181FE64A3A300507F9D5000419EFFE07CFF3B784BFFFF583BE000004BFFFF4C60000000"
+      },
+      {
+        "va": "0x304a8c",
+        "bytes": "801E00C4"
+      },
+      {
+        "va": "0x304a90",
+        "bytes": "2F800000"
+      },
+      {
+        "va": "0x304a94",
+        "bytes": "419C00AC"
+      },
+      {
+        "va": "0x304aa4",
+        "bytes": "4BFCC9ED"
+      },
+      {
+        "va": "0x304aac",
+        "bytes": "836201FC"
+      },
+      {
+        "va": "0x304ab0",
+        "bytes": "813E00C4"
+      },
+      {
+        "va": "0x304ac8",
+        "bytes": "3B5C0488"
+      },
+      {
+        "va": "0x304ad0",
+        "bytes": "48059339"
+      },
+      {
+        "va": "0x304ae0",
+        "bytes": "40860048"
+      },
+      {
+        "va": "0x304aec",
+        "bytes": "919E00AC"
+      },
+      {
+        "va": "0x304af0",
+        "bytes": "919E00B0"
+      },
+      {
+        "va": "0x304c58",
+        "bytes": "380000007CA802A6F821FF61FBC10090FBE10098FB410070FB610078FB810080FBA10088F8A100B0900300AC7C7E1B78806400407C9F23782F830000419E002078630020388004164BF4A569E84100285463063E2C03000040820030E8C100B0EB410070EB6100787CC803A6EB810080EBA10088EBC10090EBE10098382100A04E8000206000000083FF0040389F14B0788300204BF4A62DE8410028786300204BF4CFC1E84100282C8302F4418600604BFCC78960000000812201FC809E00C45460502A546318387C8407B47CA302147FC54A143B7E04887B6300204805917D60000000E8C100B0EB410070EB6100787CC803A6EB810080EBA10088EBC10090EBE10098382100A04E8000207BE300204BF4D931E841002883A201F03D03000138E88D5C88DD000078FB00202F060000813B000083490044419A009483E201F47BFF0020388003487FE3FB784BF4D4F5E8410028897D00002F8B00007C7C1B78419E00947FE3FB787B84002038A000004BF4C0E1E84100282C0300004182009C787C0020809C00087B5D0020C02202183BE0FFFF7F63DB78788400207BE60020835D000038E00000F84100287F4903A63900000139200000805D0004394000004E800421E84100284BFFFEE883E201F47BE300204BF4C16DE841002839400001806201F8995D00004BF4A849E84100284BFFFF507FE3FB784BF4C149E841002839800001806201F8999D00004BF4A825E84100284BFFFF50808202144BFFFF6C"
+      },
+      {
+        "va": "0x304c80",
+        "bytes": "900300AC"
+      },
+      {
+        "va": "0x304c88",
+        "bytes": "80640040"
+      },
+      {
+        "va": "0x304c9c",
+        "bytes": "38800416"
+      },
+      {
+        "va": "0x304ca0",
+        "bytes": "4BF4A569"
+      },
+      {
+        "va": "0x304ca8",
+        "bytes": "5463063E"
+      },
+      {
+        "va": "0x304cb0",
+        "bytes": "40820030"
+      },
+      {
+        "va": "0x304cf8",
+        "bytes": "4BF4CFC1"
+      },
+      {
+        "va": "0x304d00",
+        "bytes": "2C8302F4"
+      },
+      {
+        "va": "0x304d04",
+        "bytes": "41860060"
+      },
+      {
+        "va": "0x304d08",
+        "bytes": "4BFCC789"
+      },
+      {
+        "va": "0x304d10",
+        "bytes": "812201FC"
+      },
+      {
+        "va": "0x304d14",
+        "bytes": "809E00C4"
+      },
+      {
+        "va": "0x304d18",
+        "bytes": "5460502A"
+      },
+      {
+        "va": "0x304d1c",
+        "bytes": "54631838"
+      },
+      {
+        "va": "0x304d20",
+        "bytes": "7C8407B4"
+      },
+      {
+        "va": "0x304d2c",
+        "bytes": "3B7E0488"
+      },
+      {
+        "va": "0x304d34",
+        "bytes": "4805917D"
+      },
+      {
+        "va": "0x304da4",
+        "bytes": "4BF4D4F5"
+      },
+      {
+        "va": "0x304e18",
+        "bytes": "4E800421"
+      },
+      {
+        "va": "0x304e20",
+        "bytes": "4BFFFEE8"
+      },
+      {
+        "va": "0x35de08",
+        "bytes": "2B84001F38000001396000007C09203038000000419D0018808303EC7D2A20382C0A0000408200147D605B787C0307B44E80002060000000396000014BFFFFEC"
+      },
+      {
+        "va": "0x35de1c",
+        "bytes": "419D0018"
+      },
+      {
+        "va": "0x35de20",
+        "bytes": "808303EC"
+      },
+      {
+        "va": "0x35dee8",
+        "bytes": "912303EC"
+      },
+      {
+        "va": "0x364300",
+        "bytes": "F821FF617CE802A6FBA100887C7D1B78FB610078FBC10090FBE10098FB410070FB810080F8E100B0806403243B60000183E21BA47F6B183080DD00FC3D5F000180621BAC7CC95878913D00FC80AA87287CA45B78908A87284BEEEAC1E8410028801D00FC2F8000007C7E1B78419E012CE93F5548552602522FA60000419E002CEBA100B0EB4100707FA803A6EB610078EB810080EBA10088EBC10090EBE10098382100A04E800020653A004078630020FB5F55484BEEE2E5E841002883C21B583D830001390C8D5C88FE0000791C00202C070000807C0000834300444182019083E21B5C7BFD0020388006487FA3EB784BEEDEA9E8410028881E00002C8000007C7F1B78418601487FA3EB787BE4002038A000004BEECA95E84100282F030000419A0170787B0020809B00087B5E0020C0221BCC3BE0FFFF7F83E3787BE6002078840020839E000038E00000F84100287F8903A6805E00043900000139200001394000004E800421E8410028EBA100B0EB4100707FA803A6EB610078EB810080EBA10088EBC10090EBE10098382100A04E800020600000004BF6CFF96000000083E21BA45460502A547D1838388000007F9D02147F5CFA14399A0488799F00207FE3FB784BFF9945600000005468063E2C0800004082FEAC388000007FE3FB784BFF99D1600000007BC300204BEEE1ADE841002883C21B583D63000138AB8D5C889E000078BC00202C840000815C0000834A00444186008483E21B5C7BFF0020388003487FE3FB784BEEDD71E8410028893E00002F0900007C7D1B78419A00807FE3FB787BA400204BFFFEC87FA3EB784BEECA49E841002880621B609B7E00004BEEB129E84100284BFFFEA083E21B5C7BE300204BEECA25E841002880621B609B7E00004BEEB105E84100284BFFFE5880821BC84BFFFE9883E21B5C7BE300204BEEC9F9E841002880621B609B7E00004BEEB0D9E84100284BFFFF647FE3FB784BEEC9D9E841002880621B609B7E00004BEEB0B9E84100284BFFFF6860000000"
+      },
+      {
+        "va": "0x364328",
+        "bytes": "80640324"
+      },
+      {
+        "va": "0x364330",
+        "bytes": "83E21BA4"
+      },
+      {
+        "va": "0x364334",
+        "bytes": "7F6B1830"
+      },
+      {
+        "va": "0x364338",
+        "bytes": "80DD00FC"
+      },
+      {
+        "va": "0x36433c",
+        "bytes": "3D5F0001"
+      },
+      {
+        "va": "0x364344",
+        "bytes": "7CC95878"
+      },
+      {
+        "va": "0x364348",
+        "bytes": "913D00FC"
+      },
+      {
+        "va": "0x36434c",
+        "bytes": "80AA8728"
+      },
+      {
+        "va": "0x364350",
+        "bytes": "7CA45B78"
+      },
+      {
+        "va": "0x364354",
+        "bytes": "908A8728"
+      },
+      {
+        "va": "0x364358",
+        "bytes": "4BEEEAC1"
+      },
+      {
+        "va": "0x364360",
+        "bytes": "801D00FC"
+      },
+      {
+        "va": "0x36436c",
+        "bytes": "419E012C"
+      },
+      {
+        "va": "0x364370",
+        "bytes": "E93F5548"
+      },
+      {
+        "va": "0x364374",
+        "bytes": "55260252"
+      },
+      {
+        "va": "0x36437c",
+        "bytes": "419E002C"
+      },
+      {
+        "va": "0x3643a8",
+        "bytes": "653A0040"
+      },
+      {
+        "va": "0x3643b0",
+        "bytes": "FB5F5548"
+      },
+      {
+        "va": "0x3643e8",
+        "bytes": "38800648"
+      },
+      {
+        "va": "0x3643f0",
+        "bytes": "4BEEDEA9"
+      },
+      {
+        "va": "0x364498",
+        "bytes": "4BF6CFF9"
+      },
+      {
+        "va": "0x3644a0",
+        "bytes": "83E21BA4"
+      },
+      {
+        "va": "0x3644a4",
+        "bytes": "5460502A"
+      },
+      {
+        "va": "0x3644a8",
+        "bytes": "547D1838"
+      },
+      {
+        "va": "0x3644ac",
+        "bytes": "38800000"
+      },
+      {
+        "va": "0x3644b8",
+        "bytes": "399A0488"
+      },
+      {
+        "va": "0x3644c4",
+        "bytes": "4BFF9945"
+      },
+      {
+        "va": "0x3644cc",
+        "bytes": "5468063E"
+      },
+      {
+        "va": "0x3644d4",
+        "bytes": "4082FEAC"
+      },
+      {
+        "va": "0x3644d8",
+        "bytes": "38800000"
+      },
+      {
+        "va": "0x3644e0",
+        "bytes": "4BFF99D1"
+      },
+      {
+        "va": "0x364520",
+        "bytes": "38800348"
+      },
+      {
+        "va": "0x364528",
+        "bytes": "4BEEDD71"
+      },
+      {
+        "va": "0x364548",
+        "bytes": "4BFFFEC8"
+      },
+      {
+        "va": "0x375bd8",
+        "bytes": "F821FF817C8802A6FBE100787C7F1B7838630328F88100907863002038800000FBC100704BEDD44DE8410028801F03242F80FFFF7BFE0020419E001480621FC07FC4F3784BFEE6E5600000007FC3F3784800EBC960000000E8A10090EBC10070EBE100787CA803A6382100804E800020"
+      },
+      {
+        "va": "0x375c04",
+        "bytes": "801F0324"
+      },
+      {
+        "va": "0x375c08",
+        "bytes": "2F80FFFF"
+      },
+      {
+        "va": "0x375c10",
+        "bytes": "419E0014"
+      },
+      {
+        "va": "0x375c1c",
+        "bytes": "4BFEE6E5"
+      },
+      {
+        "va": "0x489f68",
+        "bytes": "F821FF717C6802A6FBA1007883A2696CFB810070F86100A03B800000807D00004BE469516000000083A26970814269745460502A546818383CBD00097D880214810269783880000138EC08803960FFFF7CE607B4906506E87D26EA143FBD00013860000098890009986A00EF93880000938A0044996A00ED4BE43BD1600000008062697CC0226980939D8730939D8728939D872C4BFDBDC560000000E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x489f80",
+        "bytes": "3B800000"
+      },
+      {
+        "va": "0x489f90",
+        "bytes": "83A26970"
+      },
+      {
+        "va": "0x489fc4",
+        "bytes": "3FBD0001"
+      },
+      {
+        "va": "0x489fe0",
+        "bytes": "4BE43BD1"
+      },
+      {
+        "va": "0x489ff0",
+        "bytes": "939D8730"
+      },
+      {
+        "va": "0x489ff4",
+        "bytes": "939D8728"
+      },
+      {
+        "va": "0x489ff8",
+        "bytes": "939D872C"
+      },
+      {
+        "va": "0x489ffc",
+        "bytes": "4BFDBDC5"
+      },
+      {
+        "va": "0x61b718",
+        "bytes": "80630008"
+      },
+      {
+        "va": "0x889100",
+        "bytes": "10002858"
+      },
+      {
+        "va": "0x889104",
+        "bytes": "438B0000"
+      },
+      {
+        "va": "0x89a354",
+        "bytes": "10002858"
+      },
+      {
+        "va": "0x89a358",
+        "bytes": "438B0000"
+      },
+      {
+        "va": "0x89f1b8",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a011c",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a1ac4",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a6890",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x10002858",
+        "bytes": "53435F504C415945445F424F4E55535F5441524745545F4D534700"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -111638,6 +112141,11 @@
     ]
   },
   "annotations": [
+{"va":"0x00489FF4","name":"TOD_bonus_target_progress_reset","kind":"comment","confidence":"confirmed","bytes":"939D8728","comment":"Reached reset489F68 clears saved8730,8728,872C after2CDBB0 and before465DC0, using canonical block pointer8A6890. Neighbors remain unnamed. Zero progress is not proof no past targets or lifetime retention.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; collectible_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00364354","name":"TOD_bonus_target_progress_publication","kind":"comment","confidence":"confirmed","bytes":"908A8728","comment":"Store saved BE32 mask8728 OR slw(1,object+324), after clearing the same bit from runtime owner+FC. Lookup252E18 follows; pending is reread afterward. Saved progress is not the runtime remaining-target set.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; collectible_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x003643B0","name":"TOD_bonus_target_message_latch","kind":"comment","confidence":"confirmed","bytes":"FB5F5548","comment":"Nonzero post-lookup pending: set saved global flag278 SC_PLAYED_BONUS_TARGET_MSG before native648 lookup/virtual request. Existing latch returns without request; not proof message played or target completion.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; collectible_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x003644E0","name":"TOD_bonus_target_local_zero_reward","kind":"comment","confidence":"confirmed","bytes":"4BFF99D1","comment":"Zero post-lookup pending and absent local bit0: grant local gold bolt0 in world chosen by saved906E8. Precheck35DE08 suppresses duplicate grant/message; later348 request follows. Not saved8728 all-bits completion.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; collectible_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00304D34","name":"TOD_local_collectible_saved_destination_grant","kind":"comment","confidence":"confirmed","bytes":"4805917D","comment":"After numeric416 type admission and optional state2F4 virtual request, grant runtime+C4 local ID in world selected by saved906E8. No local duplicate precheck; runtime identity/index and current planet not inferred.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; collectible_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x001E259C","name":"TOD_multiplier_sampled_health_drop","kind":"comment","confidence":"confirmed","bytes":"41810024","comment":"Replay-gated strict cached-health21C4>current1784 resets saved multiplier428 and runtime accumulator21C8 to1. Getter can mutate state; not a direct damage callback or universal clamp.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bolt_multiplier_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x001E264C","name":"TOD_multiplier_accumulator_threshold","kind":"comment","confidence":"confirmed","bytes":"4080FFD0","comment":"After mutating getter, subtract0.5 from runtime21C8. bge skips a single increment when result>=float32(0.01); otherwise finite multiplier+1 selection1..20 reseeds accumulator. Not a timer or loop.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bolt_multiplier_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x001E5E08","name":"TOD_message_6B_multiplier_gate","kind":"comment","confidence":"confirmed","bytes":"40990008","comment":"After23E338 adds hero XP, reread6B node float+90; finite<=0 skips multiplier update1E25F0, positive/unordered falls through.6A sibling loop has no explicit updater; source/gameplay cadence unverified.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bolt_multiplier_flow native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
