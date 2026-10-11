@@ -25,7 +25,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             // Unsupported/unloaded saves have a status table, not this schema.
             int expected = view switch
             {
-                "Weapons & gadgets" => 10, "Skill points" => 8, "Armor" => 7,
+                "Weapons & gadgets" => 10, "Skill points" => 8, "Dance progress" => 6, "Armor" => 7,
                 "Counters & nearby fields" => 6, "Gameplay records" => 5, "Gameplay segments" => 9,
                 "Save regions" => 4, "Files & headers" => 5, "Special bolts" => 7, "Skins" => 7,
                 "World progress" => 9, "Quick select" => 6, "Objects & equipment" => 9,
@@ -38,6 +38,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 "Weapons & gadgets" => new[] { "Item", "Owned", "Level", "XP", "Ammo" },
                 "Skill points" => new[] { "Skill point", "Complete", "Points" },
+                "Dance progress" => new[] { "Target (reference)", "Saved progress bit" },
                 "Armor" => new[] { "Armor", "Owned", "Equipped" },
                 "Special bolts" => new[] { "Level", "Collected", "Total" },
                 "Blueprints" => new[] { "Blueprint", "Collected" },
@@ -66,6 +67,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     "Weapons & gadgets" => "Levels display stored level + 1 for weapon IDs 1–15. XP and ammo are rounded for display only. Select Technical for exact values." +
                         (string.IsNullOrEmpty(c[9]) ? "" : "\r\nNeeds review: " + c[9]),
                     "Skill points" => "This readable label is formatted from the internal identifier, not a recovered localized skill-point title.",
+                    "Dance progress" => "Reference enemy names from native actor index assignments, not localized titles. Not recorded does not mean never danced; the earned Dance skill is stored separately.",
                     "Armor" => "Ownership, equipped ID and the saved unlock byte are independent. Raw flags and native availability caveats are below.",
                     "Special bolts" => "Counts are from native per-level masks; labels are internal level identifiers. Select a row for overall collected/spent balance and exact bits.",
                     "Skins" => "Labels are formatted native identifiers. Shipped prices use special bolts; ownership and selected ID are saved separately.",
@@ -116,6 +118,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             "Weapons & gadgets" => new[] { c[1], c[2], Level(c), Number(c[4]), Number(c[5]) },
             "Skill points" => new[] { Label(c[1], "SKILLPOINT_"), c[2], c[3] },
+            "Dance progress" => new[] { c[0], c[1] },
             "Armor" => new[] { c[1] == "ARMOR_NONE" ? "No armor" : Label(c[1], "ARMOR_"), c[2], c[4] },
             "Special bolts" => new[] { Label(c[1], "LEVEL_"), c[2], c[3] },
             "Skins" => new[] { c[1] == "SKIN_NONE" ? "Default" : Label(c[1], "SKIN_"), c[2], c[3], c[4] },

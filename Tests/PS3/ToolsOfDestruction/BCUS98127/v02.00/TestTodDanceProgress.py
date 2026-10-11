@@ -103,7 +103,7 @@ class DanceProgressChecks(unittest.TestCase):
     def test_initialization_and_target_identity_limits(self):
         report = self.native()
         self.assertIn("+31F8", report["initialization"])
-        self.assertIn("Individual target identities", report["warning"])
+        self.assertIn("producer-only report does not assign target names", report["warning"])
         self.assertIn("not names for28 enemies", report["identity_limits"])
         self.assertNotIn("save_observation", report)
 

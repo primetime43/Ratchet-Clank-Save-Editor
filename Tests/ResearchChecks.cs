@@ -56,7 +56,7 @@ internal static partial class Program
             }
             Equal(89, TodResearch.Map.GetProperty("space_stat_boundary").GetProperty("instruction_guards").GetArrayLength());
         });
-        Check("Dance progress keeps all64 bits and the earned award independent without inventing target identities", () =>
+        Check("Dance progress keeps all64 bits and the earned award independent with qualified reference identities", () =>
         {
             const ulong pattern = 0x000000000FFFFFFFUL;
             foreach (ulong bank in new[] { 0UL, pattern, pattern | (1UL << 63), ulong.MaxValue })
@@ -70,10 +70,39 @@ internal static partial class Program
                 var row = TodSaveInspection.Read(bytes, "BCUS98127").Table("Skill points").Rows.Single(r => r.Cells[0] == "48");
                 Equal(earned ? "Yes" : "No", row.Cells[2]);
                 True(row.Details.Contains($"0x{bank:X16}") && row.Details.Contains($"exact completion pattern: {(bank == pattern ? "Yes" : "No")}"), "Full64 bank must use exact equality, not a masked or popcount completion.");
-                True(row.Details.Contains("zero progress does not clear an earned award") && row.Details.Contains("Individual target identities") && row.Details.Contains("Viewing never awards skills"), "Snapshot must not invent identity, current eligibility or mutate awards.");
+                True(row.Details.Contains("zero progress does not clear an earned award") && row.Details.Contains("internal configuration names") && row.Details.Contains("Current runtime eligibility") && row.Details.Contains("Viewing never awards skills"), "Snapshot must qualify reference identity/current eligibility and never mutate awards.");
                 True(bytes.SequenceEqual(before), "Viewing must retain bank, independent earned bit and opaque neighbors.");
             }
             Equal(134, TodResearch.Map.GetProperty("dance_progress").GetProperty("instruction_guards").GetArrayLength());
+        });
+        Check("Dance target view maps28 references while keeping clear bits, high bits and earned state independent", () =>
+        {
+            const ulong pattern = 0x000000000FFFFFFFUL;
+            foreach (ulong bank in new[] { 0UL, 1UL << 19, pattern, pattern | (1UL << 63) })
+            foreach (bool earned in new[] { false, true })
+            {
+                byte[] bytes = ResearchFixture();
+                BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x8720, 8), bank);
+                BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x8710, 8), earned ? 1UL << 48 : 0UL);
+                Convert.FromHexString("0123456789ABCDEF").CopyTo(bytes, 0x8718);
+                byte[] before = bytes.ToArray();
+                var raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Dance progress");
+                Equal(28, raw.Rows.Count);
+                Equal(6, raw.Columns.Length);
+                Equal("EnemyShinglePirate", raw.Rows[19].Cells[3]);
+                True(raw.Rows[19].Details.Contains("Same actor vtable"), "Shingle association must disclose its separate method link.");
+                var friendly = InspectionPresentation.Simplify("Dance progress", raw);
+                Equal(2, friendly.Columns.Length);
+                for (int index = 0; index < 28; index++)
+                {
+                    Equal((bank & (1UL << index)) != 0 ? "Recorded" : "Not recorded", friendly.Rows[index].Cells[1]);
+                    True(friendly.Rows[index].Details.Contains($"Earned Dance skill48: {(earned ? "Yes" : "No")}") &&
+                        friendly.Rows[index].Details.Contains($"Exact completion pattern: {(bank == pattern ? "Yes" : "No")}"), "Earned award and all64 exact-pattern comparison must stay independent.");
+                    True(friendly.Rows[index].Details.Contains("not localized titles") && friendly.Rows[index].Details.Contains("Clear does not prove never danced"), "Reference labels and raw bit meaning must remain qualified.");
+                }
+                True(bytes.SequenceEqual(before), "Viewing targets must retain all bytes and unknown neighbors.");
+            }
+            Equal(283, TodResearch.Map.GetProperty("dance_targets").GetProperty("instruction_guards").GetArrayLength());
         });
         Check("Quick-select warning state preserves one-byte latches, opaque neighbors and failed-request counter semantics", () =>
         {
@@ -1128,7 +1157,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1415, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1447, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -1556,7 +1585,7 @@ internal static partial class Program
                 .Invoke(grid, new object[] { new DataGridViewCellEventArgs(0, combusterRow) });
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
             tabs.SelectedIndex = 2;
-            foreach (var expected in new[] { ("Skill points", 3, 8), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
+            foreach (var expected in new[] { ("Skill points", 3, 8), ("Dance progress", 2, 6), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
                 ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 9), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 9), ("Reset-event counters", 3, 5), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
                 views.SelectedItem = expected.Item1;
@@ -1747,7 +1776,7 @@ internal static partial class Program
             form.ClientSize = new Size(900, 620);
             Capture(form, Path.GetFullPath("artifacts/ui-upgrades-simple-minimum-reference.png"));
             form.ClientSize = new Size(1900, 970);
-            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "World object flags", "Gameplay segments", "Global event flags", "Arena challenges", "Reset-event counters", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
+            foreach (string view in new[] { "Weapons & gadgets", "Skill points", "Dance progress", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Stored state blocks", "Objects & equipment", "World progress", "World object flags", "Gameplay segments", "Global event flags", "Arena challenges", "Reset-event counters", "Quick select", "Player summary", "Game settings", "Saved locations", "Save layout", "Files & metadata" })
             {
                 inspectorViews.SelectedItem = view;
                 Capture(form, Path.GetFullPath("artifacts/ui-" + view.Replace(" ", "-").ToLowerInvariant() + "-reference.png"));

@@ -282,6 +282,7 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["quick_select_warning"]["instruction_guards"]
                 + MAPPING["dance_progress"]["instruction_guards"]
                 + MAPPING["space_stat_boundary"]["instruction_guards"]
+                + MAPPING["dance_targets"]["instruction_guards"]
                 + MAPPING["equipment_mutation"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)

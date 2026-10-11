@@ -2,7 +2,54 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
-Latest completed pass confirms named get_space_stat/space_combat_reset and their separate runtime owner, eight numeric dispatch routes, explicit live-stat reset footprint and reset-before-persistent872C/8730 update ordering. Runtime pending+FC is not saved target progress8728, and unavailable live statistics are not synthesized from zero saved words. Evidence includes89 guard ranges, nine complete selected bodies,14 new focused research checks, one app check and four annotations. Existing saved-row details and Research expose the findings read-only; simple columns and summary counts remain unchanged. All723 native/asset/organization checks and191 app regression checks pass, including actual-save UI loading, raw-value preservation, resizing/DPI behavior and encrypted edit/reopen using disposable copies. Live read-only Ghidra checks pass1414 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1415 total JSON annotations include one unmapped TOC reference base. IDA importer validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. Numeric stat menu labels/units, exact persistent counter event names, current runtime contents, target identities and helper/callback effects remain unresolved. These checks validate static evidence/software behavior, not in-game acceptance, edit safety or full semantic coverage.
+Latest completed pass links all28 low-bit Dance progress indices at saved8720 to selected runtime actor assignments and internal enemy configuration names. Thirty literal publications, the common negative default, state-to-actor ownership and the distinct Shingle Pirate shared-vtable association are protected by283 guard ranges. Fourteen new focused checks, one app check and32 new instruction comments support the read-only two-column Dance progress view, six-column Technical mode and searchable Research topic. The supplied snapshot has all28 bits clear but earned skill48 set; clear bits do not prove never danced, and high bits/opaque neighbors remain unchanged. All736 native/asset/organization checks and192 app regression checks pass, including actual-save loading, raw-value preservation, UI resizing/DPI and encrypted edit/reopen on disposable copies. Live read-only Ghidra validates1446 mapped annotations,45 layouts, repeat-import idempotence and analyst-name/comment preservation;1447 total JSON annotations include one unmapped TOC reference base. IDA validation remains mocked safety testing, not live IDA execution. Original ELF, encrypted save and detached plaintext SHA-256 values remain unchanged. Localized names, complete enemy variants, later actor-index changes, callback admission/current eligibility, space-target identities, numeric runtime-stat labels/units and exact persistent-counter event names remain unresolved. This is exact-build static/software validation, not in-game acceptance, safe new edits or full semantic coverage.
+
+## Dance progress actor indices and named configuration associations
+
+The exact USA BCUS98127 v02.00 ELF now links **all28 low-bit indices of saved BE64 bank8720** to selected runtime actor index assignments and **internal enemy configuration names**. This extends the producer-only pass below; its previous target-identity limitation is superseded by this qualified catalog, not by a claim of complete variant coverage or current gameplay eligibility.
+
+State initializer **C2548**, used by state vtables845A50/846690 at+18, calls14090 then copies input registration payload+40 into state+10 atC2578. The selected Dance producers follow state+10 to the actor and read actor+28. Common actor initializer **BFE70** explicitly writesFFFFFFFF to its original actor+28 atBFED4; selected actor methods publish literals0..27. This index is not a saved object UID, physical pool slot, world slot, class-table ordinal or configuration member+28.
+
+For27 entries, the same reviewed actor method passes a configuration pointer to virtual+4C and explicitly writes the literal index to its original actor+28. Named MonolithicConfig property triplets, descriptor-backed getters and their affine offsets from root101B9EE8 independently identify those pointers. Index19 has the distinct shared-vtable evidence described below. Addresses in this table are original ELF VAs; the save offset is8720.
+
+| Saved integer bit | Internal configuration association | Index method VA |
+| --- | --- | --- |
+| 0 | EnemyAntaraCentipede | 17A890 |
+| 1 | EnemyAntaraSwarmer | 17D4B8 |
+| 2 | EnemyBladeMaster | 1809D0 |
+| 3 | EnemyBombBot | 181C40 |
+| 4 | EnemyBurrowerBeetle | 182500 |
+| 5 | EnemyCaveBat | 184A60 |
+| 6 | EnemyConsumerBot | 186D60 |
+| 7 | EnemyCragmiteMature | 1895B8 |
+| 8 | EnemyCragmiteYoung | 18C618 |
+| 9 | EnemyCragmiteSwarmer | 18B2D8 |
+| 10 | EnemyDrophyd | 18E420 |
+| 11 | EnemyGelChomper | 193DD0 |
+| 12 | EnemyHunchbackPirate | 194C90 |
+| 13 | EnemyHunter | 198CD8 |
+| 14 | EnemyKerchuuFlameThrower | 199800 |
+| 15 | EnemyKerchuuRoller | 19B6A8 |
+| 16 | EnemyPenguin | 1A2240 |
+| 17 | EnemySargassoWasp | 1A72A0 |
+| 18 | EnemySecurityBot | 1AD730 |
+| 19 | EnemyShinglePirate (shared class-method table) | 1AED30 |
+| 20 | EnemyShockBot | 1B3658 |
+| 21 | EnemySkinnyPirateMelee | 1B5E88 |
+| 22 | EnemySkinnyPirateShooter | 1B9250 |
+| 23 | EnemyStalker | 1BE910 |
+| 24 | EnemyTachyonTrooperMelee | 1C3FA8 |
+| 25 | EnemyTachyonTrooperShooter | 1C7AD8 |
+| 26 | EnemyTachyonTurret | 1CCDC8 |
+| 27 | EnemyTachyonWalker | 1CE928 |
+
+**Index19 evidence:** actor vtable848CF0 slot+8→descriptor864F30→1AED30 sets its original actor+28 to19 at1AF04C. The same vtable slot+48→descriptor864F18→1AE8C0 passes pointer101BA314, independently named EnemyShinglePirate by registration88EABC/getter99650, to virtual+4C. This is a shared class-method association, **not a direct configuration load inside1AED30 or a guaranteed relative execution order**. The two index0 stores and two index17 stores belong to qualified branches of their respective actor methods; the catalog does not erase those branches.
+
+These are28 **index/configuration associations**, not28 uniquely identified physical enemies. Multiple instances and shielded/advanced variants are not exhaustively cataloged. The five known progress producers do not prove every referenced actor enters the same callback in every runtime state. Later actor index changes, target placement, callback admission, localized labels and in-game acceptance remain unverified. Exact all64 completion semantics and independent earned skill48 are unchanged.
+
+The supplied plaintext save has **all28 progress bits clear**, no high bits, and **earned Dance skill48 set**. A clear bit is not proof of never having danced with that enemy. The new read-only **Dance progress** view uses two simple columns: reference target and Recorded/Not recorded. Technical mode retains six columns; details retain raw bank/high bits, exact completion comparison, separate earned status and association limits. Existing summary counts and editing permissions remain unchanged; no normalization, award or callbacks execute.
+
+[Inspect-TodDanceTargets.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodDanceTargets.py) reproduces **283 guard ranges**, full selected actor/getter/state bodies,30 literal publications and32 new instruction comments for IDA/Ghidra. [Fourteen focused tests](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodDanceTargets.py) cover all index/name/pointer links, the distinct index19 proof, byte guards, tamper rejection, single-bit/high-bit observations, independent awards, malformed layout, opaque neighbors, unchanged actual-save hash and bundled-report reproduction. Private observations are never embedded in NativeMap.json.
 
 ## Named space statistics and persistent counter boundaries
 
@@ -32,7 +79,7 @@ Saved8728 records collected target indices, while runtime+FC records currently p
 
 ## Dance skill progress bank and independent earned award
 
-The exact USA BCUS98127 v02.00 ELF now establishes a concrete purpose for the previously unresolved BE64 bank at plaintext save offset **0x8720**: five selected runtime paths accumulate progress and request **SKILLPOINT_DANCE**, native ID48, when the bank matches an exact low28 pattern. This is not a second earned-skill bitset, trophy table or confirmed list of28 named enemies.
+The producer-only pass established a concrete purpose for the previously unresolved BE64 bank at plaintext save offset **0x8720**: five selected runtime paths accumulate progress and request **SKILLPOINT_DANCE**, native ID48, when the bank matches an exact low28 pattern. This is not a second earned-skill bitset or trophy table. The later actor-index/name catalog above supplies qualified reference associations separately.
 
 | Storage | Confirmed role | Supplied USA save |
 | --- | --- | --- |
@@ -47,7 +94,7 @@ The equal branch passes101F5048 (=save base+5528) and numeric30hex to thunk122E0
 
 There is no new-bit prerequisite or one-shot request latch between these stores/comparisons and the award call. An already-exact bank can request48 again on duplicate indices, negative indices or zero-shift operands. Setter35D5D0 independently deduplicates earned bit48 and returns before score/notification work when already set. **Progress and earned award are separate**: the supplied save has zero progress but an earned Dance skill. This observation does not reconstruct why the bank is zero or establish any complete target history. Initialization35E110→35D9A0 passes base+5528 and explicitly stores zero64 at+31F8, resolving8720..8727; this is not proof every load clears it.
 
-The app adds the raw bank, low28 set indices, retained high bits and exact-pattern result to the Dance skill row's details, plus a searchable Research topic. Simple columns and summary row counts stay unchanged. Unknown target identities are not relabeled as enemy names, completion percentages or current eligibility; viewing does not normalize progress, repair score or award skills. Private save observations are not embedded in NativeMap.json.
+The producer pass added raw bank, low28 set indices, retained high bits and exact-pattern result to the Dance skill row's details, plus a searchable Research topic. Its evidence alone did not assign target identities; the separate actor-index catalog above now links reference names. Summary row counts stay unchanged; viewing does not normalize progress, infer current eligibility, repair score or award skills. Private save observations are not embedded in NativeMap.json.
 
 [Inspect-TodDanceProgress.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodDanceProgress.py) reproduces134 guards, eight complete selected bodies, the cross-TOC thunk, canonical pointers, negative alternate branches, named award export and definition. [Fifteen focused tests](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodDanceProgress.py) cover all low28 bits, high-bit rejection, duplicate requests, signed-negative gates, shift aliases/zero operands, malformed inputs, evidence tampering, initialization limits, unchanged actual-save hash, neighbor retention and private-snapshot-free report reproduction. Six new instruction comments preserve existing function names. These are static/software checks, not in-game edit validation or full target identity coverage.
 

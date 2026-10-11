@@ -112545,7 +112545,7 @@
   },
   "dance_progress": {
     "confidence": "exact-build-native-flow",
-    "warning": "USA BCUS98127 v02.00 only. Read-only static evidence, no native execution or gameplay-tested edits. Individual target identities, runtime index assignment and localized skill text remain unresolved.",
+    "warning": "USA BCUS98127 v02.00 only. Read-only static evidence, no native execution or gameplay-tested edits. This producer-only report does not assign target names or runtime index origins; the separate dance_targets report supplies qualified actor/config associations. Localized skill text and current eligibility remain unresolved.",
     "bank": {
       "offset": "0x8720",
       "type": "u64 BE",
@@ -112587,7 +112587,7 @@
       }
     ],
     "initialization": "35E110 passes base+5528 to35D9A0; zero r29 stored by std+31F8 at35DB9C resolves saved8720..8727. Separate saved8710/8718 stores do not merge their meanings. Initialization does not prove every load clears progress or that zero means never danced.",
-    "identity_limits": "The low28 pattern proves the selected completion test, not names for28 enemies or allocation of index0..27. Runtime source+28 is not a raw save index field, saved object UID or world slot. Earlier callbacks and gates of the five bodies are not replayed. No per-target names, success histories, current eligibility, total gameplay coverage or edits certified.",
+    "identity_limits": "The low28 pattern alone proves the selected completion test, not names for28 enemies or allocation of index0..27. Separate dance_targets evidence now links selected actor assignments to internal configurations; not localized labels or exhaustive variants. Runtime source+28 is not a raw save index field, saved object UID or world slot. Earlier callbacks and gates of the five bodies are not replayed. No success histories, current eligibility, total gameplay coverage or edits certified.",
     "recommended_annotations": [
       {
         "va": "0xdda88",
@@ -113640,6 +113640,1949 @@
       }
     ]
   },
+  "dance_targets": {
+    "confidence": "exact-build-native-index-and-config-association",
+    "warning": "USA BCUS98127 v02.00 only; read-only static reference associations. Formatted internal names, not localized titles. No native/Lua execution, live actor reconstruction, complete variant catalog, in-game acceptance or safe edits claimed.",
+    "saved_bank": {
+      "offset": "0x8720",
+      "type": "u64 BE",
+      "pattern": "0x000000000FFFFFFF",
+      "earned_skill_offset": "0x8710",
+      "earned_skill_id": 48
+    },
+    "owner_chain": "State initializerC2548 (shared by vtables845A50/846690 at+18) first calls14090 then copies registration payload+40 into state+10. Selected Dance producers follow state+10 and read actor+28, then OR saved8720. Runtime actor+28 is not a saved object UID, world slot, class-table ordinal or configuration member+28. Common actor initializerBFE70 explicitly sets its original actor+28 toFFFFFFFF; selected actor methods subsequently publish literals0..27. This is selected static ownership evidence, not simulation of all dispatch/callback paths.",
+    "catalog": [
+      {
+        "index": 0,
+        "config_name": "EnemyAntaraCentipede",
+        "display_label": "Antara Centipede",
+        "index_method_va": "0x17a890",
+        "binding_method_va": "0x17a890",
+        "config_registration_va": "0x88ec24",
+        "config_getter_va": "0x981b0",
+        "config_root_offset": "0xabc",
+        "config_pointer_va": "0x101ba9a4",
+        "config_load_va": "0x17a8a0",
+        "config_pointer_slot_va": "0x893198",
+        "publications": [
+          {
+            "literal_va": "0x17a980",
+            "store_va": "0x17a984",
+            "owner_register": "r31"
+          },
+          {
+            "literal_va": "0x17aa0c",
+            "store_va": "0x17aa10",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 1,
+        "config_name": "EnemyAntaraSwarmer",
+        "display_label": "Antara Swarmer",
+        "index_method_va": "0x17d4b8",
+        "binding_method_va": "0x17d4b8",
+        "config_registration_va": "0x88eb04",
+        "config_getter_va": "0x99230",
+        "config_root_offset": "0x57c",
+        "config_pointer_va": "0x101ba464",
+        "config_load_va": "0x17d4d4",
+        "config_pointer_slot_va": "0x893258",
+        "publications": [
+          {
+            "literal_va": "0x17d510",
+            "store_va": "0x17d518",
+            "owner_register": "r28"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 2,
+        "config_name": "EnemyBladeMaster",
+        "display_label": "Blade Master",
+        "index_method_va": "0x1809d0",
+        "binding_method_va": "0x1809d0",
+        "config_registration_va": "0x88ebd0",
+        "config_getter_va": "0x98680",
+        "config_root_offset": "0x934",
+        "config_pointer_va": "0x101ba81c",
+        "config_load_va": "0x1809e0",
+        "config_pointer_slot_va": "0x8933ec",
+        "publications": [
+          {
+            "literal_va": "0x180abc",
+            "store_va": "0x180ac0",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 3,
+        "config_name": "EnemyBombBot",
+        "display_label": "Bomb Bot",
+        "index_method_va": "0x181c40",
+        "binding_method_va": "0x181c40",
+        "config_registration_va": "0x88ec3c",
+        "config_getter_va": "0x98050",
+        "config_root_offset": "0xb2c",
+        "config_pointer_va": "0x101baa14",
+        "config_load_va": "0x181c50",
+        "config_pointer_slot_va": "0x89348c",
+        "publications": [
+          {
+            "literal_va": "0x181d30",
+            "store_va": "0x181d58",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 4,
+        "config_name": "EnemyBurrowerBeetle",
+        "display_label": "Burrower Beetle",
+        "index_method_va": "0x182500",
+        "binding_method_va": "0x182500",
+        "config_registration_va": "0x88eb28",
+        "config_getter_va": "0x99020",
+        "config_root_offset": "0x624",
+        "config_pointer_va": "0x101ba50c",
+        "config_load_va": "0x182510",
+        "config_pointer_slot_va": "0x893520",
+        "publications": [
+          {
+            "literal_va": "0x182594",
+            "store_va": "0x182598",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 5,
+        "config_name": "EnemyCaveBat",
+        "display_label": "Cave Bat",
+        "index_method_va": "0x184a60",
+        "binding_method_va": "0x184a60",
+        "config_registration_va": "0x88ead4",
+        "config_getter_va": "0x994f0",
+        "config_root_offset": "0x49c",
+        "config_pointer_va": "0x101ba384",
+        "config_load_va": "0x184a70",
+        "config_pointer_slot_va": "0x893614",
+        "publications": [
+          {
+            "literal_va": "0x184ae8",
+            "store_va": "0x184af0",
+            "owner_register": "r28"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 6,
+        "config_name": "EnemyConsumerBot",
+        "display_label": "Consumer Bot",
+        "index_method_va": "0x186d60",
+        "binding_method_va": "0x186d60",
+        "config_registration_va": "0x88ece4",
+        "config_getter_va": "0x976b0",
+        "config_root_offset": "0xe3c",
+        "config_pointer_va": "0x101bad24",
+        "config_load_va": "0x186d7c",
+        "config_pointer_slot_va": "0x8936d0",
+        "publications": [
+          {
+            "literal_va": "0x186dc8",
+            "store_va": "0x186dcc",
+            "owner_register": "r28"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 7,
+        "config_name": "EnemyCragmiteMature",
+        "display_label": "Cragmite Mature",
+        "index_method_va": "0x1895b8",
+        "binding_method_va": "0x1895b8",
+        "config_registration_va": "0x88ec84",
+        "config_getter_va": "0x97c30",
+        "config_root_offset": "0xc7c",
+        "config_pointer_va": "0x101bab64",
+        "config_load_va": "0x1895d4",
+        "config_pointer_slot_va": "0x8937bc",
+        "publications": [
+          {
+            "literal_va": "0x189604",
+            "store_va": "0x189608",
+            "owner_register": "r29"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 8,
+        "config_name": "EnemyCragmiteYoung",
+        "display_label": "Cragmite Young",
+        "index_method_va": "0x18c618",
+        "binding_method_va": "0x18c618",
+        "config_registration_va": "0x88ec78",
+        "config_getter_va": "0x97ce0",
+        "config_root_offset": "0xc44",
+        "config_pointer_va": "0x101bab2c",
+        "config_load_va": "0x18c634",
+        "config_pointer_slot_va": "0x89390c",
+        "publications": [
+          {
+            "literal_va": "0x18c664",
+            "store_va": "0x18c668",
+            "owner_register": "r29"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 9,
+        "config_name": "EnemyCragmiteSwarmer",
+        "display_label": "Cragmite Swarmer",
+        "index_method_va": "0x18b2d8",
+        "binding_method_va": "0x18b2d8",
+        "config_registration_va": "0x88ec6c",
+        "config_getter_va": "0x97d90",
+        "config_root_offset": "0xc0c",
+        "config_pointer_va": "0x101baaf4",
+        "config_load_va": "0x18b2f4",
+        "config_pointer_slot_va": "0x893890",
+        "publications": [
+          {
+            "literal_va": "0x18b338",
+            "store_va": "0x18b33c",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 10,
+        "config_name": "EnemyDrophyd",
+        "display_label": "Drophyd",
+        "index_method_va": "0x18e420",
+        "binding_method_va": "0x18e420",
+        "config_registration_va": "0x88ec90",
+        "config_getter_va": "0x97b80",
+        "config_root_offset": "0xcb4",
+        "config_pointer_va": "0x101bab9c",
+        "config_load_va": "0x18e440",
+        "config_pointer_slot_va": "0x8939e0",
+        "publications": [
+          {
+            "literal_va": "0x18e594",
+            "store_va": "0x18e5a4",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 11,
+        "config_name": "EnemyGelChomper",
+        "display_label": "Gel Chomper",
+        "index_method_va": "0x193dd0",
+        "binding_method_va": "0x193dd0",
+        "config_registration_va": "0x88eba0",
+        "config_getter_va": "0x98940",
+        "config_root_offset": "0x854",
+        "config_pointer_va": "0x101ba73c",
+        "config_load_va": "0x193dec",
+        "config_pointer_slot_va": "0x893b80",
+        "publications": [
+          {
+            "literal_va": "0x193e4c",
+            "store_va": "0x193e54",
+            "owner_register": "r29"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 12,
+        "config_name": "EnemyHunchbackPirate",
+        "display_label": "Hunchback Pirate",
+        "index_method_va": "0x194c90",
+        "binding_method_va": "0x194c90",
+        "config_registration_va": "0x88eac8",
+        "config_getter_va": "0x995a0",
+        "config_root_offset": "0x464",
+        "config_pointer_va": "0x101ba34c",
+        "config_load_va": "0x194cb0",
+        "config_pointer_slot_va": "0x893c60",
+        "publications": [
+          {
+            "literal_va": "0x194dc0",
+            "store_va": "0x194dc8",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 13,
+        "config_name": "EnemyHunter",
+        "display_label": "Hunter",
+        "index_method_va": "0x198cd8",
+        "binding_method_va": "0x198cd8",
+        "config_registration_va": "0x88ebb8",
+        "config_getter_va": "0x987e0",
+        "config_root_offset": "0x8c4",
+        "config_pointer_va": "0x101ba7ac",
+        "config_load_va": "0x198ce8",
+        "config_pointer_slot_va": "0x893d78",
+        "publications": [
+          {
+            "literal_va": "0x198dc4",
+            "store_va": "0x198dc8",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 14,
+        "config_name": "EnemyKerchuuFlameThrower",
+        "display_label": "Kerchuu Flame Thrower",
+        "index_method_va": "0x199800",
+        "binding_method_va": "0x199800",
+        "config_registration_va": "0x88eaf8",
+        "config_getter_va": "0x992e0",
+        "config_root_offset": "0x544",
+        "config_pointer_va": "0x101ba42c",
+        "config_load_va": "0x199810",
+        "config_pointer_slot_va": "0x893dec",
+        "publications": [
+          {
+            "literal_va": "0x199a64",
+            "store_va": "0x199a8c",
+            "owner_register": "r23"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 15,
+        "config_name": "EnemyKerchuuRoller",
+        "display_label": "Kerchuu Roller",
+        "index_method_va": "0x19b6a8",
+        "binding_method_va": "0x19b6a8",
+        "config_registration_va": "0x88eaec",
+        "config_getter_va": "0x99390",
+        "config_root_offset": "0x50c",
+        "config_pointer_va": "0x101ba3f4",
+        "config_load_va": "0x19b6c4",
+        "config_pointer_slot_va": "0x893e94",
+        "publications": [
+          {
+            "literal_va": "0x19b7c8",
+            "store_va": "0x19b7cc",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 16,
+        "config_name": "EnemyPenguin",
+        "display_label": "Penguin",
+        "index_method_va": "0x1a2240",
+        "binding_method_va": "0x1a2240",
+        "config_registration_va": "0x88ecd8",
+        "config_getter_va": "0x97760",
+        "config_root_offset": "0xe04",
+        "config_pointer_va": "0x101bacec",
+        "config_load_va": "0x1a2250",
+        "config_pointer_slot_va": "0x894020",
+        "publications": [
+          {
+            "literal_va": "0x1a2338",
+            "store_va": "0x1a2340",
+            "owner_register": "r29"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 17,
+        "config_name": "EnemySargassoWasp",
+        "display_label": "Sargasso Wasp",
+        "index_method_va": "0x1a72a0",
+        "binding_method_va": "0x1a72a0",
+        "config_registration_va": "0x88eb1c",
+        "config_getter_va": "0x990d0",
+        "config_root_offset": "0x5ec",
+        "config_pointer_va": "0x101ba4d4",
+        "config_load_va": "0x1a72d8",
+        "config_pointer_slot_va": "0x8941b0",
+        "publications": [
+          {
+            "literal_va": "0x1a73f4",
+            "store_va": "0x1a7400",
+            "owner_register": "r27"
+          },
+          {
+            "literal_va": "0x1a7490",
+            "store_va": "0x1a74ac",
+            "owner_register": "r27"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 18,
+        "config_name": "EnemySecurityBot",
+        "display_label": "Security Bot",
+        "index_method_va": "0x1ad730",
+        "binding_method_va": "0x1ad730",
+        "config_registration_va": "0x88eb34",
+        "config_getter_va": "0x98f70",
+        "config_root_offset": "0x65c",
+        "config_pointer_va": "0x101ba544",
+        "config_load_va": "0x1ad758",
+        "config_pointer_slot_va": "0x8944a8",
+        "publications": [
+          {
+            "literal_va": "0x1ad810",
+            "store_va": "0x1ad840",
+            "owner_register": "r28"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 19,
+        "config_name": "EnemyShinglePirate",
+        "display_label": "Shingle Pirate",
+        "index_method_va": "0x1aed30",
+        "binding_method_va": "0x1ae8c0",
+        "config_registration_va": "0x88eabc",
+        "config_getter_va": "0x99650",
+        "config_root_offset": "0x42c",
+        "config_pointer_va": "0x101ba314",
+        "config_load_va": "0x1ae8f0",
+        "config_pointer_slot_va": "0x894504",
+        "publications": [
+          {
+            "literal_va": "0x1af038",
+            "store_va": "0x1af04c",
+            "owner_register": "r19"
+          }
+        ],
+        "association": "Same actor vtable848CF0: index method at+8, config-binding method at+48; not a direct load inside the index method or a proven execution sequence."
+      },
+      {
+        "index": 20,
+        "config_name": "EnemyShockBot",
+        "display_label": "Shock Bot",
+        "index_method_va": "0x1b3658",
+        "binding_method_va": "0x1b3658",
+        "config_registration_va": "0x88ebac",
+        "config_getter_va": "0x98890",
+        "config_root_offset": "0x88c",
+        "config_pointer_va": "0x101ba774",
+        "config_load_va": "0x1b3668",
+        "config_pointer_slot_va": "0x894604",
+        "publications": [
+          {
+            "literal_va": "0x1b3704",
+            "store_va": "0x1b3718",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 21,
+        "config_name": "EnemySkinnyPirateMelee",
+        "display_label": "Skinny Pirate Melee",
+        "index_method_va": "0x1b5e88",
+        "binding_method_va": "0x1b5e88",
+        "config_registration_va": "0x88ea8c",
+        "config_getter_va": "0x99910",
+        "config_root_offset": "0x34c",
+        "config_pointer_va": "0x101ba234",
+        "config_load_va": "0x1b5ea8",
+        "config_pointer_slot_va": "0x894750",
+        "publications": [
+          {
+            "literal_va": "0x1b5fac",
+            "store_va": "0x1b5fb0",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 22,
+        "config_name": "EnemySkinnyPirateShooter",
+        "display_label": "Skinny Pirate Shooter",
+        "index_method_va": "0x1b9250",
+        "binding_method_va": "0x1b9250",
+        "config_registration_va": "0x88eaa4",
+        "config_getter_va": "0x997b0",
+        "config_root_offset": "0x3bc",
+        "config_pointer_va": "0x101ba2a4",
+        "config_load_va": "0x1b9260",
+        "config_pointer_slot_va": "0x89483c",
+        "publications": [
+          {
+            "literal_va": "0x1b92f0",
+            "store_va": "0x1b92f4",
+            "owner_register": "r29"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 23,
+        "config_name": "EnemyStalker",
+        "display_label": "Stalker",
+        "index_method_va": "0x1be910",
+        "binding_method_va": "0x1be910",
+        "config_registration_va": "0x88ebc4",
+        "config_getter_va": "0x98730",
+        "config_root_offset": "0x8fc",
+        "config_pointer_va": "0x101ba7e4",
+        "config_load_va": "0x1be938",
+        "config_pointer_slot_va": "0x894998",
+        "publications": [
+          {
+            "literal_va": "0x1be9b0",
+            "store_va": "0x1be9b4",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 24,
+        "config_name": "EnemyTachyonTrooperMelee",
+        "display_label": "Tachyon Trooper Melee",
+        "index_method_va": "0x1c3fa8",
+        "binding_method_va": "0x1c3fa8",
+        "config_registration_va": "0x88eb58",
+        "config_getter_va": "0x98d60",
+        "config_root_offset": "0x704",
+        "config_pointer_va": "0x101ba5ec",
+        "config_load_va": "0x1c3fb8",
+        "config_pointer_slot_va": "0x894bc0",
+        "publications": [
+          {
+            "literal_va": "0x1c4138",
+            "store_va": "0x1c4144",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 25,
+        "config_name": "EnemyTachyonTrooperShooter",
+        "display_label": "Tachyon Trooper Shooter",
+        "index_method_va": "0x1c7ad8",
+        "binding_method_va": "0x1c7ad8",
+        "config_registration_va": "0x88eb70",
+        "config_getter_va": "0x98c00",
+        "config_root_offset": "0x774",
+        "config_pointer_va": "0x101ba65c",
+        "config_load_va": "0x1c7b04",
+        "config_pointer_slot_va": "0x894cb0",
+        "publications": [
+          {
+            "literal_va": "0x1c7c5c",
+            "store_va": "0x1c7c68",
+            "owner_register": "r31"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 26,
+        "config_name": "EnemyTachyonTurret",
+        "display_label": "Tachyon Turret",
+        "index_method_va": "0x1ccdc8",
+        "binding_method_va": "0x1ccdc8",
+        "config_registration_va": "0x88eb40",
+        "config_getter_va": "0x98ec0",
+        "config_root_offset": "0x694",
+        "config_pointer_va": "0x101ba57c",
+        "config_load_va": "0x1cce08",
+        "config_pointer_slot_va": "0x894dac",
+        "publications": [
+          {
+            "literal_va": "0x1cd0b4",
+            "store_va": "0x1cd0e4",
+            "owner_register": "r22"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      },
+      {
+        "index": 27,
+        "config_name": "EnemyTachyonWalker",
+        "display_label": "Tachyon Walker",
+        "index_method_va": "0x1ce928",
+        "binding_method_va": "0x1ce928",
+        "config_registration_va": "0x88eb88",
+        "config_getter_va": "0x98aa0",
+        "config_root_offset": "0x7e4",
+        "config_pointer_va": "0x101ba6cc",
+        "config_load_va": "0x1ce9d8",
+        "config_pointer_slot_va": "0x894e5c",
+        "publications": [
+          {
+            "literal_va": "0x1ced24",
+            "store_va": "0x1ced48",
+            "owner_register": "r18"
+          }
+        ],
+        "association": "Selected actor method both passes this named config pointer to virtual+4C and explicitly stores this literal at the original actor+28. Other runtime variants/overrides are not exhaustively cataloged."
+      }
+    ],
+    "index19_boundary": "Vtable848CF0 slot+8 descriptor864F30 targets1AED30, which sets original actor+28 to19. Its slot+48 descriptor864F18 targets1AE8C0, which passes named EnemyShinglePirate config to virtual+4C. Same class-method table links the association; no direct Shingle config load or guaranteed relative execution order inside1AED30 is claimed.",
+    "variant_boundary": "28 index associations are not28 uniquely identified physical enemies. A class can have multiple instances and methods can have qualified branches/overrides; default named configs do not exclude shielded/advanced variants. Five already mapped progress producers do not prove every cataloged actor reaches the same dance path in every state. Callback admission, later actor+28 changes and current actor availability remain unresolved.",
+    "save_interpretation": "All64 saved bits are retained. Show each low28 bit as Recorded/Not recorded. Clear does not prove never danced, killed or mission-complete. Extra bits28..63 still block exact completion; earned skill48 remains separate. A zero bank and an earned award can coexist. Names explain the selected code-backed index association, not target locations, histories or current eligibility.",
+    "recommended_annotations": [
+      {
+        "va": "0x17a984",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_0_17a984",
+        "comment": "Original runtime actor+28 receives Dance progress index0; named reference config association EnemyAntaraCentipede. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x17aa10",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_0_17aa10",
+        "comment": "Original runtime actor+28 receives Dance progress index0; named reference config association EnemyAntaraCentipede. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x17d518",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_1_17d518",
+        "comment": "Original runtime actor+28 receives Dance progress index1; named reference config association EnemyAntaraSwarmer. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x180ac0",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_2_180ac0",
+        "comment": "Original runtime actor+28 receives Dance progress index2; named reference config association EnemyBladeMaster. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x181d58",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_3_181d58",
+        "comment": "Original runtime actor+28 receives Dance progress index3; named reference config association EnemyBombBot. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x182598",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_4_182598",
+        "comment": "Original runtime actor+28 receives Dance progress index4; named reference config association EnemyBurrowerBeetle. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x184af0",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_5_184af0",
+        "comment": "Original runtime actor+28 receives Dance progress index5; named reference config association EnemyCaveBat. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x186dcc",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_6_186dcc",
+        "comment": "Original runtime actor+28 receives Dance progress index6; named reference config association EnemyConsumerBot. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x189608",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_7_189608",
+        "comment": "Original runtime actor+28 receives Dance progress index7; named reference config association EnemyCragmiteMature. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x18c668",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_8_18c668",
+        "comment": "Original runtime actor+28 receives Dance progress index8; named reference config association EnemyCragmiteYoung. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x18b33c",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_9_18b33c",
+        "comment": "Original runtime actor+28 receives Dance progress index9; named reference config association EnemyCragmiteSwarmer. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x18e5a4",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_10_18e5a4",
+        "comment": "Original runtime actor+28 receives Dance progress index10; named reference config association EnemyDrophyd. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x193e54",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_11_193e54",
+        "comment": "Original runtime actor+28 receives Dance progress index11; named reference config association EnemyGelChomper. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x194dc8",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_12_194dc8",
+        "comment": "Original runtime actor+28 receives Dance progress index12; named reference config association EnemyHunchbackPirate. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x198dc8",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_13_198dc8",
+        "comment": "Original runtime actor+28 receives Dance progress index13; named reference config association EnemyHunter. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x199a8c",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_14_199a8c",
+        "comment": "Original runtime actor+28 receives Dance progress index14; named reference config association EnemyKerchuuFlameThrower. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x19b7cc",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_15_19b7cc",
+        "comment": "Original runtime actor+28 receives Dance progress index15; named reference config association EnemyKerchuuRoller. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1a2340",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_16_1a2340",
+        "comment": "Original runtime actor+28 receives Dance progress index16; named reference config association EnemyPenguin. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1a7400",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_17_1a7400",
+        "comment": "Original runtime actor+28 receives Dance progress index17; named reference config association EnemySargassoWasp. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1a74ac",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_17_1a74ac",
+        "comment": "Original runtime actor+28 receives Dance progress index17; named reference config association EnemySargassoWasp. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1ad840",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_18_1ad840",
+        "comment": "Original runtime actor+28 receives Dance progress index18; named reference config association EnemySecurityBot. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1af04c",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_19_1af04c",
+        "comment": "Original runtime actor+28 receives Dance progress index19; named reference config association EnemyShinglePirate. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1b3718",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_20_1b3718",
+        "comment": "Original runtime actor+28 receives Dance progress index20; named reference config association EnemyShockBot. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1b5fb0",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_21_1b5fb0",
+        "comment": "Original runtime actor+28 receives Dance progress index21; named reference config association EnemySkinnyPirateMelee. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1b92f4",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_22_1b92f4",
+        "comment": "Original runtime actor+28 receives Dance progress index22; named reference config association EnemySkinnyPirateShooter. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1be9b4",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_23_1be9b4",
+        "comment": "Original runtime actor+28 receives Dance progress index23; named reference config association EnemyStalker. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1c4144",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_24_1c4144",
+        "comment": "Original runtime actor+28 receives Dance progress index24; named reference config association EnemyTachyonTrooperMelee. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1c7c68",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_25_1c7c68",
+        "comment": "Original runtime actor+28 receives Dance progress index25; named reference config association EnemyTachyonTrooperShooter. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1cd0e4",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_26_1cd0e4",
+        "comment": "Original runtime actor+28 receives Dance progress index26; named reference config association EnemyTachyonTurret. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0x1ced48",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_27_1ced48",
+        "comment": "Original runtime actor+28 receives Dance progress index27; named reference config association EnemyTachyonWalker. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof."
+      },
+      {
+        "va": "0xbfed4",
+        "kind": "comment",
+        "name": "TOD_dance_actor_index_default_negative",
+        "comment": "Common actor initializerBFE70 explicitly sets original actor+28 toFFFFFFFF. Dance progress suffixes treat signed-negative index as skip-store but still compare saved8720. Selected actor methods assign0..27 later; callbacks/final state not emulated."
+      },
+      {
+        "va": "0xc2578",
+        "kind": "comment",
+        "name": "TOD_dance_state_actor_owner_publication",
+        "comment": "Shared state initializer copies input registration payload+40 into state+10 after14090. Dance producers follow this pointer to actor+28, not config+28 or a saved world/object index."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x94400",
+        "bytes": "F821FF917C8802A680A2B358F88100808082FBC44BF7C0BDE8410028E8010080386000017C0803A6382100704E800020"
+      },
+      {
+        "va": "0x976b0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF7A851E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE0E3C80A2B3747FE3FB7878C400204BF78DD5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FCE44BF79B5DE841002838DE0E3C80A2B3747FE3FB7878C400204BF78D95E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x97760",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF7A7A1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE0E0480A2B3747FE3FB7878C400204BF78D25E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FCE84BF79AADE841002838DE0E0480A2B3747FE3FB7878C400204BF78CE5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x97b80",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF7A381E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE0CB480A2B3747FE3FB7878C400204BF78905E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD004BF7968DE841002838DE0CB480A2B3747FE3FB7878C400204BF788C5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x97c30",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF7A2D1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE0C7C80A2B3747FE3FB7878C400204BF78855E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD044BF795DDE841002838DE0C7C80A2B3747FE3FB7878C400204BF78815E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x97ce0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF7A221E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE0C4480A2B3747FE3FB7878C400204BF787A5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD084BF7952DE841002838DE0C4480A2B3747FE3FB7878C400204BF78765E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x97d90",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF7A171E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE0C0C80A2B3747FE3FB7878C400204BF786F5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD0C4BF7947DE841002838DE0C0C80A2B3747FE3FB7878C400204BF786B5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98050",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF79EB1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE0B2C80A2B3747FE3FB7878C400204BF78435E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD1C4BF791BDE841002838DE0B2C80A2B3747FE3FB7878C400204BF783F5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x981b0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF79D51E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE0ABC80A2B3747FE3FB7878C400204BF782D5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD244BF7905DE841002838DE0ABC80A2B3747FE3FB7878C400204BF78295E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98680",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF79881E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE093480A2B3747FE3FB7878C400204BF77E05E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD404BF78B8DE841002838DE093480A2B3747FE3FB7878C400204BF77DC5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98730",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF797D1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE08FC80A2B3747FE3FB7878C400204BF77D55E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD444BF78ADDE841002838DE08FC80A2B3747FE3FB7878C400204BF77D15E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x987e0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF79721E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE08C480A2B3747FE3FB7878C400204BF77CA5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD484BF78A2DE841002838DE08C480A2B3747FE3FB7878C400204BF77C65E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98890",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF79671E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE088C80A2B3747FE3FB7878C400204BF77BF5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD4C4BF7897DE841002838DE088C80A2B3747FE3FB7878C400204BF77BB5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98940",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF795C1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE085480A2B3747FE3FB7878C400204BF77B45E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD504BF788CDE841002838DE085480A2B3747FE3FB7878C400204BF77B05E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98aa0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF79461E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE07E480A2B3747FE3FB7878C400204BF779E5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD584BF7876DE841002838DE07E480A2B3747FE3FB7878C400204BF779A5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98c00",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF79301E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE077480A2B3747FE3FB7878C400204BF77885E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD604BF7860DE841002838DE077480A2B3747FE3FB7878C400204BF77845E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98d60",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF791A1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE070480A2B3747FE3FB7878C400204BF77725E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD684BF784ADE841002838DE070480A2B3747FE3FB7878C400204BF776E5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98ec0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF79041E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE069480A2B3747FE3FB7878C400204BF775C5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD704BF7834DE841002838DE069480A2B3747FE3FB7878C400204BF77585E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x98f70",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78F91E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE065C80A2B3747FE3FB7878C400204BF77515E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD744BF7829DE841002838DE065C80A2B3747FE3FB7878C400204BF774D5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x99020",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78EE1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE062480A2B3747FE3FB7878C400204BF77465E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD784BF781EDE841002838DE062480A2B3747FE3FB7878C400204BF77425E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x990d0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78E31E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE05EC80A2B3747FE3FB7878C400204BF773B5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD7C4BF7813DE841002838DE05EC80A2B3747FE3FB7878C400204BF77375E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x99230",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78CD1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE057C80A2B3747FE3FB7878C400204BF77255E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD844BF77FDDE841002838DE057C80A2B3747FE3FB7878C400204BF77215E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x992e0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78C21E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE054480A2B3747FE3FB7878C400204BF771A5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD884BF77F2DE841002838DE054480A2B3747FE3FB7878C400204BF77165E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x99390",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78B71E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE050C80A2B3747FE3FB7878C400204BF770F5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD8C4BF77E7DE841002838DE050C80A2B3747FE3FB7878C400204BF770B5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x994f0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78A11E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE049C80A2B3747FE3FB7878C400204BF76F95E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD944BF77D1DE841002838DE049C80A2B3747FE3FB7878C400204BF76F55E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x995a0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78961E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE046480A2B3747FE3FB7878C400204BF76EE5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD984BF77C6DE841002838DE046480A2B3747FE3FB7878C400204BF76EA5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x99650",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF788B1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE042C80A2B3747FE3FB7878C400204BF76E35E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FD9C4BF77BBDE841002838DE042C80A2B3747FE3FB7878C400204BF76DF5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x997b0",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF78751E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE03BC80A2B3747FE3FB7878C400204BF76CD5E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FDA44BF77A5DE841002838DE03BC80A2B3747FE3FB7878C400204BF76C95E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x99910",
+        "bytes": "38A000007C0802A638800001F821FF81FBC10070FBE10078F80100907C7F1B784BF785F1E84100282F8300007C7E1B7838A000007FE3FB78419E003838DE034C80A2B3747FE3FB7878C400204BF76B75E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E8000208082FDAC4BF778FDE841002838DE034C80A2B3747FE3FB7878C400204BF76B35E8410028E8810090EBC1007038600001EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0xbfe70",
+        "bytes": "F821FEA17C8802A6FB0101207C781B78FAE1011878770020FA8101007C741B787EE3BB78FB210128FB410130FBC10150FBE10158F8810170FAA10108FAC10110FB610138FB810140FBA101484BF53A55E8410028809800143800FFFFC182025478890020901800283BC000003B2000003BE00000C00900603B400000FF806000409E0018C0220258C1A90110FC0D0800418202E86000000039380054788400207923002038A000003B60FFFF4BF50FD5E841002838980068788C002038B80074386000403BB802B03880001090AC0000906C0004936C00087BBC0020815800B438A0000061487FFF7F83E378911800B44BF509B1E841002880FC00088182025C38C700013AC0000054CB383090DC0008380BFF90388C00307EBD0214394C00207ABD00207EC3B37838A000003938022838FD0010937D0068937D00643B6C0010397D002038DD00303AA00001787A002C787E002C7ADF002C7AD9002C90BD006090BD006C9ABD0070793C00207D8020CE7C0060CE787F000E7C20D8CE787E000E7DA050CE390000037ADA000E7C00E9CE7AD9000E7C2039CE7F83E3787DA059CE911D00607D8031CEFBDD0040FBFD0048FB3D0050FB5D00584BF50B29E841002838A0100390BC0078807805382C8300004186000C3B200001933C00807EE3BB784BFFE3C98158055092D805B02F0A0000419A00503BB805803ACA01C47BBE00207AC60020C09E0004C0DE0008C0BE0000D0C60008D0A60000D086000483780550C19E000C3BFB01D4C05E0010C07E00147BFA0020D07A0008D19A0000D05A000483D800007EE3BB7838800000813E007483490000F8410028804900047F4903A64E800421E84100283861008038800005787900207F23CB784BF536F9E84100289AA100FE80B40014398000017F24CB783861007090A10080918100E44BF50F65E841002881180000814100707EE3BB789158002480E8004880070000F84100287C0903A6804700044E800421E841002881780000388000017EE3BB78828B005882B40000F84100287EA903A6805400044E800421E841002838A000017C6407B47EE3BB784BFFECD5801805B82F800003419E00802C000001418200A02C800004418600803B9800C07B8300204800438D60000000EB010170EA8101007F0803A6EAA10108EAC10110EAE10118EB010120EB210128EB410130EB610138EB810140EBA10148EBC10150EBE10158382101604E80002060000000D189006081380014D1890110809800144BFFFD1060000000809C00785497003A92FC00784BFFFF8880780014388000004BF51489E84100284BFFFF746000000080780014388000004BF510B1E84100284BFFFF5C60000000"
+      },
+      {
+        "va": "0xbfec8",
+        "bytes": "3800FFFF"
+      },
+      {
+        "va": "0xbfed4",
+        "bytes": "90180028"
+      },
+      {
+        "va": "0xc2548",
+        "bytes": "F821FF717CC802A6FBA100787CBD2B78FB8100707C7C1B7878A5002078630020F8C100A04BF51B25E8410028807D0040907C0010E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0xc2574",
+        "bytes": "807D0040"
+      },
+      {
+        "va": "0xc2578",
+        "bytes": "907C0010"
+      },
+      {
+        "va": "0x10dba0",
+        "bytes": "38E30014814215A838A000017D0802A678E4002038C00000F821FF91F901008090A3002090C4000098A40008C00A00B438000001D004000481230010816900282F8B00007C0A5836419C0050816215B83C6B0001E80387207C0C5378F98387203D6B000138A0FFFF3880003078AA0120E92B87207C29500040820010806215BC4BF046C1E8410028E8810080382100707C8803A64E800020816215B84BFFFFC4"
+      },
+      {
+        "va": "0x135468",
+        "bytes": "3803001481422158398000017D2802A67808002039600000F821FF91F9210080918300249168000099880008C00A00B438000001D00800048083001080E400B454E6F07E54C5103E90A400B481230010816900282F8B00007C0A5836419C00548162215C3C6B0001E8A387207CA45378F88387203D0B00013940FFFF3880003079460120E8E887207C27300040820010806221604BEDCDE5E8410028E9810080382100707D8803A64E800020600000008162215C4BFFFFC0"
+      },
+      {
+        "va": "0x1354b4",
+        "bytes": "81230010"
+      },
+      {
+        "va": "0x1354b8",
+        "bytes": "81690028"
+      },
+      {
+        "va": "0x1354d8",
+        "bytes": "F8838720"
+      },
+      {
+        "va": "0x1354f0",
+        "bytes": "7C273000"
+      },
+      {
+        "va": "0x17a890",
+        "bytes": "F821FF717CE802A6FBE100887C7F1B7880823260F8E100A0FBC10080FBA10078787E002080DF00007FC3F3788166004C80AB0000F84100287CA903A6804B00044E800421E84100287FC3F3784BFFFDC5392000003880FFFF7FC3F378909F0800993F080C913F08044BFFEEF97FC3F3784BFFEF3138000009C00231E039600000394000007C0903A6D01F07FC600000007D0BFA14396B000479030020914307B04200FFF0899F083C2F8C0000409E006880FF00143880000138C0000138A0000081270054E9070118800900687C8A00363BAAFFFF7BAC0FA47D036078F86701187FC3F37898DF080F98BF080E4BFFED3539600000917F0028EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E80002038DF08108082326480BF00143960000578DD0020C022326839200001917D001890BD0000915D0014913D0028C0440AECD05D0024D05D00204BE992B5E8410028801D0008D03D0010600A000438C0000138A000007FC3F378915D000898DF080F98BF080E4BFFECA939600000917F0028EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E800020"
+      },
+      {
+        "va": "0x17a8a0",
+        "bytes": "80823260"
+      },
+      {
+        "va": "0x17a980",
+        "bytes": "39600000"
+      },
+      {
+        "va": "0x17a984",
+        "bytes": "917F0028"
+      },
+      {
+        "va": "0x17aa0c",
+        "bytes": "39600000"
+      },
+      {
+        "va": "0x17aa10",
+        "bytes": "917F0028"
+      },
+      {
+        "va": "0x17d4b8",
+        "bytes": "F821FF717C8802A6FB8100707C7C1B78FBA10078F88100A0787D00208082332080DC00007FA3EB788166004C80AB0000F84100287CA903A6804B00044E800421E84100287FA3EB784BFFFAE97FA3EB784BF42969600000003860000139200000907C0028993C07F8E80100A0EB810070EBA100787C0803A6382100904E800020"
+      },
+      {
+        "va": "0x17d4d4",
+        "bytes": "80823320"
+      },
+      {
+        "va": "0x17d510",
+        "bytes": "38600001"
+      },
+      {
+        "va": "0x17d518",
+        "bytes": "907C0028"
+      },
+      {
+        "va": "0x1809d0",
+        "bytes": "F821FF717CC802A6FBE100887C7F1B78808234B4FBA10078FBC10080F8C100A0787E0020813F00003BA000017FC3F3788169004C80AB0000F84100287CA903A6804B00044E800421E8410028809F00307FC3F37860800200901F00304BFFFDB5815F055093BF05B02F8A0000419E0050389F0598380A01C478870020780C0020C0270004C0670008C0470000D06C0008D04C0000D02C0004815F0550C187000C390A01D4C1A70010C007001479030020D0030008D1830000D1A30004817F00007FC3F378388000013BC0000180AB007480050000F84100287C0903A6804500044E800421E841002880BF001439800002919F002881450054E8C50118810A00687FC740363867FFFF78690FA47CCB4878F96501184BE90CBDE84100282C03000040820080809F001481040054E86401188128006C88E900047FC038367C660378F8C4011880FF001483A70054E9870118817D006C88AB00057FCA28367D885378F907011883BF0014807D0054EBFD01188123006C88C900067FC430367FFE2378FBDD0118EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E80002080BF00149BA50170807F001481430054E9830118812A006C890900007FC040367D870378F8E30118819F001480CC0054E8AC01188086006C8BA400017FCBE8367CAA5B78F94C0118809F001481040054E86401188128006C88E900027FC038367C660378F8C40118819F001483AC0054EBEC0118817D006C88AB00037FCA28367FFE5378FBCC0118EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E80002060000000"
+      },
+      {
+        "va": "0x1809e0",
+        "bytes": "808234B4"
+      },
+      {
+        "va": "0x180abc",
+        "bytes": "39800002"
+      },
+      {
+        "va": "0x180ac0",
+        "bytes": "919F0028"
+      },
+      {
+        "va": "0x181c40",
+        "bytes": "F821FF317D8802A6FBE100C87C7F1B7880823554FBA100B8FBC100C0F98100E0787D0020815F00007C7E1B787FA3EB7880EA004C81070000F84100287D0903A6804700044E800421E841002880DF00307FA3EB7860C5020090BF00304BFFFDA583A234F8812234FCA09D0000A16900005480043E788304207F805800419E00C44BE8E931E84100282C030000418200B4817F0014A07D0000808B00644BE90945E8410028801D00042C80000038A0032F38C0000038E000003881007038610080418600CC60000000780700208102355883A2355C39400001809F0014E8C70048E8A80000E97D00007CA030387C095C3638000003913E054080640054EBA40118818300687D48603638E8FFFF78E60FA47FA53078F8A40118901F00284BE8FA45E8410028EBC100E0EBA100B87FC803A6EBE100C8EBC100C0382100D04E800020386000204BE9025DE8410028B07D000038600000907D0004817F0014A07D0000808B00644BE9087DE8410028801D00042C80000038A0032F38C0000038E0000038810070386100804086FF404BE90845E8410028A09D000078690020907D0004806900404BF496DD60000000801D00044BFFFF1860000000"
+      },
+      {
+        "va": "0x181c50",
+        "bytes": "80823554"
+      },
+      {
+        "va": "0x181d30",
+        "bytes": "38000003"
+      },
+      {
+        "va": "0x181d58",
+        "bytes": "901F0028"
+      },
+      {
+        "va": "0x182500",
+        "bytes": "F821FF717CC802A6FBE100887C7F1B78808235E8FBA10078F8C100A0787D002080BF00007FA3EB788165004C800B0000F84100287C0903A6804B00044E800421E84100287FA3EB784BFFFDC1809F08947FA3EB783924FFFF380000002B890001419D000838000001981F08804BF3D90560000000399F0054811F055C395F05C07983002079440020911F02504BE8DD75E841002838E0000490FF0028E86100A0EBA10078EBE100887C6803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x182510",
+        "bytes": "808235E8"
+      },
+      {
+        "va": "0x182594",
+        "bytes": "38E00004"
+      },
+      {
+        "va": "0x182598",
+        "bytes": "90FF0028"
+      },
+      {
+        "va": "0x184a60",
+        "bytes": "F821FF717D8802A6FB8100707C7C1B78808236DCF98100A0FBA10078787D0020815C00007FA3EB7880EA004C81070000F84100287D0903A6804700044E800421E84100287FA3EB784BFFFDB97FA3EB784BFFF8B938C000017FA3EB7898DC09214BF3B3B16000000038BC0054389C064078A30020788400204BE8B829E8410028816236683860000039200005906B00BC913C0028E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x184a70",
+        "bytes": "808236DC"
+      },
+      {
+        "va": "0x184ae8",
+        "bytes": "39200005"
+      },
+      {
+        "va": "0x184af0",
+        "bytes": "913C0028"
+      },
+      {
+        "va": "0x186d60",
+        "bytes": "F821FF717C8802A6FB8100707C7C1B78FBA10078F88100A0787D00208082379880FC00007FA3EB788167004C80CB0000F84100287CC903A6804B00044E800421E84100287FA3EB784BFFFAF138A0000439200000809C07F07FA3EB7890BC02B0913C02A04BFFFD5538600006907C0028E80100A0EB810070EBA100787C0803A6382100904E800020"
+      },
+      {
+        "va": "0x186d7c",
+        "bytes": "80823798"
+      },
+      {
+        "va": "0x186dc8",
+        "bytes": "38600006"
+      },
+      {
+        "va": "0x186dcc",
+        "bytes": "907C0028"
+      },
+      {
+        "va": "0x1895b8",
+        "bytes": "F821FF717C8802A6FBA100787C7D1B78FB810070F88100A0787C002080823884813D00007F83E3788169004C80AB0000F84100287CA903A6804B00044E800421E84100287F83E3784BFFFBC938600007907D0028E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x1895d4",
+        "bytes": "80823884"
+      },
+      {
+        "va": "0x189604",
+        "bytes": "38600007"
+      },
+      {
+        "va": "0x189608",
+        "bytes": "907D0028"
+      },
+      {
+        "va": "0x18b2d8",
+        "bytes": "F821FF717C8802A6FBE100887C7F1B78FBA10078F88100A0787D00208082395880DF00007FA3EB788166004C80AB0000F84100287CA903A6804B00044E800421E84100287FA3EB784BFFFD897FA3EB784BF34B4960000000881F08682F80000039200009913F0028419E0014807F0014810300686107800090E3006839800000C002395CD01F0864919F086CE94100A0EBA10078EBE100887D4803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x18b2f4",
+        "bytes": "80823958"
+      },
+      {
+        "va": "0x18b338",
+        "bytes": "39200009"
+      },
+      {
+        "va": "0x18b33c",
+        "bytes": "913F0028"
+      },
+      {
+        "va": "0x18c618",
+        "bytes": "F821FF717C8802A6FBA100787C7D1B78FB810070F88100A0787C0020808239D4813D00007F83E3788169004C80AB0000F84100287CA903A6804B00044E800421E84100287F83E3784BFFFDC938600008907D0028E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x18c634",
+        "bytes": "808239D4"
+      },
+      {
+        "va": "0x18c664",
+        "bytes": "38600008"
+      },
+      {
+        "va": "0x18c668",
+        "bytes": "907D0028"
+      },
+      {
+        "va": "0x18e420",
+        "bytes": "F821FF617C8802A6FBE100987C7F1B78FBA10088FBC10090F88100B0787D002080823AA8815F00007C7E1B787FA3EB7880AA004C80C50000F84100287CC903A6804500044E800421E84100287FA3EB784BFFFDB9807F001438C000013880000138A0001381030054E803011880E800687CC938363969FFFF796C0FA47C0A6078F9430118815F0014810A0054E96A011880E8006C880700007CC900367D6C4B78F98A0118807F00144BE83209E841002881623A40C1823A443C600003C1A23AAC39400000606843FD80EB00007FA3EB787CC741D63CA6002738859EC37880C2225489F87E912B0000F8010070C8210070FD600E9CFC005818ED800332FF8C68004FDCF382419E00A4C0423AB039400001FC0C10004C40138241820090C0623A3C39400002FC8C18004CC433824186007CC0A23AB8C0823AB4D0BF04ECD09F04DC4BF3191160000000387F02B0786A00203960000083CA00082F1E0000419A0008397F02C0796B002038E0000139200002380008003980000A90EB0064912B0060900A0000919F0028EBE100B0EBA100887FE803A6EBC10090EBE10098382100A04E800020600000003BAA000193BE05B44BFFFF8060000000"
+      },
+      {
+        "va": "0x18e440",
+        "bytes": "80823AA8"
+      },
+      {
+        "va": "0x18e594",
+        "bytes": "3980000A"
+      },
+      {
+        "va": "0x18e5a4",
+        "bytes": "919F0028"
+      },
+      {
+        "va": "0x193dd0",
+        "bytes": "F821FF717C8802A6FBA100787C7D1B78FB810070F88100A0787C002080823C48813D00007F83E3788169004C800B0000F84100287C0903A6804B00044E800421E84100287F83E3784BFFFB29399D02283940040079870020390000107CE33B783880000391470078910700804BE7E825E841002838DD01E078C9002038A0000B3960000090BD0028808900286083000190690028997D07FC917D07F8E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x193dec",
+        "bytes": "80823C48"
+      },
+      {
+        "va": "0x193e4c",
+        "bytes": "38A0000B"
+      },
+      {
+        "va": "0x193e54",
+        "bytes": "90BD0028"
+      },
+      {
+        "va": "0x194c90",
+        "bytes": "F821FEE17C8802A6FBE101187C7F1B78FBA10108FBC10110F8810130787D002080823D28811F00007FA3EB7880C8004C80E60000F84100287CE903A6804600044E800421E84100287FA3EB784BFFFC9D817F0014C0023D2C380100803880002E781E0020D00B00D07FC3F37880BF08A83925FFFF2B890001409D003C4BE7EAD5E8410028819F00147FC4F37838610070394000013BC00001918100809BC100FE914100E44BE7C33DE841002880610070907F087080BF001438800001387F01E081823D30787E00207FA3EB7881050054E8E50118800800687C8A0036396AFFFF79690FA47CFD4878FBA5011880BF001481050054E96501188148006C880A00007C8700367D693B78F925011883BE002863AA0008915E0028E88C0000F89F08904BF2B0C16000000080FF0014390000033800000C911F02A0901F00288167005480CB004038A600A078A300204BE7E895E841002839200400C0223D34D023000C913F014CEBA10130EBC101107FA803A6EBE10118EBA10108382101204E800020"
+      },
+      {
+        "va": "0x194cb0",
+        "bytes": "80823D28"
+      },
+      {
+        "va": "0x194dc0",
+        "bytes": "3800000C"
+      },
+      {
+        "va": "0x194dc8",
+        "bytes": "901F0028"
+      },
+      {
+        "va": "0x198cd8",
+        "bytes": "F821FF717CC802A6FBE100887C7F1B7880823E40FBA10078FBC10080F8C100A0787E0020813F00003BA000017FC3F3788169004C80AB0000F84100287CA903A6804B00044E800421E8410028809F00307FC3F37860800200901F00304BFFFDB5815F055093BF05B02F8A0000419E0050389F0598380A01C478870020780C0020C0270004C0670008C0470000D06C0008D04C0000D02C0004815F0550C187000C390A01D4C1A70010C007001479030020D0030008D1830000D1A30004815F00007FC3F378388000013BC0000180EA007481070000F84100287D0903A6804700044E800421E8410028815F00143860000D907F0028812A0054E80A011880C900687FCB303638ABFFFF78A40FA47C0C2078F98A011880BF001481050054E8C5011880E8006C886700057FC918367CCB4B78F96501184BE78995E84100282C0300004082008083BF0014813D0054E89D011880C9006C896600047FC558367C8C2B78F99D011880DF001481460054E8660118810A006C88E800067FC038367C690378F926011883BF0014817D0054EBFD011880AB006C888500077FCC20367FFE6378FBDD0118EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E800020811F00149BA80170809F001480E40054E96401188127006C886900007FC618367D653378F8A40118807F001481830054E903011883AC006C895D00017FC050367D070378F8E3011883BF0014813D0054E89D011880C9006C896600027FC558367C8C2B78F99D0118807F001481430054EBE30118810A006C88E800037FC038367FFE0378FBC30118EBC100A0EBA100787FC803A6EBE10088EBC10080382100904E80002060000000"
+      },
+      {
+        "va": "0x198ce8",
+        "bytes": "80823E40"
+      },
+      {
+        "va": "0x198dc4",
+        "bytes": "3860000D"
+      },
+      {
+        "va": "0x198dc8",
+        "bytes": "907F0028"
+      },
+      {
+        "va": "0x199800",
+        "bytes": "F821FF417D2802A6FAE100787C771B7880823EB4FAC10070FB010080FB410090FB610098FB8100A0FBA100A8FBC100B0FBE100B8F92100D0FB21008883370000787600203B4000007EC3B3783B0000003BC000008159004C3B8000003B6000003B2000003BE000003BA00000800A0000F84100287C0903A6804A00044E800421E84100288157001438E000017EC3B378816A0054E90A0118818B00687CE6603638A6FFFF78A40FA47D092078F92A01184BFFF8D97EC3B3784BF265B960000000387702B0786400203800200080C40008900400002F860000419E0030393702C02C09000041820024793C002080A23EB83BC000003BA0000293DC006493BC0060480000C06000000038C6000138E0000054CC38307CEB3B78392CFF90394000007CA34A143900FFFF78AC002080A23EB8797D002C78FE002C90C40008797D000E914C0060910C0064910C0068914C006C797C002C797E000E3905001039450020396500303800000178FF002C980C00707C2040CE78FF000E7C0028CE78FC000E7DA050CE38CC00207D8058CE390C003090EC006438EC00107C0061CEFBEC00483BE00002FBCC0040FB8C00507C2039CEFBAC00587DA031CE93EC00607D8041CE816400083BC00000394500303BAB00017FCCF37857BF38307999002C3B9FFF90390500107D23E21439650020793C00207FC6F3787BD8002C93A400087BD9000E3860000038E0FFFF3BBC0020389C00307BDB002C380000013BDC001078D8000E799A002C907C0060907C006C90FC006490FC0068981C00707D8050CE799B000E7C0028CE799A000E7C2040CE3BE0000A7DA058CE7EC3B378FB1C00503B0000027C00E1CE3AC0000E7C20F1CE93FC00647DA0E9CEFB5C0040FB7C0048FB3C0058931C00607D8021CE4BFFF5B992D70028E86100D0EAC10070EAE100787C6803A6EB010080EB210088EB410090EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E800020"
+      },
+      {
+        "va": "0x199810",
+        "bytes": "80823EB4"
+      },
+      {
+        "va": "0x199a64",
+        "bytes": "3AC0000E"
+      },
+      {
+        "va": "0x199a8c",
+        "bytes": "92D70028"
+      },
+      {
+        "va": "0x19b6a8",
+        "bytes": "F821FF717C8802A6FBE100887C7F1B78FBA10078F88100A0787D002080823F5C80DF00007FA3EB788166004C814B0000F84100287D4903A6804B00044E800421E8410028815F0014392000017FA3EB7880AA0054E90A0118800500687D2C003638ECFFFF78E60FA47D043078F88A01184BFFFD997FA3EB784BF2475160000000817F00007FA3EB78388001AB812B002480A90000F84100287CA903A6804900044E800421E8410028381F02282F830000786A00207808002038E0FFFF419E0048812A000C3BA0000080AA0008819F0014612300E160A03B10C1A23F60C0023F64900A0008918A000090EA001893AA0028D1AA0024D00A0010906A000C90EA0014D1AA002081680080C0423F5061670020C0223F68D048007090E80080D028006C3900000F911F0028EBE100A0EBA100787FE803A6EBE10088382100904E800020"
+      },
+      {
+        "va": "0x19b6c4",
+        "bytes": "80823F5C"
+      },
+      {
+        "va": "0x19b7c8",
+        "bytes": "3900000F"
+      },
+      {
+        "va": "0x19b7cc",
+        "bytes": "911F0028"
+      },
+      {
+        "va": "0x1a2240",
+        "bytes": "F821FF717D6802A6FBA100787C7D1B78808240E8F96100A0FB810070787C0020811D00007F83E3788188004C800C0000F84100287C0903A6804C00044E800421E84100287F83E3783B8000014BFFFC5D811D0014818240EC3C6000033D40CCCC606043FD6143CCCD80A80054E8E8011880C500687F8430363924FFFF792B0FA47CE55878F8A8011880CC0000811D00147C8601D63D24002739699EC35564F87E908C000080E80054E98801187D4418165545F0BE8127006C54A6103A7C062A147C602050388000007D434A14794B002088EB00007F8538367D862B78F8C80118807D0014909D02A04BE71639E8410028813D0014C00240F038600010D009007C907D0028E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x1a2250",
+        "bytes": "808240E8"
+      },
+      {
+        "va": "0x1a2338",
+        "bytes": "38600010"
+      },
+      {
+        "va": "0x1a2340",
+        "bytes": "907D0028"
+      },
+      {
+        "va": "0x1a72a0",
+        "bytes": "F821FF517D8802A6FB6100787C7B1B78DBC100A0F98100C0DBE100A8FB410070FB810080FBA10088FBC10090FBE10098815B0000787A0020808242783BC000007F43D3783B8000003BE0000080EA004C3BA0000081070000F84100287D0903A6804700044E800421E84100287F43D3784BFFFD99807B0014C3E2427CC3C24280FC40F890FC60F090C022428880C30054808600404BE69EFDE8410028817B0014FC40F890C0224288FC60F0907D635B78812B005480A9004038850240788400204BE6BA41E8410028A01B08C42F8000007F43D378419E016C38BB0810393B005478A40020792300204BE68F79E84100287F43D3784BF18ADD60000000381B02B0780600203B400000389B02C07F43D3787B5F002C81060008787D002C787E002C2C0800007B5C002C7F47D378788A0020787F000E7B5D000E38A000013880FFFF787E000E78FC000E418200503BA000003B8000023BE0001193AA0064938A006093FB0028EB6100C0EB4100707F6803A6EB810080EB610078EBA10088EBC10090EBE10098CBC100A0CBE100A8382100B04E8000206000000081824284396A003090A600083B4C0030910A0060910A006C386C0010390C0020908A0064908A006898AA00707D80D0CE38CA00207C0060CE7C2018CE7DA040CE90EA006438EA00107C0051CEFBCA0040FBEA00483BC000023BE000117C2039CEFB8A00507DA031CEFBAA00587D8059CE93CA006093FB0028EB6100C0EB4100707F6803A6EB810080EB610078EBA10088EBC10090EBE10098CBC100A0CBE100A8382100B04E8000204BFFF9414BFFFE94"
+      },
+      {
+        "va": "0x1a72d8",
+        "bytes": "80824278"
+      },
+      {
+        "va": "0x1a73f4",
+        "bytes": "3BE00011"
+      },
+      {
+        "va": "0x1a7400",
+        "bytes": "93FB0028"
+      },
+      {
+        "va": "0x1a7490",
+        "bytes": "3BE00011"
+      },
+      {
+        "va": "0x1a74ac",
+        "bytes": "93FB0028"
+      },
+      {
+        "va": "0x1ad730",
+        "bytes": "F821FED17C8802A6FB8101107C7C1B78FB410100FB610108FBA10118F881014080BC0000787A0020808245703B6000017F43D3788145004C812A0000F84100287D2903A6804A00044E800421E84100287F43D3784BFFFD553861008038800001787D00207FA3EB784BE66049E8410028801C00147FA4EB78386100703980000190010080918100E4B36100F89B6100FE4BE638B1E841002881010070397C0228911C08047964002038E000023860000180C4007890E4008054C5F07E54A9103E9124007880BC0014388000009B7C082081450054E9050118800A00687C7D003638600012399DFFFF79870FA47D063878F8C50118817C0014E92B0030E94B0038989C05C8F93A0810F95A08189B7C0822907C0028E8010140EB410100EB6101087C0803A6EB810110EBA10118382101304E80002060000000"
+      },
+      {
+        "va": "0x1ad758",
+        "bytes": "80824570"
+      },
+      {
+        "va": "0x1ad810",
+        "bytes": "38600012"
+      },
+      {
+        "va": "0x1ad840",
+        "bytes": "907C0028"
+      },
+      {
+        "va": "0x1ae8c0",
+        "bytes": "F821FF517C8802A6FBE100A87C7F1B78FB410080F88100C0FB610088FB810090FBA10098FBC100A080DF0000787A0020808245CC7F43D3788166004C80AB0000F84100287CA903A6804B00044E800421E8410028887F069A392000002F8300003800000038800000913F0688901F0674913F0670409E00D483BF00147BBB00203BA00000E8BB0028E97B002078A000227963002290010070C041007090610070C02100704BE6479DE8410028D03B00E483DF0014393E00E07BC30020792400204BE62FD1E8410028807F00144BE64FD5E84100287F43D3784BFFF5E9C05F0128EC020828837F00143980001F93BF0690999F069939000001D01F0680839B0054E8DB0118815C00687D0750363887FFFF78850FA47CBF3378FBFB0118EB4100C0EB6100887F4803A6EB810090EB410080EBA10098EBC100A0EBE100A8382100B04E80002060000000807F00144BE62C95E841002883BF00147BAB0020394000006147FFFFA10B00507C0838004182FF10838B008883AB00807B9B00207BBE00207F64DB787FC3F3784BE61909E84100282C9D00002F1C000041860014881E00795409E07E552C203E999E0079419AFECC897B00795563E07E547E203E9BDB007983BF00144BFFFEB8"
+      },
+      {
+        "va": "0x1ae8f0",
+        "bytes": "808245CC"
+      },
+      {
+        "va": "0x1aed30",
+        "bytes": "F821FF217CE802A6FA6100787C731B7878630020FA810080FAA10088FAC10090FAE10098FB0100A0FB2100A8FB4100B0FB6100B8FB8100C0FBA100C8FBC100D0FBE100D8F8E100F04BF110F96000000080D3003038B301E060C3000878AB0020399302B0907300307983002039200003808B00283AC000003A8000006080001D3B400000900B0028913302A080C300083B0000003BC000002F8600003B8000003AE000003AA000003B6000003B2000003BE000003BA00000419E0030393302C02C0900004182002479280020808245D43B800001394000029388006491480060480000C8600000003946000138000000554538307C0B03783925FF90390000007C8C4A1438E0FFFF78890020808245D4914300087C050378797D002C781E002C9109006090E9006490E900689109006C797C002C38C00001394400103904002038E4003098C90070797D000E7C0020CE78BE000E7C2050CE797C000E7DA040CE38C900107D8038CE38A900207C0049CE39690030781F002CFBA90058781F000E7C2031CE380000017DA029CE3BA000027D8059CE90090064FBC90040FBE90048FB89005093A9006083E300083B84001038000000391F00013BA00000550938303944002038A9FF903BC400307CEC2A1438A0000178FF002038E0FFFF910300087C060378781B002C93BF006090FF006493BF006C90FF006898BF00707C20E0CE391F00103BBF00207C0020CE3B9F00307DA050CE78DB000E7D80F0CE78D9002C7C00F9CE78DA002C7C2041CE7C0603787DA0E9CE7818002C7D80E1CE7819000E781A000E78D8000E3BC000023960000793DF0060917F0064FB5F0040FB7F0048FB1F0050FB3F0058832300087C0803787C0B0378395900013BA4003055583830914300083938FF903B8400107C0C4A1438640020781800207917002C3BF800103B7800203B5800307975002C7976002C7914002C90F8006890D8006C98B8007090D8006090F800647D80E8CE7977000E7DA018CE7915000E7C0020CE7976000E7C20E0CE7914000E3B2000057C00C1CE7C20F9CE7DA0D9CE93380064FAF8004893D800607D80D1CE3AE00013FAD80040FA980050FAB8005882D3001492F300287EC3B378C02245A0C06245B8C04245B082B60054829500403A7400407A6400204BE621C1E8410028E98100F0EA610078EA8100807D8803A6EAA10088EAC10090EAE10098EB0100A0EB2100A8EB4100B0EB6100B8EB8100C0EBA100C8EBC100D0EBE100D8382100E04E80002060000000"
+      },
+      {
+        "va": "0x1af038",
+        "bytes": "3AE00013"
+      },
+      {
+        "va": "0x1af04c",
+        "bytes": "92F30028"
+      },
+      {
+        "va": "0x1b3658",
+        "bytes": "F821FF717CE802A6FBE100887C7F1B78808246CCF8E100A0FBA10078787D0020813F00007FA3EB788169004C80CB0000F8410028804B00047CC903A64E800421E84100287FA3EB784BFFF5217FA3EB784BFFFEB9813F001438BF01E078AB0020A089006868830001546007FE2F800000981F081C419E0020C02900D0C00246D0EDA10032D1A900D0815F003061480200911F0030819F05B82C0C00034082000C38000001981F081E808B0028380000143900000160830008906B002880BF0014901F002881850054E8C50118814C00687D0750363927FFFF792B0FA47CDD5878FBA50118809F014C60830400907F014CEBE100A0EBA100787FE803A6EBE10088382100904E800020"
+      },
+      {
+        "va": "0x1b3668",
+        "bytes": "808246CC"
+      },
+      {
+        "va": "0x1b3704",
+        "bytes": "38000014"
+      },
+      {
+        "va": "0x1b3718",
+        "bytes": "901F0028"
+      },
+      {
+        "va": "0x1b5e88",
+        "bytes": "F821FF717C8802A6FBE100887C7F1B78FBA10078FBC10080F88100A0787D002080824818813F00007C7E1B787FA3EB788169004C80AB0000F84100287CA903A6804B00044E800421E84100287FA3EB784BFFFC51881F097C7FA3EB78809F06C82F80000080BF097838C00000419E000838C0000180E247A078C607E0C02703B44BFFE19960000000881F097C2C000000418200B838600001907F05B47BC300203BBF02B04BF09F45600000003BDF00547BAC0020395F0640381F0228794400207808002080CC00087BC30020394000002C86000041860008395F02C0794A0020C02247EC3BC00005C1A2481C3980000238C0000393CA0064918A006080E8008090C80078813F055C60E50020D02800709128002890A80080D1A8006C4BE5A35DE841002839600015917F0028E90100A0EBA10078EBC100807D0803A6EBE10088382100904E800020C002478C901F05B4D01F05484BFFFF48"
+      },
+      {
+        "va": "0x1b5ea8",
+        "bytes": "80824818"
+      },
+      {
+        "va": "0x1b5fac",
+        "bytes": "39600015"
+      },
+      {
+        "va": "0x1b5fb0",
+        "bytes": "917F0028"
+      },
+      {
+        "va": "0x1b9250",
+        "bytes": "F821FF717C0802A6FBA100787C7D1B7880824904F80100A0FB810070787C0020819D00007F83E378810C004C81480000F84100287D4903A6804800044E800421E841002838E000027F83E37890FD05B44BFFFDB9809D06C838A00004C022490838C000007F83E3784BFFADE9600000007F83E3784BF06BAD6000000038DD0054389D064038A0000378C300207884002090BD02A04BE5701DE8410028817D001439200016913D0028806B0068546003DE2F800000419E0010806248BC3960000099630008EBA100A0EB8100707FA803A6EBA10078382100904E80002060000000"
+      },
+      {
+        "va": "0x1b9260",
+        "bytes": "80824904"
+      },
+      {
+        "va": "0x1b92f0",
+        "bytes": "39200016"
+      },
+      {
+        "va": "0x1b92f4",
+        "bytes": "913D0028"
+      },
+      {
+        "va": "0x1be910",
+        "bytes": "F821FEE17C8802A6FBE101187C7F1B78FB810100FBA10108FBC10110F881013080DF0000787D002080824A603B8000017FA3EB783BC0000180A6004C80050000F84100287C0903A6804500044E800421E8410028813F00307FA3EB78612A0200915F00304BFFF6F53981008038800001799D00207FA3EB784BE54E59E8410028811F00147FA4EB783861007091010080938100E44BE526CDE8410028815F001438E0001790FF0028816A0054E80A011880CB00687FC530363885FFFF78830FA47C091878F92A01184BE52DC9E84100282F830000409E0044839F0014811C0054EBFC011880E8006C896700017FC358367FFE1B78FBDC0118E8010130EB810100EBA101087C0803A6EBC10110EBE10118382101204E800020807F00149B830170819F0014808C0054EBAC011880C4006C88A600007FC928367FAA4B78F94C0118E8010130EB810100EBA101087C0803A6EBC10110EBE10118382101204E800020"
+      },
+      {
+        "va": "0x1be938",
+        "bytes": "80824A60"
+      },
+      {
+        "va": "0x1be9b0",
+        "bytes": "38E00017"
+      },
+      {
+        "va": "0x1be9b4",
+        "bytes": "90FF0028"
+      },
+      {
+        "va": "0x1c3fa8",
+        "bytes": "F821FED17D8802A6FBE101287C7F1B7880824C88FB610108FB810110FBC10120F9810140FBA10118811F0000787E0020395F08907FC3F378795C00203B6000018168004C80EB0000F84100287CE903A6804B00044E800421E841002888DF08CC7FC3F37838A6FFFF54A40FFE21240002913F05B44BFFFD8D881F08CC7FC3F3782F8000003880000138A00000419E000838A0000178A507E04BFFF18960000000397F086480624C447966002038810080789D0020C0030734388000017FA3EB78D0060024D00600204BE4F771E841002880BF00147FA4EB78392000013861007090A10080992100FE936100E44BE4CFDDE8410028800100707FC3F37883BF0014901F08604BFFED7D600000007BA40020786500207F83E3784BF026C9600000008BBF062D2C1D00007F83E3784082009C7FC3F3784BEFBD9560000000381F0228811F055C781E0020C1A24C8C399F02B0C0224C7C39600000799C0020815E0080D1BE007061470020D03E006C911E002890FE0080837C00082C9B000041860008397F02C0796500203BA0000238C000093920001890C5006493A50060913F0028EBE10140EB6101087FE803A6EB810110EBA10118EBC10120EBE10128382101304E800020600000009B7C00284BF0262D600000004BFFFF5C"
+      },
+      {
+        "va": "0x1c3fb8",
+        "bytes": "80824C88"
+      },
+      {
+        "va": "0x1c4138",
+        "bytes": "39200018"
+      },
+      {
+        "va": "0x1c4144",
+        "bytes": "913F0028"
+      },
+      {
+        "va": "0x1c7ad8",
+        "bytes": "F821FED17C8802A6FBE101287C7F1B78FB610108FB810110FBA10118F8810140FBC10120813F0000787D002080824D787C7C1B787C7B1B787FA3EB788169004C80AB0000F84100287CA903A6804B00044E800421E84100287FA3EB784BFFFB35881F093538A000002F800000419E000838A000017FA3EB7878A507E0388000004BFFB67160000000391F08B080E24D7C7906002039400004C0070734D0060024D0060020887F09342C030000408200148BBF0935399DFFFF558A0FFE394A00023BC10080388000017BDD0020915B05B47FA3EB783BC000014BE4BC31E841002839200001992100FE80BF0014386100747FA4EB7890A1008093C100E44BE4949DE8410028897F0934800100742C8B0000901F0674408600A43BBF08DC7B830020839F00147BBD00204BFFB229600000007B840020786500207FA3EB784BEFEB75600000008B9F062D2F1C0000409A00DC7B6300204BEF82456000000038FF02B078E3002039600000836300082F9B0000419E0008397F02C0796A0020380000093980000239000019900A0064918A0060911F0028EBE10140EB6101087FE803A6EB810110EBA10118EBC10120EBE10128382101304E8000207FA3EB783880003E4BE4BB49E84100289BC100FE80DF00147FA4EB783861007090C1008093C100E44BE493B9E8410028808100703BBF08DC7B830020839F0014909F06707BBD00204BFFB15160000000786500207B8400207FA3EB784BEFEA9D600000008B9F062D2F1C0000419AFF2C7FA3EB789BDD00284BEFEA99600000004BFFFF1860000000"
+      },
+      {
+        "va": "0x1c7b04",
+        "bytes": "80824D78"
+      },
+      {
+        "va": "0x1c7c5c",
+        "bytes": "39000019"
+      },
+      {
+        "va": "0x1c7c68",
+        "bytes": "911F0028"
+      },
+      {
+        "va": "0x1ccdc8",
+        "bytes": "F821FF017C8802A6FAC100B07C761B78FAE100B8FB2100C8FB4100D0FB6100D8FB8100E0FBA100E8FBC100F0FBE100F8F8810110FB0100C083160000787D002080824E743B2000007FA3EB783AE000003BC0000080B8004C3B6000003B4000003B0000003BE000003B80000081850000F84100287D8903A6804500044E800421E841002880760014C0224E7880C30054808600A4A06600A04BE44231E841002881560014C0024E7C38000001C0224E803980000038C10080812A005438A10070E90A011838800066386000B6816900687C0758363927FFFF79200FA47D0B0078F96A0118D00100A8918100ACD001008091810084918100889181008C91810090D0010094918100989181009C918100A0918100A4E8FD0570E95D0578F8E10070F94100784BE44C85E841002878690020388000007D234B78E8A90048F8B605C84BE44799E8410028388000007FA3EB783BB602B0989605BE4BFFFC697BA4002039200000800400082F800000419E0008393602C0792A0020386000023800000339600000900A0064906A0060818400087D675B787D655B78394C000178FC002C55493830914400083909FF90398000007CDD421481024E843800000178C9002038E800103948002038C0FFFF797F002C918900609189006C78BE002C3988003090C9006490C90068980900707C2038CE78BF000E7DA050CE7D655B78797C000E7C0040CE797E000E7D8060CE38E900207C0049CE39490030797B002C396900103980000178BB000E91890064906900607C2059CE7CA02B787DA039CE38E80030FBC90040FB690050FB8900587D8051CE39480010FBE9004883E400087CAB2B78781A002C3B9F00017978002C579E3830938400083B7EFF907979002C7D3DDA143BA80020793B00207817002C3BFB00103BDB00203B9B003090DB0068999B007090DB006490BB006C90BB00607DA0E8CE797A000E7818000E7D8038CE7979000E7C2050CE7817000E7C0040CE388000037C00D9CE38A000037C20F9CEFB5B00487DA0F1CEFAFB00507D80E1CE3AE0001AFB1B0058907B0064FB3B0040907B006083360014E87900484BEFA35960000000807600144BE46885E841002892F60028EAC10110EAE100B87EC803A6EB0100C0EAC100B0EB2100C8EB4100D0EB6100D8EB8100E0EBA100E8EBC100F0EBE100F8382101004E800020"
+      },
+      {
+        "va": "0x1cce08",
+        "bytes": "80824E74"
+      },
+      {
+        "va": "0x1cd0b4",
+        "bytes": "3AE0001A"
+      },
+      {
+        "va": "0x1cd0e4",
+        "bytes": "92F60028"
+      },
+      {
+        "va": "0x1ce928",
+        "bytes": "7D800026F821FE81FA410110FA610118FA810120FAA10128FAC10130FAE10138FB010140FB210148FB410150FB610158FB810160FBA10168FBC10170FBE10178FA010100FA2101087C7D1B787C721B783AA000003A6000003B2000003AE000003BC000003B6000003AC000003A8000003B4000003B0000003BE000003B800000918101887C0802A6F801019080830014A06400504BE428F5E8410028813D00002E03007F7FA3EB788129004C4192045C80824F24792C002078710020788400207E238B787A500020800C0000F84100287C0903A6804C00044E800421E84100287E0383784BFFEF857E0383784BFFF4C58172001439200000C0224E949932091180EB0054808700A4A06700A04BE4265DE841002838C1008078DD00203880004B7FA3EB784BE44D95E841002839400001994100FE80B200147FA4EB78390000013861007090A10080910100E44BE425FDE8410028811200148061007038000000C0024F2C39600001907205C8E9880020E888002890120854F9900830F8900838D0120850F9900820F890082883A80054E9480118813D00687D67483638C7FFFF78C50FA47D432878F868011841920344807200143880000038A000114BE42BEDE84100287E238B784BEF138160000000399202B0799D002039200000823D00082F910000419E0008393202C0792900203880000238A00000380000007CAA2B789089006490890060811D0008795E002C78BF002C39680001795E000E55673830917D00083867FF9080E24F30795C002C7CCC1A143967002078D100207D465378394700107CA82B7878BF000E3860000138A0FFFF901100609011006C90B1006490B10068987100707C2050CE394700307DA058CE397100107C0038CE791B002C791C000E78DB000E7D8050CE395100207C0089CE380000177C2059CE3971003090110064FBD100407DA051CE7D004378FBF100487D8059CE7D1F4378FB710050FB91005890910060815D00083B870010781A002C3BCA00013A27002057CB3830394700303B6BFF9093DD00087D2CDA147BFA000E793B00207BF8002C3BDB00207BF9002C3BFB0010911B006C911B006090BB006490BB0068987B00707C20E0CE3B9B00307817002C7DA088CE7D8050CE7818000E7819000E7C0038CE7917000E396000197C00D9CE7C20F9CE3BE700307DA0F1CE3BC700107D80E1CE3B870020917B0064FB3B0040FB5B0048FAFB0050FB1B0058909B0060831D00087D0B43787D004378395800017816002C555738307974002C3A37FF907975002C7D2C8A147813002C79370020915D00083B5700103B3700203B1700309117006090B7006490B700689117006C987700707D80F8CE7976000E7C0038CE7814000E7C20F0CE7975000E7DA0E0CE78D3000E3B6000157C00B9CEFAD700487C20D1CE3AC0001B7DA0C9CEFA970058937700647D80C1CEFAB70040FA770050909700608272001492D2002882B3006866B40400929300688132080C2C09FFFF4182001C83B208102C9DFFFF41860010819205542E0CFFFF419200C03A6000019A7209132F09FFFF419A00683AC000009AD205BEEA010190808101887E0803A6EA210108EA0101007C908120EA410110EA610118EA810120EAA10128EAC10130EAE10138EB010140EB210148EB410150EB610158EB810160EBA10168EBC10170EBE10178382101804E80002060000000829208102F94FFFF409EFF9482B205542C15FFFF4082FF887E0383784BFFE6F54BFFFF7C60000000807200143880000038A000054BE428ADE84100284BFFFCC080824F284BFFFBA8991209134BFFFF48"
+      },
+      {
+        "va": "0x1ce9d8",
+        "bytes": "80824F24"
+      },
+      {
+        "va": "0x1ced24",
+        "bytes": "3AC0001B"
+      },
+      {
+        "va": "0x1ced48",
+        "bytes": "92D20028"
+      },
+      {
+        "va": "0x845a68",
+        "bytes": "0085ED48"
+      },
+      {
+        "va": "0x8466a8",
+        "bytes": "0085ED48"
+      },
+      {
+        "va": "0x848cf8",
+        "bytes": "00864F30"
+      },
+      {
+        "va": "0x848d38",
+        "bytes": "00864F18"
+      },
+      {
+        "va": "0x85d398",
+        "bytes": "000976B00088FF38"
+      },
+      {
+        "va": "0x85d3a0",
+        "bytes": "000977600088FF38"
+      },
+      {
+        "va": "0x85d3d0",
+        "bytes": "00097B800088FF38"
+      },
+      {
+        "va": "0x85d3d8",
+        "bytes": "00097C300088FF38"
+      },
+      {
+        "va": "0x85d3e0",
+        "bytes": "00097CE00088FF38"
+      },
+      {
+        "va": "0x85d3e8",
+        "bytes": "00097D900088FF38"
+      },
+      {
+        "va": "0x85d408",
+        "bytes": "000980500088FF38"
+      },
+      {
+        "va": "0x85d418",
+        "bytes": "000981B00088FF38"
+      },
+      {
+        "va": "0x85d450",
+        "bytes": "000986800088FF38"
+      },
+      {
+        "va": "0x85d458",
+        "bytes": "000987300088FF38"
+      },
+      {
+        "va": "0x85d460",
+        "bytes": "000987E00088FF38"
+      },
+      {
+        "va": "0x85d468",
+        "bytes": "000988900088FF38"
+      },
+      {
+        "va": "0x85d470",
+        "bytes": "000989400088FF38"
+      },
+      {
+        "va": "0x85d480",
+        "bytes": "00098AA00088FF38"
+      },
+      {
+        "va": "0x85d490",
+        "bytes": "00098C000088FF38"
+      },
+      {
+        "va": "0x85d4a0",
+        "bytes": "00098D600088FF38"
+      },
+      {
+        "va": "0x85d4b0",
+        "bytes": "00098EC00088FF38"
+      },
+      {
+        "va": "0x85d4b8",
+        "bytes": "00098F700088FF38"
+      },
+      {
+        "va": "0x85d4c0",
+        "bytes": "000990200088FF38"
+      },
+      {
+        "va": "0x85d4c8",
+        "bytes": "000990D00088FF38"
+      },
+      {
+        "va": "0x85d4d8",
+        "bytes": "000992300088FF38"
+      },
+      {
+        "va": "0x85d4e0",
+        "bytes": "000992E00088FF38"
+      },
+      {
+        "va": "0x85d4e8",
+        "bytes": "000993900088FF38"
+      },
+      {
+        "va": "0x85d4f8",
+        "bytes": "000994F00088FF38"
+      },
+      {
+        "va": "0x85d500",
+        "bytes": "000995A00088FF38"
+      },
+      {
+        "va": "0x85d508",
+        "bytes": "000996500088FF38"
+      },
+      {
+        "va": "0x85d518",
+        "bytes": "000997B00088FF38"
+      },
+      {
+        "va": "0x85d528",
+        "bytes": "000999100088FF38"
+      },
+      {
+        "va": "0x85ed48",
+        "bytes": "000C2548"
+      },
+      {
+        "va": "0x85ed4c",
+        "bytes": "0088FF38"
+      },
+      {
+        "va": "0x864f18",
+        "bytes": "001AE8C0"
+      },
+      {
+        "va": "0x864f1c",
+        "bytes": "0088FF38"
+      },
+      {
+        "va": "0x864f30",
+        "bytes": "001AED30"
+      },
+      {
+        "va": "0x864f34",
+        "bytes": "0088FF38"
+      },
+      {
+        "va": "0x88ea8c",
+        "bytes": "10012FB80085D5280085D138"
+      },
+      {
+        "va": "0x88eaa4",
+        "bytes": "10012FF00085D5180085D128"
+      },
+      {
+        "va": "0x88eabc",
+        "bytes": "100130380085D5080085D118"
+      },
+      {
+        "va": "0x88eac8",
+        "bytes": "100130500085D5000085D110"
+      },
+      {
+        "va": "0x88ead4",
+        "bytes": "100130680085D4F80085D108"
+      },
+      {
+        "va": "0x88eaec",
+        "bytes": "100130980085D4E80085D0F8"
+      },
+      {
+        "va": "0x88eaf8",
+        "bytes": "100130B00085D4E00085D0F0"
+      },
+      {
+        "va": "0x88eb04",
+        "bytes": "100130D00085D4D80085D0E8"
+      },
+      {
+        "va": "0x88eb1c",
+        "bytes": "100131000085D4C80085D0D8"
+      },
+      {
+        "va": "0x88eb28",
+        "bytes": "100131180085D4C00085D0D0"
+      },
+      {
+        "va": "0x88eb34",
+        "bytes": "100131300085D4B80085D0C8"
+      },
+      {
+        "va": "0x88eb40",
+        "bytes": "100131480085D4B00085D0C0"
+      },
+      {
+        "va": "0x88eb58",
+        "bytes": "100131800085D4A00085D0B0"
+      },
+      {
+        "va": "0x88eb70",
+        "bytes": "100131C80085D4900085D0A0"
+      },
+      {
+        "va": "0x88eb88",
+        "bytes": "100132100085D4800085D090"
+      },
+      {
+        "va": "0x88eba0",
+        "bytes": "100132480085D4700085D080"
+      },
+      {
+        "va": "0x88ebac",
+        "bytes": "100132580085D4680085D078"
+      },
+      {
+        "va": "0x88ebb8",
+        "bytes": "100132680085D4600085D070"
+      },
+      {
+        "va": "0x88ebc4",
+        "bytes": "100132780085D4580085D068"
+      },
+      {
+        "va": "0x88ebd0",
+        "bytes": "100132880085D4500085D060"
+      },
+      {
+        "va": "0x88ec24",
+        "bytes": "100133280085D4180085D028"
+      },
+      {
+        "va": "0x88ec3c",
+        "bytes": "100133500085D4080085D018"
+      },
+      {
+        "va": "0x88ec6c",
+        "bytes": "100133A00085D3E80085CFF8"
+      },
+      {
+        "va": "0x88ec78",
+        "bytes": "100133B80085D3E00085CFF0"
+      },
+      {
+        "va": "0x88ec84",
+        "bytes": "100133D00085D3D80085CFE8"
+      },
+      {
+        "va": "0x88ec90",
+        "bytes": "100133E80085D3D00085CFE0"
+      },
+      {
+        "va": "0x88ecd8",
+        "bytes": "100134480085D3A00085CFB0"
+      },
+      {
+        "va": "0x88ece4",
+        "bytes": "100134580085D3980085CFA8"
+      },
+      {
+        "va": "0x88fafc",
+        "bytes": "101B9EE8"
+      },
+      {
+        "va": "0x8914f0",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x892094",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x893198",
+        "bytes": "101BA9A4"
+      },
+      {
+        "va": "0x893258",
+        "bytes": "101BA464"
+      },
+      {
+        "va": "0x8933ec",
+        "bytes": "101BA81C"
+      },
+      {
+        "va": "0x89348c",
+        "bytes": "101BAA14"
+      },
+      {
+        "va": "0x893520",
+        "bytes": "101BA50C"
+      },
+      {
+        "va": "0x893614",
+        "bytes": "101BA384"
+      },
+      {
+        "va": "0x8936d0",
+        "bytes": "101BAD24"
+      },
+      {
+        "va": "0x8937bc",
+        "bytes": "101BAB64"
+      },
+      {
+        "va": "0x893890",
+        "bytes": "101BAAF4"
+      },
+      {
+        "va": "0x89390c",
+        "bytes": "101BAB2C"
+      },
+      {
+        "va": "0x8939e0",
+        "bytes": "101BAB9C"
+      },
+      {
+        "va": "0x893b80",
+        "bytes": "101BA73C"
+      },
+      {
+        "va": "0x893c60",
+        "bytes": "101BA34C"
+      },
+      {
+        "va": "0x893d78",
+        "bytes": "101BA7AC"
+      },
+      {
+        "va": "0x893dec",
+        "bytes": "101BA42C"
+      },
+      {
+        "va": "0x893e94",
+        "bytes": "101BA3F4"
+      },
+      {
+        "va": "0x894020",
+        "bytes": "101BACEC"
+      },
+      {
+        "va": "0x8941b0",
+        "bytes": "101BA4D4"
+      },
+      {
+        "va": "0x8944a8",
+        "bytes": "101BA544"
+      },
+      {
+        "va": "0x894504",
+        "bytes": "101BA314"
+      },
+      {
+        "va": "0x894604",
+        "bytes": "101BA774"
+      },
+      {
+        "va": "0x894750",
+        "bytes": "101BA234"
+      },
+      {
+        "va": "0x89483c",
+        "bytes": "101BA2A4"
+      },
+      {
+        "va": "0x894998",
+        "bytes": "101BA7E4"
+      },
+      {
+        "va": "0x894bc0",
+        "bytes": "101BA5EC"
+      },
+      {
+        "va": "0x894cb0",
+        "bytes": "101BA65C"
+      },
+      {
+        "va": "0x894dac",
+        "bytes": "101BA57C"
+      },
+      {
+        "va": "0x894e5c",
+        "bytes": "101BA6CC"
+      },
+      {
+        "va": "0x10012fb8",
+        "bytes": "456E656D79536B696E6E795069726174654D656C656500"
+      },
+      {
+        "va": "0x10012ff0",
+        "bytes": "456E656D79536B696E6E7950697261746553686F6F74657200"
+      },
+      {
+        "va": "0x10013038",
+        "bytes": "456E656D795368696E676C6550697261746500"
+      },
+      {
+        "va": "0x10013050",
+        "bytes": "456E656D7948756E63686261636B50697261746500"
+      },
+      {
+        "va": "0x10013068",
+        "bytes": "456E656D794361766542617400"
+      },
+      {
+        "va": "0x10013098",
+        "bytes": "456E656D794B657263687575526F6C6C657200"
+      },
+      {
+        "va": "0x100130b0",
+        "bytes": "456E656D794B657263687575466C616D655468726F77657200"
+      },
+      {
+        "va": "0x100130d0",
+        "bytes": "456E656D79416E74617261537761726D657200"
+      },
+      {
+        "va": "0x10013100",
+        "bytes": "456E656D79536172676173736F5761737000"
+      },
+      {
+        "va": "0x10013118",
+        "bytes": "456E656D79427572726F776572426565746C6500"
+      },
+      {
+        "va": "0x10013130",
+        "bytes": "456E656D795365637572697479426F7400"
+      },
+      {
+        "va": "0x10013148",
+        "bytes": "456E656D7954616368796F6E54757272657400"
+      },
+      {
+        "va": "0x10013180",
+        "bytes": "456E656D7954616368796F6E54726F6F7065724D656C656500"
+      },
+      {
+        "va": "0x100131c8",
+        "bytes": "456E656D7954616368796F6E54726F6F70657253686F6F74657200"
+      },
+      {
+        "va": "0x10013210",
+        "bytes": "456E656D7954616368796F6E57616C6B657200"
+      },
+      {
+        "va": "0x10013248",
+        "bytes": "456E656D7947656C43686F6D70657200"
+      },
+      {
+        "va": "0x10013258",
+        "bytes": "456E656D7953686F636B426F7400"
+      },
+      {
+        "va": "0x10013268",
+        "bytes": "456E656D7948756E74657200"
+      },
+      {
+        "va": "0x10013278",
+        "bytes": "456E656D795374616C6B657200"
+      },
+      {
+        "va": "0x10013288",
+        "bytes": "456E656D79426C6164654D617374657200"
+      },
+      {
+        "va": "0x10013328",
+        "bytes": "456E656D79416E7461726143656E74697065646500"
+      },
+      {
+        "va": "0x10013350",
+        "bytes": "456E656D79426F6D62426F7400"
+      },
+      {
+        "va": "0x100133a0",
+        "bytes": "456E656D79437261676D697465537761726D657200"
+      },
+      {
+        "va": "0x100133b8",
+        "bytes": "456E656D79437261676D697465596F756E6700"
+      },
+      {
+        "va": "0x100133d0",
+        "bytes": "456E656D79437261676D6974654D617475726500"
+      },
+      {
+        "va": "0x100133e8",
+        "bytes": "456E656D7944726F7068796400"
+      },
+      {
+        "va": "0x10013448",
+        "bytes": "456E656D7950656E6775696E00"
+      },
+      {
+        "va": "0x10013458",
+        "bytes": "456E656D79436F6E73756D6572426F7400"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -114133,6 +116076,38 @@
     ]
   },
   "annotations": [
+{"va":"0x0017A984","name":"TOD_dance_actor_index_0_17a984","kind":"comment","confidence":"confirmed","bytes":"917F0028","comment":"Original runtime actor+28 receives Dance progress index0; named reference config association EnemyAntaraCentipede. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0017AA10","name":"TOD_dance_actor_index_0_17aa10","kind":"comment","confidence":"confirmed","bytes":"917F0028","comment":"Original runtime actor+28 receives Dance progress index0; named reference config association EnemyAntaraCentipede. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0017D518","name":"TOD_dance_actor_index_1_17d518","kind":"comment","confidence":"confirmed","bytes":"907C0028","comment":"Original runtime actor+28 receives Dance progress index1; named reference config association EnemyAntaraSwarmer. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00180AC0","name":"TOD_dance_actor_index_2_180ac0","kind":"comment","confidence":"confirmed","bytes":"919F0028","comment":"Original runtime actor+28 receives Dance progress index2; named reference config association EnemyBladeMaster. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00181D58","name":"TOD_dance_actor_index_3_181d58","kind":"comment","confidence":"confirmed","bytes":"901F0028","comment":"Original runtime actor+28 receives Dance progress index3; named reference config association EnemyBombBot. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00182598","name":"TOD_dance_actor_index_4_182598","kind":"comment","confidence":"confirmed","bytes":"90FF0028","comment":"Original runtime actor+28 receives Dance progress index4; named reference config association EnemyBurrowerBeetle. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00184AF0","name":"TOD_dance_actor_index_5_184af0","kind":"comment","confidence":"confirmed","bytes":"913C0028","comment":"Original runtime actor+28 receives Dance progress index5; named reference config association EnemyCaveBat. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00186DCC","name":"TOD_dance_actor_index_6_186dcc","kind":"comment","confidence":"confirmed","bytes":"907C0028","comment":"Original runtime actor+28 receives Dance progress index6; named reference config association EnemyConsumerBot. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00189608","name":"TOD_dance_actor_index_7_189608","kind":"comment","confidence":"confirmed","bytes":"907D0028","comment":"Original runtime actor+28 receives Dance progress index7; named reference config association EnemyCragmiteMature. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0018C668","name":"TOD_dance_actor_index_8_18c668","kind":"comment","confidence":"confirmed","bytes":"907D0028","comment":"Original runtime actor+28 receives Dance progress index8; named reference config association EnemyCragmiteYoung. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0018B33C","name":"TOD_dance_actor_index_9_18b33c","kind":"comment","confidence":"confirmed","bytes":"913F0028","comment":"Original runtime actor+28 receives Dance progress index9; named reference config association EnemyCragmiteSwarmer. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0018E5A4","name":"TOD_dance_actor_index_10_18e5a4","kind":"comment","confidence":"confirmed","bytes":"919F0028","comment":"Original runtime actor+28 receives Dance progress index10; named reference config association EnemyDrophyd. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00193E54","name":"TOD_dance_actor_index_11_193e54","kind":"comment","confidence":"confirmed","bytes":"90BD0028","comment":"Original runtime actor+28 receives Dance progress index11; named reference config association EnemyGelChomper. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00194DC8","name":"TOD_dance_actor_index_12_194dc8","kind":"comment","confidence":"confirmed","bytes":"901F0028","comment":"Original runtime actor+28 receives Dance progress index12; named reference config association EnemyHunchbackPirate. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00198DC8","name":"TOD_dance_actor_index_13_198dc8","kind":"comment","confidence":"confirmed","bytes":"907F0028","comment":"Original runtime actor+28 receives Dance progress index13; named reference config association EnemyHunter. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00199A8C","name":"TOD_dance_actor_index_14_199a8c","kind":"comment","confidence":"confirmed","bytes":"92D70028","comment":"Original runtime actor+28 receives Dance progress index14; named reference config association EnemyKerchuuFlameThrower. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0019B7CC","name":"TOD_dance_actor_index_15_19b7cc","kind":"comment","confidence":"confirmed","bytes":"911F0028","comment":"Original runtime actor+28 receives Dance progress index15; named reference config association EnemyKerchuuRoller. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001A2340","name":"TOD_dance_actor_index_16_1a2340","kind":"comment","confidence":"confirmed","bytes":"907D0028","comment":"Original runtime actor+28 receives Dance progress index16; named reference config association EnemyPenguin. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001A7400","name":"TOD_dance_actor_index_17_1a7400","kind":"comment","confidence":"confirmed","bytes":"93FB0028","comment":"Original runtime actor+28 receives Dance progress index17; named reference config association EnemySargassoWasp. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001A74AC","name":"TOD_dance_actor_index_17_1a74ac","kind":"comment","confidence":"confirmed","bytes":"93FB0028","comment":"Original runtime actor+28 receives Dance progress index17; named reference config association EnemySargassoWasp. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001AD840","name":"TOD_dance_actor_index_18_1ad840","kind":"comment","confidence":"confirmed","bytes":"907C0028","comment":"Original runtime actor+28 receives Dance progress index18; named reference config association EnemySecurityBot. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001AF04C","name":"TOD_dance_actor_index_19_1af04c","kind":"comment","confidence":"confirmed","bytes":"92F30028","comment":"Original runtime actor+28 receives Dance progress index19; named reference config association EnemyShinglePirate. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001B3718","name":"TOD_dance_actor_index_20_1b3718","kind":"comment","confidence":"confirmed","bytes":"901F0028","comment":"Original runtime actor+28 receives Dance progress index20; named reference config association EnemyShockBot. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001B5FB0","name":"TOD_dance_actor_index_21_1b5fb0","kind":"comment","confidence":"confirmed","bytes":"917F0028","comment":"Original runtime actor+28 receives Dance progress index21; named reference config association EnemySkinnyPirateMelee. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001B92F4","name":"TOD_dance_actor_index_22_1b92f4","kind":"comment","confidence":"confirmed","bytes":"913D0028","comment":"Original runtime actor+28 receives Dance progress index22; named reference config association EnemySkinnyPirateShooter. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001BE9B4","name":"TOD_dance_actor_index_23_1be9b4","kind":"comment","confidence":"confirmed","bytes":"90FF0028","comment":"Original runtime actor+28 receives Dance progress index23; named reference config association EnemyStalker. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001C4144","name":"TOD_dance_actor_index_24_1c4144","kind":"comment","confidence":"confirmed","bytes":"913F0028","comment":"Original runtime actor+28 receives Dance progress index24; named reference config association EnemyTachyonTrooperMelee. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001C7C68","name":"TOD_dance_actor_index_25_1c7c68","kind":"comment","confidence":"confirmed","bytes":"911F0028","comment":"Original runtime actor+28 receives Dance progress index25; named reference config association EnemyTachyonTrooperShooter. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001CD0E4","name":"TOD_dance_actor_index_26_1cd0e4","kind":"comment","confidence":"confirmed","bytes":"92F60028","comment":"Original runtime actor+28 receives Dance progress index26; named reference config association EnemyTachyonTurret. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001CED48","name":"TOD_dance_actor_index_27_1ced48","kind":"comment","confidence":"confirmed","bytes":"92D20028","comment":"Original runtime actor+28 receives Dance progress index27; named reference config association EnemyTachyonWalker. Selected state+10 consumers OR saved BE64 bank8720. Not an object UID/world slot, localized label, live actor or complete variant/eligibility proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x000BFED4","name":"TOD_dance_actor_index_default_negative","kind":"comment","confidence":"confirmed","bytes":"90180028","comment":"Common actor initializerBFE70 explicitly sets original actor+28 toFFFFFFFF. Dance progress suffixes treat signed-negative index as skip-store but still compare saved8720. Selected actor methods assign0..27 later; callbacks/final state not emulated.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x000C2578","name":"TOD_dance_state_actor_owner_publication","kind":"comment","confidence":"confirmed","bytes":"907C0010","comment":"Shared state initializer copies input registration payload+40 into state+10 after14090. Dance producers follow this pointer to actor+28, not config+28 or a saved world/object index.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_targets native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0002B938","name":"TOD_get_space_stat_runtime_not_saved","kind":"comment","confidence":"confirmed","bytes":"4BFF9499","comment":"Named get_space_stat wrapper reaches24DD0->139A0->3619C0 with runtime10330740, outside GAME.SAV. Signed low32 Lua result; no saved-stat reconstruction.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; space_stat_boundary native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x003619E4","name":"TOD_space_stat_relative_dispatch_table","kind":"data","confidence":"confirmed","bytes":"000000380000009C000000940000006800000020000000600000005800000040","comment":"Eight signed-relative native3619C0 targets. IDs3/7 query runtime pending+FC, not saved8728. ID4 computes numeric134/130*100 with float32 and fctidz; no cap100/name/unit proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; space_stat_boundary native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00361FB0","name":"TOD_space_stat_reset_explicit_word_bank","kind":"comment","confidence":"confirmed","bytes":"93BF0120","comment":"Named space_combat_reset reaches361F60. Explicit stores zero runtime words120..148 after helpers. No direct saved8728/872C/8730 or pending+FC store in selected complete bodies; callback effects/final preservation unmodeled.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; space_stat_boundary native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

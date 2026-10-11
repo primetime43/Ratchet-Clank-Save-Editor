@@ -751,6 +751,29 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
                 return new(new[] { "ID", "Native name", "Owned", "Selected", "Shipped cost", "Ownership word", "Offset" }, rows.AsReadOnly());
             }
+            if (view == "Dance progress")
+            {
+                ulong bank = BinaryPrimitives.ReadUInt64BigEndian(data.AsSpan(0x8720, 8));
+                ulong earned = BinaryPrimitives.ReadUInt64BigEndian(data.AsSpan(0x8710, 8));
+                const ulong pattern = 0x000000000FFFFFFFUL;
+                var report = TodResearch.Map.GetProperty("dance_targets");
+                foreach (var target in report.GetProperty("catalog").EnumerateArray())
+                {
+                    int index = target.GetProperty("index").GetInt32();
+                    int offset = 0x8720 + 7 - index / 8;
+                    string state = (bank & (1UL << index)) != 0 ? "Recorded" : "Not recorded";
+                    string label = target.GetProperty("display_label").GetString();
+                    string detail = $"{label}: {state}. Reference name: {target.GetProperty("config_name").GetString()}.\r\n" +
+                        $"Saved BE64 integer bit {index}; byte {TodResearch.Hex(offset)}, mask0x{1 << (index % 8):X2}. Raw bank0x{bank:X16}; extra high bits0x{bank & ~pattern:X16}.\r\n" +
+                        $"Exact completion pattern: {(bank == pattern ? "Yes" : "No")}. Earned Dance skill48: {((earned & (1UL << 48)) != 0 ? "Yes" : "No")}; independent of this progress bank.\r\n" +
+                        report.GetProperty("save_interpretation").GetString() + "\r\n" + target.GetProperty("association").GetString() + "\r\n" +
+                        report.GetProperty("variant_boundary").GetString() + "\r\n" + report.GetProperty("warning").GetString() +
+                        " Viewing never awards skills, executes callbacks or normalizes progress.\r\n" + TodResearch.Pretty(target);
+                    rows.Add(new(new[] { label, state, index.ToString(), target.GetProperty("config_name").GetString(),
+                        TodResearch.Hex(offset), $"0x{1 << (index % 8):X2}" }, detail));
+                }
+                return new(new[] { "Target (reference)", "Saved progress bit", "Index", "Native configuration", "Byte offset", "Bit mask" }, rows.AsReadOnly());
+            }
             if (view == "Skill points")
             {
                 ulong bits = BinaryPrimitives.ReadUInt64BigEndian(data.AsSpan(0x8710, 8));
@@ -785,7 +808,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                             $"Extra high bits: 0x{dance & ~pattern:X16}; exact completion pattern: {(dance == pattern ? "Yes" : "No")}. " +
                             "Progress and the earned award above are independent; zero progress does not clear an earned award. Five native suffixes OR a runtime source+28 index, then test all64 bits exactly against 0x000000000FFFFFFF. " +
                             "Extra high bits block the request; signed-negative indices skip storing but still test equality. No upper clamp: PPC shift counts64..127 yield0 and128 aliases0. " +
-                            "A duplicate request does not grant points again. Individual target identities and current runtime eligibility remain unresolved; these indices are not enemy names or world slots. Viewing never awards skills or normalizes progress.";
+                            "A duplicate request does not grant points again. The Dance progress view now links all28 indices to selected actor methods and internal configuration names; these are not world slots or localized labels. Current runtime eligibility and complete variant coverage remain unresolved. Viewing never awards skills or normalizes progress.";
                     }
                     if (id == 24) detail += "\r\nIris Wrench producer: a qualified runtime pool scan requests this skill only with its runtime gate set, selector11, and no other occupied qualifying object whose config+2C is zero. This is not a saved enemy-kill history or a reconstruction of all actual enemies.";
                     if (id is 35 or 36 or 38 or 39 or 40 or 41 or 42 or 43) detail += "\r\nAdditional native award predicates are mapped in Research. They read runtime words/bytes, including ratio comparisons, not fields reconstructed from this save. The producer's final branch is not explicitly restricted to level13; menu grouping is not an award eligibility gate.";
