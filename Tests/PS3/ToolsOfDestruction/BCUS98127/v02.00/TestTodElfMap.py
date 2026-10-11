@@ -267,6 +267,9 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["pool_lifecycle"]["instruction_guards"]
                 + MAPPING["global_flag_mutation"]["instruction_guards"]
                 + MAPPING["object_classes"]["instruction_guards"]
+                + MAPPING["segment_opaque"]["instruction_guards"]
+                + MAPPING["option_producers"]["instruction_guards"]
+                + MAPPING["reset_producers"]["instruction_guards"]
                 + MAPPING["equipment_mutation"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)

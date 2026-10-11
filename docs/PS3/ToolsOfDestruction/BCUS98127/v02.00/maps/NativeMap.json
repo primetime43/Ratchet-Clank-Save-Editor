@@ -103590,6 +103590,1944 @@
     "definition_count": 18214,
     "warning": "Numeric classes counted from bounded reference object definitions across all root groups, not loaded-world selection, class-name bindings or current saved pool allocation."
   },
+  "segment_opaque": {
+    "confidence": "bounded code-backed ownership audit",
+    "warning": "No new saved field semantic, editable field or completion percentage. No native execution. This selected-candidate audit is not a global no-reader/no-writer proof.",
+    "storage": {
+      "world_base": "0x488",
+      "world_stride": "0x408",
+      "physical_world_slots": 20,
+      "segments_per_world": 10,
+      "segment_stride": "0x30",
+      "segment_word28": {
+        "offset": "0x28",
+        "size": 4,
+        "type": "opaque bytes"
+      },
+      "segment_tail": {
+        "offset": "0x2d",
+        "size": 3,
+        "type": "opaque bytes"
+      },
+      "world_tail": {
+        "offset": "0x404",
+        "size": 4,
+        "type": "opaque bytes"
+      }
+    },
+    "reviewed_candidates": [
+      {
+        "function_va": "0x92198",
+        "access_va": "0x92248",
+        "immediate": "0x88c",
+        "copy_source_offset": "0x0",
+        "access_kind": "32-bit raw copy",
+        "owner": "First11F20 result from input argument1 retained in r30 and narrowed to r11; source is second11F20 result for argument2 narrowed to r9.",
+        "conclusion": "Immediate88C alone does not bind this write to save488+world0+404. Destination comes from argument conversion11F20, not the saved-world address calculation; aliasing through arbitrary callers is not ruled out."
+      },
+      {
+        "function_va": "0x93818",
+        "access_va": "0x938e8",
+        "immediate": "0x4b0",
+        "copy_source_offset": "0x14",
+        "access_kind": "32-bit raw copy",
+        "owner": "First11F20 result from input argument1 retained in r30 and narrowed to r11; word at source+14 loaded into r29 from the second11F20 result for argument2.",
+        "conclusion": "This copy cannot assign meaning/type to saved segment28 merely because4B0 equals488+28. No saved-record getter or world/segment indexing is used in this reviewed leaf; arbitrary caller aliasing is not excluded."
+      },
+      {
+        "function_va": "0x1827d8",
+        "access_va": "0x183434",
+        "immediate": "0x88c",
+        "access_kind": "float load into stack message",
+        "owner": "Selected path retains the original input owner in nonvolatile r25; reads adjacent input+884/+888/+88C and stages them at stack+9C/+A0/+A4 before13DE0 with code2F6 and input+68.",
+        "conclusion": "The neighboring input+14\u2192+54 traversal is configuration traversal, not the owner of this88C float load. This is an input-owner float field, not evidence that savedworld404 is float; caller aliasing remains outside this audit."
+      }
+    ],
+    "prior_counterexample": {
+      "function_va": "0x7edf0",
+      "pointer_slot_va": "0x88b208",
+      "initialized_pointer_va": "0x101b9ee8",
+      "saved_pointer_slot_va": "0x89f188",
+      "initialized_saved_pointer_va": "0x101efb20",
+      "rule": "Constructor immediate404/4B0/88C stores use r9 loaded from88B208. Distinct initialized pointer owners, not a new direct saved-field consumer; pointer slots are not treated as immutable runtime alias proofs."
+    },
+    "prior_evidence_boundary": "WorldAux already confirms segment28 BE32-zero initialization, segment2D..2F/world404..407 omitted by that initializer, and full906F0 snapshot/initial-restore coverage. These are prior byte-footprint facts, not new semantics or a universal preservation claim.",
+    "unresolved": "No new semantic consumer/producer established for segment28 or world404..407. Existing configuration28 float readers have a different owner. Keep opaque bytes and do not expose an inferred edit.",
+    "recommended_annotations": [
+      {
+        "va": "0x92248",
+        "name": "TOD_argument_owner_88c_copy_not_save_tail",
+        "kind": "comment",
+        "comment": "Argument-converted owner+88C receives source+0 raw bits. Do not equate literal88C with live savedworld0 tail404."
+      },
+      {
+        "va": "0x938e8",
+        "name": "TOD_argument_owner_4b0_copy_not_save_segment",
+        "kind": "comment",
+        "comment": "Argument-converted owner+4B0 receives source+14 raw bits. Not a confirmed savedsegment28 semantic/type."
+      },
+      {
+        "va": "0x183434",
+        "name": "TOD_input_owner_88c_message_not_save_tail",
+        "kind": "comment",
+        "comment": "Original input owner+88C float copied into stack message with adjacent884/888. Input+14\u2192+54 traversal elsewhere is not this load's owner; no savedworld404 type confirmation."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x7ee04",
+        "bytes": "8122B2D0"
+      },
+      {
+        "va": "0x7eed0",
+        "bytes": "90690404"
+      },
+      {
+        "va": "0x7ef7c",
+        "bytes": "D02904B0"
+      },
+      {
+        "va": "0x7f358",
+        "bytes": "D029088C"
+      },
+      {
+        "va": "0x92198",
+        "bytes": "38A000007C0802A638800001F821FF61FBC10090FBE10098FBA100887C7F1B78F80100B04BF7FD65E84100282F8300007C7E1B7838A000007FE3FB78419E00F03861007080A2B37438800002787D002038C000007FE3FB787FA7EB784BF8118DE84100287FA5EB782C0300007FE3FB78408200108082FBC04BF7F071E84100287FE3FB783880000238A000004BF7FCFDE84100287BCB0020786900203860000080E900008149000480A900088089000C90EB088C914B089090AB0894908B089883A9001483E9001883C9001C8009001093AB08A0900B089C"
+      },
+      {
+        "va": "0x921bc",
+        "bytes": "4BF7FD65"
+      },
+      {
+        "va": "0x921c8",
+        "bytes": "7C7E1B78"
+      },
+      {
+        "va": "0x92224",
+        "bytes": "4BF7FCFD"
+      },
+      {
+        "va": "0x9222c",
+        "bytes": "7BCB0020"
+      },
+      {
+        "va": "0x92230",
+        "bytes": "78690020"
+      },
+      {
+        "va": "0x92238",
+        "bytes": "80E90000"
+      },
+      {
+        "va": "0x92248",
+        "bytes": "90EB088C"
+      },
+      {
+        "va": "0x93818",
+        "bytes": "38A000007C0802A638800001F821FF61FBC10090FBE10098FBA100887C7F1B78F80100B04BF7E6E5E84100282F8300007C7E1B7838A000007FE3FB78419E00F03861007080A2B37438800002787D002038C000007FE3FB787FA7EB784BF7FB0DE84100287FA5EB782C0300007FE3FB78408200108082FBC04BF7D9F1E84100287FE3FB783880000238A000004BF7E67DE84100287BCB0020786900203860000080E900008149000480A900088089000C90EB049C914B04A090AB04A4908B04A883A9001483E9001883C9001C8009001093AB04B0900B04AC93EB04B493CB04B88189002080C900248109002880E9002C918B04BC90CB04C0910B04C490EB04C880A900348149003090AB04D0914B04CC"
+      },
+      {
+        "va": "0x9383c",
+        "bytes": "4BF7E6E5"
+      },
+      {
+        "va": "0x93848",
+        "bytes": "7C7E1B78"
+      },
+      {
+        "va": "0x938a4",
+        "bytes": "4BF7E67D"
+      },
+      {
+        "va": "0x938ac",
+        "bytes": "7BCB0020"
+      },
+      {
+        "va": "0x938b0",
+        "bytes": "78690020"
+      },
+      {
+        "va": "0x938d8",
+        "bytes": "83A90014"
+      },
+      {
+        "va": "0x938e8",
+        "bytes": "93AB04B0"
+      },
+      {
+        "va": "0x1827d8",
+        "bytes": "2F8405F47C0802A6F821FED1FB2100D8FBE10108DB8101107C7F1B78DBA1011838E00000DBC1012038A00000DBE1012839000000FB0100D0FB4100E0FB6100E8FB8100F0FBA100F8FBC10100F801014038C000007C791B78419E0128409D00D42F8405F6419E090C409C02D0"
+      },
+      {
+        "va": "0x18282c",
+        "bytes": "7C791B78"
+      },
+      {
+        "va": "0x183404",
+        "bytes": "2F1BFFFF7F63DB78419A079C90610080C07908843B990068D061009C38810070C05908887B830020D04100A038A002F6C039088CD02100A44BE909A5"
+      },
+      {
+        "va": "0x183414",
+        "bytes": "C0790884"
+      },
+      {
+        "va": "0x183424",
+        "bytes": "C0590888"
+      },
+      {
+        "va": "0x183434",
+        "bytes": "C039088C"
+      },
+      {
+        "va": "0x183438",
+        "bytes": "D02100A4"
+      },
+      {
+        "va": "0x18343c",
+        "bytes": "4BE909A5"
+      },
+      {
+        "va": "0x88b208",
+        "bytes": "101B9EE8"
+      },
+      {
+        "va": "0x89f188",
+        "bytes": "101EFB20"
+      }
+    ]
+  },
+  "option_producers": {
+    "confidence": "code-backed entry-latched exit cleanup; option producer/name remains unresolved",
+    "warning": "Exact USA v02.00 static evidence and detached observations, not native execution, safe edit permission, a current camera verdict or another build's offsets.",
+    "field": {
+      "save_offset": "0x114c0",
+      "physical_type": "u32 BE",
+      "semantic_name": null,
+      "entry_basis": "Entry reads the entire saved word once: zero produces runtime latch1, nonzero latch0. The exit methods consume that runtime byte; they do not reread the saved word in their guarded bodies.",
+      "producer_boundary": "Known leaf default35EE40 stores1 at settings member18. No additional direct setter, named script binding or original player-facing option label was confirmed in this bounded follow-up; this is not an exhaustive absence proof."
+    },
+    "exit_paths": [
+      {
+        "method_table_va": "0x84af18",
+        "entry_va": "0x20f3f0",
+        "update_va": "0x20f598",
+        "exit_va": "0x20f1f8",
+        "exit_table_offset": "0x20",
+        "runtime_latch_member": "0x24",
+        "runtime_actor_state_exclusion": "0x5c9"
+      },
+      {
+        "method_table_va": "0x84af48",
+        "entry_va": "0x2108d8",
+        "update_va": "0x210b80",
+        "exit_va": "0x2112d8",
+        "exit_table_offset": "0x20",
+        "runtime_latch_member": "0x3f",
+        "runtime_actor_state_exclusion": "0x63"
+      }
+    ],
+    "exit_rule": {
+      "nonzero_runtime_latch_mode": "0x0f",
+      "zero_runtime_latch_mode": "0x10",
+      "lookup_va": "0x683f0",
+      "cleanup_thunk_va": "0x10390",
+      "cleanup_native_va": "0x63a748",
+      "selector_argument": 0,
+      "qualification": "Runtime actor-state exclusion bypasses this camera branch. Otherwise, nested container+2114 subsystem+64 nonzero reaches latch selection; if zero, either mode0F/10 check through11060 returning a nonzero low byte calls12770 and bypasses latch cleanup. Only when both fail does that path reach latch selection. A null683F0 lookup skips63A748. These callbacks and runtime state are not saved option meanings.",
+      "separate_runtime_offset": "The preliminary incoming-object+14 actor+14C0 comparisons are runtime actor state, not saved-root+114C0 despite the same low displacement.",
+      "scope": "No direct saved114C0/tail store or latch-byte store occurs in the guarded exit bodies. Called callbacks are not exhaustively proven free of save side effects; changing a save after entry does not itself demonstrate changing the runtime latch."
+    },
+    "cleanup": {
+      "va": "0x63a748",
+      "record_start_member": "0xc0",
+      "record_stride": "0x200",
+      "record_count": 16,
+      "mode_member": "0x64",
+      "selector_member": "0x6c",
+      "preserved_member": "0x68",
+      "pending_mode_member": "0x20c0",
+      "pending_selector_member": "0x20c4",
+      "pending_rule": "If pending20C0 matches requested mode, and selector argument iszero or pending20C4 matches it, writesFFFFFFFF to20C0. It does not clear20C4 in this body.",
+      "matching_rule": "Scans all16 records, matching record+64 and optional record+6C selector. Selector0 is a wildcard. Unlike683F0's first-match lookup, this cleanup loop continues across matching records, subject to callback mutations.",
+      "callback_sequence": "For each encountered match, stores1 to record+64 before invoking record virtual slot14 with(record,container). Then snapshots record+68, calls container+2128 mode-table entry requested_mode*12+8 with(record,1,record+6C), and restores that snapshot to+68. Snapshot occurs after the first callback, not before it.",
+      "post_state_boundary": "Mode1 is a pre-callback store, not a guarantee of final mode1 or camera inactivity. The callbacks may mutate records, container and future match candidates. No save field is directly addressed by this cleanup body; callback side effects and runtime acceptance remain unproved."
+    },
+    "opaque_tail": {
+      "save_offsets": [
+        "0x114d6",
+        "0x114d7"
+      ],
+      "semantic_names": [
+        null,
+        null
+      ],
+      "leaf_unwritten_members": [
+        "0x2e",
+        "0x2f"
+      ],
+      "scope": "Existing leaf initializer coverage still excludes these bytes. This follow-up found no qualified name/producer for them and does not establish padding, unused storage or defaultzero."
+    },
+    "limitations": [
+      "Saved114C0 has no confirmed original name or input activation/release proof for hold/toggle.",
+      "The bounded root-affine lead scan and selected same-displacement readers do not exclude computed, indirect, dynamically registered or later producers.",
+      "Neither runtime camera mode nor its callbacks is a newly editable saved field.",
+      "Opaque114D6/114D7 values remain arbitrary raw bytes; snapshot zeros would not prove a role."
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x20f1f8",
+        "kind": "function",
+        "name": "TOD_first_person_exit_latched24_cleanup_verified",
+        "comment": "Methodtable84AF18+20. Uses runtime entry latch24 to choose0F/nonzero or10/zero; conditional683F0 lookup then10390\u219263A748(selector0). Actorstate5C9 and nested2114 subsystem checks can bypass; not savedwordsetter or hold/toggle proof."
+      },
+      {
+        "va": "0x2112d8",
+        "kind": "function",
+        "name": "TOD_first_person_exit_latched3f_cleanup_verified",
+        "comment": "Methodtable84AF48+20. Uses entry latch3F, conditional mode0F/10 cleanup via10390\u219263A748(selector0). Actorstate63 and nestedsubsystem checks can bypass. No original optionname or savedtail identity."
+      },
+      {
+        "va": "0x63a748",
+        "kind": "function",
+        "name": "TOD_camera_matching_records_cleanup_verified",
+        "comment": "Clears matching pending20C0 toFFFFFFFF; scans16 C0+200stride records bymode64 and optionalselector6C(0wildcard). Storesmode1 before virtual14 callback; snapshots68 afterfirstcallback, invokesmode-table callback2128+mode*12+8, restores68. Callback-qualified, not finalstate or savewrite guarantee."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x10390",
+        "bytes": "F8410028"
+      },
+      {
+        "va": "0x10394",
+        "bytes": "3C420002"
+      },
+      {
+        "va": "0x10398",
+        "bytes": "3842FF24"
+      },
+      {
+        "va": "0x1039c",
+        "bytes": "4862A3AC"
+      },
+      {
+        "va": "0x20f1f8",
+        "bytes": "F821FF517C8802A6FBE100A8FB610088FB810090FBA10098FBC100A0F88100C0816300147C7F1B7879630020800314C02F8005C9419E01044BE04291E8410028787C00207C7E1B7883BC21144BE0232DE84100287C6B1B7878630020812B00008149002080CA0000F84100287CC903A6804A00044E800421E841002880BD00642C05000041820114887F00242F030000419A00D87F83E3783880000F4BE5915D600000002F830000419E00187BC300203880000F38A000004BE010E1E8410028817F00147963002083630014819B0068558807FE2C8800004186006080C3000080A6005C81450000F84100287D4903A6804500044E800421E8410028809F0014E81C20F0EBDC20F83B841120388100707B9D0020F80100707FA3EB78FBC100784BE02F69E84100287FA3EB784BE04B1DE8410028817F0014796900203960000199691DF1EBE100C0EB6100887FE803A6EB810090EBA10098EBC100A0EBE100A8382100B04E8000207F83E378388000104BE59089600000002C0300004182FF447BC300203880001038A000004BE0100DE84100284BFFFF2C787B002038A0000F7FA3EB787F64DB784BE01CC1E84100285463063E2C830000418600187FA3EB784BE033B9E84100284BFFFEF8600000007F64DB787FA3EB7838A000104BE01C8DE84100285467063E2F070000419AFE9C4BFFFFCC60000000"
+      },
+      {
+        "va": "0x20f218",
+        "bytes": "81630014"
+      },
+      {
+        "va": "0x20f224",
+        "bytes": "800314C0"
+      },
+      {
+        "va": "0x20f228",
+        "bytes": "2F8005C9"
+      },
+      {
+        "va": "0x20f22c",
+        "bytes": "419E0104"
+      },
+      {
+        "va": "0x20f240",
+        "bytes": "83BC2114"
+      },
+      {
+        "va": "0x20f274",
+        "bytes": "80BD0064"
+      },
+      {
+        "va": "0x20f27c",
+        "bytes": "41820114"
+      },
+      {
+        "va": "0x20f280",
+        "bytes": "887F0024"
+      },
+      {
+        "va": "0x20f288",
+        "bytes": "419A00D8"
+      },
+      {
+        "va": "0x20f290",
+        "bytes": "3880000F"
+      },
+      {
+        "va": "0x20f294",
+        "bytes": "4BE5915D"
+      },
+      {
+        "va": "0x20f2a0",
+        "bytes": "419E0018"
+      },
+      {
+        "va": "0x20f2ac",
+        "bytes": "38A00000"
+      },
+      {
+        "va": "0x20f2b0",
+        "bytes": "4BE010E1"
+      },
+      {
+        "va": "0x20f338",
+        "bytes": "99691DF1"
+      },
+      {
+        "va": "0x20f364",
+        "bytes": "38800010"
+      },
+      {
+        "va": "0x20f368",
+        "bytes": "4BE59089"
+      },
+      {
+        "va": "0x20f374",
+        "bytes": "4182FF44"
+      },
+      {
+        "va": "0x20f380",
+        "bytes": "38A00000"
+      },
+      {
+        "va": "0x20f384",
+        "bytes": "4BE0100D"
+      },
+      {
+        "va": "0x20f394",
+        "bytes": "38A0000F"
+      },
+      {
+        "va": "0x20f3a0",
+        "bytes": "4BE01CC1"
+      },
+      {
+        "va": "0x20f3b0",
+        "bytes": "41860018"
+      },
+      {
+        "va": "0x20f3b8",
+        "bytes": "4BE033B9"
+      },
+      {
+        "va": "0x20f3c0",
+        "bytes": "4BFFFEF8"
+      },
+      {
+        "va": "0x20f3d0",
+        "bytes": "38A00010"
+      },
+      {
+        "va": "0x20f3d4",
+        "bytes": "4BE01C8D"
+      },
+      {
+        "va": "0x20f3e4",
+        "bytes": "419AFE9C"
+      },
+      {
+        "va": "0x20f3fc",
+        "bytes": "83A26864"
+      },
+      {
+        "va": "0x20f400",
+        "bytes": "38000000"
+      },
+      {
+        "va": "0x20f408",
+        "bytes": "3D7D0001"
+      },
+      {
+        "va": "0x20f414",
+        "bytes": "98030024"
+      },
+      {
+        "va": "0x20f420",
+        "bytes": "812B14C0"
+      },
+      {
+        "va": "0x20f424",
+        "bytes": "2F890000"
+      },
+      {
+        "va": "0x20f428",
+        "bytes": "409E000C"
+      },
+      {
+        "va": "0x20f430",
+        "bytes": "987F0024"
+      },
+      {
+        "va": "0x2108e0",
+        "bytes": "80826920"
+      },
+      {
+        "va": "0x2108e4",
+        "bytes": "38000000"
+      },
+      {
+        "va": "0x2108f0",
+        "bytes": "3D240001"
+      },
+      {
+        "va": "0x210900",
+        "bytes": "981F003F"
+      },
+      {
+        "va": "0x210904",
+        "bytes": "816914C0"
+      },
+      {
+        "va": "0x210910",
+        "bytes": "2F8B0000"
+      },
+      {
+        "va": "0x210918",
+        "bytes": "409E000C"
+      },
+      {
+        "va": "0x210920",
+        "bytes": "98DF003F"
+      },
+      {
+        "va": "0x2112d8",
+        "bytes": "F821FF517C8802A6FBE100A8FB610088FB810090FBA10098FBC100A0F88100C0816300147C7F1B7879630020800314C02F800063419E01044BE021B1E8410028787C00207C7E1B7883BC21144BE0024DE84100287C6B1B7878630020812B00008149002080CA0000F84100287CC903A6804A00044E800421E841002880BD00642C05000041820114887F003F2F030000419A00D87F83E3783880000F4BE5707D600000002F830000419E00187BC300203880000F38A000004BDFF001E8410028817F00147963002083630014819B0068558807FE2C8800004186006080C3000080A6005C81450000F84100287D4903A6804500044E800421E8410028809F0014E81C20F0EBDC20F83B841120388100707B9D0020F80100707FA3EB78FBC100784BE00E89E84100287FA3EB784BE02A3DE8410028817F0014796900203960000199691DF1EBE100C0EB6100887FE803A6EB810090EBA10098EBC100A0EBE100A8382100B04E8000207F83E378388000104BE56FA9600000002C0300004182FF447BC300203880001038A000004BDFEF2DE84100284BFFFF2C787B002038A0000F7FA3EB787F64DB784BDFFBE1E84100285463063E2C830000418600187FA3EB784BE012D9E84100284BFFFEF8600000007F64DB787FA3EB7838A000104BDFFBADE84100285467063E2F070000419AFE9C4BFFFFCC60000000"
+      },
+      {
+        "va": "0x2112f8",
+        "bytes": "81630014"
+      },
+      {
+        "va": "0x211304",
+        "bytes": "800314C0"
+      },
+      {
+        "va": "0x211308",
+        "bytes": "2F800063"
+      },
+      {
+        "va": "0x21130c",
+        "bytes": "419E0104"
+      },
+      {
+        "va": "0x211320",
+        "bytes": "83BC2114"
+      },
+      {
+        "va": "0x211354",
+        "bytes": "80BD0064"
+      },
+      {
+        "va": "0x21135c",
+        "bytes": "41820114"
+      },
+      {
+        "va": "0x211360",
+        "bytes": "887F003F"
+      },
+      {
+        "va": "0x211368",
+        "bytes": "419A00D8"
+      },
+      {
+        "va": "0x211370",
+        "bytes": "3880000F"
+      },
+      {
+        "va": "0x211374",
+        "bytes": "4BE5707D"
+      },
+      {
+        "va": "0x211380",
+        "bytes": "419E0018"
+      },
+      {
+        "va": "0x21138c",
+        "bytes": "38A00000"
+      },
+      {
+        "va": "0x211390",
+        "bytes": "4BDFF001"
+      },
+      {
+        "va": "0x211418",
+        "bytes": "99691DF1"
+      },
+      {
+        "va": "0x211444",
+        "bytes": "38800010"
+      },
+      {
+        "va": "0x211448",
+        "bytes": "4BE56FA9"
+      },
+      {
+        "va": "0x211454",
+        "bytes": "4182FF44"
+      },
+      {
+        "va": "0x211460",
+        "bytes": "38A00000"
+      },
+      {
+        "va": "0x211464",
+        "bytes": "4BDFEF2D"
+      },
+      {
+        "va": "0x211474",
+        "bytes": "38A0000F"
+      },
+      {
+        "va": "0x211480",
+        "bytes": "4BDFFBE1"
+      },
+      {
+        "va": "0x211490",
+        "bytes": "41860018"
+      },
+      {
+        "va": "0x211498",
+        "bytes": "4BE012D9"
+      },
+      {
+        "va": "0x2114a0",
+        "bytes": "4BFFFEF8"
+      },
+      {
+        "va": "0x2114b0",
+        "bytes": "38A00010"
+      },
+      {
+        "va": "0x2114b4",
+        "bytes": "4BDFFBAD"
+      },
+      {
+        "va": "0x2114c4",
+        "bytes": "419AFE9C"
+      },
+      {
+        "va": "0x35ee40",
+        "bytes": "38000000C1A21A8439200001C0021A80D00300089923002DD1A30024980300299003000090030004900300149003000C9003001091230018D1A3001CD1A30020992300289923002A9923002B9923002C4E80002060000000"
+      },
+      {
+        "va": "0x35ee48",
+        "bytes": "39200001"
+      },
+      {
+        "va": "0x35ee74",
+        "bytes": "91230018"
+      },
+      {
+        "va": "0x63a748",
+        "bytes": "7D800026F821FF41FB210088FB410090FB610098FAE10078FB010080FB8100A0FBA100A8FBC100B0FBE100B87C7A1B787C9B23787CB92B78918100C87CC802A6F8C100D0800320C07F802000419E01045769103A576520362E1900003B8000007F0928503AE000013BDA00C0480000102C1C000F3B9C00014182009C7BDF00203BDE020080FF00647F07D800409AFFE47FE3FB787B44002041920010811F006C7F88C800409EFFCC80FF000092FF006480A7001481250000F84100287D2903A6804500044E800421E841002880DA21287FE3FB787C18321483BF006880BF006C38800001780C0020816C0008814B0000F84100287D4903A6804B00044E800421E84100282C1C000F3B9C000193BF00684082FF6CEAE100D0806100C87EE803A6EB010080EAE100787C708120EB210088EB410090EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E8000202C050000408200103880FFFF909A20C04BFFFEF0806320C47C8328004086FEE44BFFFFE860000000"
+      },
+      {
+        "va": "0x63a78c",
+        "bytes": "800320C0"
+      },
+      {
+        "va": "0x63a790",
+        "bytes": "7F802000"
+      },
+      {
+        "va": "0x63a794",
+        "bytes": "419E0104"
+      },
+      {
+        "va": "0x63a7a0",
+        "bytes": "2E190000"
+      },
+      {
+        "va": "0x63a7a4",
+        "bytes": "3B800000"
+      },
+      {
+        "va": "0x63a7ac",
+        "bytes": "3AE00001"
+      },
+      {
+        "va": "0x63a7b0",
+        "bytes": "3BDA00C0"
+      },
+      {
+        "va": "0x63a7b8",
+        "bytes": "2C1C000F"
+      },
+      {
+        "va": "0x63a7c8",
+        "bytes": "3BDE0200"
+      },
+      {
+        "va": "0x63a7cc",
+        "bytes": "80FF0064"
+      },
+      {
+        "va": "0x63a7d0",
+        "bytes": "7F07D800"
+      },
+      {
+        "va": "0x63a7e0",
+        "bytes": "41920010"
+      },
+      {
+        "va": "0x63a7e4",
+        "bytes": "811F006C"
+      },
+      {
+        "va": "0x63a7f4",
+        "bytes": "92FF0064"
+      },
+      {
+        "va": "0x63a7f8",
+        "bytes": "80A70014"
+      },
+      {
+        "va": "0x63a80c",
+        "bytes": "4E800421"
+      },
+      {
+        "va": "0x63a814",
+        "bytes": "80DA2128"
+      },
+      {
+        "va": "0x63a820",
+        "bytes": "83BF0068"
+      },
+      {
+        "va": "0x63a824",
+        "bytes": "80BF006C"
+      },
+      {
+        "va": "0x63a828",
+        "bytes": "38800001"
+      },
+      {
+        "va": "0x63a830",
+        "bytes": "816C0008"
+      },
+      {
+        "va": "0x63a844",
+        "bytes": "4E800421"
+      },
+      {
+        "va": "0x63a854",
+        "bytes": "93BF0068"
+      },
+      {
+        "va": "0x63a858",
+        "bytes": "4082FF6C"
+      },
+      {
+        "va": "0x63a898",
+        "bytes": "2C050000"
+      },
+      {
+        "va": "0x63a89c",
+        "bytes": "40820010"
+      },
+      {
+        "va": "0x63a8a0",
+        "bytes": "3880FFFF"
+      },
+      {
+        "va": "0x63a8a4",
+        "bytes": "909A20C0"
+      },
+      {
+        "va": "0x63a8ac",
+        "bytes": "806320C4"
+      },
+      {
+        "va": "0x63a8b0",
+        "bytes": "7C832800"
+      },
+      {
+        "va": "0x84af18",
+        "bytes": "00867488008674C000866500008674B8008674C800867480008674A8008674A0008674B0"
+      },
+      {
+        "va": "0x84af48",
+        "bytes": "008674D800867548008665000086752800867538008675300087B5980086752000867540"
+      },
+      {
+        "va": "0x8674b0",
+        "bytes": "0020F1F80088FF38"
+      },
+      {
+        "va": "0x8674b8",
+        "bytes": "0020F3F00088FF38"
+      },
+      {
+        "va": "0x8674c8",
+        "bytes": "0020F5980088FF38"
+      },
+      {
+        "va": "0x867528",
+        "bytes": "002108D80088FF38"
+      },
+      {
+        "va": "0x867538",
+        "bytes": "00210B800088FF38"
+      },
+      {
+        "va": "0x867540",
+        "bytes": "002112D80088FF38"
+      },
+      {
+        "va": "0x87c3c8",
+        "bytes": "0063A748008AFE5C"
+      },
+      {
+        "va": "0x89679c",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x896858",
+        "bytes": "101EFB20"
+      }
+    ]
+  },
+  "reset_producers": {
+    "confidence": "code-backed numeric producer/dispatch boundaries",
+    "storage": {
+      "counter_base": "0x5734",
+      "counter_count": 8,
+      "runtime_owner_va": "0x101e8d70",
+      "runtime_category_member": "0x48",
+      "runtime_window_member": "0x4c"
+    },
+    "selection_vs_recording": {
+      "selector_thunk_va": "0x132d0",
+      "selector_va": "0x2cdc60",
+      "window_literal": 0.25,
+      "rule": "Selector overwrites the runtime window+4C with0.25, then runtime category+48 with the supplied ID. It contains no saved-counter increment, reset-request admission call or actor-state write. Repeated qualified callbacks refresh the window; the last supplied category replaces the previous one if these calls return sequentially. Runtime interleaving/atomicity and time units are not established.",
+      "recording_boundary": "Only a separate admitted reset request reaches the saved counter writer2CE518. Selecting a category does not itself record a reset, and category names remain unresolved."
+    },
+    "common_preselector": {
+      "thunk_va": "0x11370",
+      "function_va": "0x68ff68",
+      "rule": "Callbacks for categories2,4,6 first reach68FF68: actor member+14 supplies a runtime entry pointer; its entry+68 flags are ORed with0x20. This is a runtime flag update, not a saved bit or direct reset admission.",
+      "scope": "The gameplay meaning of entry flag0x20 and virtual callback frequency are not recovered."
+    },
+    "producer_boundaries": [
+      {
+        "categories": [
+          2
+        ],
+        "function_va": "0x433b0",
+        "selected_member": "0x430",
+        "selection": "After11370 and40518, signed actor word430<=28 selects2. The dispatcher then rereads430 and uses an unsigned<=32 bound for its33-entry table.",
+        "boundary": "States29..32 bypass selection but remain in the table domain. Raw80000000..FFFFFFFF satisfy the signed selection and then fail the unsigned dispatch bound. Selection is therefore not proof of a recognized state handler or named failure cause.",
+        "preselector_state_request": "40518 can request3EFB8(actor,23) before category selection. On the reached setter publication path3F0C0/3F0C4, it stores requested actor430 and zeroes actor434. Caller predicates use actor334, a native float threshold and flags454 bit1000; complete old-state transition effects are not simulated."
+      },
+      {
+        "categories": [
+          4
+        ],
+        "function_va": "0x4b9e8",
+        "selected_member": "0x4a4",
+        "selection": "After11370, initial actor word4A4!=2 selects4. Five following helpers45B28/48520/4AC10/4AA38/4A250 run before the later dispatcher rereads4A4, which is bounded unsigned<=102 for103 entries.",
+        "boundary": "The selected state sample and later dispatch sample are separated by helper calls; their equality is not assumed. Out-of-range initial states can select4. No actor/death label or reset-request occurrence follows from this callback alone."
+      },
+      {
+        "categories": [
+          6
+        ],
+        "function_va": "0x54fb0",
+        "selected_member": "0x762",
+        "mode_member": "0x764",
+        "selection": "After11370/54EB8/4DAA8, modebyte764==0 and statebyte762!=0 select6. Only afterward does reloaded762 receive the unsigned<=19 bound for20 dispatch entries.",
+        "boundary": "Statebytes20..255 still select6 but bypass the table. State0 and nonzero764 bypass category6 selection. No valid-state, death or failure verdict is inferred.",
+        "preselector_state_request": "54EB8 can request53490(actor,1) for prior byte762 in8..11, otherwise14, under its float/flag gates. On reached publication53680/53688 the setter stores low8 requested state to762 and zeroes754; unrelated state-specific callbacks and the full transition machine are not reconstructed."
+      },
+      {
+        "categories": [
+          3,
+          7
+        ],
+        "function_va": "0x18f480",
+        "selected_member": "0x8b0",
+        "selection": "Flags8B0 bit800 chooses whether to select. If set, bit1000 chooses7 when set, otherwise3. The selector call returns before the commonBF178 call.",
+        "boundary": "BF178 itself requires actorbyte5BD==0 for its following runtime virtual callbacks/C59C0. That later gate does not gate the earlier category selection. No cleanup, death or actor-name label is assigned."
+      },
+      {
+        "categories": [
+          5
+        ],
+        "function_va": "0x3bfa0",
+        "selected_member": null,
+        "selection": "Category5 is selected before10550(actor+24) and the resolved object's virtual method+14.",
+        "boundary": "Following virtual callback acceptance/side effects and invocation frequency remain unresolved."
+      }
+    ],
+    "float_gate_caution": "40518/54EB8 initialize their local predicate0, then use fcmpu followed by BO4/BI29/+8: branch when CR7.GT is0, skipping li1. Only ordered greater-than sets predicate1; less/equal/unordered (including NaN) retain0. The bounded helper previews raw CR bits only, not floating-point/native execution, timer units or the full transition gate.",
+    "virtual_contexts": [
+      {
+        "categories": [
+          5
+        ],
+        "vtable_va": "0x842128",
+        "method_offset": "0x10",
+        "descriptor_va": "0x85ae20",
+        "function_va": "0x3bfa0",
+        "actor_name": "Unresolved"
+      },
+      {
+        "categories": [
+          2
+        ],
+        "vtable_va": "0x842178",
+        "method_offset": "0x10",
+        "descriptor_va": "0x85b048",
+        "function_va": "0x433b0",
+        "actor_name": "Unresolved"
+      },
+      {
+        "categories": [
+          4
+        ],
+        "vtable_va": "0x8421f8",
+        "method_offset": "0x10",
+        "descriptor_va": "0x85b218",
+        "function_va": "0x4b9e8",
+        "actor_name": "Unresolved"
+      },
+      {
+        "categories": [
+          6
+        ],
+        "vtable_va": "0x842260",
+        "method_offset": "0x10",
+        "descriptor_va": "0x85b3d8",
+        "function_va": "0x54fb0",
+        "actor_name": "Unresolved"
+      },
+      {
+        "categories": [
+          3,
+          7
+        ],
+        "vtable_va": "0x8482e0",
+        "method_offset": "0x10",
+        "descriptor_va": "0x864478",
+        "function_va": "0x18f480",
+        "actor_name": "Unresolved"
+      }
+    ],
+    "dispatch_tables": [
+      {
+        "category": 2,
+        "function_va": "0x433b0",
+        "table_pointer_slot_va": "0x889fe8",
+        "table_va": "0x43438",
+        "physical_entries": 33,
+        "unique_target_count": 22,
+        "encoding": "Signed BE32 displacement relative to the table VA; repeated targets are retained, not distinct state names.",
+        "entries": [
+          {
+            "state": 0,
+            "target_va": "0x43530"
+          },
+          {
+            "state": 1,
+            "target_va": "0x43874"
+          },
+          {
+            "state": 2,
+            "target_va": "0x43818"
+          },
+          {
+            "state": 3,
+            "target_va": "0x43818"
+          },
+          {
+            "state": 4,
+            "target_va": "0x43530"
+          },
+          {
+            "state": 5,
+            "target_va": "0x43920"
+          },
+          {
+            "state": 6,
+            "target_va": "0x43748"
+          },
+          {
+            "state": 7,
+            "target_va": "0x43a00"
+          },
+          {
+            "state": 8,
+            "target_va": "0x43690"
+          },
+          {
+            "state": 9,
+            "target_va": "0x43590"
+          },
+          {
+            "state": 10,
+            "target_va": "0x43590"
+          },
+          {
+            "state": 11,
+            "target_va": "0x43940"
+          },
+          {
+            "state": 12,
+            "target_va": "0x43960"
+          },
+          {
+            "state": 13,
+            "target_va": "0x43590"
+          },
+          {
+            "state": 14,
+            "target_va": "0x43530"
+          },
+          {
+            "state": 15,
+            "target_va": "0x43b2c"
+          },
+          {
+            "state": 16,
+            "target_va": "0x43a30"
+          },
+          {
+            "state": 17,
+            "target_va": "0x43530"
+          },
+          {
+            "state": 18,
+            "target_va": "0x43ac4"
+          },
+          {
+            "state": 19,
+            "target_va": "0x436c0"
+          },
+          {
+            "state": 20,
+            "target_va": "0x43590"
+          },
+          {
+            "state": 21,
+            "target_va": "0x43590"
+          },
+          {
+            "state": 22,
+            "target_va": "0x43590"
+          },
+          {
+            "state": 23,
+            "target_va": "0x43768"
+          },
+          {
+            "state": 24,
+            "target_va": "0x437a8"
+          },
+          {
+            "state": 25,
+            "target_va": "0x437c8"
+          },
+          {
+            "state": 26,
+            "target_va": "0x437f8"
+          },
+          {
+            "state": 27,
+            "target_va": "0x435b0"
+          },
+          {
+            "state": 28,
+            "target_va": "0x43590"
+          },
+          {
+            "state": 29,
+            "target_va": "0x43530"
+          },
+          {
+            "state": 30,
+            "target_va": "0x435d0"
+          },
+          {
+            "state": 31,
+            "target_va": "0x434bc"
+          },
+          {
+            "state": 32,
+            "target_va": "0x43648"
+          }
+        ]
+      },
+      {
+        "category": 4,
+        "function_va": "0x4b9e8",
+        "table_pointer_slot_va": "0x88a120",
+        "table_va": "0x4bbbc",
+        "physical_entries": 103,
+        "unique_target_count": 28,
+        "encoding": "Signed BE32 displacement relative to the table VA; repeated targets are retained, not distinct state names.",
+        "entries": [
+          {
+            "state": 0,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 1,
+            "target_va": "0x4c0e4"
+          },
+          {
+            "state": 2,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 3,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 4,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 5,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 6,
+            "target_va": "0x4c0bc"
+          },
+          {
+            "state": 7,
+            "target_va": "0x4c0d0"
+          },
+          {
+            "state": 8,
+            "target_va": "0x4c110"
+          },
+          {
+            "state": 9,
+            "target_va": "0x4c5e4"
+          },
+          {
+            "state": 10,
+            "target_va": "0x4c6a4"
+          },
+          {
+            "state": 11,
+            "target_va": "0x4c8e0"
+          },
+          {
+            "state": 12,
+            "target_va": "0x4c8e0"
+          },
+          {
+            "state": 13,
+            "target_va": "0x4ca5c"
+          },
+          {
+            "state": 14,
+            "target_va": "0x4bf80"
+          },
+          {
+            "state": 15,
+            "target_va": "0x4bfb4"
+          },
+          {
+            "state": 16,
+            "target_va": "0x4bfd4"
+          },
+          {
+            "state": 17,
+            "target_va": "0x4c03c"
+          },
+          {
+            "state": 18,
+            "target_va": "0x4bd58"
+          },
+          {
+            "state": 19,
+            "target_va": "0x4cd7c"
+          },
+          {
+            "state": 20,
+            "target_va": "0x4cd94"
+          },
+          {
+            "state": 21,
+            "target_va": "0x4cdac"
+          },
+          {
+            "state": 22,
+            "target_va": "0x4ca88"
+          },
+          {
+            "state": 23,
+            "target_va": "0x4ca88"
+          },
+          {
+            "state": 24,
+            "target_va": "0x4ca88"
+          },
+          {
+            "state": 25,
+            "target_va": "0x4ca88"
+          },
+          {
+            "state": 26,
+            "target_va": "0x4ca88"
+          },
+          {
+            "state": 27,
+            "target_va": "0x4ca88"
+          },
+          {
+            "state": 28,
+            "target_va": "0x4cb34"
+          },
+          {
+            "state": 29,
+            "target_va": "0x4cb34"
+          },
+          {
+            "state": 30,
+            "target_va": "0x4cb34"
+          },
+          {
+            "state": 31,
+            "target_va": "0x4cb34"
+          },
+          {
+            "state": 32,
+            "target_va": "0x4cb34"
+          },
+          {
+            "state": 33,
+            "target_va": "0x4cb34"
+          },
+          {
+            "state": 34,
+            "target_va": "0x4cc54"
+          },
+          {
+            "state": 35,
+            "target_va": "0x4cf24"
+          },
+          {
+            "state": 36,
+            "target_va": "0x4cf70"
+          },
+          {
+            "state": 37,
+            "target_va": "0x4bf4c"
+          },
+          {
+            "state": 38,
+            "target_va": "0x4cf88"
+          },
+          {
+            "state": 39,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 40,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 41,
+            "target_va": "0x4cd50"
+          },
+          {
+            "state": 42,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 43,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 44,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 45,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 46,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 47,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 48,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 49,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 50,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 51,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 52,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 53,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 54,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 55,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 56,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 57,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 58,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 59,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 60,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 61,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 62,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 63,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 64,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 65,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 66,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 67,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 68,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 69,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 70,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 71,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 72,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 73,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 74,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 75,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 76,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 77,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 78,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 79,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 80,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 81,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 82,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 83,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 84,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 85,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 86,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 87,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 88,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 89,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 90,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 91,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 92,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 93,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 94,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 95,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 96,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 97,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 98,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 99,
+            "target_va": "0x4bf74"
+          },
+          {
+            "state": 100,
+            "target_va": "0x4cef8"
+          },
+          {
+            "state": 101,
+            "target_va": "0x4cdc0"
+          },
+          {
+            "state": 102,
+            "target_va": "0x4cecc"
+          }
+        ]
+      },
+      {
+        "category": 6,
+        "function_va": "0x54fb0",
+        "table_pointer_slot_va": "0x88a280",
+        "table_va": "0x550c8",
+        "physical_entries": 20,
+        "unique_target_count": 15,
+        "encoding": "Signed BE32 displacement relative to the table VA; repeated targets are retained, not distinct state names.",
+        "entries": [
+          {
+            "state": 0,
+            "target_va": "0x55060"
+          },
+          {
+            "state": 1,
+            "target_va": "0x5533c"
+          },
+          {
+            "state": 2,
+            "target_va": "0x5533c"
+          },
+          {
+            "state": 3,
+            "target_va": "0x5538c"
+          },
+          {
+            "state": 4,
+            "target_va": "0x5516c"
+          },
+          {
+            "state": 5,
+            "target_va": "0x553e0"
+          },
+          {
+            "state": 6,
+            "target_va": "0x552f4"
+          },
+          {
+            "state": 7,
+            "target_va": "0x552f4"
+          },
+          {
+            "state": 8,
+            "target_va": "0x55310"
+          },
+          {
+            "state": 9,
+            "target_va": "0x55140"
+          },
+          {
+            "state": 10,
+            "target_va": "0x55360"
+          },
+          {
+            "state": 11,
+            "target_va": "0x55140"
+          },
+          {
+            "state": 12,
+            "target_va": "0x5518c"
+          },
+          {
+            "state": 13,
+            "target_va": "0x551b0"
+          },
+          {
+            "state": 14,
+            "target_va": "0x551d4"
+          },
+          {
+            "state": 15,
+            "target_va": "0x55224"
+          },
+          {
+            "state": 16,
+            "target_va": "0x55244"
+          },
+          {
+            "state": 17,
+            "target_va": "0x553c4"
+          },
+          {
+            "state": 18,
+            "target_va": "0x5516c"
+          },
+          {
+            "state": 19,
+            "target_va": "0x553c4"
+          }
+        ]
+      }
+    ],
+    "unresolved": [
+      "All player-facing category names and actor classes remain unresolved.",
+      "Category1 has physical storage but no newly confirmed selector here.",
+      "Actual invocation frequency/order, runtime state transitions, callback acceptance and current selected context are not derivable from the supplied save."
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x68ff68",
+        "kind": "function",
+        "name": "TOD_actor_mark_runtime_entry_flag20_before_category_context",
+        "comment": "Actor+14 is runtime entry pointer; ORs entry+68 flags with20, used via11370 before category2/4/6 callbacks. No saved-bit write, reset admission or gameplay flag name established."
+      },
+      {
+        "va": "0x43438",
+        "kind": "data",
+        "size": 132,
+        "name": "TOD_reset_context2_state_relative_dispatch",
+        "comment": "33 signed BE32 offsets relative to43438, states0..32. Signed430<=28 selection precedes unsigned dispatch bound; negative raw states can select2 but reject dispatch. Targets are not gameplay state names."
+      },
+      {
+        "va": "0x4bbbc",
+        "kind": "data",
+        "size": 412,
+        "name": "TOD_reset_context4_state_relative_dispatch",
+        "comment": "103 signed BE32 offsets relative to4BBBC; dispatcher rereads4A4 after intervening helpers, separately from initial!=2 category4 selection. Repeated targets retained; no actor/death names."
+      },
+      {
+        "va": "0x550c8",
+        "kind": "data",
+        "size": 80,
+        "name": "TOD_reset_context6_byte_state_relative_dispatch",
+        "comment": "20 signed BE32 offsets relative to550C8. Mode764==0/nonzero762 selection happens before<=19 table bound;20..255select6 but reject table. Runtime actor states, not saved category names."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x11370",
+        "bytes": "F84100283C4200023842FF244867EBEC"
+      },
+      {
+        "va": "0x1137c",
+        "bytes": "4867EBEC"
+      },
+      {
+        "va": "0x132d0",
+        "bytes": "F84100283C4200013842FFE8482BA984"
+      },
+      {
+        "va": "0x132dc",
+        "bytes": "482BA984"
+      },
+      {
+        "va": "0x3bfa0",
+        "bytes": "F821FF717CA802A6FBA100787C7D1B78386000053BBD0024F8A100A04BFD7315E84100287BA300204BFD4589E84100287C6B1B7878630020812B000081490014808A0000F84100287C8903A6804A00044E800421E8410028E80100A0EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x3bfbc",
+        "bytes": "4BFD7315"
+      },
+      {
+        "va": "0x3efb8",
+        "bytes": "F821FEC17C0802A6FB810118FBA10120FBC10128FBE10130DBE101387C7C1B78FB610110F8010150814304303BC000007C9D23782B8A001F3BE00000419D00A48162A034794917887CA9582E7CA407B47C645A147C6903A64E8004200000008400000084000002A8000002A8000000840000008400000084000002B4000002B4000000840000008400000084000002CC000000840000008400000084000002E80000008400000084000003140000008400000084000000840000008400000084000003240000008400000338000000840000034C00000360000003906000000080E2A038811C04547F8AE800419E020C5509B87E5528483E911C0454281D00217FAAEB783BA00000915C043093BC0434418101B88362A044794317887C03D82E7C0C07B47CCCDA147CC903A64E80042000000198000002D800000C0C00000C5800000A8C000001980000019800000B2400000BC000000CA4000004B8000004FC00000304000003D4000001980000041800000474000006FC00000778000007C4000008080000084C00000868000008AC000006700000095C000009EC00000B7000000670000006B40000054800000088000005FC000006485503C87E813C0014C022A0145460383EC042A0047D234B78C062A048901C045481690054836B004038BB016078A400204BFD2091E8410028807C00143880000B4BFD3A91E841002881429FF4811C0360D03C04385509043E83EA00107F9F4840419C003C553B482C80AA0000552B38307FEBD8507FBF2A147BAA002083CA00647C9E40507CE8F0507CEC23787D86FE707FA030782C00000040820CAC817C00143800000039200000901C03606128FFFFA38B00507C9C40004186005883AB0080838B00887BBF00207B9E00207FE3FB787FC4F3784BFD110DE84100282F1D0000419A0014899F00795586E07E54C3203E987F00792F9C0000419E0018895E00795544E07E5487203E98FE007960000000E8610150EB610110EB8101187C6803A6EBA10120EBC10128EBE10130CBE10138382101404E80002080E2A038811C045461080100911C04544BFFFDFC38E00000811C04544BFFFDDC819C045480E2A0385588E87E5508183E911C04544BFFFDC4807C045480E2A0385460003C541BE07E5768203E911C04544BFFFDA82C1D0010387C03C04182FFA438800000786300204BFD10D1E841002880E2A038815C0430811C04544BFFFD7C2C9D00134186FF7C387C03C44BFFFFD480BC045480E2A03864A80004911C04544BFFFD58809C045480E2A03868880010911C04544BFFFD4438C0000180E2A038811C045498DC03204BFFFD307B830020837C00144BFFEA9D2F230000409A0A4CC002A03C7B6A002080E2A038D00A00D0815C0430811C04544BFFFD00817C0014C002A00480E2A038D00B00D0815C0430811C04544BFFFCE483DC001490E101007FC3F378C0610100C022A014C042A00480FE0054808700404BFD1E51E84100284BFFFE987B9F00207FE3FB784BFFEA252F230000419A005C8162A04C3FC00003C3E2A05063C743FDC102A054836B00007D9B39D63CCC00273BA69EC37BA5C22257A9F87E912B0000F8A10108C8210108FC000E9CFD400018ED2A07F2FF894000409C0010801C045460030008907C04547FE3FB783BE0000093FC043C4BFFE9B52C2300004182096CC3E2A05880BC0014FC40F890C022A0147CA32B78C062A04881450054808A004039040060790400204BFD1D99E8410028807C0014388000034BFD3799E8410028EC41F824D05C04384BFFFDC880DC0014C022A0147CC33378C062A048C042A0048126005483A90040397D0080796400204BFD1D51E8410028807C0014388000044BFD3751E8410028D03C04384BFFFD843C60FFFB83FC0014C022A0146060FFDFC062A0387FE3FB78C042A0047D080038911C045483DF005480FE00403B6702007B6400204BFD1CFDE8410028807C0014388000104BFD36FDE841002839800005D03C0438999C04594BFFFD28817C0014C022A0147D635B78C062A048C042A00480AB005481450040388A0220788400204BFD1CB1E8410028807C0014388000114BFD36B1E8410028D03C04384BFFFCE483FC0014C022A0147FE3FB78C062A038C042A00483DF005480FE00403B6703207B6400204BFD1C6DE8410028807C0014388000194BFD366DE8410028D03C04384BFFFCA0815C0014C022A0147D435378C062A038C042A004808A00548104004038080040780400204BFD1C29E8410028807C0014388000024BFD3629E841002838600005D03C0438987C04594BFFFC54551EC87E807C001438800001C022A01457C8383EC062A048989C0320911C045480E30054C042A004818700403BAC01807BA400204BFD1BCDE8410028807C00143880000C4BFD35CDE841002883DC0014D03C04387BDF002038C0000060C9FFFFA01F00507F004800419AFBE8807F0080809F008480BF00884BFD10C9E8410028839F0054807F0080395E003080BF00887FE7FB78C03F00D079480020815F009880DC004C809C00484BFD32A9E84100284BFFFBA0807C001461058000C022A01490BC0454D03C043CC062A06081430054C042A00483EA0040389F01A0788400204BFD1B21E8410028807C00143880000D4BFD3521E8410028D03C04384BFFFB54817C00007B830020838B0048837C0000F84100287F6903A6805C00044E800421E84100284BFFFB2C837C0014C022A0147F63DB78C062A038C042A00480BB005483E500403BDF00C07BC400204BFD1AB5E8410028807C0014388000064BFD34B5E8410028D03C04384BFFFAE8817C0014C022A0147D635B78C062A048C042A004836B0054809B00404BFD1A79E8410028817C001438A000003940000098BC0320A06B0050615CFFFF7C83E0004086FA504BFFFAA038C100803880007B78DB00203BA000017F63DB784BFD3FE9E8410028813C0014386100747F64DB789121008093A100E44BFD185DE8410028817C0014C022A0147D635B78C062A04883EB0054C042A00483DF0040391E01E0790400204BFD19F1E8410028807C00143880000F4BFD33F1E8410028D03C04384BFFFA24811C0014C022A0147D034378C062A038C042A00483E8005483DF004038FE012078E400204BFD19ADE8410028807C0014388000094BFD33ADE841002839800005D03C0438999C04594BFFF9D880BC0014C022A0147CA32B78C062A048C042A00481450054808A004038040140780400204BFD1961E8410028807C00143880000A4BFD3361E8410028D03C04384BFFF994837C0014C022A0147F63DB78C062A048C042A004813B005483A90040397D0100796400204BFD191DE8410028807C0014388000084BFD331DE8410028D03C04384BFFF9507B8300204BFFF5B1817C0014C062A0487D635B78C022A05C4BFFFEE083BC0014C022A0147FA3EB78C062A038C042A004813D005481090040396801C0796400204BFD18BDE8410028807C00143880000E4BFD32BDE8410028D03C04384BFFF8F0550005EE2C0000004082000CC07C0024D07C03648162A04C5507E8BE3CC00003C022A01454EC183EC042A00460C043FDC062A060919C045483CB00007FBE01D63D3D002739099EC35503F87E547FBFFE906B000080BC0014547B07FE395B001F7CA32B787FDF52148085005457CC283480E400407CCC3A1478C400204BFD1821E8410028807C00147BC400204BFD3221E84100282C9E001FD03C04384085F850C1A2A064EC810372D09C04384BFFF84038A100803880005E78BD00207FA3EB784BFD3D8DE8410028815C0014380000017FA4EB783861007091410080900100E44BFD15FDE8410028809C04543C60FFFB83DC0014C022A0146068FFDFC062A0387FC3F378C042A0047C9F403893FC045480FE00548187004038CC02C078C400204BFD177DE8410028807C0014388000164BFD317DE8410028D03C04384BFFF7B0550B06F62C8B00004086039481429FF4811C03605509043E80EA00107F0748404198003C553B482C55263830812A00007D66D8507C8B4A147885002083A500647D5D40507C08E8507C0353787C68FE707C9B40782F9B0000409E039C80BC0014C022A0147CA32B78C062A048C042A0048145005483EA00403BDF02807BC400204BFD16DDE8410028807C0014388000144BFD30DDE8410028D03C04384BFFF7108182A04C3D000003C182A050611F43FDC1A2A02883CC00007CFEF9D63C67002738039EC37806C222541BF87E936C0000F8C10108C8E10108FD603E9CFCC05818ECA60332FC85680040840268817C001439200005C022A014913C04307D635B78C062A038C042A00480AB005481450040388A0360788400204BFD1645E8410028807C00143880001B4BFD3045E8410028D03C04384BFFF678807C001461080004C022A014911C0454D03C043CC062A03883E30054C042A00483DF004038FE034078E400204BFD15F9E8410028807C00143880001A4BFD2FF9E8410028D03C04384BFFF62C550006F62C0000004182018080DC0014C022A0147CC33378C062A048C042A0048126005483690040397B0260796400204BFD15A9E8410028807C0014388000134BFD2FA9E8410028D03C04384BFFF5DC807C0014610B0004C022A014917C0454D03C043CC062A03880A30054C042A00481450040388A02E0788400204BFD155DE8410028807C0014388000174BFD2F5DE8410028D03C04384BFFF590815C0014C042A02C7D435378C022A014C062A048808A0054810400403BE800A07BE400204BFD1519E8410028807C0014388000054BFD2F19E8410028C042A028EC2100B2D03C04384BFFF54483BC0014C062A0487FA3EB78C022A014C042A02C813D005480A90040396500E0796400204BFD14CDE8410028807C0014388000074BFD2ECDE8410028C082A028EC610132D07C04384BFFF4F8819C0014C022A0147D836378C062A048C042A00480CC005483A60040393D0380792400204BFD1481E8410028807C00143880001C4BFD2E81E8410028D03C04384BFFF4B4C002A0404BFFF5B8C3E2A0044BFFF698809C0014C022A0147C832378C062A048C042A00480E40054818700403BAC02407BA400204BFD142DE8410028807C0014388000124BFD2E2DE8410028D03C04384BFFF460837C001438000006C022A014901C04307F63DB78C062A038C042A004819B005480CC00403BA603007BA400204BFD13E1E8410028807C0014388000184BFD2DE1E8410028D03C04384BFFF414819C0014C022A0147D836378C062A048C042A00480CC005483660040393B02A0792400204BFD139DE8410028807C0014388000154BFD2D9DE8410028D03C04384BFFF3D078030020809C0014481A8D55600000004BFFF34838610080787D00207FA3EB784807BC1560000000809C00147FA3EB7838A000014807BC916000000081029FECC042A0147FA3EB7838A0000238C0000038E00000C0280D284807BACD60000000398000007D8763787D846378799F002C78FE002C789F000E799E000E7B6300207FA4EB787FC5F3787FE6FB7838E000004807AF05600000004BFFFBE4"
+      },
+      {
+        "va": "0x3f0c0",
+        "bytes": "915C0430"
+      },
+      {
+        "va": "0x3f0c4",
+        "bytes": "93BC0434"
+      },
+      {
+        "va": "0x40518",
+        "bytes": "380303307C8802A6F821FF71FBC10080781E0020C002A014FBE10088FBA10078F88100A07C7F1B78C1BE000439200000FF8D0000409D000839200001801F04307D3D4B782F000017419A00182C000002418200102C8000034186000840990054813F0454552604E62C060000418200182C9D0000408600105528987E5507683E90FF04547FC3F378809F00144808689560000000E92100A0EBA10078EBC100807D2803A6EBE10088382100904E8000202F1D0000419AFFAC80BF045454A304E62F830000409EFFC07BE30020388000174BFFE9D14BFFFF8C"
+      },
+      {
+        "va": "0x40548",
+        "bytes": "FF8D0000"
+      },
+      {
+        "va": "0x4054c",
+        "bytes": "409D0008"
+      },
+      {
+        "va": "0x405e4",
+        "bytes": "38800017"
+      },
+      {
+        "va": "0x405e8",
+        "bytes": "4BFFE9D1"
+      },
+      {
+        "va": "0x433b0",
+        "bytes": "8122A0AC7C0802A6F821FEC1FB810110FBC10120FBE10128F8010150DBC101307C7F1B78DBE10138787E0020FBA10118C00900A47C7C1B78C3E304347FC3F378EDBF002AD1BF04344BFCDF79E84100287FC3F3784BFFD115815F04302F8A001C409D0168280A0020418101188162A0B0794617887CA6582E7CA407B47C645A147C6903A64E800420000000F80000043C000003E0000003E0000000F8000004E800000310000005C8000002580000015800000158000005080000052800000158000000F8000006F4000005F8000000F80000068C00000288000001580000015800000158000003300000037000000390000003C00000017800000158000000F8000001980000008400000210C002A0C8C1BF0434FC0D0000408106E8813F0454552606722C86000041860890C3C2A0CCC19F0438EC2CF028FF8D0800419C07B0EC2CF028FC1F080040800010FC8D08004CC53382418608C4FF0D600040990024839F03D47FC3F378C022A0147F8407B44BFFA9697FC3F3783880001D4BFFBA8D7FC3F3784BFFB64D7FC3F3784BFFB41D807F00144BFD041DE8410028EBC10150EB8101107FC803A6EBA10118EBC10120EBE10128CBC10130CBE10138382101404E80002060000000386000024BFCFD55E8410028815F04304BFFFE8C60000000C13F0434C11F0438FC0940004081FF947FC3F378388000014BFFBA114BFFFF84C11F0434C0FF0438FF883800409DFF747FC3F3783880001A4BFFB9F14BFFFF64C122A0C4C1BF0434FC0D4800408105F0813F0454552706722C87000041860750C3C2A0C0C19F0438ED4CF028FF8D5000419C06D4EC2CF028FC9F080040840010FF0D08004F59D382419A07C4FF8D6000409DFF1080BF03D07FC3F378C0229FF87CA407B44BFFA8557FC3F378388000014BFFB9794BFFFEEC3BBF043C8062A010C022A0047BA400204BFCCE69E8410028C162A038C01F043CFC0058004181059CC05F0434C03F0438FC8208004085FEB47FC3F378388000214BFFB9314BFFFEA47FC3F3784BFFA8CD7FC3F3784BFFF9D5C19F0434C09F0438FC0C2000408104F07FC3F3783880000A4BFFB9014BFFFE74815F0454554005EE2F000000409A0014C022A028C05F0434FF820800409D000C7FC3F3784BFFE6857FC3F3784BFFA875C09F0434C07F0438FC0418004081FE348B9F04597FC3F37838A00014C022A084389CFFFF38C00014989F04597C9D23784BFFA6812CA300004086FE087FAC07742F0C00004099070C7FC3F378388000134BFFB8794BFFFDECC07F0434C05F0438FF831000409DFDDC7FC3F378388000084BFFB8594BFFFDCCC3DF0434C15F0438FC9E50004085FDBC817F0454556C04E62F0C0000409AFE1CC1BF0334C3E2A014FF8DF800409DFE0C7FC3F378388000174BFFB8194BFFFD8CC0FF0434C0DF0438FF873000409DFD7C7FC3F3783880000F4BFFB7F94BFFFD6C813F0454552B06B42F8B0000409E03D4C182A0C0C1BF0434FC0D6000418105BCC09F0438FF8D2000409DFD404BFFFDACC0DF0434C0BF0438FF0628004099FD2C7FC3F3783880001B4BFFB7A94BFFFD1CC11F0434C0FF0438FF883800409DFD0C2C0A0002418204F083BF0014C3E2A0B8C3DD00E4EC3EF82A4BFCE6F1E8410028D03D00E4817F001438AB00E07963002078A400204BFCE0F5E84100287FC3F378388000014BFFB74D4BFFFCC080FF03602C870000418603A87FC3F378C022A0984BFFD3E15467063E2C0700004082FF247FC3F378C022A08438A0000238C000034BFFA4F92CA300004086FC808102A04C3C800003C17F0434608043FDC182A050806800007D4301D63D2A00273BA99EC37BACC22257BCF87E93880000F9810100C8C10100FCA0369CC07F0438FC802818EC440332EC2200F2FF0158004098FC2C4BFF6AD160000000907F03607FC3F3784BFFCA794BFFFC14C01F0434C1BF0438FC8068004085FC047FC3F378388000074BFFB6814BFFFBF4C0DF0434C0BF0438FC8628004085FBE47FC3F3783880000C4BFFB6614BFFFBD47FC3F3784BFFEF057FC3F3784BFFA5F5C11F0434C0FF0438FF0838004099022088DF04593940000080A29FF43926FFFF80FF0360993F045954E8043E818500107D264B787F8C4040419C0034550B482C81850000550938307FA958507D1D6214791C0020809C00647D4438507C0720507C0353787C67FE707D0A38787CC507742C0500004081000C2C8A00004086FF647FC3F3783880000D4BFFB5C14BFFFB347FC3F3784BFFA55D7FC3F3784BFFF665C03F0434C17F0438FF015800409901807FC3F378388000094BFFB5914BFFFB04809F0454548A05EE2F8A0000409E0014C3C2A028C3FF0434FC1FF0004081000C7FC3F3784BFFE6757FC3F3784BFFA505C002A078C1BF0434FC8D00004185017CC07F0438FF0D18004099FAB8897F04597FC3F37838A00001C022A084398BFFFF38C00001999F04597D9D63784BFFA3052FA30000409EFA8C7FA907742C0900004081FAF07FC3F378388000104BFFB4FD4BFFFA70C17F0434C1BF0438FC8B68004085FA607FC3F378388000134BFFB4DD3861008038800064787D00207FA3EB784BFCFCF1E841002838E0000198E100FE811C001438C000017FA4EB78386100789101008090C100E44BFCD559E841002880A1007890BF03C44BFFFA08C15F0434C13F0438FF0A48004099F9F87FC3F3784BFFE5897FC3F378388000104BFFB46D3801008038800063781D00207FA3EB784BFCFC81E841002838600001986100FE80FC0014390000017FA4EB783861007490E10080910100E44BFCD4E9E841002880C1007490DF03C04BFFF9987FC3F3784BFFC7D14BFFF98CC1BF04344BFFFC3CC3C2A0CC801F0454540306722F030000409AF920C19F04384BFFF928C3C2A0C0815F0454554006722F000000409AFA18C19F04384BFFFA207FC3F378C022A0BC4BFFD079547C063E2F1C0000409A0234C1BF04344BFFFE6C39200000807F00143880FFFF913F043C4BFCE969E84100284BFFFA504BFF67B56000000081429FF4907F03605469043E7C681B78818A00107F0C48404198FC3C552B482C80AA0000552638307C8658507F842A147B830020800300647D4040507D2800507D3D53787FA8FE707F8040782F800000419EFC0478030020809F0014C022A0B4C042A060481A51D1600000004BFFFBE8809F03D47FC3F3787C8407B44BFFA469815F0014C0A2A004C182A038C08A00D0EC652028EC43233AD04A00D0C1BF0434C19F04384BFFF838809F03D07FC3F3787C8407B44BFFA4317FC3F3784BFFA1312C23000040820138C002A03C839F0014C162A038C1BC00D0EFE06828EFDF6AFAD3DC00D0C1BF0434C19F04384BFFF904839F0014C142A0B8C13C00E4EC2950284BFCE205E8410028D03C00E44BFFFB14C3C2A0C0613D0040FC20F090807F03D093BF04547C6407B4C0429FF87FC3F3784BFFA5FDC1BF04344BFFFE6CC3C2A0CC61280040FC20F09080FF03D47FC3F378C042A0147CE407B4911F04544BFFA5D17FC3F378388000004BFFAAA5C1BF04344BFFFE187FC3F378C022A0BC4BFFCEC15465063E2C8500004186FDF4811F04546106002090DF04544BFFF76C7FC3F3784BFFA7E5C1BF0434C19F04384BFFF7307FC3F3784BFFA7D13921008038800051793D00207FA3EB784BFCF9EDE8410028817C0014398000017FA4EB783861007091610080918100E44BFCD25DE8410028C1BF0434C19F04384BFFF7F8C002A0404BFFFECC7FC3F378388000194BFFB1814BFFF6F47FC3F378388000144BFFB1714BFFF6E4"
+      },
+      {
+        "va": "0x433f8",
+        "bytes": "4BFCDF79"
+      },
+      {
+        "va": "0x43404",
+        "bytes": "4BFFD115"
+      },
+      {
+        "va": "0x43408",
+        "bytes": "815F0430"
+      },
+      {
+        "va": "0x4340c",
+        "bytes": "2F8A001C"
+      },
+      {
+        "va": "0x43410",
+        "bytes": "409D0168"
+      },
+      {
+        "va": "0x43414",
+        "bytes": "280A0020"
+      },
+      {
+        "va": "0x43418",
+        "bytes": "41810118"
+      },
+      {
+        "va": "0x43438",
+        "bytes": "000000F80000043C000003E0000003E0000000F8000004E800000310000005C8000002580000015800000158000005080000052800000158000000F8000006F4000005F8000000F80000068C00000288000001580000015800000158000003300000037000000390000003C00000017800000158000000F8000001980000008400000210"
+      },
+      {
+        "va": "0x4357c",
+        "bytes": "4BFCFD55"
+      },
+      {
+        "va": "0x43584",
+        "bytes": "815F0430"
+      },
+      {
+        "va": "0x4b9e8",
+        "bytes": "7D80002678640020F821FD11F9C10210F9E10218FA010220FA210228FA410230FA610238FA810240FAA10248FAC10250FAE10258FB010260FB210268FB410270FB610278FB810280FBA10288FBC10290FBE10298906101E4906101E0DAC102A039600000DAE102A83AC00000DB0102B03BC00000DB2102B83B400000DB4102C03A800000DB6102C83B800000DB8102D03A400000DBA102D83B000000DBC102E039C00000DBE102E83A0000003AE000003BE00000918102F87CA802A63B600000F8A10300F88101F08062A1543AA00000C00404A83BA000003A6000003B20000039E00000C02300A47C832378EDA0082AF96101D03A200000D1A404A84BFC588DE8410028810101E439200000800804A4F92101D82F800002419E0010386000044BFC77C9E8410028E86101F04BFFA015E86101F04BFFCA05E86101F04BFFF0EDE86101F04BFFEF0DE86101F04BFFE71D80E101E48142A0D08107036080CA00105509043E7C06484041800040552B383080CA00005527482C7CAB38507D653214796C0020806C00647D4340507C8818507C8053787C09FE707D6048782C800000408602E860000000814101E4800A04A42880006641850234780617888182A1E87CA6602E7CA307B47C0362147C0903A64E800420000003B800000528000003B8000003B8000003B8000003B800000500000005140000055400000A2800000AE800000D2400000D2400000EA0000003C4000003F800000418000004800000019C000011C0000011D8000011F000000ECC00000ECC00000ECC00000ECC00000ECC00000ECC00000F7800000F7800000F7800000F7800000F7800000F780000109800001368000013B400000390000013CC000003B8000003B800001194000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B80000133C00001204000013104BFEE68160000000814101E45469043E7C681B78906A03608142A0D0828A00107C9448404184003C553B482C834A0000552B38307E2BD8507EB1D2147AA30020832300647E7940507E48C8507E509B787E1DFE707EA3E8782E0300004092152483A101E4C022A168C0BD04A8FF0508004199026060000000832101E483F900147BE300204BFC7B85E8410028EAC10300810102F87EC803A6E9C10210E9E102187D108120EA010220EA210228EA410230EA610238EA810240EAA10248EAC10250EAE10258EB010260EB210268EB410270EB610278EB810280EBA10288EBC10290EBE10298CAC102A0CAE102A8CB0102B0CB2102B8CB4102C0CB6102C8CB8102D0CBA102D8CBC102E0CBE102E8382102F04E8000206000000078080020F90101E8806800402E0300004192FD1078630020388000B94BFC7D85E84100285460063E2F000000419AFCF4810101E4A14804D8554404E62F840000419EFCE080C80000E86101F08186003C80AC0000F84100287CA903A6804C00044E800421E84100285463063E2C0300004082FCB0E8A101E8816500402C0B0000916101C04182FC9C806101C04BFC75C5E8410028786300204801C52160000000808101C0C062A0E839241FC0C042A11839000001C182A1E479270020D063006C39600001D0430070990300799903007891670068D18700644BFFFC48826101E4C17304A8C15304CCFC0B50004081FE74E86101F04BFFBF3D5474063E2C940000418600B8806101E483E300144BFFFE5C838101E4C3FC04A8C0FC04CCFC9F38004085FFE4E86101F04BFFBF095476063E2E16000041921654822101E483F100144BFFFE28822101E4C37104A8C2F104CCFF1BB80041991060826101E483F300144BFFFE08812101E4C042A1ACC1A904A8FF0D100040990014A18904D8558506F62F850000419E1588C3A2A200FC0DE80040810018826101E4A01304D8540604A42C8600004186157C830101E4C2D804CCFE0DB0004091FFA4E86101F04BFF9E9D824101E483F200144BFFFDA04BFEE39D6000000080E101E48142A0D05469043E7C681B7890670360800A00107F0048404198003C5533482C824A0000553938307E1998507DF0921479FD002082BD00647D5540507E88A8507E9E53787FC9FE707DE448782F840000409E135081E101E4C06F04A8C02F04CCFC0308004181FF7C81C101E483EE00144BFFFD20E86101F04BFFA26982C101E483F600144BFFFD0CE86101F04BFFA38582A101E483F500144BFFFCF881C101E4C082A0E4C0AE04A8FE0520004091FEB4E86101F0388000094BFF8EC981E101E483EF00144BFFFCCC83E101E43BC000008142A0D0811F0360838A00105509043E7C9C4840418400345539482C830A0000553A38307EBAC8507D95C21479940020827400647E5340507C0898507C0693787CC5FE707D9E2878810101E4C2E2A118C00804A8FE00B80040910EE0EC60B8282E1E0000D06804A84192102083E800143B9E0030C302A168397F0030C0E2A1047B830020C142A13C79680020E8E101F0C1630004C3480004EFCBD028C1230000C3280000EF49C828C1030008C2C80008EC48B028C0A3000CC0C8000CED053028EC9E07B2EC7A26BAEC0218BAFD80002CEED76024FCA05028EC2205B2FDA5386EEFED0632EFBE05B2FF853F6EEF7C0632EF3A05B2FD65BE6EED2B0632ECC805B2FC8539AED3E1020083610200D361020080810200D12102007896002C81210200D0810200814102007936000E7957002CFAC703707B77000EFAE70378FC20B89083A101E4386101808082A1243B5D03703B1F00307B4500204BFC5971E84100287B050020EB210188EA6101807B3500227A66002292A10200C3E10200C1450000C1A50004C0250008C3A5000CEF1F082A90C10200C001020092610200EF8A002AC041020093210200EF62682AC3C10200ECFEE82AD3050008D3850000D3650004D0E5000C818101E4806C00144BFC767DE841002841920D74816101E4395E003079440020806B001439030020C3C4000039230030C3840004791B0020C324000879270020C03B0004C3A70004C3470008C36700004BFC6065E8410028C2DB0000FC20B050C05B00084BFC6DC1E8410028C302A120C2C2A1F0EFE1C5BAEC3CE828FDA0FE5EFDA06E9CFCEDF828FC4DB828FFBF136EFF87EFEEFCE03850FF87EF2E4BFC6019E8410028ED7ED828EC59D028FC2058504BFC6D75E8410028C3C2A1F4EFFC07B2ECC1C5BAFD00365EFD00469CFC883028FD28B828FCA64A2EFC6429AEFC802050FC6428EEEC23FFB84BFC5B6DE8410028C182A1F8EC210332FF01C00040990C38FC20C090EC21F82AC382A1044BFC5B49E841002838610090ED6105B23881008CEC2B07B24BFC7B51E8410028FC20E09038610088388100844BFC7B3DE8410028C1210084FD404850C3010088C1010090EFD80632C341008C7FEAFB78EC8906B2832101E4D3810200794F002C816102008102A118806102007971002C809900147910002C812102007871000EEC4A0232C002A13C7930000EFA240018FA04001083590014ECC2F0BAC3C2A158ECA4313AFD80282CEFB76024FCE50028EC640772FC27E0EED0210200EED8077280E10200EFE20772FDA7E5AED1A1020078EF000E83610200FF67BFEED36102007B6E002C83A10200F9FA00287BAE000EF9DA002082390014E8C101D83B1100103AB100207B1300207AB40020C0730004C1140000C0940008EF230232C1730000ECC402F2C0B30008C3540004ED8506B28013000C7806002C7CCC3378ED3ACAF8EC053238ED436138D121020082410200D001020080A102007A4C000EEAE101D0D141020078B7002C82C10200F98101D87EFCBB78E9C101D88202A1547ADC000EFB8101D0EBE101D0F9D10008FBF1000081E101E4C03000A4C30F04B0EEF8082AFC17F000D2EF04B04081F8407BDE002083A2A1883BE000033B80000081E101E47FE907B4E86101F07FC4F37838A0FFFFC05D0CF438C00000C062A104C02F04D0FB810070FB8100784BFFDD512C9F00043BFF00014086FFC8480008C880A101E480C2A154C3E2A158C02504B0C00600A4EDA1002AFF8DF800D1A504B0409DF9C482A2A15C3C6000033D605555606443FDE86101F061735556811500007D4821D63DCA00273B6E9EC35769F87E5538047E7CE921D63FC700277F1D0E707FBD01943B5E9EC357B9083C5756F87E7EF9C05056D0047E3A97000392D500007E8407B47E5098965651083C7C1192147DE080507DE507B44BFFD51D810101E4C04804B0ED82F828FC0CF800D18804B04081FA1C83E80014D3E804B04BFFF738830101E43B8000008142A0D08118042082EA00105509043E7E17484041900034552B482C55243830812A00007CE458507F274A147B3F002083DF00647F88F0507FBE40507F9BEB787F7AFE707F3CD078810101E4A12804D8552A05AC2F0A0000409A08F4C2C2A1ECC1A804A8FF8DB000409D01B883E8001461200200B00804D8819F0054812C00448909000C280800074081088081C9000038CE103078DE002080BE02402C85FFFF418608687FE3FB783AE101304BFC7AF9E8410028809E0244817F009854893032C342A1183AC101007FC95A143AA101107BD900203A8101203BB900303B5900103B1900207C20C8CE38E101003B6000007C00E8CE78E300207DA0D0CE3A6100A07D80C0CE7FE5FB787C00B9CE7C641B787C20B1CE2E1C00007DA0A9CE7D80A1CEC39F00D0C3C10130C3A10138EF3E0732C3610134EF1D0732EEFB0732D35F003C937F000C937F001C937F002C7A7F0020D3210130D3010138D2E101344BFC7769E84100283880000038A000017FE3FB7838C000014BFC3BF1E8410028824101E4821200147A11002081F10090920100B091E100B441920078390100C8790E00207DC373784806F29960000000814101E47DC3737838A00001808A00144806F3116000000093610200C04102007DC37378C022A0E83CA0000438C0000038E000024806F14D60000000806101E47DC4737838E00000836300147B830020E8BB0020E8DB00284806E599600000007FE3FB784BFC50A5E8410028838101E4C1BC04A8818101E4C3EC04CCFF0DF8004099F6D048000488836101E48062A124C042A118835B0014C03B04ACC2FA00E44BFC5CD9E8410028ED17082AD11A00E4822101E4807100143B2300E0786300207B2400204BFC5035E8410028826101E4807300144BFC7035E8410028810101E4C182A104C14804ACFF0A60004099067883E80014C342A1487BEB0020C12804C0C16B00E4EC0BD02AFC004800408106604BFEDA716000000082E101E48142A0D05469043E3BE0000090770360838A00107E1C484041900034552F482C55203830812A00007C8078507CA44A1478A7002080C700647F0618507D8330507D9FC3787FE8FE707CBF407882A101E4A13504D8552A06B42F0A0000409A0BEC3A4001407D3090382F900140419E0018E86101F04BFF92695473063E2C1300004082F5B42C9F0000418600347BF90020E86101F0E8B90030E8D900384BFF77812E23000041920018834101E4A23A04D8562306722F030000409A0308E86101F04BFFB46D547B063E2E1B00004092F670E86101F03880000E4BFF857D816101E483EB00144BFFF380820101E4C0F004A8C0D004CCFF0730004099F55CE86101F0388000254BFF8551822101E483F100144BFFF3544BFED95160000000812101E48142A0D090690360808A00105469043E7C8448404184003C553F482C81CA0000553C38307D7CF8507DEB721479F10020821100647FD018507C6380507C68F3787D0AFE707DE350782E030000409206CC810101E4A26804D8812804A45672077A2F120000409A050C552E103A8222A0D4C1A804A8396EFFA87D6307B47F238A14C3590064FF8DD000419D09DC83A101E4C33D04CCFC8DC8004085F47C4BFFF4F84BFED8A56000000080E101E48142A0D05469043E7C681B7890670360836A00107E1B48404190003C5523482C832A0000553138307E7118507C93CA1478920020821200647D5040507FC880507FCF53787DE9FE707C8348782F030000409A04E8810101E4A2A804D8812804A456B4077A2F940000409E04445539103A8242A0D4C1A804A83A79FF907E7007B47FB09214C0FD0084FC0D38004081F44C3AC10100388000747ADC00203BE000017F83E3784BFC6BFDE8410028810101E0B3E101787F84E3783861008081C800143960000191C10100916101644BFC4465E8410028822101E438800006807104A42C83001E408500083880000738A00000E86101F07C8407B44BFFE5D182E101E4A19704D8C1B704A861850004B0B704D84BFFF3C8812101E4C30904A8C2C904CCFF98B000409DF16CC0690024C022A104FC0308004C40138241820958814101E4886A04DD39030001990A04DD4BFED74D60000000812101E48142A0D090690360808A00105469043E7C8448404184F37C5537482C82CA0000552538307F85B8507D7CB214797F002081DF00647E2E18507E0370507E1E8B787FCFFE707D6078782E0000004192F34478120020E86101F0E8B20030E8D200384BFF74992F230000419AF32882A101E48262A0D88A9504DC7E8007747CD300AE2F860000409EF30CE86101F04BFF8F2D547A063E2C9A00004086F380E86101F0388000234BFF828D836101E483FB00144BFFF0906000000083C101E4C302A208C0FE04A8FC07C0004081F350E86101F0388000024BFF825D838101E483FC00144BFFF060820101E4C3D004A8C0D004CCFF9E3000409DF1E84BFFF298E86101F04BFFADC15470063E2E1000004092F2044BFFF280E86101F04BFFAA89830101E483F800144BFFF01C82A101E4386101B08082A12439550370C022A11879450020829500144BFC4E05E8410028E80101B8E8E101B039F400307809002279FF002078E6002291210200C1010200C3DF000CC01F0000C2FF0004C19F000890C10200EC2C402AC161020090E10200ECC0582AC121020090010200ECB7482AC1410200EC9E502AD03F0008D0DF0000D0BF0004D09F000C810101E4806800144BFC6B0DE841002882E101E480A2A154C3C2A158C07704B0C1A500A4EEC3682AFC96F000D2D704B04085EF543BE0000383A101E42E1F00047FE507B4E86101F038C000013BFF0001C03D04D04BFFDCC94092FFE0810101E4C32804B0EF59F028FF1AF000D34804B04099F0B883E80014D3C804B04BFFEF10820101E4C362A164C3F004A8FF9FD800409DF0CCE86101F0388000284BFF80E1824101E483F200144BFFEEE481C101E4C3A2A204C38E04A8FF9CE800409DF0C0E86101F0388000294BFF80B582C101E483F600144BFFEEB8E86101F04BFFBE51830101E4C01804A8C09804CCFC0020004081F038E86101F03880000F4BFF8081832101E48362A0D488F904DD83F9001454FD15BA7F5DDA14C0BA0008D0B904CC4BFFEE6C824101E4C13204A8C11204CCFF894000409DF1304BFFFAC0832101E4C39904A8C1B904CCFF1C68004099F118E86101F0388000274BFF8025834101E483FA00144BFFEE283BC000004BFFF79881C101E483EE00144098EE147BF60020C042A14883C101E4C3F600E4EF7F102AC33E04C0FC9BC8004084EDF44BFFF98080C101E4C1A604A84BFFF02483E101E4C1BF04A84BFFF8CC834101E4C1BA04A84BFFFB14C002A1FCFF810000409CF3C8FC2000904BFFF3C0E86101F04BFF8EF9546E063E2F8E0000409EF07CE86101F04BFFAE65547F063E2C1F00004082ED884BFFEFDC82C101E42E1E000083F600144BFFF1F84BFED3796000000083C101E483FE0014907E03604BFFED64814101E439E30030C0E2A11879E40020C2C2A104C162A13C83CA0014393E0030C1A4000CC044000879270020C307000CEF8DC028D3810200C3A70008EFE2E82883610200C32400047B7D002CD3E10200C3670004EF59D82883410200C10400007B5D000E7BA500227BB5002CD3410200C2E70000ED48B82880010200781C002CD1410200830102007B1C000E93810200C12102007B8C0022ED89027291810200C381020090A10200C0A10200EFDC673AEC05F17AFCC0002CEFA73024FFE05828EC9D0172FC7FB12ED0610200EC5D073282C1020093810200C02102007AD5000EEF1D0072FDBFB62ED1A102007AAE002283810200FF7F38AE7B94002CD361020083E1020091C102007BF4000EC04102007A88002291010200C02102004BFC5F6DE84100284BFFF9F882E101E483F700144BFFF0AC820101E439030030C342A118790F0020C322A104C162A13C83D00014395E0030C10F000CC12F000879490020C2E9000CED48B828D1410200C1890008EFC9602880810200C0AF00047899002CD3C10200C0C90004EC05302880E10200C06F000078F9000E7B3500227B33002CD0010200C0890000EC232028836102007B78002CD021020083A102007BB8000E7F1AC3787B18002293410200C3010200EED8063293010200C141020092A10200C0410200EF8AB2BAEFA2E0BAFDA0E82CED3A6824FFDD5828EFE900B2FCFECFEED0E10200ED8902B28001020093410200C36102007813000EEEE906F2FD1ECDEED10102007A65002280C10200FCDED32E78D2002CD0C102008181020090A102007992000EC04102007A57002292E10200C02102004BFC5E35E84100284BFFF81082A101E43943003039E100A0C022A0E83A950380794900207A96002079F800207F03C378C069000CC096000CEEC32028C0E90008D2C10200C1B60008EF076828C3A9000480810200789F002CD3010200C3960004EC5DE028C369000080E1020078FF000ED0410200C3F60000EF3BF82880010200FBE100A8781E002CD321020080C1020078DE000EFBC100A04BFC536DE84100288082A1247F05C378C022A118386101A04BFC4865E8410028E98101A8EB8101A079850022C17600007B9F002290A10200C2E10200C0160004C1160008C196000CECA8B82A93E10200C341020093810200EFCBD02AC121020091810200ECC0482AC1410200EC8C502AD0B60008D3D60000D0D60004D096000C4BFFE9D4812101E4380100A0C022A0E83889038038E903907891002078F80020781600207EC3B378C2D1000CC0F8000CEF07B028C3980008D3010200C1B10008EFBC6828C3F8000480C1020078DB002CD3A10200C0510004EF7F1028C358000081810200799B000ED3610200C3310000EEFAC82880A10200FB6100A878BA002CD2E1020082E102007AFA000EFB4100A04BFC525DE84100288082A1247EC5B378C022A118386101904BFC4755E8410028EB810198E9C101907B9F0022C171000079CB002293E10200C1410200C0110004C1910008C0D1000CEC6C502A91610200C101020091C10200ECAB402AC121020093810200EC80482AC3C10200EC26F02AD0710008D0B10000D0910004D031000C4BFFEBA838C101003880007478D400203AC000017E83A3784BFC62D5E841002880A101E0398000017E84A378B181017882E500143861009492C1016492E101004BFC3B3DE8410028838101E43880000783FC04A42C1F001840810008388000067C8407B4E86101F038A000014BFFDCA982A101E4A31504D8C1B504A863000004B01504D84BFFF5A8E86101F04BFFE091824101E4C1B204A84BFFEA6CE86101F0388100844BFF69815474063E2E1400004192FA48E86101F04BFFE06582A101E4C1B504A84BFFEA60E86101F04BFF91F983A101E483FD00144BFFE80C80E90000E86101F083A70048837D0000F84100287F6903A6805D00044E800421E84100284BFFE7F0E86101F04BFF865582E101E483F700144BFFE7D060000000"
+      },
+      {
+        "va": "0x4bae4",
+        "bytes": "4BFC588D"
+      },
+      {
+        "va": "0x4baf4",
+        "bytes": "800804A4"
+      },
+      {
+        "va": "0x4bafc",
+        "bytes": "2F800002"
+      },
+      {
+        "va": "0x4bb08",
+        "bytes": "4BFC77C9"
+      },
+      {
+        "va": "0x4bbbc",
+        "bytes": "000003B800000528000003B8000003B8000003B8000003B800000500000005140000055400000A2800000AE800000D2400000D2400000EA0000003C4000003F800000418000004800000019C000011C0000011D8000011F000000ECC00000ECC00000ECC00000ECC00000ECC00000ECC00000F7800000F7800000F7800000F7800000F7800000F780000109800001368000013B400000390000013CC000003B8000003B800001194000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B80000133C0000120400001310"
+      },
+      {
+        "va": "0x53490",
+        "bytes": "2F8400057C0802A6F821FEB1FBC10128FBE10130DBA101387C9F2378DBC101407C7E1B78DBE10148FB210100FB410108FB610110FB810118FBA10120F8010160419C02402C0400073B8000013B60000041810220881E07622F00000C419A02382F80000D419E02842C000004418202BC5789063E2C89000040860060811E075C38800002550706722F070000419A004C7BC300207C8407B49BFE073E4BFFD6B5EBC10160EB2101007FC803A6EB410108EB610110EB810118EBA10120EBC10128EBE10130CBA10138CBC10140CBE10148382101504E8000205764063E2F840000409E01D02C890000408601E48142A20C3B80000080FE074454E9043E806A00107F834840419C00345528482C80CA0000552438307CA440507F2532147B230020800300647F8700507FA038507F9BEB787F7AFE707F3CD078897E07625569063E38E9FFFA2B870001419D00807C09F800418201F07B9D0020393E06E838800000792300204BFBCDEDE8410028A17D00506D6AFFFF2C8AFFFF418601D8807D00803B3C0030809D008480BD00884BFBD155E8410028819D0054807D00807FA7EB7880BD00887B280020815D0098C03D00D080CC004C808C00484BFBF339E8410028897E076260000000557A063E7F1AF800419A017083BE075C57AA003C915E075C57E0063E7D7D5B782B8000137FEBFB789BFE07623BE0000093FE0754419DFEA480C2A330556415BA7D04302E7D0507B47C6532147C6903A64E800420FFFFFE84000008D40000013C00000A040000083800000764000006F0000006F000000670000005FC00000558000004E400000460000003D800000358000002D4000002AC0000022C0000022C000001B0600000002C84000C3B8000003B6000014186FDD8881E07623B8000003B6000002F00000C409AFDD03BBE06D47BA30020388000004BFBCCB1E84100284BFFFDC860000000817E075C38800003556A05AC2C0A00004182FDD02C8900004186FE24819E075C558906722F090000409AFE14388000014BFFFDB06000000038DE06E43880000078C300203BBE06D44BFBCC59E841002838BE06D03880000078A300204BFBCC45E84100287BA30020388000004BFBCC35E84100284BFFFF74387E06DC38800000786300204BFBCC1DE84100284BFFFD34837E075C636A0001915E075C4BFFFE94897E07624BFFFE74807E0014C3A2A254C3C2A228FC60E890FC40F090C022A23C80A3005483450040399A00E0798400204BFBDA21E84100287B8B0020FC40F090C022A23CFC60E8907D635B78812B005483E900403B3F00E07B2400204BFBD9F5E8410028807E0014388000074BFBF3F5E8410028D03E07504BFFFCD8807E0014C3A2A254C3E2A228FC60E890FC40F890C022A23C8183005483EC00403B3F00607B2400204BFBD9ADE84100287B8A0020FC40F890C022A23CFC60E8907D43537883AA0054839D004038FC008078E400204BFBD981E8410028807E0014388000034BFBF381E8410028D03E07507BC300204BFFA7894BFFFC5C807E00147B990020C3C2A254C3E2A228FC60F090FC40F890C022A23C81630054818B00403BEC01407BE400204BFBD92DE841002881590054FC40F890C022A23CFC60F0907F23CB7883AA00403B9D01407B8400204BFBD905E8410028807E00143880000A4BFBF305E8410028887E0763D03E0750288300024085FBE04BFFFF7880FE00007BC3002083C70048811E0000F84100287D0903A6805E00044E800421E84100284BFFFBB4807E00143880FFFF4BFBEBF9E8410028807E0014C3C2A254C3A2A228FC60F090FC40E890C022A23C83630054809B004038040100780400204BFBD879E84100287B860020FC40E890C022A23CFC60F0907CC333788126005480A900403B4501007B4400204BFBD84DE8410028807E0014388000084BFBF24DE8410028D03E07504BFFFB30555A07FE2F1A0000419A074C807E0014C3A2A254C3C2A228FC60E890FC40F090C022A23C8103005483680040381B0400780400204BFBD7F9E84100287B840020FC40F090C022A23CFC60E8907C8323788124005480C9004038A6042078A400204BFBD7CDE8410028807E0014388000204BFBF1CDE8410028D03E07504BFFFAB0554B687E807E0014C3A2A2547B9D0020556C983EC3E2A228FC40F890C022A23C919E075CFC60E89083E30054833F004039590040794400204BFBD775E8410028839D0054FC40F890C022A23CFC60E8907FA3EB7880FC004039070060790400204BFBD74DE8410028807E0014388000024BFBF14DE84100287BC30020D03E07504BFFF6054BFFFA28807E0014C3E2A23CC3C2A228FC20F890C3A2A254FC40F090FC60E89083630054809B004038040440780400204BFBD6F9E84100287B860020FC40F090FC60E8907CC33378FC20F89080A60054808500404BFBD6D5E8410028807E0014388000224BFBF0D5E8410028C0A2A234EC810172D3FE075839200000993E073FD09E07504BFFF9A4807E00147B9F0020C3A2A254C3C2A228FC60E890FC40F090C022A23C83430054817A0040398B01E0798400204BFBD675E8410028833F0054FC40F090C022A23CFC60E8907FE3FB78815900403BAA01E07BA400204BFBD64DE8410028807E00143880000F4BFBF04DE8410028D03E07504BFFF93088FE073D3900EEFF807E00147D444038C3C2A2543B67FFFFC3E2A228909E075CFC40F8909B7E073DFC60F09080C30054C022A23C80A6004038050200780400204BFBD5EDE84100287B890020FC40F890C022A23CFC60F0907D234B7883490054817A0040398B0200798400204BFBD5C1E8410028807E0014388000104BFBEFC1E8410028387E05ACD03E07503B800000786300209B9E073F4BFBD435E84100284BFFF88C807E00147B9D0020C3C2A254C3A2A228FC60F090FC40E890C022A23C83E30054833F004039590160794400204BFBD55DE8410028839D0054FC40E890C022A23CFC60F0907FA3EB7880FC004039070160790400204BFBD535E8410028807E00143880000B4BFBEF35E8410028D03E07504BFFF8188B7E073D3880EEFF807E00147D452038C3A2A25438DBFFFFC3E2A22890BE075CFC40F89098DE073DFC60E89081230054C022A23C83490040381A0180780400204BFBD4D5E84100287B8B0020FC40F890C022A23CFC60E8907D635B78818B005483EC00403B3F01807B2400204BFBD4A9E8410028807E00143880000C4BFFFEE87BC300204BFFC7017B880020388000006085FFFFA0C800507F062800419AF77883680080838800887B7F00207B9E00207FE3FB787FC4F3784BFBC57DE84100282F9B0000419E0014887F00795467E07E54E8203E991F00792C1C00004182F738895E0079555DE07E57BC203E9B9E00794BFFF724807E0014615A1000C3E2A23C7BDD0020935E075CFC20F890C3A2A254C3C2A228FC60E89081230054FC40F09081890040380C00E0780400204BFBD3E9E84100287B8B0020FC40F090FC60E8907D635B78FC20F89083EB0054833F0040395900E0794400204BFBD3BDE8410028809E0748D3FE07587FA3EB7838A0000738C000014BFF9EC17FA3EB78809E074C38A0000738C000004BFF9EAD386100803880005A787B00207F63DB784BFBF929E8410028839E00147F64DB783BC00001386100709381008093C100E44BFBD199E84100284BFFF650554007FE2C8000004186025C8B3E073F3BB900019BBE073F3CE0FFFC807E0014C3C2A25460E4FFE7C3A2A228FC40E890C022A23C7D482038FC60F090911E075C80C3005480A600403B4500207B4400204BFBD2FDE84100287B8C0020FC40E890C022A23CFC60F0907D836378812C0054816900403BEB00407BE400204BFBD2D1E8410028807E0014388000014BFBECD1E8410028D03E07504BFFF5B4399E06DC38800000798300204BFBC455E8410028393E06D438800000792300204BFBC441E8410028813E075C552B0672552A807E2C0B00005547803E90FE075C4082F828553A05AC3B2000062C9A00003B6000063B400006380000C03BE000C0408600183B2000043B4000053B600004380000803BE000A0807E0014C3E2A228C3C2A254FC40F890FC60F090C022A23C8143005480EA00407C803A14788400204BFBD211E84100287B880020FC40F890C022A23CFC60F0907D03437857BC063E80C8005480A600407C1F2A14780400204BFBD1E1E8410028807E00145764077C4BFBEBE1E84100282F1C0003D03E0750419A00FCC042A288EC0100B2D01E07507BDD0020809E07487F2507B47FA3EB7838C000004BFF9CBD7FA3EB78809E074C7F4507B438C000004BFF9CA94BFFF484554007FE2C0000004182009888DE073F38660001987E073F555BE8BE807E0014C3E2A24CC3A2A2545760183EFC40F890C022A23CFC60E890901E075C81430054808A00404BFBD13DE84100287B870020FC60E890C022A23CFC40F8907CE33B7880870054810400403B8800207B8400204BFBD111E8410028807E0014388000004BFBEB11E8410028C062A284EC2100F2D03E07504BFFF3EC981E073F4BFFFDB0981E073F4BFFFF74C0DE00247BC30020D0DE03644BFF9E4D4BFFF8A88B7E07632B9B0001419DFF0C4BFFFEFC60000000"
+      },
+      {
+        "va": "0x53680",
+        "bytes": "9BFE0762"
+      },
+      {
+        "va": "0x53688",
+        "bytes": "93FE0754"
+      },
+      {
+        "va": "0x54eb8",
+        "bytes": "380303307C8802A6F821FF71FBC10080781E0020C002A23CFBE10088FBA10078F88100A07C7F1B78C1BE000439200000FF8D0000409D000839200001897F07627D3D4B785560063E2800000D4181001C2C800005418600142F000006419A000C2F9D0000409E0054813F075C552804A42F080000419A00182F9D0000409E0010552A907E5549703E913F075C7FC3F378809F001448071EED60000000E96100A0EBA10078EBC100807D6803A6EBE10088382100904E80002080BF075C54A304A42C0300004082FFC838EBFFF854E6063E28860003408500147BE300203880000E4BFFE4F94BFFFF847BE30020388000014BFFE4E94BFFFF74"
+      },
+      {
+        "va": "0x54ee8",
+        "bytes": "FF8D0000"
+      },
+      {
+        "va": "0x54eec",
+        "bytes": "409D0008"
+      },
+      {
+        "va": "0x54f94",
+        "bytes": "3880000E"
+      },
+      {
+        "va": "0x54f98",
+        "bytes": "4BFFE4F9"
+      },
+      {
+        "va": "0x54fa4",
+        "bytes": "38800001"
+      },
+      {
+        "va": "0x54fa8",
+        "bytes": "4BFFE4E9"
+      },
+      {
+        "va": "0x54fb0",
+        "bytes": "F821FF717C0802A6FBA10078787D0020FBE100887C7F1B787FA3EB78F80100A0FBC100804BFBC39DE84100287FA3EB784BFFFED97FA3EB784BFF8AC183C2A21CC07F06CC389F07348062A2C078840020C022A228C1BE00A4EC43682AD05F06CC4BFBEFF1E8410028C1BF06C8C002A23CFF8D0000409D0010C09E00A4EC2D2028D03F06C8C0DF0754C0BE00A4EDA6282A893F07642C090000D1BF07544182003C3869FFFF28830002408500C060000000807F00144BFBE8FDE8410028E98100A0EBA10078EBC100807D8803A6EBE10088382100904E80002088BF07622F850000419EFFD0386000064BFBE239E8410028881F0762280000134181FFB88162A348540915BA7D09582E7D0707B47CC75A147CC903A64E800420FFFFFF980000027400000274000002C4000000A4000003180000022C0000022C00000248000000780000029800000078000000C4000000E80000010C0000015C0000017C000002FC000000A4000002FCC0FF0750FF0768004098FF407FA3EB78388000004BFFBAB57FA3EB78889F073E4BFFE3594BFFFF24C09F0754C03F0750FF840800409DFF14881F073D2C000000418200247FA3EB78388000024BFFE32D4BFFFEF8C0DF0754C0BF0750FC8628004085FEE87FA3EB78388000014BFFE30D4BFFFED8C09E00A4C03F0758EC41202AC1BF0754C07F0750FC8D1800D05F07584085FEB84BFFFFD0C13E00A4C11F0758ECA8482AC0C2A34CC0FF0754FF073000D0BF07584099FE944BFFFFACC11F0754C0FF0750FF08380041990014C15F0334C122A23CFF8A4800419DFE7080BF075C54A304A42C0300004082FF7CC19F0334C162A23CFC8C58004085FF6C7FA3EB783880000E4BFFE2754BFFFE40C01F0754C05F0750FF0010004099FE307FA3EB78388000104BFFE2554BFFFE208142A20C811F07445509043E80CA00107F864840419C007455203830806A00005525482C7C8028507D641A14797E0020819E00647D4C40507D2860507D2853787D07FE707D6038782C0000004182003C78060020800600402C8000004186002C780900207D234B788109000080E8001881670000F84100287D6903A6804700044E800421E8410028815F00007FA3EB7883AA001883FD0000F84100287FE903A6805D00044E800421E84100284BFFFD7CC19E00A47FA3EB78C17F0758ED4B602AD15F07584BFFA6514BFFFD54C01F0754C05F0750FF801000409DFD448BDF073F2C1E00004182FE547FA3EB78388000094BFFE15D4BFFFD28C13F0754C11F0750FC8940004085FD187FA3EB784BFFAFF97FA3EB784BFFF6214BFFFD04C1BF0754C07F0750FC8D18004085FCF4889F073F2F040000419AFE047FA3EB783880000B4BFFE10D4BFFFCD8C01F0754C19F0750FF806000409DFCC8813F075C552A04202C0A00004082FDD4612C80007FA3EB7838800003919F075C4BFFE0D54BFFFCA07FA3EB784BFFAF81C17F0754C15F0750FF0B50004099FC884BFFFDA07FA3EB78388000004BFFED994BFFFC74"
+      },
+      {
+        "va": "0x54fd4",
+        "bytes": "4BFBC39D"
+      },
+      {
+        "va": "0x54fe0",
+        "bytes": "4BFFFED9"
+      },
+      {
+        "va": "0x54fe8",
+        "bytes": "4BFF8AC1"
+      },
+      {
+        "va": "0x55088",
+        "bytes": "88BF0762"
+      },
+      {
+        "va": "0x5508c",
+        "bytes": "2F850000"
+      },
+      {
+        "va": "0x55098",
+        "bytes": "4BFBE239"
+      },
+      {
+        "va": "0x550a0",
+        "bytes": "881F0762"
+      },
+      {
+        "va": "0x550a4",
+        "bytes": "28000013"
+      },
+      {
+        "va": "0x550a8",
+        "bytes": "4181FFB8"
+      },
+      {
+        "va": "0x550c8",
+        "bytes": "FFFFFF980000027400000274000002C4000000A4000003180000022C0000022C00000248000000780000029800000078000000C4000000E80000010C0000015C0000017C000002FC000000A4000002FC"
+      },
+      {
+        "va": "0xbf178",
+        "bytes": "F821FF817C8802A6FBE10078F8810090880305BD7C7F1B782F800000409E00848063054C2C030000786900207D234B7841820024812900008169001880AB0000F84100287CA903A6804B00044E800421E8410028381F0054780300204BF5137DE84100287C6C1B7878630020810C00008148001480EA0000F84100287CE903A6804A00044E800421E841002838DF00C0809F001478C30020480067B160000000EBE100907FE803A6EBE10078382100804E80002060000000"
+      },
+      {
+        "va": "0x18f480",
+        "bytes": "F821FF817C8802A6FBE10078F88100907C7F1B78806308B054600528546904E62F8000002F090000419E001438600007419A00304BE83E1DE84100287BE300204BF2FCB960000000E8A10090EBE100787CA803A6382100804E80002060000000386000034BFFFFD0"
+      },
+      {
+        "va": "0x18f4b4",
+        "bytes": "4BE83E1D"
+      },
+      {
+        "va": "0x18f4c0",
+        "bytes": "4BF2FCB9"
+      },
+      {
+        "va": "0x2cdc60",
+        "bytes": "8122F158C002F164D009004C906900484E80002060000000"
+      },
+      {
+        "va": "0x2cdc68",
+        "bytes": "D009004C"
+      },
+      {
+        "va": "0x2cdc6c",
+        "bytes": "90690048"
+      },
+      {
+        "va": "0x68ff68",
+        "bytes": "812300148069006860600020900900684E80002060000000"
+      },
+      {
+        "va": "0x68ff6c",
+        "bytes": "80690068"
+      },
+      {
+        "va": "0x68ff70",
+        "bytes": "60600020"
+      },
+      {
+        "va": "0x68ff74",
+        "bytes": "90090068"
+      },
+      {
+        "va": "0x842138",
+        "bytes": "0085AE20"
+      },
+      {
+        "va": "0x842188",
+        "bytes": "0085B048"
+      },
+      {
+        "va": "0x842208",
+        "bytes": "0085B218"
+      },
+      {
+        "va": "0x842270",
+        "bytes": "0085B3D8"
+      },
+      {
+        "va": "0x8482f0",
+        "bytes": "00864478"
+      },
+      {
+        "va": "0x85ae20",
+        "bytes": "0003BFA00088FF38"
+      },
+      {
+        "va": "0x85b048",
+        "bytes": "000433B00088FF38"
+      },
+      {
+        "va": "0x85b218",
+        "bytes": "0004B9E80088FF38"
+      },
+      {
+        "va": "0x85b3d8",
+        "bytes": "00054FB00088FF38"
+      },
+      {
+        "va": "0x864478",
+        "bytes": "0018F4800088FF38"
+      },
+      {
+        "va": "0x889fe8",
+        "bytes": "00043438"
+      },
+      {
+        "va": "0x88a120",
+        "bytes": "0004BBBC"
+      },
+      {
+        "va": "0x88a280",
+        "bytes": "000550C8"
+      },
+      {
+        "va": "0x89f078",
+        "bytes": "101E8D70"
+      },
+      {
+        "va": "0x89f084",
+        "bytes": "3E800000"
+      },
+      {
+        "va": "0x89f098",
+        "bytes": "101EFB20"
+      }
+    ],
+    "warning": "Producer context is not an event cause/name or a death total. Numeric boundaries are confirmed for USA v02.00 only. No full switch execution, callback invocation, saved edits or gameplay validation."
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -104083,6 +106021,16 @@
     ]
   },
   "annotations": [
+{"va":"0x0068FF68","name":"TOD_actor_mark_runtime_entry_flag20_before_category_context","kind":"function","confidence":"confirmed","bytes":"8123001480690068","comment":"Actor+14 is runtime entry pointer; ORs entry+68 flags with20, used via11370 before category2/4/6 callbacks. No saved-bit write, reset admission or gameplay flag name established.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00043438","name":"TOD_reset_context2_state_relative_dispatch","kind":"data","confidence":"confirmed","bytes":"000000F80000043C000003E0000003E0000000F8000004E800000310000005C8000002580000015800000158000005080000052800000158000000F8000006F4000005F8000000F80000068C00000288000001580000015800000158000003300000037000000390000003C00000017800000158000000F8000001980000008400000210","comment":"33 signed BE32 offsets relative to43438, states0..32. Signed430<=28 selection precedes unsigned dispatch bound; negative raw states can select2 but reject dispatch. Targets are not gameplay state names.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0004BBBC","name":"TOD_reset_context4_state_relative_dispatch","kind":"data","confidence":"confirmed","bytes":"000003B800000528000003B8000003B8000003B8000003B800000500000005140000055400000A2800000AE800000D2400000D2400000EA0000003C4000003F800000418000004800000019C000011C0000011D8000011F000000ECC00000ECC00000ECC00000ECC00000ECC00000ECC00000F7800000F7800000F7800000F7800000F7800000F780000109800001368000013B400000390000013CC000003B8000003B800001194000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B8000003B80000133C0000120400001310","comment":"103 signed BE32 offsets relative to4BBBC; dispatcher rereads4A4 after intervening helpers, separately from initial!=2 category4 selection. Repeated targets retained; no actor/death names.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x000550C8","name":"TOD_reset_context6_byte_state_relative_dispatch","kind":"data","confidence":"confirmed","bytes":"FFFFFF980000027400000274000002C4000000A4000003180000022C0000022C00000248000000780000029800000078000000C4000000E80000010C0000015C0000017C000002FC000000A4000002FC","comment":"20 signed BE32 offsets relative to550C8. Mode764==0/nonzero762 selection happens before<=19 table bound;20..255select6 but reject table. Runtime actor states, not saved category names.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; reset_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0020F1F8","name":"TOD_first_person_exit_latched24_cleanup_verified","kind":"function","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"Methodtable84AF18+20. Uses runtime entry latch24 to choose0F/nonzero or10/zero; conditional683F0 lookup then10390\u219263A748(selector0). Actorstate5C9 and nested2114 subsystem checks can bypass; not savedwordsetter or hold/toggle proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; option_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x002112D8","name":"TOD_first_person_exit_latched3f_cleanup_verified","kind":"function","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"Methodtable84AF48+20. Uses entry latch3F, conditional mode0F/10 cleanup via10390\u219263A748(selector0). Actorstate63 and nestedsubsystem checks can bypass. No original optionname or savedtail identity.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; option_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0063A748","name":"TOD_camera_matching_records_cleanup_verified","kind":"function","confidence":"confirmed","bytes":"7D800026F821FF41","comment":"Clears matching pending20C0 toFFFFFFFF; scans16 C0+200stride records bymode64 and optionalselector6C(0wildcard). Storesmode1 before virtual14 callback; snapshots68 afterfirstcallback, invokesmode-table callback2128+mode*12+8, restores68. Callback-qualified, not finalstate or savewrite guarantee.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; option_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00092248","name":"TOD_argument_owner_88c_copy_not_save_tail","kind":"comment","confidence":"confirmed","bytes":"90EB088C","comment":"Argument-converted owner+88C receives source+0 raw bits. Do not equate literal88C with live savedworld0 tail404.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; segment_opaque native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x000938E8","name":"TOD_argument_owner_4b0_copy_not_save_segment","kind":"comment","confidence":"confirmed","bytes":"93AB04B0","comment":"Argument-converted owner+4B0 receives source+14 raw bits. Not a confirmed savedsegment28 semantic/type.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; segment_opaque native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00183434","name":"TOD_input_owner_88c_message_not_save_tail","kind":"comment","confidence":"confirmed","bytes":"C039088C","comment":"Original input owner+88C float copied into stack message with adjacent884/888. Input+14\u2192+54 traversal elsewhere is not this load's owner; no savedworld404 type confirmation.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; segment_opaque native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x005212A0","name":"TOD_object_class_registry_reset_verified","kind":"function","confidence":"confirmed","bytes":"F821FF717C6802A6","comment":"Clears runtime pool+80 state and inline class-pointer array pool+BC span500hex=320pointercells. Not class-table producer, ID bound predicate or named saved-object mapping.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; object_classes native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0068F7F0","name":"TOD_object_class_resource_prepare_verified","kind":"function","confidence":"confirmed","bytes":"F821FEE17C0802A6","comment":"Prepares runtime D100 class record. Class+78 sourceheader+38 packet(section10200): copiesBE64flags to+70; byte8length to+68; opaque bytes9 onward toallocated+6C. No text/name assumption or saved-bit identity.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; object_classes native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0068FCD8","name":"TOD_object_class_array_prepare_verified","kind":"function","confidence":"confirmed","bytes":"8122A4F47C0802A6","comment":"Iterates class-pointer array1064FD3C, count1064FD00+10, calls68F7F0 with eachpointedrecord. Samepoolroot+BC inlineclassarray, not separate resource root or saved instance identity.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; object_classes native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

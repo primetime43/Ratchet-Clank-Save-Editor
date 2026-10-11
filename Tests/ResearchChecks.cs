@@ -36,6 +36,41 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Option exits remain latched, callback-qualified and separate from saved option edits", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x114C0, 4), uint.MaxValue);
+            bytes[0x114D6] = 0xAB; bytes[0x114D7] = 0xCD;
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Game settings");
+            var word = table.Rows.Single(row => row.Cells[2] == "0x114C0");
+            Equal("4294967295", word.Cells[1]);
+            True(word.Details.Contains("entry-latched byte") && word.Details.Contains("all16 matching") && word.Details.Contains("after the first callback"), "Exit cleanup must not become a saved-word reread, first-match-only operation or atomic transaction.");
+            Equal("ABCD", table.Rows.Single(row => row.Cells[2] == "0x114D6").Cells[1]);
+            True(TodResearch.Map.GetProperty("option_producers").GetProperty("instruction_guards").GetArrayLength() > 0, "Exit evidence must be bundled.");
+            True(bytes.SequenceEqual(before), "Option inspection must not clean runtime requests or rewrite saved values.");
+        });
+        Check("Reset selection and dispatch limits never imply saved-counter updates or death causes", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x574C, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Reset-event counters");
+            Equal("4294967295", table.Rows[6].Cells[1]);
+            True(table.Rows[6].Details.Contains("negative signed state430") && table.Rows[6].Details.Contains("exceeds the20-case") && table.Rows[6].Details.Contains("Selection alone does not increment"), "Caller context bounds must not become a death count or switch eligibility guarantee.");
+            True(TodResearch.Map.GetProperty("reset_producers").GetProperty("instruction_guards").GetArrayLength() > 0, "Reset producer evidence must be bundled.");
+            True(bytes.SequenceEqual(before), "Reset research must not select categories or increment saved counters.");
+        });
+        Check("Opaque-field ownership audit preserves unusual bits without claiming unused storage", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x488 + 0x28, 4), 0xDEADBEEF);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Gameplay segments");
+            True(table.Rows[0].Details.Contains("DEADBEEF") && table.Rows[0].Details.Contains("not proof this saved word is unused"), "Eliminated immediate-offset matches must not become a no-consumer proof or invented type.");
+            Equal(30, TodResearch.Map.GetProperty("segment_opaque").GetProperty("instruction_guards").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Opaque audit must not repair or reinterpret saved bytes.");
+        });
         Check("Runtime pool setup and slot reuse do not become saved identity or allocation simulation", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -890,7 +925,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1356, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1366, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
