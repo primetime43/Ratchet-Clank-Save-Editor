@@ -67,6 +67,17 @@ def initialization_store_preview(admission_byte, next_index, pending):
             "qualification": "Explicit-store projection only, not complete callback effects or a prediction of live runtime state. No saved progress is supplied or changed."}
 
 
+def load_reset_store_plan(resolved_id):
+    """Bounded selected saved stores only; no lookup, callbacks or file mutation."""
+    if type(resolved_id) is not int or not 0 <= resolved_id < 19:
+        raise ValueError("Expected normal resolved native level ID0..18")
+    return {"stores": [{"offset": hex(offset), "size": size, "value": value}
+                       for offset, size, value in ((0x906E8, 4, resolved_id),
+                           (0x889 + resolved_id * 0x408, 1, 1),
+                           (0x8730, 4, 0), (0x8728, 4, 0), (0x872C, 4, 0))],
+            "qualification": "Selected saved-store plan only, not an atomic transaction, complete helper effects, successful load or target/history reconstruction. No native code or file writes."}
+
+
 def inspect(elf_path, save_path=None):
     elf = BINDINGS["Elf"](elf_path)
     expected = {
@@ -109,6 +120,14 @@ def inspect(elf_path, save_path=None):
         0x35F490: 0x80621A98, 0x35F49C: 0x38630010,
         0x362098: 0x7C691B78, 0x3620A0: 0x38630010,
         0x3620A4: 0x38800000, 0x3620B4: 0x988900F4,
+        0x3645E0: 0x38000000, 0x3645E4: 0x90030030, 0x3645E8: 0x4E800020,
+        0x8A688C: 0x1036AC84, 0x8A6890: 0x101EFB20,
+        0x8A6894: 0x10330610, 0x8A6898: 0x101E8E60,
+        0x89F154: 0x10062F7C,
+        0x489F84: 0x807D0000, 0x489F98: 0x5460502A,
+        0x489F9C: 0x54681838, 0x489FA4: 0x7D880214,
+        0x489FB0: 0x38EC0880, 0x489FBC: 0x906506E8,
+        0x489FCC: 0x98890009,
     }
     guards = {}
     for address, value in expected.items():
@@ -117,18 +136,30 @@ def inspect(elf_path, save_path=None):
         guards[address] = elf.read(address, 4)
     for address, target in ((0x375C84, 0x362C20), (0x36FCEC, 0x36C578),
                             (0x36C648, 0x24F4F8), (0x36A964, 0x3620D0),
-                            (0x35F4A4, 0x362098)):
+                            (0x35F4A4, 0x362098), (0x3620B8, 0x3645E0),
+                            (0x489F88, 0x2D08D8), (0x489FE0, 0x2CDBB0),
+                            (0x489FFC, 0x465DC0), (0x39A35C, 0x489F68),
+                            (0x398808, 0x39A328), (0x39B594, 0x39A328)):
         raw = elf.u32(address)
         if BINDINGS["branch_target"](raw, address) != target or not raw & 1:
             raise ValueError("Saved event call changed")
         guards[address] = elf.read(address, 4)
     for function in (0x362C20, 0x375C48, 0x36A908, 0x36C578, 0x36F6A0,
                      0x379F60, 0x37CD88, 0x380F60, 0x489F68,
-                     0x3620D0, 0x35F490, 0x362098):
+                     0x3620D0, 0x35F490, 0x362098, 0x3645E0,
+                     0x2D08D8, 0x39A328, 0x3987B8, 0x39B2E8):
         if elf.descriptors[function] != 0x89FF20:
             raise ValueError("Saved event TOC changed")
         end = elf.functions[elf.functions.index(function) + 1]
         guards[function] = elf.read(function, end - function)
+    catalog = []
+    guards[0x10062F7C] = elf.read(0x10062F7C, 19 * 4)
+    for identifier in range(19):
+        pointer = elf.u32(0x10062F7C + identifier * 4)
+        name = elf.string(pointer)
+        guards[pointer] = elf.read(pointer, len(name) + 1)
+        catalog.append({"id": identifier, "internal_name": name,
+                        "visited_offset": hex(0x889 + identifier * 0x408)})
     report = {
         "confidence": "exact-build-native-flow",
         "warning": "USA BCUS98127 v02.00 only. Event identities are unresolved: not proven deaths, kills, attempts, global difficulty or lifetime statistics. Native code is not executed; no edit safety or current runtime state inferred.",
@@ -153,14 +184,26 @@ def inspect(elf_path, save_path=None):
             "pending_mask_va": "0x1033083C",
             "rule": "Selected caller36A908 loads root8A1C24=10330740 and calls3620D0 at36A964. Initializer reads owner+F4 once into r30: any nonzero byte returns before helpers or initialization stores. Zero reaches361D10, writes1 to owner+F4 at3621A4, calls251AD8, then uses preserved zero r30 to clear owner+11C at3621CC and owner+FC at3621D0. It finally tail-calls361948. These explicit stores establish a zero-based registration starting point, not an unconditional reset on every caller invocation. Helper side effects/final runtime state are not reconstructed.",
             "index_identity_limit": "362C20 assigns the old sequential index and increments it even for saved-bit rejection. Starting from the explicit zero stores, the first registration gets0, and rejected registrations still consume their index. This is registration-order evidence, not a fixed named target catalog, stable cross-load order, legitimate32-target limit or current mission count. Saved8728 alone cannot reconstruct owner+11C or owner+FC.",
-            "reinitialization_admission": "35F490 loads container8A19B8=10330730, adds10 and passes10330740 to362098 at35F4A4. This equals the initialization owner loaded directly by36A908 through8A1C24, despite differing pointer slots and base values. Explicit byte clear3620B4 addresses argument+F4=10330834, the same admission byte read by3620D0. It then calls3645E0 with10330750. The explicit clear enables the initializer admission test if no intervening write changes the byte; helper effects, next invocation timing and complete lifecycle are unverified. This path itself does not explicitly clear next-index+11C or pending+FC.",
+            "reinitialization_admission": "35F490 loads container8A19B8=10330730, adds10 and passes10330740 to362098 at35F4A4. This equals the initialization owner loaded directly by36A908 through8A1C24, despite differing pointer slots and base values. Explicit byte clear3620B4 addresses argument+F4=10330834, the same admission byte read by3620D0. It then calls3645E0 with10330750; the now-confirmed call-free leaf clears only argument+30, runtime owner+40. The explicit admission clear enables the initializer test if no intervening write changes the byte; next invocation timing and the larger lifecycle remain unverified. This closed path does not clear next-index+11C, pending+FC or saved progress.",
             "save_boundary": "Selected explicit initialization stores are in runtime owner10330740, outside serialized101EFB20..10280210. No direct saved8728/872C/8730 store occurs in the guarded initializer body. This is not proof that every called helper preserves them. Supplied GAME.SAV does not contain these runtime admission/index/pending values."},
+        "reinitialization_closed_leaf": "The formerly unresolved3645E0 is a call-free li0/stw/blr leaf: argument+30=0. In35F490->362098->3645E0, owner10330740+10 is passed, so the additional clear is runtime owner+40=10330780. The complete three-body chain explicitly clears only admission byte10330834 and that separate runtime word. It neither clears next index/pending nor writes serialized8728/872C/8730. This is a closed static chain with no remaining callees, not all effects of its larger callers or proof of mission identity/timing.",
+        "reset_publication": {
+            "caller": "0x39A328", "reset": "0x489F68",
+            "name_cell": "0x1036AC84", "catalog": catalog,
+            "rule": "39A328 calls489F68 at39A35C before its later asset/pointer branches. The reset reads a name pointer from runtime cell1036AC84 through8A688C, resolves it through2D08D8, stores the low32 result to saved906E8 at489FBC, then writes ONE byte1 at save+889+408*resolvedID at489FCC. This is world base488+401, the previously mapped visited byte, not unlocked+400, exclusion+402 or a BE32 visited flag. After2CDBB0 it clears saved8730,8728,872C, then calls465DC0. There is no local old-destination equality, saved-progress or replay-word gate before these selected stores. Prior helpers and later callbacks remain significant; no atomicity or final-state guarantee.",
+            "lookup_limit": "2D08D8 compares19 catalog names through2500F8 and returns the first matching index, or0 if none matches. Therefore unmatched-name fallback follows saved destination0 and visited-byte0 stores before clearing counters;0 is not proof that the name matched the level0 catalog entry. Runtime name/lookup outcome is absent from GAME.SAV. No arbitrary native pointer/string access is performed by this inspector.",
+            "caller_limit": "Selected3987B8 paths converge on398808->39A328 after optional runtime cleanup. Selected39B2E8 branch reaches39B594->39A328 between3999D0 and3990A0(arg,1); other branches do not establish that same sequence. These are resource/load-context entry routes, not every world transition, universal death/retry behavior, successful loading or all reset causes. The reinitialization-only chain35F490 is distinct from persistent reset489F68.",
+            "snapshot_limit": "Saved906E8=0 and visited slot0=1 are compatible with these explicit stores but do not prove they ran on this save, that a catalog name matched, the current planet or why the three counters are zero."},
         "restoration_caller": "375C48 starts with target+324=FFFFFFFF, runs384758, then calls362C20. A zero low-byte result replaces the assigned index withFFFFFFFF and returns before the explicit type5 request. Nonzero retains the assigned index and follows that request. No saved identity, physical target location or successful request outcome is recovered.",
         "reset": "Previously confirmed489F68 clears8730,8728,872C after2CDBB0 and before465DC0. Counter event names, all reset causes and surrounding callback effects remain unverified. Snapshot zero is not absence of past events.",
         "recommended_annotations": [
+            {"va": "0x3645e4", "kind": "comment", "name": "TOD_bonus_reinitialize_separate_runtime_word_clear", "comment": "Call-free3645E0 clears argument+30. Through35F490->362098, argument10330750 means owner10330740+40=10330780, not pending+FC or next-index+11C. Closed chain has only admission-byte and this-word stores; no serialized progress writes."},
+            {"va": "0x39a35c", "kind": "comment", "name": "TOD_load_resource_entry_saved_progress_reset_call", "comment": "39A328 invokes489F68 before later asset/pointer branches. Reset publishes name-resolved saved906E8, ONE visited byte889+408*id, then clears8730/8728/872C after2CDBB0. Not universal transition/death/retry or final callback-state proof."},
+            {"va": "0x489fbc", "kind": "comment", "name": "TOD_reset_publish_name_resolved_saved_destination", "comment": "489F68 reads runtime name cell1036AC84 and calls2D08D8. Store resolved low32 ID to saved906E8. Inverse lookup compares19 names; unmatched fallback0 is NOT proof of a level0 name match. Followed by visited-byte publication before progress resets."},
+            {"va": "0x489fcc", "kind": "comment", "name": "TOD_reset_publish_one_world_visited_byte", "comment": "ONE byte1 at canonical save+889+408*resolvedID (world488+401). Not unlocked+400/exclusion+402 or a BE32 flag. Name no-match fallback0 also selects slot0. Publication precedes2CDBB0 and three saved progress/counter clears; no atomicity/full-load acceptance."},
             {"va": "0x362108", "kind": "comment", "name": "TOD_bonus_registration_initialization_admission", "comment": "3620D0 reads runtime owner+F4 once. Zero reaches initialization; any nonzero returns before helpers/stores. Selected36A908 passes10330740. Not a saved option or unconditional mission reset."},
             {"va": "0x3621cc", "kind": "comment", "name": "TOD_bonus_registration_index_zero", "comment": "Reached initializer suffix clears runtime owner+11C using original zero admission byte in preserved r30; next instruction clears pending+FC. Registration362C20 consumes sequential indices even on saved8728 rejection. No fixed target names/count or full callback effects."},
-            {"va": "0x3620b4", "kind": "comment", "name": "TOD_bonus_registration_reinitialize_admission_clear", "comment": "35F490 loads container8A19B8=10330730 and adds10: argument10330740 matches36A908 direct root8A1C24. This +F4 zero store addresses initializer admission byte10330834. Enables later admission absent intervening changes; helper3645E0/timing unverified. Not direct pending/index/saved-progress reset."},
+            {"va": "0x3620b4", "kind": "comment", "name": "TOD_bonus_registration_reinitialize_admission_clear", "comment": "35F490 loads container8A19B8=10330730 and adds10: argument10330740 matches36A908 direct root8A1C24. This +F4 zero store addresses initializer admission byte10330834. Enables later admission absent intervening changes; confirmed call-free3645E0 clears only owner+40. Timing/larger caller effects unknown. Closed chain does not reset pending/index/saved progress."},
             {"va": "0x362c40", "kind": "comment", "name": "TOD_bonus_target_restore_saved_bit_test", "comment": "362C20 consumes runtime index+11C and assigns target+324 before testing saved8728. Set bit returns0 without pending OR; clear/zero bit returns1 and ORs runtime+FC. Saved progress unchanged; no target identity/count."},
             {"va": "0x375ca8", "kind": "comment", "name": "TOD_bonus_target_restore_rejected_sentinel", "comment": "Zero low-byte result from362C20 restores raw FFFFFFFF to target+324 and returns before explicit type5 request. Previously recorded bit prevents pending registration; not proof request/gameplay success."},
             {"va": "0x36c678", "kind": "comment", "name": "TOD_saved_event_counter_wrapping_increment", "comment": "Reached36C578 suffix stores old saved872C+1 low32 before runtime handle resolution. Earlier helpers/callbacks precede this. BE32 counter, not mask; event identity/death/kill meaning unconfirmed."},
@@ -177,6 +220,8 @@ def inspect(elf_path, save_path=None):
         report["save_observation"] = {
             "plaintext_sha256": hashlib.sha256(raw).hexdigest().upper(),
             "raw_words": {hex(o): struct.unpack_from(">I", raw, o)[0] for o in (0x8728, 0x872C, 0x8730)},
+            "saved_destination": struct.unpack_from(">I", raw, 0x906E8)[0],
+            "visited_bytes": [raw[0x889 + identifier * 0x408] for identifier in range(19)],
             "qualification": "Raw snapshot only. No prior event totals, live handle admission, active pending set or current scaling inferred."}
     return report
 

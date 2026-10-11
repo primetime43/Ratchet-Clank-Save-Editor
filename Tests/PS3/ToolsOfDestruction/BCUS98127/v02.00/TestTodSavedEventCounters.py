@@ -82,7 +82,7 @@ class SavedEventCounterChecks(unittest.TestCase):
     def test_exact_guard_ranges_and_two_integer_fields(self):
         report = self.native()
         elf = TOOL["BINDINGS"]["Elf"](ELF)
-        self.assertEqual(len(report["instruction_guards"]), 120)
+        self.assertEqual(len(report["instruction_guards"]), 166)
         for guard in report["instruction_guards"]:
             expected = bytes.fromhex(guard["bytes"])
             self.assertEqual(elf.read(int(guard["va"], 0), len(expected)), expected)
@@ -93,7 +93,8 @@ class SavedEventCounterChecks(unittest.TestCase):
         elf = TOOL["BINDINGS"]["Elf"](ELF)
         original = elf.u32
         for address in (0x8A1C70, 0x8A1C48, 0x8A1C80, 0x8A206C, 0x36C678, 0x36C69C, 0x36C6D4, 0x375C84, 0x362C50, 0x36FCEC,
-                        0x8A19B8, 0x8A1C24, 0x362108, 0x3621CC, 0x3621D0, 0x35F49C, 0x3620B4, 0x35F4A4, 0x36A964):
+                        0x8A19B8, 0x8A1C24, 0x362108, 0x3621CC, 0x3621D0, 0x35F49C, 0x3620B4, 0x35F4A4, 0x36A964,
+                        0x3645E4, 0x3620B8, 0x8A688C, 0x8A6890, 0x489FBC, 0x489FCC, 0x489F88, 0x39A35C, 0x398808, 0x39B594):
             with patch.object(elf, "u32", side_effect=lambda va, target=address: original(va) ^ (4 if va == target else 0)):
                 with patch.dict(TOOL["BINDINGS"], {"Elf": lambda _: elf}):
                     with self.assertRaises(ValueError):
@@ -102,7 +103,7 @@ class SavedEventCounterChecks(unittest.TestCase):
     def test_changed_toc_refused(self):
         self.native()
         elf = TOOL["BINDINGS"]["Elf"](ELF)
-        for function in (0x36C578, 0x3620D0, 0x35F490, 0x362098):
+        for function in (0x36C578, 0x3620D0, 0x35F490, 0x362098, 0x3645E0, 0x2D08D8, 0x39A328, 0x3987B8, 0x39B2E8):
             with patch.dict(elf.descriptors, {function: 0x88FF38}):
                 with patch.dict(TOOL["BINDINGS"], {"Elf": lambda _: elf}):
                     with self.assertRaises(ValueError):
@@ -150,6 +151,62 @@ class SavedEventCounterChecks(unittest.TestCase):
         self.assertIn("not a fixed named target catalog", report["index_identity_limit"])
         self.assertIn("not proof that every called helper preserves", report["save_boundary"])
 
+    def test_bounded_saved_store_plan_order_and_one_byte_visited(self):
+        for identifier in range(19):
+            plan = TOOL["load_reset_store_plan"](identifier)
+            self.assertEqual([(int(s["offset"], 0), s["size"], s["value"]) for s in plan["stores"]],
+                [(0x906E8, 4, identifier), (0x889 + 0x408 * identifier, 1, 1),
+                 (0x8730, 4, 0), (0x8728, 4, 0), (0x872C, 4, 0)])
+            self.assertIn("not an atomic transaction", plan["qualification"])
+
+    def test_store_plan_refuses_arbitrary_saved_ids_and_noninteger_values(self):
+        for bad in (-1, 19, 0xFFFFFFFF, True, 0.0, "0", None):
+            with self.assertRaises(ValueError):
+                TOOL["load_reset_store_plan"](bad)
+
+    def test_detached_store_plan_preserves_unlocked_exclusion_and_opaque_bytes(self):
+        # Generated fixture, not a native/gameplay execution or captured save transition.
+        for identifier in range(19):
+            before = bytes([0xA5]) * 0x906F0
+            after = bytearray(before)
+            touched = set()
+            for store in TOOL["load_reset_store_plan"](identifier)["stores"]:
+                offset, size = int(store["offset"], 0), store["size"]
+                after[offset:offset + size] = store["value"].to_bytes(size, "big")
+                touched.update(range(offset, offset + size))
+            visited = 0x889 + 0x408 * identifier
+            self.assertEqual(after[visited - 1:visited + 2], bytes([0xA5, 1, 0xA5]))
+            self.assertEqual([index for index, (a, b) in enumerate(zip(before, after)) if a != b], sorted(touched))
+            self.assertEqual(before[0x8728:0x8734], bytes([0xA5]) * 12)
+
+    def test_native_reset_catalog_name_source_and_no_match_fallback_qualification(self):
+        report = self.native()["reset_publication"]
+        elf = TOOL["BINDINGS"]["Elf"](ELF)
+        self.assertEqual(elf.u32(0x8A688C), int(report["name_cell"], 0))
+        self.assertEqual(len(report["catalog"]), 19)
+        for row in report["catalog"]:
+            self.assertEqual(row["internal_name"], elf.string(elf.u32(0x10062F7C + 4 * row["id"])))
+            self.assertEqual(int(row["visited_offset"], 0), 0x488 + 0x401 + 0x408 * row["id"])
+        self.assertIn("or0 if none matches", report["lookup_limit"])
+        self.assertIn("not proof that the name matched", report["lookup_limit"])
+        self.assertIn("do not prove they ran on this save", report["snapshot_limit"])
+
+    def test_closed_reinitialization_leaf_only_clears_separate_runtime_word(self):
+        report = self.native()
+        elf = TOOL["BINDINGS"]["Elf"](ELF)
+        self.assertEqual(elf.read(0x3645E0, 12).hex().upper(), "38000000900300304E800020")
+        self.assertEqual(elf.u32(0x8A19B8) + 0x10 + 0x10 + 0x30, 0x10330780)
+        self.assertIn("neither clears next index/pending", report["reinitialization_closed_leaf"])
+        self.assertIn("no remaining callees", report["reinitialization_closed_leaf"])
+
+    def test_selected_reset_entry_precedes_asset_gates_not_universal_event_proof(self):
+        report = self.native()["reset_publication"]
+        self.assertIn("before its later asset/pointer branches", report["rule"])
+        self.assertIn("no local old-destination equality", report["rule"])
+        self.assertIn("ONE byte1", report["rule"])
+        self.assertIn("universal death/retry", report["caller_limit"])
+        self.assertIn("other branches do not establish", report["caller_limit"])
+
     def test_runtime_pool_and_event_identity_caveats(self):
         report = self.native()
         self.assertIn("slot<=limit, NOT slot<limit", report["handle_gate"])
@@ -166,6 +223,8 @@ class SavedEventCounterChecks(unittest.TestCase):
         before = [hashlib.sha256(Path(p).read_bytes()).digest() for p in (ELF, SAVE)]
         observed = TOOL["inspect"](ELF, SAVE)["save_observation"]
         self.assertEqual(observed["raw_words"], {"0x8728": 0, "0x872c": 0, "0x8730": 0})
+        self.assertEqual(observed["saved_destination"], 0)
+        self.assertEqual(observed["visited_bytes"], [1] + [0] * 18)
         self.assertIn("No prior event totals", observed["qualification"])
         self.assertEqual(before, [hashlib.sha256(Path(p).read_bytes()).digest() for p in (ELF, SAVE)])
 
