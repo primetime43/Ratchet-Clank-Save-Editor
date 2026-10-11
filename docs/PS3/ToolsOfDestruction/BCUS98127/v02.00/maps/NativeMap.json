@@ -116436,6 +116436,389 @@
       }
     ]
   },
+  "gelanator_transition": {
+    "confidence": "exact-build-native-paired-transition",
+    "warning": "USA BCUS98127 v02.00 only. No native execution, active-mode reconstruction, gameplay naming, firing cost or new editing permission.",
+    "record_selection": "Associated table853A30->8734A8->43A4D0 publishes literal27 to actor+44. Native export80D1C independently names27 WPN_GELANATOR. Update853A38->8734B8->43A6C0 selects hero+1A68 +20*actor44 after qualified pool handle, actor40, type/message211 and nonnull saved-pointer checks. Hero bind23E650 installs canonical101EFB20 at+1A68. For the initialized27 selection, record21C/ammo+8 is saved224. No local item-ID range/ownership gate is established; valid hero/handle and unchanged initialized selection are required, not inferred from a save snapshot.",
+    "entry_boundary": "Base call250C78->68FF68 sets runtime parent+68 flag20 before actor state+20 is tested for exactly2. For admitted state2, old entry latch+28 is sampled then cleared at43A7B8. Only if that sample is nonzero and the record exists, saved ammo equality to0 and actor latch+50 can select an early state3 wait: zero ammo/latch0 OR nonzero-or-unordered ammo/latch-nonzero. Entry-latch0 skips this local ammo check entirely. Signed zero compares equal; unordered is not a native payload/exception contract. Helper work and recordless paths can still reach the separate phase gate; this is not universal zero-ammo rejection.",
+    "phase_gate": "43A864 samples runtime actor+50: zero loads threshold31 from8A535C; ANY nonzero loads30 from8A5360. Call493388 resolves parent+94 through496690; nonnull delegates491CD8, null returns-1 from8A6B04. fcmpu compares threshold against returned value, and cror LT|EQ then bne rejects less-than-threshold and unordered values. Equality admits. Units, active animation, deeper helper effects and sampling cadence remain unverified; the sample cannot be read from GAME.SAV.",
+    "paired_ammo": "After the ordered phase gate, state3/entry latch1/configured runtime+24 are published before record presence and a NEW actor+50 sample. Record present/latch0 calls4661F8 with1.0 from8A5340 at43A9C8, then stores actor+50=1. Record present/ANY nonzero calls465E18 with the SAME1.0 at43A8C8, then stores actor+50=0. Recordless skips both operations and these explicit actor-latch stores. Both setters resolve maximum through463DE0 and clamp before their saved+8 store. Thus request1 is not guaranteed actual delta1 or conserved refund, especially at capacity, malformed maxima or nonfinite inputs. Subsequent43A548 and runtime handle cleanup are outside a full final-state model; no per-shot claim.",
+    "runtime_limit": "Actor+20/+24/+28/+44/+50, parent phase and resource handles are runtime members, not offsets into GAME.SAV. Phase-gate and transaction latch reads are separate samples around a helper, not one guaranteed immutable byte. Siblings43A378/43A428 explicitly write actor+50=0/1 without directly calling the two saved ammo setters; their animation/helper effects remain qualified. Saved224 and ownership22C do not establish a reservation, active mode, toggle count or runtime latch. The previously mapped load reset also requests Gelanator ammo0 through the absolute setter, independently of this pair.",
+    "recommended_annotations": [
+      {
+        "va": "0x43a508",
+        "kind": "comment",
+        "name": "TOD_Gelanator_transition_select_native_item27",
+        "comment": "Publishes literal27 at actor+44; native WPN_GELANATOR export independently confirms identity. Qualified hero+1A68 +20*ID later selects saved record21C/ammo224. Not all actor instances or raw ID safety."
+      },
+      {
+        "va": "0x43a9c8",
+        "kind": "comment",
+        "name": "TOD_Gelanator_transition_ammo_debit_then_runtime_latch",
+        "comment": "After ordered phase gate, record present and NEW actor+50 sample zero: subtract request1.0 through4661F8, then actor+50=1. Maximum clamp applies; not exactly1 actual delta or per-shot cost."
+      },
+      {
+        "va": "0x43a8c8",
+        "kind": "comment",
+        "name": "TOD_Gelanator_transition_ammo_refund_then_runtime_latch",
+        "comment": "Record present/NEW actor+50 sample ANY nonzero: add request1.0 through465E18, then actor+50=0. Clamped request, not conserved refund or complete final callback state."
+      },
+      {
+        "va": "0x43a888",
+        "kind": "comment",
+        "name": "TOD_Gelanator_transition_ordered_runtime_threshold_gate",
+        "comment": "FCMPU threshold<=returned phase via LT|EQ admits equality, rejects unordered. Latch0 selects31, any nonzero30. Units/source runtime state absent from GAME.SAV; transaction rereads latch after helper."
+      },
+      {
+        "va": "0x43a7b8",
+        "kind": "comment",
+        "name": "TOD_Gelanator_entry_latch_clear_before_qualified_ammo_gate",
+        "comment": "Clears runtime actor+28 after sampling it. Sample0 skips local ammo-equality test. Sample-nonzero/record present can choose early state3 wait; not universal zero-ammo rejection or saved latch."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x80d14",
+        "bytes": "8082B488C022B48C4BF91C75"
+      },
+      {
+        "va": "0x80d1c",
+        "bytes": "4BF91C75"
+      },
+      {
+        "va": "0x23e650",
+        "bytes": "F821FED17C0802A6FB0100F03B0311B8FB2100F87B190020FAA100D8FBE101283AA311C07C7F1B78FBA101183BA00000FA8100D07AA300203A9F11C8F8010140FAC100E0FAE100E8FB410100FB610108FB810110FBC1012093B9000493B900004BDD4841E84100283AFF12D07A8300203ADF12DC4BDD482DE84100287AE300204BDD4821E84100287AC300204BDD35F5E8410028399F1320798300207BF500204BDD4801E8410028395F14A0794300203B0000004BDD249DE8410028811F00147EA3AB783B4000003B20000080A800543B6000003A9F112080E5001060E6000290C500104BFA26DD6000000081227C0038600000913F1A68907F1B689BBF1B619BBF001C808904187EA3AB78F88100C0C82100C0FC000E9CFC2000184BFFF92582DF00147AD700207EE3BB784BDD51E5E841002883827C04881C00EF2F800000419E02743BBC00207C00E0CE387C001039370010397700207DA0E8CE3BA000007C2018CE7C00B9CE7C2049CE7DA059CEEBDC0038E89C0030FBD70038F897003083DF1A6860000000807F002057AC103A57A02036546928347D0C02147C89EA147CDE4214548A103A78C3002038EA00503BBD00017CE507B47C3C2C2E4BDD55C5E84100282C3D00204082FFC08BDC00EE2C9E0000408601E07EA3AB783BC000004BFFF7D938BF184838DF18608097006478A3002078C5002038C0000A3BA000404BDD1F11E8410028395F14B0381F14C479430020780500207EE4BB784BDD2685E8410028399F154C83627C0C799C0020C0827C1038FF1B1C3900FFFF90FC0000911C000893BC00049BDF1B60EB5B0000FB5F1A58807700C8C0D700602F830000C0770110FCA62028FD232028FD6521AEFC2920EED1770060D0370110419E001C81627C147863002038A00000808B00004BDD4F91E84100287A9600207EE4BB787EC3B3783BBF1A704BDD4699E841002838BF1AB08156006438DF1AC0C1427BC4399700303917001038F7002078B8002078D900203B9F1A803B7F1A903B5F1AA06140000B3A800000901600647C00B8CE7EA3AB787D8060CE3AA000047C2040CE7DA038CE7C00E9CE7C20E1CE7DA0D9CE7D80D1CE929800009298000492980008D158000C929900009299000492990008D159000C82DF00008096006481240000F84100287D2903A6804400044E800421E8410028387F18407877002092BF10D0929700009BD700069BD700049BD700059BDF1B62EBE10140EA8100D07FE803A6EAA100D8EAC100E0EAE100E8EB0100F0EB2100F8EB410100EB610108EB810110EBA10118EBC10120EBE10128382101304E80002039360010C0227BF838960030792C0020788300203961009038800006797E0020C04C000CC003000CEDA2002AC10C0008D1A100C8C1830008ECE8602AC0CC000480A100C878BB002C38A00001D0E100C8C1430004ECA6502AC08C000080C100C878DB000E38C00001D0A100C8C16300007FC3F378EC64582A814100C8FB610078795A002CC101007CC0C10078D06100C8800100C8781A000EFB410070C12C000CC04C0008ED890072C1AC0004ED420072ED6D0072C00C0000ED200072C0810074C0410070ECE86028ECA65028EC645828EDA24828D0E100C8810100C8D0A100C880E100C87919002CD06100C883A100C878F9000ED1A100C87BB8002C838100C8FB2100887B98000EFB0100804BDD1901E84100288377009038810080C0227C08386100707FC6F37892C100A0936100A44BDD27BDE8410028547A063E2F1A0000409A00147FC3F3784BDD2E15E84100284BFFFCD4830100907FC3F378EB380000EAD80008FB370030FAD700384BDD2DF1E84100284BFFFCB060000000"
+      },
+      {
+        "va": "0x23e744",
+        "bytes": "913F1A68"
+      },
+      {
+        "va": "0x250c78",
+        "bytes": "F8410028"
+      },
+      {
+        "va": "0x250c7c",
+        "bytes": "3C420001"
+      },
+      {
+        "va": "0x250c80",
+        "bytes": "3842FF3C"
+      },
+      {
+        "va": "0x250c84",
+        "bytes": "4843F2E4"
+      },
+      {
+        "va": "0x43a378",
+        "bytes": "F821FF617CA802A6FB810080FBA10088F8A100B081830014396000007C7C1B7899630050808C00548064004038030020781D00207FA3EB7848057641600000007FA4EB78A1430006807C0014390AFFFF7D0007B47C07AE76780605603927000138A607FF2BA900027CAB0378796B0524409C00087C0B0378F9610070C8210070FC000E9CC0425420FC2000184805A0D560000000E92100B0EB810080EBA100887D2803A6382100A04E80002060000000"
+      },
+      {
+        "va": "0x43a398",
+        "bytes": "99630050"
+      },
+      {
+        "va": "0x43a428",
+        "bytes": "F821FF617D8802A6FB810080FBA10088F98100B080830014380000017C7C1B78980300508064005483A300407FA3EB7848057599600000007FA4EB78A1430006807C0014390AFFFF7D0007B47C07AE76780605603927000138A607FF2BA900027CAB0378796B0524409C00087C0B0378F9610070C8210070FC000E9CC0425420FC2000184805A02D60000000E96100B0EB810080EBA100887D6803A6382100A04E80002060000000"
+      },
+      {
+        "va": "0x43a448",
+        "bytes": "98030050"
+      },
+      {
+        "va": "0x43a4d0",
+        "bytes": "F821FF717C8802A6FBA100787C7D1B78FBE10088787F0020F88100A07FE3FB784BFFFA5160000000893D00502F8900003800001B7FE3FB78901D0044419E001CE8A100A0EBA10078EBE10088382100907CA803A64BFFFF04E8C100A07FE3FB78EBA10078EBE10088382100907CC803A64BFFFE3860000000"
+      },
+      {
+        "va": "0x43a500",
+        "bytes": "3800001B"
+      },
+      {
+        "va": "0x43a508",
+        "bytes": "901D0044"
+      },
+      {
+        "va": "0x43a6c0",
+        "bytes": "F821FEC17C8802A6FB610110787B0020DBE10138FB410108FBE101307C7A1B787C7F1B787F63DB78FBC10128FB810118FBA10120F88101504BE16581E8410028381F0020781E0020813E00002F890002419E0030EBE10150EB4101087FE803A6EB610110EB810118EBA10120EBC10128EBE10130CBE10138382101404E800020818254288102542CE8BF003080E25424E8CC0000E96800007CA33038814700107C685C365500043E7C0A00404180003C5405482C80670000540638307D6628507F8B1A147B8A0020800A00647C8040507D2800507D3D23787FA7FE707F8038782C8000004086019C3B800000889E0008392000002C040000993E0008418200A82C9C0000418602147B8A0020C0025444C1AA0008FF0D0000419A01BC881F00502F800000409E01BC83BF0014C02254447FA3EB78C0425434C062543880FD00548087004048059B4560000000891F005038C100803868FFFF78DD002054650FFE7FA3EB7838850041788400204BE185FDE841002839600001996100FE801A0014394000017FA4EB783861007090010080914100E44BE14895E841002881210070913F00488B5F00502F1A0000409A00CCC3E2543C807F001448058B1160000000FF9F08004FDCF382409EFE8C818254303BA0000138E000032C1C000090FE00009BBE0008C04C00B4D05E0004418200488BDF00502C9E0000418601087B830020C02254203B8000004802B551600000009B9F0050893F0050388000002F090000419A000838800001788407E07F63DB784BFFFC593B7F0048388000007B6300204BE18749E8410028EBE10150EB4101087FE803A6EB610110EB810118EBA10120EBC10128EBE10130CBE10138382101404E80002060000000C3E254404BFFFF38781D0020807D00402F030000419AFE5C78630020388002114BE148B1E84100285468063E2F880000419EFE40815D0040806A1A682F830000419EFE3083BF004457BC203657A7103A7D87E2147F8362144BFFFE1C897F00502C0B000040820048834254303BE000033B60000193FE00009B7E0008C03A00B4D03E00044BFFFD587B830020C02254204802B831600000009BBF00504BFFFF00887F00502C8300004186FE08819F0014C02254447D836378C0425434C0625438810C005480C8004038A6002078A4002048059941600000004BFFFDFC60000000"
+      },
+      {
+        "va": "0x43a6f8",
+        "bytes": "4BE16581"
+      },
+      {
+        "va": "0x43a708",
+        "bytes": "813E0000"
+      },
+      {
+        "va": "0x43a70c",
+        "bytes": "2F890002"
+      },
+      {
+        "va": "0x43a710",
+        "bytes": "419E0030"
+      },
+      {
+        "va": "0x43a7ac",
+        "bytes": "889E0008"
+      },
+      {
+        "va": "0x43a7b8",
+        "bytes": "993E0008"
+      },
+      {
+        "va": "0x43a7bc",
+        "bytes": "418200A8"
+      },
+      {
+        "va": "0x43a7d0",
+        "bytes": "C1AA0008"
+      },
+      {
+        "va": "0x43a7d4",
+        "bytes": "FF0D0000"
+      },
+      {
+        "va": "0x43a7d8",
+        "bytes": "419A01BC"
+      },
+      {
+        "va": "0x43a7dc",
+        "bytes": "881F0050"
+      },
+      {
+        "va": "0x43a7e4",
+        "bytes": "409E01BC"
+      },
+      {
+        "va": "0x43a864",
+        "bytes": "8B5F0050"
+      },
+      {
+        "va": "0x43a86c",
+        "bytes": "409A00CC"
+      },
+      {
+        "va": "0x43a870",
+        "bytes": "C3E2543C"
+      },
+      {
+        "va": "0x43a878",
+        "bytes": "48058B11"
+      },
+      {
+        "va": "0x43a880",
+        "bytes": "FF9F0800"
+      },
+      {
+        "va": "0x43a884",
+        "bytes": "4FDCF382"
+      },
+      {
+        "va": "0x43a888",
+        "bytes": "409EFE8C"
+      },
+      {
+        "va": "0x43a89c",
+        "bytes": "90FE0000"
+      },
+      {
+        "va": "0x43a8a0",
+        "bytes": "9BBE0008"
+      },
+      {
+        "va": "0x43a8a8",
+        "bytes": "D05E0004"
+      },
+      {
+        "va": "0x43a8ac",
+        "bytes": "41820048"
+      },
+      {
+        "va": "0x43a8b0",
+        "bytes": "8BDF0050"
+      },
+      {
+        "va": "0x43a8b8",
+        "bytes": "41860108"
+      },
+      {
+        "va": "0x43a8c0",
+        "bytes": "C0225420"
+      },
+      {
+        "va": "0x43a8c8",
+        "bytes": "4802B551"
+      },
+      {
+        "va": "0x43a8d0",
+        "bytes": "9B9F0050"
+      },
+      {
+        "va": "0x43a8f0",
+        "bytes": "4BFFFC59"
+      },
+      {
+        "va": "0x43a938",
+        "bytes": "C3E25440"
+      },
+      {
+        "va": "0x43a970",
+        "bytes": "806A1A68"
+      },
+      {
+        "va": "0x43a978",
+        "bytes": "419EFE30"
+      },
+      {
+        "va": "0x43a97c",
+        "bytes": "83BF0044"
+      },
+      {
+        "va": "0x43a980",
+        "bytes": "57BC2036"
+      },
+      {
+        "va": "0x43a984",
+        "bytes": "57A7103A"
+      },
+      {
+        "va": "0x43a98c",
+        "bytes": "7F836214"
+      },
+      {
+        "va": "0x43a994",
+        "bytes": "897F0050"
+      },
+      {
+        "va": "0x43a99c",
+        "bytes": "40820048"
+      },
+      {
+        "va": "0x43a9c4",
+        "bytes": "C0225420"
+      },
+      {
+        "va": "0x43a9c8",
+        "bytes": "4802B831"
+      },
+      {
+        "va": "0x43a9d0",
+        "bytes": "9BBF0050"
+      },
+      {
+        "va": "0x465e18",
+        "bytes": "F821FF717C8802A6DBE10088FFE00890FBA100707C7D1B7878630020F88100A04BFFDFA960000000C1825FD4C09D0008EFFF202AFC7F6028FC0367EEFC400828FDA2006ED1BD0008E80100A0EBA10070CBE100887C0803A6382100904E800020"
+      },
+      {
+        "va": "0x465e38",
+        "bytes": "4BFFDFA9"
+      },
+      {
+        "va": "0x465e48",
+        "bytes": "EFFF202A"
+      },
+      {
+        "va": "0x465e5c",
+        "bytes": "D1BD0008"
+      },
+      {
+        "va": "0x4661f8",
+        "bytes": "F821FF717C8802A6DBE10088FFE00890FBA100707C7D1B7878630020F88100A04BFFDBC960000000C1625FD4C09D0008ED84F828FC6C5828FC035B2EFC400828FDA2006ED1BD0008E80100A0EBA10070CBE100887C0803A6382100904E800020"
+      },
+      {
+        "va": "0x466218",
+        "bytes": "4BFFDBC9"
+      },
+      {
+        "va": "0x466228",
+        "bytes": "ED84F828"
+      },
+      {
+        "va": "0x46623c",
+        "bytes": "D1BD0008"
+      },
+      {
+        "va": "0x493388",
+        "bytes": "F821FF917C0802A6F801008080630094480032F9600000002F83000078630020419E00204BFFE92D60000000E86100807C6803A6382100704E80002060000000E861008038210070C0226BE47C6803A64E80002060000000"
+      },
+      {
+        "va": "0x493398",
+        "bytes": "480032F9"
+      },
+      {
+        "va": "0x4933ac",
+        "bytes": "4BFFE92D"
+      },
+      {
+        "va": "0x4933d0",
+        "bytes": "C0226BE4"
+      },
+      {
+        "va": "0x68ff68",
+        "bytes": "812300148069006860600020900900684E80002060000000"
+      },
+      {
+        "va": "0x853a30",
+        "bytes": "008734A8"
+      },
+      {
+        "va": "0x853a38",
+        "bytes": "008734B8"
+      },
+      {
+        "va": "0x8734a8",
+        "bytes": "0043A4D0"
+      },
+      {
+        "va": "0x8734ac",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x8734b8",
+        "bytes": "0043A6C0"
+      },
+      {
+        "va": "0x8734bc",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x88b3c0",
+        "bytes": "100002D0"
+      },
+      {
+        "va": "0x88b3c4",
+        "bytes": "41D80000"
+      },
+      {
+        "va": "0x897b38",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a5340",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x8a535c",
+        "bytes": "41F80000"
+      },
+      {
+        "va": "0x8a5360",
+        "bytes": "41F00000"
+      },
+      {
+        "va": "0x8a5364",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x8a6b04",
+        "bytes": "BF800000"
+      },
+      {
+        "va": "0x100002d0",
+        "bytes": "57504E5F47454C414E41544F5200"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -116929,6 +117312,11 @@
     ]
   },
   "annotations": [
+{"va":"0x0043A508","name":"TOD_Gelanator_transition_select_native_item27","kind":"comment","confidence":"confirmed","bytes":"901D0044","comment":"Publishes literal27 at actor+44; native WPN_GELANATOR export independently confirms identity. Qualified hero+1A68 +20*ID later selects saved record21C/ammo224. Not all actor instances or raw ID safety.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; gelanator_transition native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0043A9C8","name":"TOD_Gelanator_transition_ammo_debit_then_runtime_latch","kind":"comment","confidence":"confirmed","bytes":"4802B831","comment":"After ordered phase gate, record present and NEW actor+50 sample zero: subtract request1.0 through4661F8, then actor+50=1. Maximum clamp applies; not exactly1 actual delta or per-shot cost.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; gelanator_transition native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0043A8C8","name":"TOD_Gelanator_transition_ammo_refund_then_runtime_latch","kind":"comment","confidence":"confirmed","bytes":"4802B551","comment":"Record present/NEW actor+50 sample ANY nonzero: add request1.0 through465E18, then actor+50=0. Clamped request, not conserved refund or complete final callback state.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; gelanator_transition native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0043A888","name":"TOD_Gelanator_transition_ordered_runtime_threshold_gate","kind":"comment","confidence":"confirmed","bytes":"409EFE8C","comment":"FCMPU threshold<=returned phase via LT|EQ admits equality, rejects unordered. Latch0 selects31, any nonzero30. Units/source runtime state absent from GAME.SAV; transaction rereads latch after helper.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; gelanator_transition native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0043A7B8","name":"TOD_Gelanator_entry_latch_clear_before_qualified_ammo_gate","kind":"comment","confidence":"confirmed","bytes":"993E0008","comment":"Clears runtime actor+28 after sampling it. Sample0 skips local ammo-equality test. Sample-nonzero/record present can choose early state3 wait; not universal zero-ammo rejection or saved latch.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; gelanator_transition native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00463E08","name":"TOD_ammo_capacity_raw_saved_level_no_local_clamp","kind":"comment","confidence":"confirmed","bytes":"889D0011","comment":"Loads raw record+11 level byte; following466500 indexes data+280+4*level without local20-slot/NumLevels clamp. Separate XP cap does not protect this path; level255 offset67C is not proven valid.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_capacity native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00466520","name":"TOD_ammo_capacity_base_from_unclamped_saved_level","kind":"comment","confidence":"confirmed","bytes":"7C29242E","comment":"Reads f32 MaxAmmo base using raw caller level; then tail branch to466258 with saved mask and attribute9. No ownership/XP/current-ammo input or safe out-of-range lookup contract.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_capacity native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x004662EC","name":"TOD_modifier_absolute_add_before_final_factor","kind":"comment","confidence":"confirmed","bytes":"EC21102A","comment":"Kind exactly0: add f32 value+8 to base, physical index order. All nonzero kinds instead add to factor initialized1.0. Saved mask and exact attribute select records; cost/tags/ownership ignored by this arithmetic body.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_capacity native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

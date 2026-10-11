@@ -1,5 +1,7 @@
 # Tools of Destruction research tools — PS3 / USA / v02.00
 
+[Inspect-TodGelanatorTransition.py](Inspect-TodGelanatorTransition.py) validates85 ranges for initialized item27, the borrowed canonical save pointer, paired1.0 debit/refund requests, ordered phase gates and runtime latch stores. Thirteen tests cover branch equality/unordered cases, distinct runtime samples, tampering and immutable raw observations. Optional `--save` cannot infer active mode, current phase, actual delta, reservation count or firing cost; plans accept explicit detached runtime samples only.
+
 [Inspect-TodAmmoCapacity.py](Inspect-TodAmmoCapacity.py) validates35 guard ranges for raw saved-level indexing and the exact modifier arithmetic chain. Twelve tests cover address boundaries, mask/attribute selection, additive percentage factors, per-operation binary32 rounding, nonfinite/overflow refusal, tampering and a qualified fingerprinted asset/save comparison. Optional `--save` reports only immutable raw inputs/address plans; explicit finite previews never claim current runtime maxima or edit safety.
 
 [Inspect-TodLoadResetDependencies.py](Inspect-TodLoadResetDependencies.py) validates49 native guard ranges for the Gelanator record/ammo pointer, +0 request with definition-dependent clamp, and deferred runtime latch consumption gated by saved906EC. Nine tests cover exact reproduction, tampering, finite signed-zero/negative maxima, branch extremes and raw immutable snapshots. Optional `--save` never runs resets or infers live configuration/latch state.

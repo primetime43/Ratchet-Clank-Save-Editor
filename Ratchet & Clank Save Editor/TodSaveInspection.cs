@@ -314,6 +314,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         var reset = TodResearch.Map.GetProperty("load_reset_dependencies").GetProperty("ammo_reset");
                         details += "\r\nGelanator-specific load reset: " + reset.GetProperty("rule").GetString() +
                             "\r\n" + reset.GetProperty("clamp_limit").GetString() + " Viewing never invokes this reset.";
+                        var transition = TodResearch.Map.GetProperty("gelanator_transition");
+                        details += "\r\nGelanator paired ammo transition: " + transition.GetProperty("paired_ammo").GetString() +
+                            "\r\n" + transition.GetProperty("phase_gate").GetString() +
+                            "\r\n" + transition.GetProperty("entry_boundary").GetString() +
+                            "\r\n" + transition.GetProperty("runtime_limit").GetString();
                     }
                     rows.Add(new(new[] { item.Id.ToString(), item.Name, item.ScriptOwned ? "Yes" : "No", item.StoredLevel.ToString(),
                         Number(item.XpBits), Number(item.AmmoBits), $"0x{item.ModifierMask:X8}", $"0x{item.Unlock:X2}", TodResearch.Hex(item.Offset), item.Warning }, details));

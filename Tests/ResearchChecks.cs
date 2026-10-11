@@ -735,6 +735,25 @@ internal static partial class Program
             Equal(7, TodResearch.Map.GetProperty("adaptation_context").GetProperty("seven_state_dispatch").GetProperty("states").GetArrayLength());
             True(bytes.SequenceEqual(before), "Decryptor inspection must not change counter values or speed.");
         });
+        Check("Gelanator paired ammo details preserve the snapshot without inventing active mode or firing costs", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x224, 4), 0x7FC12345);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x228, 4), 0xFFFFFFFF);
+            bytes[0x22C] = 0xFE; bytes[0x22D] = 0xFF; bytes[0x22E] = 0xAB; bytes[0x22F] = 0xCD;
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Weapons & gadgets");
+            string detail = table.Rows[27].Details;
+            True(detail.Contains("Gelanator paired ammo transition") &&
+                detail.Contains("calls4661F8 with1.0") && detail.Contains("calls465E18 with the SAME1.0"), "Selected debit and refund requests must both remain qualified.");
+            True(detail.Contains("not guaranteed actual delta1") && detail.Contains("no per-shot claim"), "A paired clamped request is not a conserved refund or one ammo per shot.");
+            True(detail.Contains("separate samples") && detail.Contains("not offsets into GAME.SAV"), "Runtime state must not become a saved mode field.");
+            True(detail.Contains("not universal zero-ammo rejection") && detail.Contains("unordered values"), "Local entry/phase gates must retain their branch boundaries.");
+            True(!table.Rows[1].Details.Contains("Gelanator paired ammo transition"), "Other items must not inherit this actor-specific evidence.");
+            True(detail.Contains("ammo bits: 0x7FC12345") && detail.Contains("ABCD"), "Unusual ammo and opaque tails must stay visible.");
+            Equal("255", table.Rows[27].Cells[3]); Equal("0xFFFFFFFF", table.Rows[27].Cells[6]);
+            True(bytes.SequenceEqual(before), "Viewing must not execute or balance a Gelanator transition.");
+        });
         Check("Ammo capacity explains arithmetic and raw-level bounds without calculating live maxima", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1202,7 +1221,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1462, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1467, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
