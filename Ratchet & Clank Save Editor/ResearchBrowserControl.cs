@@ -47,7 +47,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Shipped reference segment names for 19 worlds", TodResearch.Map.GetProperty("segment_configuration_assets"), 0));
             topics.Add(JsonTopic("World initialization footprint & opaque byte preservation", TodResearch.Map.GetProperty("world_aux_fields"), 0));
             topics.Add(JsonTopic("Blueprints & bonuses", TodResearch.Map.GetProperty("bonuses"), 0));
+            topics.Add(JsonTopic("Six bonus-state consumers & qualified runtime effects", TodResearch.Map.GetProperty("bonus_effects"), 0));
             topics.Add(JsonTopic("Equipment history & stored state", TodResearch.Map.GetProperty("state_storage"), 0));
+            topics.Add(JsonTopic("Equipment history callback, restore requests & menu fallbacks", TodResearch.Map.GetProperty("equipment_lifecycle"), 0));
             topics.Add(JsonTopic("Persistent grids, map labels & volume headers", TodResearch.Map.GetProperty("persistent_grid"), 0));
             topics.Add(JsonTopic("Map-menu order, images & native grid checks", TodResearch.Map.GetProperty("grid_routing"), 0));
             topics.Add(JsonTopic("Map rectangles, world projection & clearing brush", TodResearch.Map.GetProperty("grid_geometry"), 0));
@@ -59,6 +61,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Arena challenges, recorded wins & reward rules", TodResearch.Map.GetProperty("arena_challenges"), 0));
             topics.Add(JsonTopic("Arena source indices, native IDs & default-selection lookup", TodResearch.Map.GetProperty("arena_menu"), 0));
             topics.Add(JsonTopic("Shipped arena UI display partition & chalNum routing", TodResearch.Map.GetProperty("arena_menu_assets"), 0));
+            topics.Add(JsonTopic("Arena selection side effects & raw-zero weapon reward gate", TodResearch.Map.GetProperty("arena_table"), 0));
+            topics.Add(JsonTopic("Compiled arena input lists, story bits & activation dependencies", TodResearch.Map.GetProperty("arena_table_assets"), 0));
             topics.Add(JsonTopic("Reset-event categories & runtime countdown", TodResearch.Map.GetProperty("reset_categories"), 0));
             topics.Add(JsonTopic("Global event flags & native bit addressing", TodResearch.Map.GetProperty("global_flags"), 0));
             topics.Add(new("Weapons & gadgets", TodResearch.Scope, TodResearch.Inventory.Select(item =>

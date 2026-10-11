@@ -155,6 +155,61 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return text.ToString();
         }
 
+        private static string BonusEffectDetails(int id)
+        {
+            foreach (var effect in TodResearch.Map.GetProperty("bonus_effects").GetProperty("effects").EnumerateArray())
+                if (effect.GetProperty("id").GetInt32() == id)
+                    return "\r\n\r\nCode-confirmed behavior, when the separate runtime gates pass:\r\n" +
+                        effect.GetProperty("rule").GetString() + "\r\n" + effect.GetProperty("scope").GetString() +
+                        "\r\nThis describes a native consumer, not an active-effect verdict from this save. Viewing never applies the effect or changes its state.";
+            return "\r\nThe effect's runtime consumer is not yet mapped in this pass; no behavior is guessed from its name.";
+        }
+
+        private string EquipmentHistoryDetails()
+        {
+            string[] words = new[] { 0x42C, 0x430, 0x434 }.Select(offset =>
+            {
+                int id = unchecked((int)U32(offset));
+                return id >= 0 && id < Inventory.Count ? Inventory[id].Name + " (ID " + id + ")" : "Raw signed ID " + id;
+            }).ToArray();
+            var lifecycle = TodResearch.Map.GetProperty("equipment_lifecycle");
+            return "\r\n\r\nSaved history, newest to oldest: " + string.Join(" → ", words) + ".\r\n" +
+                lifecycle.GetProperty("restore_requests").GetProperty("rule").GetString() + "\r\n" +
+                lifecycle.GetProperty("menu_fallback").GetProperty("rule").GetString() +
+                "\r\nHistory recording: " + lifecycle.GetProperty("history_dispatch").GetProperty("gate").GetString() +
+                "\r\nRestore requests and menu fallbacks are not proof of current equipment or successful equipping. Unknown IDs are preserved, not sent to native code. See Research for the qualified callback dispatch.";
+        }
+
+        private string ArenaScriptDetails(int id)
+        {
+            var assets = TodResearch.Map.GetProperty("arena_table_assets");
+            var text = new StringBuilder("\r\nConfirmed shipped script inputs, not a live menu reconstruction:\r\n");
+            bool found = false;
+            foreach (var list in assets.GetProperty("source_lists").EnumerateArray())
+                foreach (var row in list.GetProperty("rows").EnumerateArray())
+                    if (row.GetProperty("native_id").GetInt32() == id)
+                    {
+                        found = true;
+                        text.AppendLine(list.GetProperty("name").GetString().Replace('_', ' ') + ": input index " +
+                            row.GetProperty("selector_input_index") + "; " + list.GetProperty("condition").GetString() +
+                            (list.GetProperty("selector_called").GetBoolean() ? "." : "; singleton forces index1 without calling the selector."));
+                    }
+            if (!found) text.AppendLine("This native ID is not in the reached lists recovered from these compiled scripts; this is not proof of global unavailability.");
+            foreach (var gate in assets.GetProperty("activation_gates").EnumerateArray())
+                if (gate.GetProperty("target_native_id").GetInt32() == id)
+                    text.AppendLine("Script activation requires a signed-positive success count for native ID " + gate.GetProperty("requires_native_id") + ".");
+            text.AppendLine("Four independently stored arena story bits (Set/Clear is not a current-trip verdict):");
+            foreach (var flag in TodResearch.Map.GetProperty("arena_table").GetProperty("story_flags").EnumerateArray())
+            {
+                int offset = TodResearch.Offset(flag.GetProperty("word_offset")), bit = flag.GetProperty("word_bit").GetInt32();
+                ulong word = BinaryPrimitives.ReadUInt64BigEndian(data.AsSpan(offset, 8));
+                text.AppendLine(flag.GetProperty("enum").GetString() + ": " + ((word & (1UL << bit)) != 0 ? "Set" : "Clear") + ".");
+            }
+            text.AppendLine(assets.GetProperty("alias_warning").GetString());
+            text.AppendLine("Named first-victory weapon-reward getter requires configured signed weapon ID >0 and the raw completion counter exactly0. Any nonzero bits hide that reward, including negative signed counters; this differs from the signed-positive menu partition/activation tests. Current runtime configuration and accepted rewards are not inferred.");
+            return text.ToString();
+        }
+
         public InspectionTable Table(string view)
         {
             if (!Available) return new(new[] { "Status" }, new[] { new InspectionRow(new[] { Message }, Message) });
@@ -182,7 +237,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x424, "Special bolts spent", "code-backed", "Owned balance getter 25DB8 subtracts this word from collected bit counts. Skin purchase 27AA0 increments it by the definition cost. Do not normalize it to owned-skin count."),
                     (0x428, "Bolt multiplier", "code-backed", "Float32 BE. Native getter/update 1E2568 / 1E25F0; code clamps updates to 1..20, not a validated edit range."),
                     (0x42C, "Last recorded equipped item", "code-backed", "History updater1F5570 shifts old430 to434, old42C to430, then records native equipped getter11810/466EC0 at42C. Historical snapshot, not necessarily current runtime equipment; no safe editing range inferred."),
-                    (0x430, "Previously recorded equipped item", "code-backed", "Previous42C value, not a dual-wield secondary slot. Restore and menu consumers use fallback logic; callback timing and reset behavior remain unverified."),
+                    (0x430, "Previously recorded equipped item", "code-backed", "Previous42C value, not a dual-wield secondary slot. Restore and menu consumers use different fallback rules. The state-entry callback and runtime-only resets are documented in Research; a saved word is not current equipment."),
                     (0x434, "Older recorded equipped item", "code-backed", "Previous430 value; consulted by menu26CE30. Raw item ID and history order retained; unknown IDs are not repaired."),
                     (0x438, "Pack dispatch selector", "code-backed", "set_pack_type native27A30 stores0 for argument0, otherwise1. Known hero action consumers select the alternate message only when this word equals1; malformed nonzero values are not treated as true or repaired."),
                     (0x43C, "Saved pack type", "code-backed", "Named set_pack_type/get_pack_type write/read this BE32 word. Native PACK_HELI/THRUSTER/HYDRO/WING IDs0..3; TYPE_COUNT4 is a sentinel, not a mapped saved selection. Saved selection does not prove current runtime availability."),
@@ -197,7 +252,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x906EC, "Engine replay/restart word", "code-backed", "Native -replay CLI option writes1; selective restart increments with unsigned wrap then caps at1000. Nonzero gates multiplier, final armor and segment scaling. Not a confirmed localized Challenge Mode label or count of completed playthroughs.") })
                 {
                     uint value = U32(field.Item1);
-                    rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 }, field.Item4));
+                    rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 },
+                        field.Item4 + (field.Item1 is 0x42C or 0x430 or 0x434 ? EquipmentHistoryDetails() : "")));
                 }
                 foreach (var field in TodResearch.Map.GetProperty("save_aux_fields").GetProperty("fields").EnumerateArray())
                 {
@@ -257,9 +313,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "The description is a shipped config comment, not a confirmed localized title. Base bolts are not the current payout: repeat wins and weapon rewards affect it.\r\n" +
                         "Counter reads are signed32; raw bits are preserved. Incrementing a counter alone does not grant currency or weapon/quick-select state.\r\n" +
                         "Arena indexing has three spaces: Lua source index, native challenge ID, and current display row. The shipped UI keeps source index as chalNum and stably places non-positive signed counts before positive counts; selection and image lookup use chalNum, not display row. Inactive rows are still present but selection checks isActive.\r\n" +
-                        "get_num_challenges reads runtime table.num, not a fixed 23. Default selection converts a runtime native ID back to its first matching source index, then the UI finds its display row. The source-index-to-ID table remains unresolved, so this native-ID view does not reconstruct or reorder the current menu.\r\n" +
+                        "get_num_challenges reads runtime table.num, not a fixed 23. Default selection converts a runtime native ID back to its first matching source index, then the UI finds its display row. Shipped script input lists are now recovered separately, but their alias to the live source-index table remains unresolved; this native-ID view does not reconstruct or reorder the current menu.\r\n" +
                         "Separate reset-event category counters at 0x5734–0x5754 (not per-challenge failures; category names unknown): " + Convert.ToHexString(data.AsSpan(0x5734, 32)) + "\r\n" +
-                        (mapped ? TodResearch.Pretty(entry) : "ID0 is the native INVALID sentinel, not a playable challenge.");
+                        (mapped ? TodResearch.Pretty(entry) : "ID0 is the native INVALID sentinel, not a playable challenge.") + ArenaScriptDetails(id);
                     rows.Add(new(new[] { id.ToString(CultureInfo.InvariantCulture), name, label, count, bolts,
                         TodResearch.Hex(offset), $"{raw:X8}" }, details));
                 }
@@ -413,7 +469,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         $"Title lookup ID {item.GetProperty("title_lookup_id")}; description lookup ID {item.GetProperty("description_lookup_id")}. " +
                         $"Shipped state-name lookup IDs: {item.GetProperty("state_name_lookup_ids")}.\r\n" +
                         "Menu indices and unlock thresholds can be remapped by a runtime mode not captured in the save; this table does not assert current menu availability. " +
-                        "Enable-all writes score840 and replaces zero states with1, preserving nonzero states and earned skill bits. " + note));
+                        "Enable-all writes score840 and replaces zero states with1, preserving nonzero states and earned skill bits. " + note + BonusEffectDetails(id)));
                 }
                 return new(new[] { "ID", "Bonus", "Stored state", "Shipped score", "State-name count", "State offset", "Definition VA", "Notes" }, rows.AsReadOnly());
             }

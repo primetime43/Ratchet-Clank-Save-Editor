@@ -2,6 +2,79 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
+## Compiled arena selector inputs and independent reward predicates
+
+The original global archive contains separate level scripts under `/levels/imperial fight fest/scripts/`, distinct from the previously mapped arena configuration script. Fingerprinted source plus compiled `main.lc`, `arena.lc` and `arena_2.lc` establish20 literal master descriptors and the following reached script lists. A bounded constructor fold reads literal metadata only: it does not execute calls, branches, Lua or game code.
+
+| Script list | Native challenge IDs in literal input order | Reached-path qualification |
+| --- | --- | --- |
+| First-trip opening1 | `1` | Story flag74 clear; forces index1 without calling the selector |
+| First-trip opening2 | `4` | Flag74 set, flag75 clear; forces index1 without calling the selector |
+| First-trip final | `1,4,2,3,7,5,8,10` | Both first-trip flags set; list passed to the selector |
+| Return-trip bonus1 | `1,4,2,3,7,5,8,10,6,12,13,14,17,18,9,11,20,22` | Reached return script loop after two flag-qualified opening scripts |
+
+The return script also constructs an identical bonus2 literal, but the compiled selector call takes **bonus1 only**. It is not an additional proven selectable branch. Native catalog entries `IFF_B_13` and `IFF_B_19` lack master descriptors in compiled `main.lc`; `IFF_B_14` and `IFF_B_17` have descriptors but are omitted from the reached return list. Compiled rows must not be counted from commented/source-only text or inferred from the22 native configuration entries.
+
+Fourteen compiled assignments update descriptor `active` from a predecessor challenge's **signed completion count >0**. Four relevant independently exported story IDs are74/75 (`LVL_IFF_CHALLENGE_1_DONE` / `_2_DONE`) and88/89 (`LVL_IFF_RETURN_CHALLENGE_9_DONE` / `_10_DONE`), integer bits10/11/24/25 in saved BE64 word `5530`. These bits and challenge counters are independent; neither bank is normalized to the other. The supplied save has all four bits clear and all23 physical challenge counter words zero. That establishes saved predicates only, not which trip, script or UI is currently running.
+
+### Native dependencies and the remaining table-installation gap
+
+Named `get_challenge_weapon_reward`, wrapper `316B8 → 273D0`, resolves a menu source index through `110B0 → 2756F8`. It exposes configured `ArenaConfig[nativeID].WpnReward` only when **signed configured weapon ID >0 and raw saved counter `56D8 + 4*nativeID ==0`**; otherwise it returns `-1`. Any nonzero counter hides this first-victory weapon reward, including high-bit values interpreted as negative by signed consumers. This differs from the shipped UI's signed-positive display partition and activation rules. Named bolt reward wrapper `317C8 → 261E0` resolves the same index and delegates to the independently mapped direct-ID reward calculator; runtime config is required for a live quote.
+
+Selection `314E8 → 26088` writes runtime Lua `ARENA_CHALLENGE_DATA.selection`, resolves the native ID into runtime object `+D8`, then requests a runtime phase transition. These are not new save fields. Operation bridge `282AF8` validates actor/type `B9`, clears a runtime member through `39DEA8`, and calls `24F098(thread+48, opcode5,0,0)`; it does **not itself prove installation or aliasing of the supplied list as `ARENA_CHALLENGE_DATA`**. The lower dispatcher/table binder remains unresolved.
+
+Consequently, recovered **selector-input indices**, runtime menu source indices, native IDs and display rows are kept distinct. The inspector adds script-list membership, independent saved story bits and the raw-zero weapon-reward qualification to row details without reordering counters or claiming current availability. Script/title localization symbols are not independently recovered English labels.
+
+[Inspect-TodArenaTable.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodArenaTable.py) reproduces223 native guards, six source/compiled fingerprints, three compiled root digests and20 asset guard ranges. Thirteen tests cover list/master reproduction, the unselected literal, activation edges, BE64 flags, signed/raw reward differences, invalid inputs and unchanged source hashes. The native/asset reports are embedded separately as `arena_table` / `arena_table_assets` and visible under Research. No original asset payload or private save is bundled.
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodArenaTable.py --elf "path/to/EBOOT.ELF" --archive "path/to/global_cached.psarc" --save "path/to/plaintext-working-copy.bin"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodArenaTable.py --elf "path/to/EBOOT.ELF" --archive "path/to/global_cached.psarc" --save "path/to/plaintext-working-copy.bin" -v
+```
+
+## Equipment-history dispatch and qualified bonus effects
+
+This parallel pass separates persisted values from the native operations that consume them. The exact USA executable, detached plaintext snapshot and generated edge cases are inspected read-only. Neither native code nor Lua is executed, and no new editing controls are enabled.
+
+### History is recorded on a qualified state-entry callback
+
+The saved signed item-ID words at `42C`, `430` and `434` are newest-to-oldest history, not three simultaneous equipment slots. Hero initialization installs dispatch table `84A4B8` at hero member `1E00`; its slot `+28` points through descriptor `8666D8` to history updater `1F5570`. The runtime inventory's member `188` supplies the owning hero, whose `1A68` resolves the serialized state.
+
+State step `467228`, call `4674C0`, invokes that callback only for runtime state member `110 == 2` with a nonzero entry argument. Pump `467A30` reads entry latch `118`, converts it to a Boolean, clears it, calls the step, and repeats if the step raises the latch again. The state1-to-state2 transition raises it, allowing history dispatch within the same pump invocation. The callback runs **before** state2's active-object and pending/current-item checks. It can record duplicate or `-1` values; it is not equivalent to every frame or every successful equip.
+
+Request `467908` instead queues runtime pending item `140`, or returns an already-active success under its separate checks. It does not directly update saved history. Runtime reset `1F5DB8 → 1F5C18` clears pending ID `140=-1` and active handle `144=0` without clearing those three serialized words in that function.
+
+| Consumer | Exact reached-path selection rule |
+| --- | --- |
+| Restore equipment request | Use `42C`, except `-1` or item30 becomes item0; separate ownership/ammo/runtime checks can reject the request |
+| Restore recent-history seed | Use `42C`, except zero selects `430`; `-1` becomes item1. Write only if runtime recent count `13C` is zero |
+| Menu primary | Use `42C`, except `-1`/zero selects `430`; selected zero becomes `-1` |
+| Menu secondary | Use `430`, except `-1`/zero or equality with primary selects `434`; selected zero becomes `-1`. The final fallback is not deduplicated |
+
+The supplied history `15/25/0` therefore selects restore request15 and seed15, while the separate menu consumer selects15/25. These are **request/fallback observations**, not proof of current runtime equipment or accepted equipping. [Inspect-TodEquipmentLifecycle.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodEquipmentLifecycle.py) independently reproduces67 native guards; its bounded synthetic helpers exclude out-of-catalog IDs and retain unknown snapshot words without previewing them.
+
+### Six physical bonus-state consumers
+
+These consumers read direct bytes at `86F8 + native bonus ID`. The four confirmed score gates use **unsigned saved weighted score `8708`**, not `8734` or warning latch `8738`. Native enum names are not recovered localized labels.
+
+| Native bonus | Confirmed local behavior; separate runtime gates still apply |
+| --- | --- |
+| ID1 `CHEAT_HERO_BIGHEAD` | Score≥50 and nonzero state; states1/2/3 multiply transform basis by2/4/0.5, other nonzero bytes by1 |
+| ID3 `CHEAT_ENEMY_BIGHEAD` | Score≥100 and nonzero state; state2 uses0.5, other nonzero bytes2.5; additionally checks a nonnegative bone index |
+| ID5 `CHEAT_DEV_COMMENTS` | Score≥200, nonzero state and native qualifier exactly1 permit qualified runtime dispatch; clip/qualifier meanings remain unresolved |
+| ID7 `CHEAT_WRENCH_REPLACE` | Raw byte indexes a runtime model asset table and changes a64-bit selection mask at runtime `+118`; neither traced local block clamps the index or checks score |
+| ID9 `CHEAT_JAMES_ZURKON` | Nonzero state **or a separate runtime override** selects factory pair `C3/657`, otherwise `4B/311`; no local score gate established |
+| ID11 `CHEAT_MIRROR_LEVEL` | Score≥500 and nonzero state set runtime latch `10724C10` and context byte `+45` bit0; otherwise both are cleared while unrelated bits remain |
+
+The head consumers' zero/insufficient-score path does not explicitly restore an earlier transform. Unknown wrench state255 remains an unchecked asset index, not a safe replacement option. Missing *local* score checks do not establish that all callers ignore eligibility. Mirror axis/input consequences, runtime asset-table capacity, factory object labels, commentary clips and current activation remain unconfirmed.
+
+Actual snapshot: weighted score750 and all14 bonus-state bytes zero. That alone does not establish the state of every runtime effect: the factory consumer has an independent override, and other consumers require actors/models/call timing absent from the save. [Inspect-TodBonusEffects.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonusEffects.py) reproduces98 native guards and six effect rules. Tests preserve raw unsigned scores, state255 fallbacks and original input hashes. The viewer keeps its simple columns, adds these qualifications to selected-row details, and embeds both full reports under Research.
+
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodEquipmentLifecycle.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonusEffects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
+```
+
 ## Object-counter lifecycles, quick-select mutation and opaque-tail ownership
 
 This parallel pass strengthens existing storage mappings rather than assigning names to every opaque byte. `inventory_aux` and `final_tail_fields` independently reproduce the exact native reset/restore/consumer relationships. All observations are scoped to the hash-verified USA BCUS98127 v02.00 executable. The program shows the new explanations read-only; no restart, item insertion, skill award or initializer is executed.
@@ -234,7 +307,7 @@ Reproduction tools (all read-only; `--save` accepts the detached plaintext worki
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1278 annotations, 118 imports, evidence, byte signatures and 42 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1293 annotations, 118 imports, evidence, byte signatures and 42 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -804,7 +877,7 @@ Named `enable_all_cheats` (`2BBC90 → 27A678 → 35D480`) writes **840** to sco
 
 #### Equipment history, not dual-wield slots
 
-Native callback `0x1F5570` reads inventory member `+0x188`, then hero member `+0x1A68` to reach serialized state. Initializer `0x1F5DB8` stores the hero argument at inventory `+0x188`; the already mapped hero initializer links `+0x1A68` to `0x101EFB20`. The callback's descriptor `0x8666D8` is referenced at table slot `0x84A4E0` for indirect dispatch; exact callback timing remains unverified.
+Native callback `0x1F5570` reads inventory member `+0x188`, then hero member `+0x1A68` to reach serialized state. Initializer `0x1F5DB8` stores the hero argument at inventory `+0x188`; the already mapped hero initializer links `+0x1A68` to `0x101EFB20`. The callback's descriptor `0x8666D8` is referenced at table slot `0x84A4E0` for indirect dispatch. The [qualified state-entry dispatch](#equipment-history-dispatch-and-qualified-bonus-effects) is now confirmed separately; physical animation timing, all transition causes and gameplay acceptance remain unverified.
 
 The callback performs these operations, in order:
 
@@ -1227,7 +1300,7 @@ python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodResetCategories.p
 
 ### Why this is not 100-percent semantic or gameplay confirmation
 
-Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, dynamic segment asset changes and uncataloged slots, timer units/reset-event cause, equipment callback/reset dependencies, runtime arena menu table/order, player-facing reset-category names and category1 selection, any persisted checkpoint/health dependencies, additional snapshot synchronization, runtime grid geometry/world-axis naming and pixel-specific meanings, unnamed common copied-header bytes and final tail byte60DB. The5734 bank has confirmed initialization/increment mechanics, selectors2..7 and runtime expiration; this still does not make it named challenge failures or prove in-game counter semantics. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above. All21 grid slots now have native map-label associations and partially verified volume headers/group flags, not a fully understood planet/mission completion map. Tail `0x906E4`, settings word `114C0` and settings bytes `114D6/114D7` remain semantically unresolved; first-person context is established without guessing an option label or polarity. The final word has native engine replay/restart context; localized game-mode naming and completed-playthrough semantics remain unverified. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
+Structural maps cover all file bytes, but many are deliberately opaque. Remaining work includes runtime per-world object-slot/name catalogs and object-specific lifecycle meanings, dynamic segment asset changes and uncataloged slots, timer units/reset-event cause, all equipment-state transition causes and gameplay equip acceptance, arena operation-dispatch list alias/current runtime table, player-facing reset-category names and category1 selection, any persisted checkpoint/health dependencies, additional snapshot synchronization, runtime grid geometry/world-axis naming and pixel-specific meanings, unnamed common copied-header bytes and final tail byte60DB. The5734 bank has confirmed initialization/increment mechanics, selectors2..7 and runtime expiration; this still does not make it named challenge failures or prove in-game counter semantics. Direct arena IDs/counters/configuration, object-bitset addressing and qualified load predicates, segment/log scalar provenance, RLE grammar, equipment history, fifteen options and two saved load-selection words are established above. All21 grid slots now have native map-label associations and partially verified volume headers/group flags, not a fully understood planet/mission completion map. Tail `0x906E4`, settings word `114C0` and settings bytes `114D6/114D7` remain semantically unresolved; first-person context is established without guessing an option label or polarity. The final word has native engine replay/restart context; localized game-mode naming and completed-playthrough semantics remain unverified. Runtime checkpoint positions are distinguished from saved fields rather than used to fill unknown save offsets.
 
 One snapshot and a stripped executable cannot establish every script-defined key, valid value combination, reset dependency or in-game acceptance rule. Static code evidence, observed values, structural boundaries and gameplay verification are distinct. No completion percentage is assigned to this research, and no “100% compatibility” or “100% mapped” claim is made. Controlled before/after captures and an isolated runtime test environment are required for the remaining behavioral verification; original saves must be kept untouched.
 
@@ -1237,7 +1310,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1277 mapped annotations (the third TOC reference base is unmapped), 42 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry/save-tail/reward-channel/mission-key/pack-boot/segment-loader/world-footprint/health-checkpoint/auxiliary-word/first-person-coupling/decryptor-context/segment-aggregate-gate/definition-handle/object-lifecycle/final-tail-ownership/arena-menu instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1292 mapped annotations (the third TOC reference base is unmapped), 42 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry/save-tail/reward-channel/mission-key/pack-boot/segment-loader/world-footprint/health-checkpoint/auxiliary-word/first-person-coupling/decryptor-context/segment-aggregate-gate/definition-handle/object-lifecycle/final-tail-ownership/arena-menu/equipment-dispatch/bonus-effect/arena-selector instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 
