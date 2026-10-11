@@ -36,6 +36,30 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Quick-select warning state preserves one-byte latches, opaque neighbors and failed-request counter semantics", () =>
+        {
+            foreach (uint counter in new uint[] { 0, 3, 5, 0x80000006, uint.MaxValue })
+            {
+                byte[] bytes = ResearchFixture();
+                BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8734, 4), counter);
+                bytes[0x8738] = 0xFF;
+                Convert.FromHexString("11223344556677").CopyTo(bytes, 0x8739);
+                byte[] before = bytes.ToArray();
+                var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+                var raw = inspection.Table("Counters & nearby fields");
+                var row = raw.Rows.Single(r => r.Cells[1] == "Quick-select warning counter");
+                Equal(counter.ToString("X8"), row.Cells[4]);
+                True(!InspectionPresentation.Simplify("Counters & nearby fields", raw).Rows.Any(r => r.Cells[0] == "Quick-select warning counter"), "Implementation counters must not crowd the simple player summary.");
+                foreach (var detail in new[] { row.Details, inspection.Table("Quick select").Rows[0].Details })
+                {
+                    True(detail.Contains("raw0xFF, ONE byte") && detail.Contains("11223344556677"), "Raw latch and adjacent bytes must remain distinct.");
+                    True(detail.Contains("not successful assignment count") && detail.Contains("without testing a success result") && detail.Contains("not latch8738"), "Requests, playback and restart preservation must not become success/history claims.");
+                    True(detail.Contains("Viewing never assigns slots"), "Inspection must not execute native mutations.");
+                }
+                True(bytes.SequenceEqual(before), "Viewing must not cap the counter, normalize the latch or clear opaque bytes.");
+            }
+            Equal(87, TodResearch.Map.GetProperty("quick_select_warning").GetProperty("instruction_guards").GetArrayLength());
+        });
         Check("Saved event counters preserve integer words without inventing deaths, kills or runtime scaling", () =>
         {
             foreach (uint value in new uint[] { 0, 3, 0x80000000, uint.MaxValue })
@@ -1065,7 +1089,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1400, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1405, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

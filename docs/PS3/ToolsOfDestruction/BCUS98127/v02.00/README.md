@@ -2,6 +2,7 @@
 
 ## Findings and definitions
 
+- [Quick-select assignment and warning state](ElfMap.md#quick-select-direct-assignment-warning-counter-and-byte-latch): named direct32-slot setter, counter before native rejection branches, one-byte repeat-warning gate and distinct initialization/preservation; not successful assignments or playback history.
 - [Saved event counters and target restoration](ElfMap.md#saved-event-counters-bounded-consumers-and-bonus-target-restoration): wrapping872C/8730 counters, qualified runtime handle gate, bounded config-parameter factors and recorded-target registration suppression; gameplay event names remain unknown.
 - [Weapon purchase routing and level-five gate](ElfMap.md#weapon-purchase-routing-and-saved-level-five-gate): exact stored level4/replay/definition prerequisites, independent dispatch/recheck samples, level/XP/ammo before payment and qualified duplicate normal acquisition.
 - [Blueprint selector grants](ElfMap.md#blueprint-selector-grants-and-qualified-level-associations): saved-destination indexed native grant, thirteen qualified level associations and a shipped Stratus City predicate; not pickup locations or history.
@@ -37,7 +38,7 @@
 - [Object/reset/restore and opaque-tail ownership](ElfMap.md#object-counter-lifecycles-quick-select-mutation-and-opaque-tail-ownership): selected three-bank resets, six restore assignments, signed Souls skill-point consumer, quick-select mutation and final-word/settings copy boundaries.
 - [Arena indexing and shipped display order](ElfMap.md#arena-native-ids-source-indices-and-display-rows): native count/inverse lookups and completion-dependent source-index routing; runtime table contents remain unresolved.
 - [Pack/boot state, reference segment names and opaque-byte ownership](ElfMap.md#saved-packboot-state-ordered-segment-names-and-initializer-ownership): three newly named words,56 asset-backed segment associations across19 worlds and exact initialization/copy boundaries.
-- [Native address/structure map](maps/NativeMap.json): 1400 annotations, 118 imports and 45 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1405 annotations, 118 imports and 45 structure definitions.
 - [Bonus-target progress and collection paths](ElfMap.md#bonus-target-progress-and-qualified-special-bolt-producers): saved8728 publication versus reread runtime pending, flag278 message latch, localID0 reward precheck and direct runtime-local-ID grant. Individual targets and total count remain unknown.
 - [Bolt multiplier mutation and paired XP messages](ElfMap.md#bolt-multiplier-health-sampling-accumulator-and-paired-xp-messages): replay-gated sampled health reset, runtime-only half-step accumulator, strict float32 threshold and additive6A/6B XP paths; no timer or per-kill cadence inferred.
 - [Hero XP/HP reference arrays](ElfMap.md#named-hero-xphp-arrays-and-shipped-progression-reference): named100-entry native banks and98 fingerprinted shipped rows, separate from live level/health; includes unclamped progress arithmetic.

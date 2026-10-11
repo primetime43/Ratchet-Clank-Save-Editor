@@ -31,6 +31,20 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private static string Number(uint bits) => BitConverter.Int32BitsToSingle(unchecked((int)bits)).ToString("R", CultureInfo.InvariantCulture);
         private uint U32(int offset) => BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(offset, 4));
 
+        private string QuickSelectWarningDetails()
+        {
+            var report = TodResearch.Map.GetProperty("quick_select_warning");
+            byte latch = data[0x8738];
+            return $"\r\nQuick-select warning state: counter {U32(0x8734)} (0x{U32(0x8734):X8} at0x8734); message latch {(latch == 0 ? "Clear" : "Set")} (raw0x{latch:X2}, ONE byte at0x8738).\r\n" +
+                report.GetProperty("counter").GetProperty("rule").GetString() + "\r\n" +
+                report.GetProperty("latch").GetProperty("rule").GetString() + "\r\n" +
+                report.GetProperty("named_assignment").GetProperty("rule").GetString() + "\r\n" +
+                report.GetProperty("full_list_context").GetString() + "\r\n" +
+                report.GetProperty("initialization").GetString() + "\r\n" + report.GetProperty("restart").GetString() +
+                "\r\nOpaque neighboring bytes8739..873F: " + Convert.ToHexString(data.AsSpan(0x8739, 7)) + ". Not message-latch bits, named fields or proven padding.\r\n" +
+                report.GetProperty("warning").GetString() + " Viewing never assigns slots, increments the counter, sets the latch or dispatches a message.";
+        }
+
         private TodSaveInspection(string message, byte[] bytes = null)
         {
             Message = message;
@@ -277,6 +291,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x41C, "Bolts", "confirmed", "uint32 big endian. Reward-side additions wrap modulo32 and update a separate runtime accumulator first. Hero-side additions use the signed low32(cap-sum) selection with cap999999999, not a universal unsigned minimum or a lower clamp. These native paths do not establish a safe edit range or repair unusual balances."),
                     (0x420, "Raritanium", "confirmed", "uint32 big endian. Reward-side additions wrap modulo32 and update a separate runtime accumulator first. Hero-side additions use the signed low32(cap-sum) selection with cap999999999, not a universal unsigned minimum or a lower clamp. Runtime reward-cache subtraction can use the full requested amount, not the actual wallet delta; that cache is not saved here."),
                     (0x424, "Special bolts spent", "code-backed", "Owned balance getter 25DB8 subtracts this word from collected bit counts. Skin purchase 27AA0 increments it by the definition cost. Do not normalize it to owned-skin count."),
+                    (0x8734, "Quick-select warning counter", "code-backed", QuickSelectWarningDetails()),
                     (0x8728, "Bonus-target progress mask", "code-backed", "BE32 retained mask, not the current runtime pending-target set or a completion percentage. Native364300 ORs an indexed bit here after clearing it from runtime owner+FC; the index comes from object+324. The pending mask is reread after a lookup, so saved bits alone cannot predict the reward branch. Individual target identities and total target count remain unknown.\r\nA nonzero pending set can latch global flag278 SC_PLAYED_BONUS_TARGET_MSG before a native message request. Zero pending instead tests saved-destination local special-bolt bit0, then grants it only if absent. No saved all-bits test or current-world guarantee. Viewing never dispatches collection, executes callbacks, grants rewards or repairs bits. Set IDs: [" + string.Join(", ", Enumerable.Range(0, 32).Where(bit => (U32(0x8728) & (1u << bit)) != 0)) + "]."),
                     (0x428, "Bolt multiplier", "code-backed", "Float32 BE. This is the raw saved multiplier, not a saved timer. When the separately sampled replay word is nonzero, native getter1E2568 resets it to1 only if cached health is strictly greater than current health; equality/healing does not reset. The getter can change game state and does not universally clamp values. Viewing never calls it.\r\nUpdater1E25F0 calls that getter, subtracts0.5 from a runtime-only accumulator and advances once when the float32 result is below about0.01. Only that finite increment path selects1..20 and reseeds the accumulator. Initialization seeds it from the saved multiplier; current accumulator and health cache cannot be inferred from this file.\r\nWithin a qualified hero-message path, numeric0x6B adds hero XP first, then calls the multiplier updater for a positive finite payload; unordered also falls through the native gate. Sibling0x6A adds XP without that explicit update. Event identities and cadence are unverified: not a proven timer or one increment per kill. Raw values are preserved, including nonfinite/out-of-range bits; no safe editing range inferred."),
                     (0x42C, "Last recorded equipped item", "code-backed", "History updater1F5570 shifts old430 to434, old42C to430, then records native equipped getter11810/466EC0 at42C. Historical snapshot, not necessarily current runtime equipment; no safe editing range inferred."),
@@ -706,7 +721,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "Membership/removal scan all32 words; automatic insertion searches only slots0..23 and filters item configuration flags0x1040.\r\n" +
                         "An occurrence in slots24..31 prevents automatic insertion too; empty tail slots do not help when the first24 are full. Explicit insertion removes all duplicate occurrences across32 words, then overwrites its chosen slot without compacting displaced items.\r\n" +
                         "Selective restart scans all32 stored words and clears IDs24,26..31 to -1, preserving retained slot positions. This view does not execute insertion or restart.\r\n" +
-                        "Stored indices are not a proven physical wheel order. Empty storage does not prove the live menu is empty. Player0 block only; no edit or runtime usability claim.";
+                        "Stored indices are not a proven physical wheel order. Empty storage does not prove the live menu is empty. Player0 block only; no edit or runtime usability claim." + QuickSelectWarningDetails();
                     rows.Add(new(new[] { slot.ToString(), id.ToString(CultureInfo.InvariantCulture), item, slot < 24 ? "Yes" : "No", TodResearch.Hex(offset), note }, detail));
                 }
                 return new(new[] { "Stored slot", "Item ID", "Item", "Auto insertion", "Offset", "Notes" }, rows.AsReadOnly());
