@@ -36,6 +36,25 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Dance progress keeps all64 bits and the earned award independent without inventing target identities", () =>
+        {
+            const ulong pattern = 0x000000000FFFFFFFUL;
+            foreach (ulong bank in new[] { 0UL, pattern, pattern | (1UL << 63), ulong.MaxValue })
+            foreach (bool earned in new[] { false, true })
+            {
+                byte[] bytes = ResearchFixture();
+                BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x8720, 8), bank);
+                BinaryPrimitives.WriteUInt64BigEndian(bytes.AsSpan(0x8710, 8), earned ? 1UL << 48 : 0UL);
+                Convert.FromHexString("1122334455667788").CopyTo(bytes, 0x8718);
+                byte[] before = bytes.ToArray();
+                var row = TodSaveInspection.Read(bytes, "BCUS98127").Table("Skill points").Rows.Single(r => r.Cells[0] == "48");
+                Equal(earned ? "Yes" : "No", row.Cells[2]);
+                True(row.Details.Contains($"0x{bank:X16}") && row.Details.Contains($"exact completion pattern: {(bank == pattern ? "Yes" : "No")}"), "Full64 bank must use exact equality, not a masked or popcount completion.");
+                True(row.Details.Contains("zero progress does not clear an earned award") && row.Details.Contains("Individual target identities") && row.Details.Contains("Viewing never awards skills"), "Snapshot must not invent identity, current eligibility or mutate awards.");
+                True(bytes.SequenceEqual(before), "Viewing must retain bank, independent earned bit and opaque neighbors.");
+            }
+            Equal(134, TodResearch.Map.GetProperty("dance_progress").GetProperty("instruction_guards").GetArrayLength());
+        });
         Check("Quick-select warning state preserves one-byte latches, opaque neighbors and failed-request counter semantics", () =>
         {
             foreach (uint counter in new uint[] { 0, 3, 5, 0x80000006, uint.MaxValue })
@@ -1089,7 +1108,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1405, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1411, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

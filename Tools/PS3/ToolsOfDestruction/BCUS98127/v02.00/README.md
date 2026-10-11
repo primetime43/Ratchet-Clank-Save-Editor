@@ -1,5 +1,7 @@
 # Tools of Destruction research tools — PS3 / USA / v02.00
 
+[Inspect-TodDanceProgress.py](Inspect-TodDanceProgress.py) validates134 guard ranges and five native progress producers for saved BE64 bank8720. Its15 tests cover exact all64 equality, signed-negative skip-but-test, PPC shift aliases, independent earned SKILLPOINT_DANCE48 and immutable raw snapshots. Optional `--save <plaintext>` preserves high bits; target identities, earlier callbacks and current runtime eligibility remain unresolved. No award or edit executes.
+
 The read-only [Inspect-TodObjectDefinitions.py](Inspect-TodObjectDefinitions.py) validates69 native guard ranges and optional `--archive <global_cached.psarc>` reference catalogs:18,214 definitions across19 named worlds, class IDs, segment-name indices and load modes. Its72-byte asset layout is distinct from saved bits and runtime pool entries. Optional `--save <plaintext>` reports raw stored bit counts without assigning object names. No native callbacks, allocations or scripts execute.
 
 These tools correspond to the exact `BCUS98127` executable and assets documented in the [build index](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md). Native inspectors check the executable identity/byte evidence and inspect optional plaintext working copies read-only.

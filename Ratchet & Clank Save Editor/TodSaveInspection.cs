@@ -768,6 +768,17 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "This is definition metadata, not a new saved field or an award prerequisite.";
                     if (id == 46) detail += "\r\nGolden producer: duplicate collectibles and unsigned local IDs above31 still run the native all-world count scan, even without a new bit. Counts include unexpected bits and are compared >= shipped totals; this does not identify actual pickups or prove wrapper acceptance of invalid IDs.";
                     if (id == 47) detail += "\r\nCheapskate producer: an admitted Combuster ammo purchase tests the ORIGINAL request <=1 after adding ammo and deducting bolts, not the clamped quantity. Zero/negative requests select missing ammo in this leaf yet meet that award comparison; caller acceptance and current purchase eligibility are not inferred from this save.";
+                    if (id == 48)
+                    {
+                        ulong dance = BinaryPrimitives.ReadUInt64BigEndian(data.AsSpan(0x8720, 8));
+                        const ulong pattern = 0x000000000FFFFFFFUL;
+                        string indices = string.Join(", ", Enumerable.Range(0, 28).Where(i => (dance & (1UL << i)) != 0));
+                        detail += $"\r\nDance progress bank at 0x8720 (BE64): 0x{dance:X16}; low28 set indices: {(indices.Length == 0 ? "None" : indices)}. " +
+                            $"Extra high bits: 0x{dance & ~pattern:X16}; exact completion pattern: {(dance == pattern ? "Yes" : "No")}. " +
+                            "Progress and the earned award above are independent; zero progress does not clear an earned award. Five native suffixes OR a runtime source+28 index, then test all64 bits exactly against 0x000000000FFFFFFF. " +
+                            "Extra high bits block the request; signed-negative indices skip storing but still test equality. No upper clamp: PPC shift counts64..127 yield0 and128 aliases0. " +
+                            "A duplicate request does not grant points again. Individual target identities and current runtime eligibility remain unresolved; these indices are not enemy names or world slots. Viewing never awards skills or normalizes progress.";
+                    }
                     if (id == 24) detail += "\r\nIris Wrench producer: a qualified runtime pool scan requests this skill only with its runtime gate set, selector11, and no other occupied qualifying object whose config+2C is zero. This is not a saved enemy-kill history or a reconstruction of all actual enemies.";
                     if (id is 35 or 36 or 38 or 39 or 40 or 41 or 42 or 43) detail += "\r\nAdditional native award predicates are mapped in Research. They read runtime words/bytes, including ratio comparisons, not fields reconstructed from this save. The producer's final branch is not explicitly restricted to level13; menu grouping is not an award eligibility gate.";
                     rows.Add(new(new[] { id.ToString(), skill.GetProperty("enum").GetString(), complete ? "Yes" : "No",

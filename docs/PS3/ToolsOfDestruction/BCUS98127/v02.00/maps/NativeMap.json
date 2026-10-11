@@ -112543,6 +112543,628 @@
       }
     ]
   },
+  "dance_progress": {
+    "confidence": "exact-build-native-flow",
+    "warning": "USA BCUS98127 v02.00 only. Read-only static evidence, no native execution or gameplay-tested edits. Individual target identities, runtime index assignment and localized skill text remain unresolved.",
+    "bank": {
+      "offset": "0x8720",
+      "type": "u64 BE",
+      "display_name": "Dance skill progress bank",
+      "completion_pattern": "0x000000000FFFFFFF",
+      "rule": "Five selected native suffixes sample runtime source+28 after following context+10. Signed-low32 negative skips OR/store but still tests the existing bank. Nonnegative performs saved8720 |= PPC sld(1,index): count uses low7 bits, counts64..127 yield0,128 aliases0. No explicit upper range clamp exists in these suffixes. Reread all64 saved bits and compare EXACTLY to low28 all-ones; extra bits28..63 prevent the request, even if every low28 bit is set. Not popcount>=28 or a masked equality."
+    },
+    "award": {
+      "id": 48,
+      "enum": "SKILLPOINT_DANCE",
+      "points": 40,
+      "name_tag": 1293,
+      "description_tag": 1364,
+      "earned_bits_offset": "0x8710",
+      "earned_mask": "0x0001000000000000",
+      "linkage": "Each reached equality branch passes101F5048 (=canonical save101EFB20+5528) and ID30hex to122E0. Thunk saves r2, changes TOC88FF38 to89FF20 (+10000-18), and tail-branches35D5D0, the verified skill setter. Named export and definition independently identify decimal48 SKILLPOINT_DANCE,40 points. It is not trophy ID48 or a second earned-skill bank.",
+      "retention": "No new-bit requirement or one-shot request latch exists between these OR stores and calls: duplicates and negative/zero-shift indices can request on an already-exact bank. Skill setter deduplicates existing bit48 independently and returns before score/notification updates. Bank8720 is not earned bit48; a zero bank can coexist with a retained award. No score, notification or actual target history inferred."
+    },
+    "producers": [
+      {
+        "function_va": "0xdd858",
+        "toc": "0x88ff38"
+      },
+      {
+        "function_va": "0x10dba0",
+        "toc": "0x88ff38"
+      },
+      {
+        "function_va": "0x1268a0",
+        "toc": "0x88ff38"
+      },
+      {
+        "function_va": "0x135468",
+        "toc": "0x88ff38"
+      },
+      {
+        "function_va": "0x13f9a0",
+        "toc": "0x88ff38"
+      }
+    ],
+    "initialization": "35E110 passes base+5528 to35D9A0; zero r29 stored by std+31F8 at35DB9C resolves saved8720..8727. Separate saved8710/8718 stores do not merge their meanings. Initialization does not prove every load clears progress or that zero means never danced.",
+    "identity_limits": "The low28 pattern proves the selected completion test, not names for28 enemies or allocation of index0..27. Runtime source+28 is not a raw save index field, saved object UID or world slot. Earlier callbacks and gates of the five bodies are not replayed. No per-target names, success histories, current eligibility, total gameplay coverage or edits certified.",
+    "recommended_annotations": [
+      {
+        "va": "0xdda88",
+        "kind": "comment",
+        "name": "TOD_dance_progress_bank_store_dda88",
+        "comment": "Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved."
+      },
+      {
+        "va": "0x10dbfc",
+        "kind": "comment",
+        "name": "TOD_dance_progress_bank_store_10dbfc",
+        "comment": "Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved."
+      },
+      {
+        "va": "0x126aa8",
+        "kind": "comment",
+        "name": "TOD_dance_progress_bank_store_126aa8",
+        "comment": "Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved."
+      },
+      {
+        "va": "0x1354d8",
+        "kind": "comment",
+        "name": "TOD_dance_progress_bank_store_1354d8",
+        "comment": "Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved."
+      },
+      {
+        "va": "0x13fd44",
+        "kind": "comment",
+        "name": "TOD_dance_progress_bank_store_13fd44",
+        "comment": "Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved."
+      },
+      {
+        "va": "0x1354f0",
+        "kind": "comment",
+        "name": "TOD_dance_progress_exact_completion",
+        "comment": "All64 saved8720 bits compared EXACTLY to000000000FFFFFFF, not masked/popcount. Signed negative index skips store but reaches this comparison; duplicates may request48 again. Setter deduplicates independently via earned8710 bit48; no history/playback proof."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x122e0",
+        "bytes": "F84100283C4200013842FFE84834B2E4"
+      },
+      {
+        "va": "0x122e4",
+        "bytes": "3C420001"
+      },
+      {
+        "va": "0x122e8",
+        "bytes": "3842FFE8"
+      },
+      {
+        "va": "0x122ec",
+        "bytes": "4834B2E4"
+      },
+      {
+        "va": "0xdd858",
+        "bytes": "F821FF517C8802A6FB210078FB410080FB610088FB810090FBA10098FBC100A0FBE100A8F88100C083C300107C791B78813E0014837E05B481290054A00900162F800000419E02443B40FFFF3B8000003BE000004800001C817E00143BFF0001812B0054A14900167F0AE8404099006080E9004057E628343BBF00017C663A14786300204BF35D95E841002880A300002C05000C4082FFC4810300042F1AFFFF7C88D8004086FFB43B9C0001409AFFAC817E00147FFAFB783BFF0001812B0054A14900167F0AE8404199FFA82B9C0001409D00AC808209543CC0000360C343FD83A400007CBD19D63D25002738099EC3540AF87E9144000083FE0014817F0054A18B00162C0C0000418200743BE000007D0AE3967CE8E1D67F8750504800001C80BE00143BFF000181650054A12B00167F1D484040980048808B004057EC28343BBF00017D6C2214796300204BF35CCDE8410028814300002C8A000C4086FFC4800300042F1C00007F80D800409EFFB43B9CFFFF409AFFAC7FFAFB782C1AFFFF4182010880DE0014575E2834C02209687CC33378C0420958C062095C83E60054835F00407F9ED2147B8400204BF3382DE841002881590010388001AB7D435378810A000083A8002480FD0000F84100287CE903A6805D00044E800421E84100282C03000041820010787B002038600000907B002881990010800C00B45405F07E54A4103E908C00B481790010806B00282C830000418401CC814209603B4000013F2A00017F491836EBD987207FDC4B78FB9987203FAA000138E0FFFF78FF0120E8DD87207F26F800409A001480620964388000304BF34835E8410028E90100C0EB210078EB4100807D0803A6EB610088EB810090EBA10098EBC100A0EBE100A8382100B04E800020837E0014813B0054A34900162C9A00004186FF1C3B40FFFF3B8000003BE000004800002060000000819E00143BFF0001812C0054A16900167F0BE840409900608109004057E728343BBF00017C674214786300204BF35B3DE841002880C300002F86000C409EFFC4814300042F1AFFFF2C0A00004082FFB43B9C0001409AFFAC819E00147FFAFB783BFF0001812C0054A16900167F0BE8404199FFA8289C0001408500AC80A209543C600003607D43FD80C500007F66E9D63D3B002738099EC3540AF87E91450000809E001481640054A3EB00162F9F0000419E00743BE000007D0AE3967CE8E1D67F8750504800001C813E00143BFF000181690054A00B00167F1D004040980048808B004057EC28343BBF00017D6C2214796300204BF35A75E8410028814300002C0A000C4082FFC480A300042F1C00002C8500004086FFB43B9CFFFF409AFFAC7FFAFB782F9AFFFF409EFDAC4BFFFDD8814209604BFFFE50"
+      },
+      {
+        "va": "0xdda64",
+        "bytes": "806B0028"
+      },
+      {
+        "va": "0xdda68",
+        "bytes": "2C830000"
+      },
+      {
+        "va": "0xdda6c",
+        "bytes": "418401CC"
+      },
+      {
+        "va": "0xdda70",
+        "bytes": "81420960"
+      },
+      {
+        "va": "0xdda74",
+        "bytes": "3B400001"
+      },
+      {
+        "va": "0xdda7c",
+        "bytes": "7F491836"
+      },
+      {
+        "va": "0xdda80",
+        "bytes": "EBD98720"
+      },
+      {
+        "va": "0xdda84",
+        "bytes": "7FDC4B78"
+      },
+      {
+        "va": "0xdda88",
+        "bytes": "FB998720"
+      },
+      {
+        "va": "0xdda90",
+        "bytes": "38E0FFFF"
+      },
+      {
+        "va": "0xdda94",
+        "bytes": "78FF0120"
+      },
+      {
+        "va": "0xdda98",
+        "bytes": "E8DD8720"
+      },
+      {
+        "va": "0xdda9c",
+        "bytes": "7F26F800"
+      },
+      {
+        "va": "0xddaa0",
+        "bytes": "409A0014"
+      },
+      {
+        "va": "0xddaa4",
+        "bytes": "80620964"
+      },
+      {
+        "va": "0xddaa8",
+        "bytes": "38800030"
+      },
+      {
+        "va": "0xddaac",
+        "bytes": "4BF34835"
+      },
+      {
+        "va": "0xddc38",
+        "bytes": "81420960"
+      },
+      {
+        "va": "0xddc3c",
+        "bytes": "4BFFFE50"
+      },
+      {
+        "va": "0x10dba0",
+        "bytes": "38E30014814215A838A000017D0802A678E4002038C00000F821FF91F901008090A3002090C4000098A40008C00A00B438000001D004000481230010816900282F8B00007C0A5836419C0050816215B83C6B0001E80387207C0C5378F98387203D6B000138A0FFFF3880003078AA0120E92B87207C29500040820010806215BC4BF046C1E8410028E8810080382100707C8803A64E800020816215B84BFFFFC4"
+      },
+      {
+        "va": "0x10dbd0",
+        "bytes": "38000001"
+      },
+      {
+        "va": "0x10dbdc",
+        "bytes": "81690028"
+      },
+      {
+        "va": "0x10dbe0",
+        "bytes": "2F8B0000"
+      },
+      {
+        "va": "0x10dbe4",
+        "bytes": "7C0A5836"
+      },
+      {
+        "va": "0x10dbe8",
+        "bytes": "419C0050"
+      },
+      {
+        "va": "0x10dbec",
+        "bytes": "816215B8"
+      },
+      {
+        "va": "0x10dbf4",
+        "bytes": "E8038720"
+      },
+      {
+        "va": "0x10dbf8",
+        "bytes": "7C0C5378"
+      },
+      {
+        "va": "0x10dbfc",
+        "bytes": "F9838720"
+      },
+      {
+        "va": "0x10dc04",
+        "bytes": "38A0FFFF"
+      },
+      {
+        "va": "0x10dc08",
+        "bytes": "38800030"
+      },
+      {
+        "va": "0x10dc0c",
+        "bytes": "78AA0120"
+      },
+      {
+        "va": "0x10dc10",
+        "bytes": "E92B8720"
+      },
+      {
+        "va": "0x10dc14",
+        "bytes": "7C295000"
+      },
+      {
+        "va": "0x10dc18",
+        "bytes": "40820010"
+      },
+      {
+        "va": "0x10dc1c",
+        "bytes": "806215BC"
+      },
+      {
+        "va": "0x10dc20",
+        "bytes": "4BF046C1"
+      },
+      {
+        "va": "0x10dc38",
+        "bytes": "816215B8"
+      },
+      {
+        "va": "0x10dc3c",
+        "bytes": "4BFFFFC4"
+      },
+      {
+        "va": "0x1268a0",
+        "bytes": "F821FF517C8802A6FB210078FB410080FB610088FB810090FBA10098FBC100A0FBE100A8F88100C083C300107C791B78813E0014837E05B481290054A00900162F800000419E021C3B40FFFF3B8000003BE000004800001C817E00143BFF0001812B0054A14900167F0AE8404099006080E9004057E628343BBF00017C663A14786300204BEECD4DE841002880A300002C05000C4082FFC4810300042F1AFFFF7C88D8004086FFB43B9C0001409AFFAC817E00147FFAFB783BFF0001812B0054A14900167F0AE8404199FFA82B9C0001409D00AC80821D983CC0000360C343FD83A400007CBD19D63D25002738099EC3540AF87E9144000083FE0014817F0054A18B00162C0C0000418200743BE000007D0AE3967CE8E1D67F8750504800001C80BE00143BFF000181650054A12B00167F1D484040980048808B004057EC28343BBF00017D6C2214796300204BEECC85E8410028814300002C8A000C4086FFC4800300042F1C00007F80D800409EFFB43B9CFFFF409AFFAC7FFAFB782C1AFFFF418200E080DE0014575E2834C0221DB07CC33378C0421D9CC0621DA083E60054835F00407F9ED2147B8400204BEEA7E5E84100288379001038800000C0021DA47F63DB78D01B0E1C480757F9600000007F63DB7838800000480757016000000083B90010807D00282C030000418001CC81421DA8396000013F2A00017D681836E8F987207CE34378F87987203C8A000138A0FFFF78AA0120E98487207CAC50004086001480621DAC388000304BEEB815E8410028E80100C0EB210078EB4100807C0803A6EB610088EB810090EBA10098EBC100A0EBE100A8382100B04E800020837E0014813B0054A34900162C9A00004186FF443B40FFFF3B8000003BE000004800002060000000819E00143BFF0001812C0054A16900167F0BE840409900608109004057E728343BBF00017C674214786300204BEECB1DE841002880C300002F86000C409EFFC4814300042F1AFFFF2C0A00004082FFB43B9C0001409AFFAC819E00147FFAFB783BFF0001812C0054A16900167F0BE8404199FFA8289C0001408500AC80A21D983C600003607D43FD80C500007F66E9D63D3B002738099EC3540AF87E91450000809E001481640054A3EB00162F9F0000419E00743BE000007D0AE3967CE8E1D67F8750504800001C813E00143BFF000181690054A00B00167F1D004040980048808B004057EC28343BBF00017D6C2214796300204BEECA55E8410028814300002C0A000C4082FFC480A300042F1C00002C8500004086FFB43B9CFFFF409AFFAC7FFAFB782F9AFFFF409EFDD44BFFFE0081421DA84BFFFE50"
+      },
+      {
+        "va": "0x126a84",
+        "bytes": "807D0028"
+      },
+      {
+        "va": "0x126a88",
+        "bytes": "2C030000"
+      },
+      {
+        "va": "0x126a8c",
+        "bytes": "418001CC"
+      },
+      {
+        "va": "0x126a90",
+        "bytes": "81421DA8"
+      },
+      {
+        "va": "0x126a94",
+        "bytes": "39600001"
+      },
+      {
+        "va": "0x126a9c",
+        "bytes": "7D681836"
+      },
+      {
+        "va": "0x126aa0",
+        "bytes": "E8F98720"
+      },
+      {
+        "va": "0x126aa4",
+        "bytes": "7CE34378"
+      },
+      {
+        "va": "0x126aa8",
+        "bytes": "F8798720"
+      },
+      {
+        "va": "0x126ab0",
+        "bytes": "38A0FFFF"
+      },
+      {
+        "va": "0x126ab4",
+        "bytes": "78AA0120"
+      },
+      {
+        "va": "0x126ab8",
+        "bytes": "E9848720"
+      },
+      {
+        "va": "0x126abc",
+        "bytes": "7CAC5000"
+      },
+      {
+        "va": "0x126ac0",
+        "bytes": "40860014"
+      },
+      {
+        "va": "0x126ac4",
+        "bytes": "80621DAC"
+      },
+      {
+        "va": "0x126ac8",
+        "bytes": "38800030"
+      },
+      {
+        "va": "0x126acc",
+        "bytes": "4BEEB815"
+      },
+      {
+        "va": "0x126c58",
+        "bytes": "81421DA8"
+      },
+      {
+        "va": "0x126c5c",
+        "bytes": "4BFFFE50"
+      },
+      {
+        "va": "0x135468",
+        "bytes": "3803001481422158398000017D2802A67808002039600000F821FF91F9210080918300249168000099880008C00A00B438000001D00800048083001080E400B454E6F07E54C5103E90A400B481230010816900282F8B00007C0A5836419C00548162215C3C6B0001E8A387207CA45378F88387203D0B00013940FFFF3880003079460120E8E887207C27300040820010806221604BEDCDE5E8410028E9810080382100707D8803A64E800020600000008162215C4BFFFFC0"
+      },
+      {
+        "va": "0x135498",
+        "bytes": "38000001"
+      },
+      {
+        "va": "0x1354b4",
+        "bytes": "81230010"
+      },
+      {
+        "va": "0x1354b8",
+        "bytes": "81690028"
+      },
+      {
+        "va": "0x1354bc",
+        "bytes": "2F8B0000"
+      },
+      {
+        "va": "0x1354c0",
+        "bytes": "7C0A5836"
+      },
+      {
+        "va": "0x1354c4",
+        "bytes": "419C0054"
+      },
+      {
+        "va": "0x1354c8",
+        "bytes": "8162215C"
+      },
+      {
+        "va": "0x1354cc",
+        "bytes": "3C6B0001"
+      },
+      {
+        "va": "0x1354d0",
+        "bytes": "E8A38720"
+      },
+      {
+        "va": "0x1354d4",
+        "bytes": "7CA45378"
+      },
+      {
+        "va": "0x1354d8",
+        "bytes": "F8838720"
+      },
+      {
+        "va": "0x1354e0",
+        "bytes": "3940FFFF"
+      },
+      {
+        "va": "0x1354e4",
+        "bytes": "38800030"
+      },
+      {
+        "va": "0x1354e8",
+        "bytes": "79460120"
+      },
+      {
+        "va": "0x1354ec",
+        "bytes": "E8E88720"
+      },
+      {
+        "va": "0x1354f0",
+        "bytes": "7C273000"
+      },
+      {
+        "va": "0x1354f4",
+        "bytes": "40820010"
+      },
+      {
+        "va": "0x1354f8",
+        "bytes": "80622160"
+      },
+      {
+        "va": "0x1354fc",
+        "bytes": "4BEDCDE5"
+      },
+      {
+        "va": "0x135518",
+        "bytes": "8162215C"
+      },
+      {
+        "va": "0x13551c",
+        "bytes": "4BFFFFC0"
+      },
+      {
+        "va": "0x13f9a0",
+        "bytes": "F821FF517C8802A6FB210078FB010070FB410080FB610088FB810090FBA10098FBC100A0FBE100A8F88100C083C300107C791B78813E0014837E05B481290054A00900162F800000419E05083B40FFFF3B8000003BE000004800002060000000817E00143BFF0001812B0054A14900167F0AE8404099006080E9004057E628343BBF00017C663A14786300204BED3C45E841002880A300002C05000C4082FFC4810300042F1AFFFF7C88D8004086FFB43B9C0001409AFFAC817E00147FFAFB783BFF0001812B0054A14900167F0AE8404199FFA82B9C0001409D00AC83E224943C600003607D43FD80BF00007C85E9D63D24002738099EC3540AF87E915F0000831E001481780054A18B00162C0C0000418200743BE000007CEAE3967CC7E1D67F8650504800001C809E00143BFF000181640054A12B00167F1D484040980048818B004057EB28343BBF00017D4B6214794300204BED3B7DE8410028810300002C88000C4086FFC4800300042F1C00007F80D800409EFFB43B9CFFFF409AFFAC7FFAFB782C1AFFFF418203C8809E0014575E2834C02224A87C832378C0422498C062249C83E40054835F00407F9ED2147B8400204BED16DDE841002883D900108319000483BE0014837E05B4813D0054A0A900162C050000418202283B40FFFF3B8000003BE000004800002060000000817E00143BFF0001812B0054A18900167F0CE840409900608109004057E728343BBF00017C674214786300204BED3AB5E841002880C300002C86000C4086FFC4814300042F1AFFFF7F8AD800409EFFB43B9C0001409AFFAC817E00147FFAFB783BFF0001812B0054A18900167F0CE8404199FFA8281C0001408100AC83E224943CE0000360E343FD83BF00007CDD19D63CA6002738859EC3548AF87E915F0000813E001481690054A00B00162C800000418600743BE000007D8AE3967D0CE1D67F8850504800001C80DE00143BFF000181660054A0AB00167F05E84040990048800B004057E928343BBF00017D690214796300204BED39EDE8410028814300002F8A000C409EFFC4808300042F1C00007C04D8004082FFB43B9CFFFF409AFFAC7FFAFB782C9AFFFF418600E87B4400207B0300204BED2F7DE841002880790010D03900144806E2BD6000000083990010388001AB7F83E378835C0000831A002483D80000F84100287FC903A6805800044E800421E84100282C03000041820010787F002038E0000090FF002883B90010807D00282C83000041840320814224A03B6000013F2A00017F6C1836E91987207D036378F87987203D6A00013880FFFF788A0120E92B87207FA95000409E0014806224A4388000304BED2579E8410028E8A100C0EB010070EB2100787CA803A6EB410080EB610088EB810090EBA10098EBC100A0EBE100A8382100B04E800020839E00143B40FFFF813C0054A36900162F9B0000419EFF083B40FFFF3B8000003BE000004800001C813E00143BFF000181290054A16900167F1D5840409800608189004057E828343BBF00017C686214786300204BED387DE841002880E300002C07000C4082FFC4814300042F1AFFFF2C8A00004086FFB43B9C0001409AFFAC813E00147FFAFB783BFF000181290054A16900167F1D58404198FFA82B9C0001409DFE7C80A224943C600003607D43FD80E500007F67E9D63CDB002738069EC3540AF87E91450000809E001481640054A3EB00162C1F00004182FE443BE000007D8AE3967D0CE1D67F8850504800001C80DE00143BFF000181660054A00B00167F00E8404099FE18808B004057E928343BBF00017D692214796300204BED37B5E8410028814300002C8A000C4086FFC480A300042F1C00002F850000409EFFB43B9CFFFF409AFFAC7FFAFB784BFFFDD0837E0014813B0054A34900162C9A00004186FC5C3B40FFFF3B8000003BE000004800002060000000815E00143BFF0001812A0054A30900167F1DC0404098006080E9004057E628343BBF00017C663A14786300204BED372DE841002880A300002F85000C409EFFC4810300042F1AFFFF2C0800004082FFB43B9C0001409AFFAC815E00147FFAFB783BFF0001812A0054A30900167F1DC0404198FFA8289C0001408500AC816224943FA0000363A543FD836B00007C9B29D63D24002738099EC3540AF87E914B0000819E0014816C0054A3EB00162F9F0000419E00743BE000007CCAE3967C66E1D67F8350504800001C813E00143BFF000181690054A00B00167F1D004040980048818B004057EA28343BBF00017D0A6214790300204BED3665E841002880E300002C07000C4082FFC4816300042F1C00002C8B00004086FFB43B9CFFFF409AFFAC7FFAFB782F9AFFFF409EFAEC4BFFFB18814224A04BFFFCFC"
+      },
+      {
+        "va": "0x13fd20",
+        "bytes": "807D0028"
+      },
+      {
+        "va": "0x13fd24",
+        "bytes": "2C830000"
+      },
+      {
+        "va": "0x13fd28",
+        "bytes": "41840320"
+      },
+      {
+        "va": "0x13fd2c",
+        "bytes": "814224A0"
+      },
+      {
+        "va": "0x13fd30",
+        "bytes": "3B600001"
+      },
+      {
+        "va": "0x13fd38",
+        "bytes": "7F6C1836"
+      },
+      {
+        "va": "0x13fd3c",
+        "bytes": "E9198720"
+      },
+      {
+        "va": "0x13fd40",
+        "bytes": "7D036378"
+      },
+      {
+        "va": "0x13fd44",
+        "bytes": "F8798720"
+      },
+      {
+        "va": "0x13fd4c",
+        "bytes": "3880FFFF"
+      },
+      {
+        "va": "0x13fd50",
+        "bytes": "788A0120"
+      },
+      {
+        "va": "0x13fd54",
+        "bytes": "E92B8720"
+      },
+      {
+        "va": "0x13fd58",
+        "bytes": "7FA95000"
+      },
+      {
+        "va": "0x13fd5c",
+        "bytes": "409E0014"
+      },
+      {
+        "va": "0x13fd60",
+        "bytes": "806224A4"
+      },
+      {
+        "va": "0x13fd64",
+        "bytes": "38800030"
+      },
+      {
+        "va": "0x13fd68",
+        "bytes": "4BED2579"
+      },
+      {
+        "va": "0x140048",
+        "bytes": "814224A0"
+      },
+      {
+        "va": "0x14004c",
+        "bytes": "4BFFFCFC"
+      },
+      {
+        "va": "0x2a14c0",
+        "bytes": "8082D7A0"
+      },
+      {
+        "va": "0x2a14c4",
+        "bytes": "C02299A0"
+      },
+      {
+        "va": "0x2a14c8",
+        "bytes": "4BFB19F1"
+      },
+      {
+        "va": "0x35d5d0",
+        "bytes": "F821FF617C0802A6FB410070FB610078FBC10090FBE100987C7B1B787C9E2378787F00203B400001FB810080FBA10088F80100B057C5E8F857C406BE386531E07F4B20367C6907B47D3F4A14E80900087D6A00382FAA0000409E00C07BDC002083BB31E07D6703787F83E378F8E90008480014C1600000007CDD1A1490DB31E04BEF3CC9E84100287C7D1B787F83E378480014D1600000007C6407B47BA300204BEF3D69E84100282C1E003B4182006C3960003B38E00001390000007D6903A638C00001600000007D1E43783908000157CCE8F857CB06BE3BAC31E07CC358367FBC07B47CBFE214E88500087C6920387D2AFE767D404A787FC050507FCCFE767CE760384200FFC454E8063E3BC0003B2C8800004086FF20EB4100B0EB6100787F4803A6EB810080EB410070EBA10088EBC10090EBE10098382100A04E800020"
+      },
+      {
+        "va": "0x35d9a0",
+        "bytes": "F821FF717C8802A63800000039200017FBE10088396000007D2903A67C7F1B7839400000FB810070FBA10078F88100A0F8030020F8030000F8030008F8030010F8030018600000007CBF5A14396B000478A30020914301B04200FFF038C0000839600000380000007CC903A6600000007D1F5A14396B0004790700209007020C4200FFF03940002039600000380000007D4903A6600000007F8BFA14396B00017B8C0020980C022C4200FFF038BF02543880000078A3002038A00C003BA000004BEF4ED9E8410028387F0E563880FFFF38A01000786300204BEF4EC1E8410028393F1E563880FFFF7923002038A002804BEF4EA9E8410028397F20D63880FFFF7963002038A010004BEF4E91E841002838000028396000007C0903A639400000B3BF0E54600000007CDF5A14396B000478C40020914430D84200FFF038E0001439600000390000007CE903A6915F31787D9F5A14396B0004798A0020910A317C4200FFF03B80000E39600000380000007F8903A6911F31CC7FBF5A14396B00017BA80020980831D04200FFF0392000003860000738000000396000007C6903A639400000901F31E0F93F31F0F93F31E87C9F5A14396B000178850020994532114200FFF0393F321CC0021A247BE50020792800203D8500013F9F00013BA00000387CAC20394000003800FFFF3880000038A009B078630020901F3218FBBF31F893BF320093A8001493A80018D008001C914800049148000093ACAC1C4BEF4D7DE841002838FCB5D03880000078E3002038A009B04BEF4D65E841002838DCBF8078C300204800125D600000003960000093BF320C997F3210EBE100A0EB8100707FE803A6EBA10078EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x35d9bc",
+        "bytes": "7C7F1B78"
+      },
+      {
+        "va": "0x35db7c",
+        "bytes": "3BA00000"
+      },
+      {
+        "va": "0x35db9c",
+        "bytes": "FBBF31F8"
+      },
+      {
+        "va": "0x35e110",
+        "bytes": "F821FF717C0802A6FBA10078787D0020FBC100807C7E1B787FA3EB78FBE10088F80100A03BE000004BFFFB496000000057E6183857E7502A3BFF00017CA63A147C85F21438640488786300204BFFFE4D600000002FBF0014409EFFD83BE000001D7F60DC3D4B00013BFF00017D2AF214390914D8790300204BFFFEE9600000002C3F00154082FFDC381E55283FDD00093BE000003BA00000780300204BFFF7F56000000093FE06EC93BE06E4E98100A0EBA10078EBC100807D8803A6EBE10088382100904E800020"
+      },
+      {
+        "va": "0x35e198",
+        "bytes": "381E5528"
+      },
+      {
+        "va": "0x35e1ac",
+        "bytes": "4BFFF7F5"
+      },
+      {
+        "va": "0x890898",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89089c",
+        "bytes": "101F5048"
+      },
+      {
+        "va": "0x8914f0",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8914f4",
+        "bytes": "101F5048"
+      },
+      {
+        "va": "0x891ce0",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x891ce4",
+        "bytes": "101F5048"
+      },
+      {
+        "va": "0x892094",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x892098",
+        "bytes": "101F5048"
+      },
+      {
+        "va": "0x8923d8",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8923dc",
+        "bytes": "101F5048"
+      },
+      {
+        "va": "0x8998c0",
+        "bytes": "42400000"
+      },
+      {
+        "va": "0x89d6c0",
+        "bytes": "1001F240"
+      },
+      {
+        "va": "0x1001f240",
+        "bytes": "534B494C4C504F494E545F44414E434500"
+      },
+      {
+        "va": "0x10026954",
+        "bytes": "00000028"
+      },
+      {
+        "va": "0x10026958",
+        "bytes": "0000050D"
+      },
+      {
+        "va": "0x1002695c",
+        "bytes": "00000554"
+      },
+      {
+        "va": "0x10026960",
+        "bytes": "00000013"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -113036,6 +113658,12 @@
     ]
   },
   "annotations": [
+{"va":"0x000DDA88","name":"TOD_dance_progress_bank_store_dda88","kind":"comment","confidence":"confirmed","bytes":"FB998720","comment":"Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_progress native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0010DBFC","name":"TOD_dance_progress_bank_store_10dbfc","kind":"comment","confidence":"confirmed","bytes":"F9838720","comment":"Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_progress native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00126AA8","name":"TOD_dance_progress_bank_store_126aa8","kind":"comment","confidence":"confirmed","bytes":"F8798720","comment":"Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_progress native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001354D8","name":"TOD_dance_progress_bank_store_1354d8","kind":"comment","confidence":"confirmed","bytes":"F8838720","comment":"Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_progress native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0013FD44","name":"TOD_dance_progress_bank_store_13fd44","kind":"comment","confidence":"confirmed","bytes":"F8798720","comment":"Saved BE64 bank8720 OR-publishes sld(1,runtime source+28) after signed nonnegative gate; index has no upper clamp. Re-read exact000000000FFFFFFF requests named SKILLPOINT_DANCE(48) via122E0->35D5D0. Extra high bits block request; target identities/runtime gates unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_progress native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x001354F0","name":"TOD_dance_progress_exact_completion","kind":"comment","confidence":"confirmed","bytes":"7C273000","comment":"All64 saved8720 bits compared EXACTLY to000000000FFFFFFF, not masked/popcount. Signed negative index skips store but reaches this comparison; duplicates may request48 again. Setter deduplicates independently via earned8710 bit48; no history/playback proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; dance_progress native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00026E68","name":"TOD_quick_select_warning_counter_before_validation","kind":"comment","confidence":"confirmed","bytes":"912A8734","comment":"Named set_qs_weapon_in_slot reaches26E20: store saved8734 update before slot/item validation. Low32 signed-difference cap selects5 only on one arithmetic branch; high words not universal min. Not successful assignments.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; quick_select_warning native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00026E8C","name":"TOD_quick_select_direct_invalid_item_clear","kind":"comment","confidence":"confirmed","bytes":"93A30004","comment":"After unsigned slot<=31, any unsigned item>31 writesFFFFFFFF to saved284+4*slot. All32 slots admitted; not hero automatic first24. Counter8734 already updated; not only -1 clear and no duplicate compaction.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; quick_select_warning native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x001E2838","name":"TOD_quick_select_warning_repeat_gate","kind":"comment","confidence":"confirmed","bytes":"4185FF70","comment":"Full first24/no-membership warning path: nonzero byte8738 AND unsigned8734>3 suppress native126 request. Zero latch skips count read; count<=3 repeats even with set latch. Not current eligibility/playback proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; quick_select_warning native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

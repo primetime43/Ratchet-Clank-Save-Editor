@@ -29,6 +29,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Progression & armor", TodResearch.Map.GetProperty("progression"), 0));
             topics.Add(JsonTopic("Skill awards, collectible scans & ammo purchase gates", TodResearch.Map.GetProperty("skill_award"), 0));
             topics.Add(JsonTopic("Skill menu groups & additional runtime award conditions", TodResearch.Map.GetProperty("skill_producers"), 0));
+            topics.Add(JsonTopic("Dance skill: saved progress versus earned award", TodResearch.Map.GetProperty("dance_progress"), 0));
             topics.Add(JsonTopic("Armor purchase, delayed equip & skin charge rules", TodResearch.Map.GetProperty("armor_consumer"), 0));
             topics.Add(JsonTopic("Hero XP, collectibles & skins", TodResearch.Map.GetProperty("collectibles"), 0));
             topics.Add(JsonTopic("Bonus-target progress & special-bolt collection paths", TodResearch.Map.GetProperty("collectible_producers"), 0));

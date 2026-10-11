@@ -4,6 +4,8 @@ Offset map checked against the PS3 `BCES00052_SAVE_1` plaintext sample and the s
 
 **Status:** the wrapper headers are mapped; game-state structures are partially mapped. A byte pattern is not enough to establish a field's gameplay meaning. No new fields are enabled for editing.
 
+The exact USA v02.00 ELF now links **saved BE64 bank8720** to five native **SKILLPOINT_DANCE (48)** producers. They OR a runtime index, then compare all64 bits exactly to000000000FFFFFFF; high bits prevent that request. Signed-negative indices skip the write but still test the old bank; PPC shift counts are not clamped to0..27. Earned bit48 in8710 is independent: the supplied save has a zero progress bank and a retained award. Individual target identities and current runtime eligibility remain unresolved. [Dance bank and award linkage](BCUS98127/v02.00/ElfMap.md#dance-skill-progress-bank-and-independent-earned-award).
+
 The USA v02.00 ELF and matching level assets now establish72-byte reference object definitions, numeric class IDs, load modes and segment associations for18,214 definitions across19 worlds. This is an **external asset catalog**, not another saved object table. Physical saved bit indices cannot be relabeled from class IDs/definition ordinals without runtime allocation evidence; rejected entries reserve slots and later spawns use the same allocator. Actual clear bitsets do not establish object presence or history. [Object-definition and allocator evidence](BCUS98127/v02.00/ElfMap.md#shipped-object-definitions-and-conditional-pool-slot-identity).
 
 ## Object publication and equipment restart boundaries
@@ -229,6 +231,7 @@ These meanings were traced in the exact USA v02.00 ELF and checked against the s
 | `0x5774 + i`, `i=0..4` | uint8 | Independent armor unlock bytes | All five bytes 1 |
 | `0x8708` | uint32 BE | Weighted skill-point total | 750 |
 | `0x8710–0x8718` | uint64 BE | Skill completion bitset; IDs 0..59 | `0FFFFFFFFFFFFFFF`, all 60 complete |
+| `0x8720–0x8728` | uint64 BE | Dance skill producer progress; exact low28 completion pattern, not earned bit48 | `0000000000000000`; Dance award is independently set |
 | `0x8728` | uint32 BE | Bonus-target progress mask; separate from runtime pending set | `00000000`; target identities/total unknown |
 | `0x872C` | uint32 BE | Wrapping saved event counter; gameplay event name unresolved | 0; not a lifetime history verdict |
 | `0x8730` | uint32 BE | Wrapping handle-qualified event counter; runtime admission not saved here | 0; not a named kills/deaths statistic |
