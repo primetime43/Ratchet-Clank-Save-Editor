@@ -4589,12 +4589,12 @@
     "raw_setter_va": "0x27a648",
     "unlock_va": "0x27108",
     "enable_all_va": "0x35d480",
-    "semantics": "Physical states are14 bytes86F8..8705. Menu APIs conditionally remap IDs>4 toID+1 when runtime5BFE08()!=1; the enum IDs and saved slots are not interchangeable with every menu index. Setter stores0 or states1..8 (menu truncates input tolow8 first); this global bound is not each definition's state count. Availability compares saved weighted score8708 unsigned against a mode-adjusted definition threshold, NOT against the state byte.",
+      "semantics": "Physical states are14 bytes86F8..8705. Menu APIs conditionally remap IDs>4 toID+1 when runtime language getter5BFE08()!=1; the enum IDs and saved slots are not interchangeable with every menu index. Setter stores0 or states1..8 (menu truncates input tolow8 first); this global bound is not each definition's state count. Availability compares saved weighted score8708 unsigned against a language-adjusted definition threshold, NOT against the state byte. Shipped pause queries pass named enum operands without proven language compensation; see bonus_remaining.",
     "enable_all": {
       "score_written": 840,
       "semantics": "Writes score840 at8708, then replaces zero state bytes with1; nonzero bytes and skill-point mask8710 are not changed. It does NOT award all skill points or prove each bonus active."
     },
-    "warning": "Runtime mode meaning, localized names/state labels and gameplay behavior are not recovered. State0 alone does not mean locked. Score thresholds are direct native definition entries, not an asserted current menu availability."
+      "warning": "The runtime selector is now identified as language through guarded parser/system-init evidence in bonus_remaining; its current value is not saved here. Localized names/state labels and complete gameplay behavior are not recovered. State0 alone does not mean locked. Score thresholds are direct native definition entries, not an asserted current menu availability."
   },
   "named_bindings": [
     {
@@ -30572,8 +30572,8 @@
           "0x3baa38"
         ],
         "weighted_score_requirement": 200,
-        "rule": "The native qualifier called through251E08 must return exactly1, unsigned score8708 must be>=200 and state86FD must be nonzero. The reached path changes runtime object activation via24EC28 and dispatches runtime member+6C states0/1/2 to3BA658/3BA720/3BA5B8; the other branch uses24F4F8 and clears runtime low-nibble flags.",
-        "scope": "CHEAT_DEV_COMMENTS is an exported identifier, not a recovered localized menu/voice label. Qualifier meaning, runtime state names, exact commentary clip and every audio dependency are unconfirmed."
+        "rule": "The runtime language getter5BFE08 called through251E08 must return exactly1, unsigned score8708 must be>=200 and state86FD must be nonzero. The reached path changes runtime object activation via24EC28 and dispatches runtime member+6C states0/1/2 to3BA658/3BA720/3BA5B8; the other branch uses24F4F8 and clears runtime low-nibble flags.",
+        "scope": "CHEAT_DEV_COMMENTS is an exported identifier, not a recovered localized menu/voice label. The language qualifier is confirmed separately in bonus_remaining; ID1 is the native fallback/default, not an asserted English literal. Runtime state names, exact commentary clip and every audio dependency remain unconfirmed."
       },
       {
         "id": 7,
@@ -30737,7 +30737,7 @@
         "kind": "function",
         "confidence": "code-backed",
         "bytes": "812237747C0802A6",
-        "comment": "The native qualifier called through251E08 must return exactly1, unsigned score8708 must be>=200 and state86FD must be nonzero. The reached path changes runtime object activation via24EC28 and dispatches runtime member+6C states0/1/2 to3BA658/3BA720/3BA5B8; the other branch uses24F4F8 and clears runtime low-nibble flags."
+        "comment": "The runtime language getter5BFE08 called through251E08 must return exactly1, unsigned score8708 must be>=200 and state86FD must be nonzero. The reached path changes runtime object activation via24EC28 and dispatches runtime member+6C states0/1/2 to3BA658/3BA720/3BA5B8; the other branch uses24F4F8 and clears runtime low-nibble flags."
       },
       {
         "va": "0x4838b8",
@@ -30774,7 +30774,7 @@
     ],
     "limitations": [
       "Only six native bonus IDs have newly traced consumers here; this is not a complete effect catalog.",
-      "Runtime/menu ID remapping does not apply to these direct physical-byte reads. No current runtime mode value is inferred from the save.",
+      "Runtime/menu ID remapping does not apply to these direct physical-byte reads. No current runtime language value is inferred from the save.",
       "Local missing score checks in two consumers do not prove all callers or other effect dependencies ignore availability.",
       "Arbitrary states and raw unsigned scores are exposed without normalization; no safe edit range or console acceptance is claimed."
     ],
@@ -33546,6 +33546,3242 @@
       }
     ]
   },
+  "inventory_reset": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 byte ownership only. Opaque bytes have no gameplay name or edit-safety contract. Viewing and synthetic previews do not initialize, reset or modify an original save.",
+    "record_reset": {
+      "function_va": "0x465c98",
+      "record_size": 20,
+      "writes": [
+        {
+          "offset": "0x0",
+          "size": 4,
+          "value": "item_id_argument",
+          "write_va": "0x465ca4"
+        },
+        {
+          "offset": "0xc",
+          "size": 4,
+          "value": 0,
+          "write_va": "0x465ca8"
+        },
+        {
+          "offset": "0x8",
+          "size": 4,
+          "value": 0,
+          "write_va": "0x465cac"
+        },
+        {
+          "offset": "0x10",
+          "size": 1,
+          "value": 0,
+          "write_va": "0x465cb0"
+        },
+        {
+          "offset": "0x4",
+          "size": 4,
+          "value": 0,
+          "write_va": "0x465cb4"
+        },
+        {
+          "offset": "0x11",
+          "size": 1,
+          "value": 0,
+          "write_va": "0x465cb8"
+        }
+      ],
+      "written_byte_range": {
+        "start": "0x0",
+        "end_exclusive": "0x12"
+      },
+      "untouched_byte_range": {
+        "start": "0x12",
+        "end_exclusive": "0x14"
+      },
+      "rule": "Standalone record reset writes the ID argument, clears XP/ammo/modifier words and ownership/level bytes, but leaves record+12/+13 untouched. This is18 written bytes out of20, not a full-record clear."
+    },
+    "bulk_initializer": {
+      "function_va": "0x466a60",
+      "caller_va": "0x35dc80",
+      "fill_call_va": "0x466a94",
+      "fill_target_va": "0x252938",
+      "zero_fill_size": "0x280",
+      "record_count": 32,
+      "record_stride": "0x14",
+      "record_reset_call_va": "0x466aac",
+      "counter_store_va": "0x466ac4",
+      "rule": "Bulk initialization zero-fills all280 bytes before looping through32 record resets. Consequently both opaque tail bytes are zero at this initializer boundary, unlike standalone465C98. The acquisition counter at280 is separately cleared."
+    },
+    "selective_restart": {
+      "function_va": "0x3ced40",
+      "prefix_copy_call_va": "0x3cedd0",
+      "prefix_copy_size": "0x484",
+      "selected_record_reset_call_va": "0x3cee1c",
+      "rule": "Selective restart initializes staging, then copies allfirst484 live bytes before selected record resets. The reset leaf leaves +12/+13 untouched even for selected items, so copied opaque inventory tails survive those observed reset steps. Later callbacks are not included in this claim."
+    },
+    "prefix_gap": {
+      "start": "0x484",
+      "end_exclusive": "0x488",
+      "size": 4,
+      "prefix_initializer_va": "0x35dc80",
+      "next_world_start": "0x488",
+      "explicit_scalar_stores": [
+        {
+          "va": "0x35dcac",
+          "offset": "0x428",
+          "size": 4
+        },
+        {
+          "va": "0x35dcc4",
+          "offset": "0x434",
+          "size": 4
+        },
+        {
+          "va": "0x35dcc8",
+          "offset": "0x444",
+          "size": 4
+        },
+        {
+          "va": "0x35dccc",
+          "offset": "0x440",
+          "size": 4
+        },
+        {
+          "va": "0x35dcd0",
+          "offset": "0x418",
+          "size": 4
+        },
+        {
+          "va": "0x35dcd4",
+          "offset": "0x41c",
+          "size": 4
+        },
+        {
+          "va": "0x35dcd8",
+          "offset": "0x420",
+          "size": 4
+        },
+        {
+          "va": "0x35dcdc",
+          "offset": "0x424",
+          "size": 4
+        },
+        {
+          "va": "0x35dce0",
+          "offset": "0x42c",
+          "size": 4
+        },
+        {
+          "va": "0x35dce4",
+          "offset": "0x430",
+          "size": 4
+        },
+        {
+          "va": "0x35dce8",
+          "offset": "0x448",
+          "size": 4
+        },
+        {
+          "va": "0x35dcec",
+          "offset": "0x44c",
+          "size": 4
+        },
+        {
+          "va": "0x35dcf0",
+          "offset": "0x450",
+          "size": 4
+        },
+        {
+          "va": "0x35dcf4",
+          "offset": "0x454",
+          "size": 4
+        },
+        {
+          "va": "0x35dcf8",
+          "offset": "0x458",
+          "size": 4
+        },
+        {
+          "va": "0x35dcfc",
+          "offset": "0x438",
+          "size": 4
+        },
+        {
+          "va": "0x35dd00",
+          "offset": "0x43c",
+          "size": 4
+        },
+        {
+          "va": "0x35dd78",
+          "offset": "0x480",
+          "size": 4
+        },
+        {
+          "va": "0x35dd7c",
+          "offset": "0x45c",
+          "size": 4
+        }
+      ],
+      "rule": "The complete prefix initializer reaches480..484 exclusively through its final scalar store, and the world loop starts at488. The four bytes484..487 are not written by these initializer steps and are not included by the first484-byte restart preservation copy. Their value at restart is not derived as zero or copied from the current save; no padding or unused-field claim is made.",
+      "scope": "These are exact initializer/first-prefix-copy boundaries, not an exhaustive census of all runtime consumers or every later copy. Full906F0-byte snapshots include the bytes verbatim. Gameplay meaning remains unresolved."
+    },
+    "instruction_guards": [
+      {
+        "va": "0x252938",
+        "bytes": "F84100283C42FFFF38420018485D55F4"
+      },
+      {
+        "va": "0x35dc80",
+        "bytes": "F821FF817C8802A6FBE100787C7F1B7878630020F881009048108DC96000000039200000C0021A2C3960FFFFD01F04283860002038000001394000007C6903A63900FFFF917F0434901F0444913F0440913F0418913F041C913F0420913F0424917F042C917F0430913F0448913F044C913F0450913F0454913F0458913F0438913F043C600000007CDF5214394A000478C50020910502844200FFF038E0001739600000380000007CE903A6600000007D4BFA14396B000479480020900803BC90080304900803604200FFE83980000939600000380000007D8903A6600000007C7F5A14396B0004786900209009045C4200FFF039600001901F0480917F045CEBE100907FE803A6EBE10078382100804E80002060000000"
+      },
+      {
+        "va": "0x35dc98",
+        "bytes": "48108DC9"
+      },
+      {
+        "va": "0x35dd78",
+        "bytes": "901F0480"
+      },
+      {
+        "va": "0x35e110",
+        "bytes": "F821FF717C0802A6FBA10078787D0020FBC100807C7E1B787FA3EB78FBE10088F80100A03BE000004BFFFB496000000057E6183857E7502A3BFF00017CA63A147C85F21438640488786300204BFFFE4D600000002FBF0014409EFFD83BE000001D7F60DC3D4B00013BFF00017D2AF214390914D8790300204BFFFEE9600000002C3F00154082FFDC381E55283FDD00093BE000003BA00000780300204BFFF7F56000000093FE06EC93BE06E4E98100A0EBA10078EBC100807D8803A6EBE10088382100904E800020"
+      },
+      {
+        "va": "0x35e138",
+        "bytes": "4BFFFB49"
+      },
+      {
+        "va": "0x35e154",
+        "bytes": "38640488"
+      },
+      {
+        "va": "0x3ceda0",
+        "bytes": "4BE83689E841002882E23C8C807B00803D77000183023C8C3D23000138A004847B040020800B86F4900986F4807B00804BE83659E841002883DB00804800000C"
+      },
+      {
+        "va": "0x3cedbc",
+        "bytes": "38A00484"
+      },
+      {
+        "va": "0x3cedd0",
+        "bytes": "4BE83659"
+      },
+      {
+        "va": "0x3cedd8",
+        "bytes": "83DB00804800000C2C3F0020418200487FFDFB787F43D3787BA400203BFF00014BFFFEA157AA103A57AC20362FA300007D0A62147FA407B47C7E4214419EFFCC7863002048096E7D600000002C3F00204082FFC0"
+      },
+      {
+        "va": "0x3cee1c",
+        "bytes": "48096E7D"
+      },
+      {
+        "va": "0x465c98",
+        "bytes": "392000003960000038000000908300009003000C912300089963001091230004996300114E800020"
+      },
+      {
+        "va": "0x466a60",
+        "bytes": "F821FF717C8802A67C601B78FBA10078F88100A07C7D1B783880000038A0028078630020FBC10080FBE100883BC000007C1F03784BDEBEA5E8410028600000007BE300207FC407B43BFF00144BFFF1ED600000002F9E001F3BDE0001409EFFE438A0000090BD0280E86100A0EBA10078EBC100807C6803A6EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x466a78",
+        "bytes": "38800000"
+      },
+      {
+        "va": "0x466a7c",
+        "bytes": "38A00280"
+      },
+      {
+        "va": "0x466a94",
+        "bytes": "4BDEBEA5"
+      },
+      {
+        "va": "0x466aa8",
+        "bytes": "3BFF0014"
+      },
+      {
+        "va": "0x466aac",
+        "bytes": "4BFFF1ED"
+      },
+      {
+        "va": "0x466ab4",
+        "bytes": "2F9E001F"
+      },
+      {
+        "va": "0x466abc",
+        "bytes": "409EFFE4"
+      },
+      {
+        "va": "0x466ac4",
+        "bytes": "90BD0280"
+      }
+    ]
+  },
+  "bonus_remaining": {
+    "confidence": "code-and-asset-backed",
+    "saved_state_base": "0x86f8",
+    "weighted_score_offset": "0x8708",
+    "effects": [
+      {
+        "id": 0,
+        "enum": "CHEAT_E3TRAILER",
+        "state_offset": "0x86f8",
+        "state_type": "u8",
+        "physical_definition_score_requirement": 25,
+        "physical_definition_state_count": 1,
+        "consumer_kind": "shipped pause-menu unlock query",
+        "rule": "Shipped cineListUpdater checks is_cheat_unlocked(CHEAT_E3TRAILER) to enable cinematic rows17. Previously-played movie status also enables rows; replay bypass applies only to rows1..16. handleSelect passes the lower-cased movie literal with PRE_ removed to play_movie.",
+        "saved_byte_effect_confirmed": false,
+        "scope": "These consumers query native availability, not get_cheat_state. The native API uses language-adjusted threshold indexing; a raw saved byte or physical threshold alone does not establish that this menu entry is unlocked, visible or playing."
+      },
+      {
+        "id": 2,
+        "enum": "CHEAT_CONCEPT_CHAR",
+        "state_offset": "0x86fa",
+        "state_type": "u8",
+        "physical_definition_score_requirement": 75,
+        "physical_definition_state_count": 1,
+        "consumer_kind": "shipped pause-menu unlock query",
+        "rule": "Shipped conceptHandler initializes pack1 availability with is_cheat_unlocked(CHEAT_CONCEPT_CHAR); onHintToggle checks that availability before selecting art indexes1..66 and entering browsing.",
+        "saved_byte_effect_confirmed": false,
+        "scope": "These consumers query native availability, not get_cheat_state. The native API uses language-adjusted threshold indexing; a raw saved byte or physical threshold alone does not establish that this menu entry is unlocked, visible or playing."
+      },
+      {
+        "id": 4,
+        "enum": "CHEAT_TRAILER01",
+        "state_offset": "0x86fc",
+        "state_type": "u8",
+        "physical_definition_score_requirement": 150,
+        "physical_definition_state_count": 1,
+        "consumer_kind": "shipped pause-menu unlock query",
+        "rule": "Shipped cineListUpdater checks is_cheat_unlocked(CHEAT_TRAILER01) to enable cinematic rows18. Previously-played movie status also enables rows; replay bypass applies only to rows1..16. handleSelect passes the lower-cased movie literal with PRE_ removed to play_movie.",
+        "saved_byte_effect_confirmed": false,
+        "scope": "These consumers query native availability, not get_cheat_state. The native API uses language-adjusted threshold indexing; a raw saved byte or physical threshold alone does not establish that this menu entry is unlocked, visible or playing."
+      },
+      {
+        "id": 6,
+        "enum": "CHEAT_CONCEPT_ENV",
+        "state_offset": "0x86fe",
+        "state_type": "u8",
+        "physical_definition_score_requirement": 250,
+        "physical_definition_state_count": 1,
+        "consumer_kind": "shipped pause-menu unlock query",
+        "rule": "Shipped conceptHandler initializes pack2 availability with is_cheat_unlocked(CHEAT_CONCEPT_ENV); onHintToggle checks that availability before selecting art indexes67..112 and entering browsing.",
+        "saved_byte_effect_confirmed": false,
+        "scope": "These consumers query native availability, not get_cheat_state. The native API uses language-adjusted threshold indexing; a raw saved byte or physical threshold alone does not establish that this menu entry is unlocked, visible or playing."
+      },
+      {
+        "id": 8,
+        "enum": "CHEAT_HOW_TO_DRAW",
+        "state_offset": "0x8700",
+        "state_type": "u8",
+        "physical_definition_score_requirement": 350,
+        "physical_definition_state_count": 1,
+        "consumer_kind": "shipped pause-menu unlock query",
+        "rule": "Shipped cineListUpdater checks is_cheat_unlocked(CHEAT_HOW_TO_DRAW) to enable cinematic rows19. Previously-played movie status also enables rows; replay bypass applies only to rows1..16. handleSelect passes the lower-cased movie literal with PRE_ removed to play_movie.",
+        "saved_byte_effect_confirmed": false,
+        "scope": "These consumers query native availability, not get_cheat_state. The native API uses language-adjusted threshold indexing; a raw saved byte or physical threshold alone does not establish that this menu entry is unlocked, visible or playing."
+      },
+      {
+        "id": 10,
+        "enum": "CHEAT_CONCEPT_WEAP",
+        "state_offset": "0x8702",
+        "state_type": "u8",
+        "physical_definition_score_requirement": 450,
+        "physical_definition_state_count": 1,
+        "consumer_kind": "shipped pause-menu unlock query",
+        "rule": "Shipped conceptHandler initializes pack3 availability with is_cheat_unlocked(CHEAT_CONCEPT_WEAP); onHintToggle checks that availability before selecting art indexes113..131 and entering browsing.",
+        "saved_byte_effect_confirmed": false,
+        "scope": "These consumers query native availability, not get_cheat_state. The native API uses language-adjusted threshold indexing; a raw saved byte or physical threshold alone does not establish that this menu entry is unlocked, visible or playing."
+      },
+      {
+        "id": 12,
+        "enum": "CHEAT_SCRIPTSCREEN",
+        "state_offset": "0x8704",
+        "state_type": "u8",
+        "physical_definition_score_requirement": 600,
+        "physical_definition_state_count": 1,
+        "consumer_kind": "shipped pause-menu unlock query",
+        "rule": "Shipped cineListUpdater checks is_cheat_unlocked(CHEAT_SCRIPTSCREEN) to enable cinematic rows20,21,22. Previously-played movie status also enables rows; replay bypass applies only to rows1..16. handleSelect passes the lower-cased movie literal with PRE_ removed to play_movie.",
+        "saved_byte_effect_confirmed": false,
+        "scope": "These consumers query native availability, not get_cheat_state. The native API uses language-adjusted threshold indexing; a raw saved byte or physical threshold alone does not establish that this menu entry is unlocked, visible or playing."
+      },
+      {
+        "id": 13,
+        "enum": "CHEAT_CONCEPT_PAINT",
+        "state_offset": "0x8705",
+        "state_type": "u8",
+        "physical_definition_score_requirement": 750,
+        "physical_definition_state_count": 1,
+        "consumer_kind": "shipped pause-menu unlock query",
+        "rule": "Shipped conceptHandler initializes pack4 availability with is_cheat_unlocked(CHEAT_CONCEPT_PAINT); onHintToggle checks that availability before selecting art indexes132..141 and entering browsing.",
+        "saved_byte_effect_confirmed": false,
+        "scope": "These consumers query native availability, not get_cheat_state. The native API uses language-adjusted threshold indexing; a raw saved byte or physical threshold alone does not establish that this menu entry is unlocked, visible or playing."
+      }
+    ],
+    "enum_evidence": [
+      {
+        "id": 0,
+        "enum": "CHEAT_E3TRAILER",
+        "name_va": "0x10002b30",
+        "name_slot_va": "0x8891c8",
+        "name_load_va": "0x2a660",
+        "value_slot_va": "0x8897dc",
+        "value_load_va": "0x2a664",
+        "value_move_va": "0x2a664",
+        "export_call_va": "0x2a668"
+      },
+      {
+        "id": 2,
+        "enum": "CHEAT_CONCEPT_CHAR",
+        "name_va": "0x10002b58",
+        "name_slot_va": "0x8891d0",
+        "name_load_va": "0x2a688",
+        "value_slot_va": "0x8886b0",
+        "value_load_va": "0x2a4d4",
+        "value_move_va": "0x2a684",
+        "export_call_va": "0x2a690"
+      },
+      {
+        "id": 4,
+        "enum": "CHEAT_TRAILER01",
+        "name_va": "0x10002b88",
+        "name_slot_va": "0x8891d8",
+        "name_load_va": "0x2a6b0",
+        "value_slot_va": "0x8886c0",
+        "value_load_va": "0x2a504",
+        "value_move_va": "0x2a6ac",
+        "export_call_va": "0x2a6b8"
+      },
+      {
+        "id": 6,
+        "enum": "CHEAT_CONCEPT_ENV",
+        "name_va": "0x10002bb0",
+        "name_slot_va": "0x8891e0",
+        "name_load_va": "0x2a6d8",
+        "value_slot_va": "0x8886d0",
+        "value_load_va": "0x2a534",
+        "value_move_va": "0x2a6d4",
+        "export_call_va": "0x2a6e0"
+      },
+      {
+        "id": 8,
+        "enum": "CHEAT_HOW_TO_DRAW",
+        "name_va": "0x10002be0",
+        "name_slot_va": "0x8891e8",
+        "name_load_va": "0x2a700",
+        "value_slot_va": "0x8886e0",
+        "value_load_va": "0x2a564",
+        "value_move_va": "0x2a6fc",
+        "export_call_va": "0x2a708"
+      },
+      {
+        "id": 10,
+        "enum": "CHEAT_CONCEPT_WEAP",
+        "name_va": "0x10002c10",
+        "name_slot_va": "0x8891f0",
+        "name_load_va": "0x2a72c",
+        "value_slot_va": "0x8886f0",
+        "value_load_va": "0x2a724",
+        "value_move_va": "0x2a728",
+        "export_call_va": "0x2a734"
+      },
+      {
+        "id": 12,
+        "enum": "CHEAT_SCRIPTSCREEN",
+        "name_va": "0x10002c40",
+        "name_slot_va": "0x8891f8",
+        "name_load_va": "0x2a75c",
+        "value_slot_va": "0x888700",
+        "value_load_va": "0x2a754",
+        "value_move_va": "0x2a758",
+        "export_call_va": "0x2a764"
+      },
+      {
+        "id": 13,
+        "enum": "CHEAT_CONCEPT_PAINT",
+        "name_va": "0x10002c58",
+        "name_slot_va": "0x8891fc",
+        "name_load_va": "0x2a774",
+        "value_slot_va": "0x888708",
+        "value_load_va": "0x2a76c",
+        "value_move_va": "0x2a770",
+        "export_call_va": "0x2a77c"
+      }
+    ],
+    "runtime_language": {
+      "va": "0x100d6478",
+      "type": "u32",
+      "toc_pointer_slot": "0x8a83a0",
+      "getter_va": "0x5bfe08",
+      "numeric_setter_va": "0x5bfe18",
+      "parser_va": "0x5bff78",
+      "elf_initial_value": 1,
+      "unmatched_parser_value": 1,
+      "literal_token_catalog": [
+        {
+          "selector": 10,
+          "tokens": [
+            {
+              "token": "chinese",
+              "load_va": "0x5bff78",
+              "slot_va": "0x8a83c4",
+              "string_va": "0x10028df0"
+            },
+            {
+              "token": "cn",
+              "load_va": "0x5bffc4",
+              "slot_va": "0x8a83c8",
+              "string_va": "0x10028df8"
+            }
+          ],
+          "select_va": "0x5bffa0"
+        },
+        {
+          "selector": 14,
+          "tokens": [
+            {
+              "token": "danish",
+              "load_va": "0x5bffdc",
+              "slot_va": "0x8a83fc",
+              "string_va": "0x10028e40"
+            },
+            {
+              "token": "dk",
+              "load_va": "0x5bfffc",
+              "slot_va": "0x8a83cc",
+              "string_va": "0x10028e00"
+            }
+          ],
+          "select_va": "0x5bfff0"
+        },
+        {
+          "selector": 12,
+          "tokens": [
+            {
+              "token": "finnish",
+              "load_va": "0x5c0014",
+              "slot_va": "0x8a8400",
+              "string_va": "0x10028e48"
+            },
+            {
+              "token": "fi",
+              "load_va": "0x5c0034",
+              "slot_va": "0x8a83d0",
+              "string_va": "0x10028e08"
+            }
+          ],
+          "select_va": "0x5c0028"
+        },
+        {
+          "selector": 2,
+          "tokens": [
+            {
+              "token": "french",
+              "load_va": "0x5c004c",
+              "slot_va": "0x8a8404",
+              "string_va": "0x10028e50"
+            },
+            {
+              "token": "fr",
+              "load_va": "0x5c006c",
+              "slot_va": "0x8a83d4",
+              "string_va": "0x10028e10"
+            }
+          ],
+          "select_va": "0x5c0060"
+        },
+        {
+          "selector": 4,
+          "tokens": [
+            {
+              "token": "german",
+              "load_va": "0x5c0084",
+              "slot_va": "0x8a8408",
+              "string_va": "0x10028e58"
+            },
+            {
+              "token": "de",
+              "load_va": "0x5c00a4",
+              "slot_va": "0x8a83d8",
+              "string_va": "0x1003c600"
+            }
+          ],
+          "select_va": "0x5c0098"
+        },
+        {
+          "selector": 5,
+          "tokens": [
+            {
+              "token": "italian",
+              "load_va": "0x5c00bc",
+              "slot_va": "0x8a840c",
+              "string_va": "0x10028e60"
+            },
+            {
+              "token": "it",
+              "load_va": "0x5c00dc",
+              "slot_va": "0x8a83dc",
+              "string_va": "0x10028e18"
+            }
+          ],
+          "select_va": "0x5c00d0"
+        },
+        {
+          "selector": 0,
+          "tokens": [
+            {
+              "token": "japanese",
+              "load_va": "0x5c00f4",
+              "slot_va": "0x8a8410",
+              "string_va": "0x10028e68"
+            },
+            {
+              "token": "jp",
+              "load_va": "0x5c0114",
+              "slot_va": "0x8a83e0",
+              "string_va": "0x10028e20"
+            }
+          ],
+          "select_va": "0x5c0108"
+        },
+        {
+          "selector": 9,
+          "tokens": [
+            {
+              "token": "korean",
+              "load_va": "0x5c012c",
+              "slot_va": "0x8a8414",
+              "string_va": "0x10028e78"
+            },
+            {
+              "token": "kp",
+              "load_va": "0x5c014c",
+              "slot_va": "0x8a83e4",
+              "string_va": "0x10028e28"
+            }
+          ],
+          "select_va": "0x5c0140"
+        },
+        {
+          "selector": 6,
+          "tokens": [
+            {
+              "token": "dutch",
+              "load_va": "0x5c0164",
+              "slot_va": "0x8a8418",
+              "string_va": "0x10028e80"
+            },
+            {
+              "token": "nl",
+              "load_va": "0x5c0184",
+              "slot_va": "0x8a83e8",
+              "string_va": "0x10028e30"
+            }
+          ],
+          "select_va": "0x5c0178"
+        },
+        {
+          "selector": 15,
+          "tokens": [
+            {
+              "token": "norwegian",
+              "load_va": "0x5c019c",
+              "slot_va": "0x8a841c",
+              "string_va": "0x10028e88"
+            },
+            {
+              "token": "no",
+              "load_va": "0x5c01bc",
+              "slot_va": "0x8a83ec",
+              "string_va": "0x10028e38"
+            }
+          ],
+          "select_va": "0x5c01b0"
+        },
+        {
+          "selector": 7,
+          "tokens": [
+            {
+              "token": "portuguese",
+              "load_va": "0x5c01d4",
+              "slot_va": "0x8a8420",
+              "string_va": "0x10028e98"
+            },
+            {
+              "token": "pt",
+              "load_va": "0x5c01f4",
+              "slot_va": "0x8a83f0",
+              "string_va": "0x1001f410"
+            }
+          ],
+          "select_va": "0x5c01e8"
+        },
+        {
+          "selector": 3,
+          "tokens": [
+            {
+              "token": "spanish",
+              "load_va": "0x5c020c",
+              "slot_va": "0x8a8424",
+              "string_va": "0x10028ea8"
+            },
+            {
+              "token": "es",
+              "load_va": "0x5c022c",
+              "slot_va": "0x8a83f4",
+              "string_va": "0x10003168"
+            }
+          ],
+          "select_va": "0x5c0220"
+        },
+        {
+          "selector": 13,
+          "tokens": [
+            {
+              "token": "swedish",
+              "load_va": "0x5c0244",
+              "slot_va": "0x8a8428",
+              "string_va": "0x10028eb0"
+            },
+            {
+              "token": "se",
+              "load_va": "0x5c0264",
+              "slot_va": "0x8a83f8",
+              "string_va": "0x10028ea0"
+            }
+          ],
+          "select_va": "0x5c0258"
+        }
+      ],
+      "comparison_helper_va": "0x5a7358",
+      "comparison_scope": "Helper maps each byte through81F638 before comparing; current character-classification table and arbitrary non-ASCII behavior are not reconstructed here.",
+      "cli": {
+        "consumer_va": "0x48a908",
+        "thunk_va": "0x252248",
+        "tokens": [
+          "-language",
+          "-lang"
+        ]
+      },
+      "system_initializer_va": "0x5c0280",
+      "numeric_alias": {
+        "11": 10
+      },
+      "scope": "Runtime-only state, not a property recoverable from the saved bonuses or save-folder region. Selector1 is native default/fallback; an explicit English literal is absent from this parser and is not guessed."
+    },
+    "availability_context": {
+      "function_va": "0x27108",
+      "rule": "Language1 exposes14 menu entries; other language values expose13 and skip physical developer-commentary slot5. Native availability first maps menu ID>4 toID+1 for language!=1; then subtracts1 for resulting IDs7/11/14. Saved score8708 is compared unsigned against this adjusted definition threshold, independently of saved state bytes.",
+      "language_1_indices": [
+        {
+          "physical_index_after_first_remap": 0,
+          "threshold_definition_index": 0
+        },
+        {
+          "physical_index_after_first_remap": 1,
+          "threshold_definition_index": 1
+        },
+        {
+          "physical_index_after_first_remap": 2,
+          "threshold_definition_index": 2
+        },
+        {
+          "physical_index_after_first_remap": 3,
+          "threshold_definition_index": 3
+        },
+        {
+          "physical_index_after_first_remap": 4,
+          "threshold_definition_index": 4
+        },
+        {
+          "physical_index_after_first_remap": 5,
+          "threshold_definition_index": 5
+        },
+        {
+          "physical_index_after_first_remap": 6,
+          "threshold_definition_index": 6
+        },
+        {
+          "physical_index_after_first_remap": 7,
+          "threshold_definition_index": 7
+        },
+        {
+          "physical_index_after_first_remap": 8,
+          "threshold_definition_index": 8
+        },
+        {
+          "physical_index_after_first_remap": 9,
+          "threshold_definition_index": 9
+        },
+        {
+          "physical_index_after_first_remap": 10,
+          "threshold_definition_index": 10
+        },
+        {
+          "physical_index_after_first_remap": 11,
+          "threshold_definition_index": 11
+        },
+        {
+          "physical_index_after_first_remap": 12,
+          "threshold_definition_index": 12
+        },
+        {
+          "physical_index_after_first_remap": 13,
+          "threshold_definition_index": 13
+        }
+      ],
+      "other_language_indices": [
+        {
+          "physical_index_after_first_remap": 0,
+          "threshold_definition_index": 0
+        },
+        {
+          "physical_index_after_first_remap": 1,
+          "threshold_definition_index": 1
+        },
+        {
+          "physical_index_after_first_remap": 2,
+          "threshold_definition_index": 2
+        },
+        {
+          "physical_index_after_first_remap": 3,
+          "threshold_definition_index": 3
+        },
+        {
+          "physical_index_after_first_remap": 4,
+          "threshold_definition_index": 4
+        },
+        {
+          "physical_index_after_first_remap": 6,
+          "threshold_definition_index": 6
+        },
+        {
+          "physical_index_after_first_remap": 7,
+          "threshold_definition_index": 6
+        },
+        {
+          "physical_index_after_first_remap": 8,
+          "threshold_definition_index": 8
+        },
+        {
+          "physical_index_after_first_remap": 9,
+          "threshold_definition_index": 9
+        },
+        {
+          "physical_index_after_first_remap": 10,
+          "threshold_definition_index": 10
+        },
+        {
+          "physical_index_after_first_remap": 11,
+          "threshold_definition_index": 10
+        },
+        {
+          "physical_index_after_first_remap": 12,
+          "threshold_definition_index": 12
+        },
+        {
+          "physical_index_after_first_remap": 13,
+          "threshold_definition_index": 13
+        }
+      ],
+      "warning": "Shipped concept/movie handlers pass named enum constants to this menu-oriented API. Preserve the actual native remapping rather than silently correcting enum IDs; the runtime language and current availability are not present in a save snapshot."
+    },
+    "asset_provenance": {
+      "archive_entry": "/built/anark/pause/built.dat",
+      "size": 1152780,
+      "sha256": "26FC24DD3564FDF94F0F6278FC0F0BC5578FE73C6813D3F39CD113FD22CF761B",
+      "verification": "Pass archive_path to independently revalidate the shipped consumers and bytecode digests; expected relationships are documented statically without executing Lua."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x5bfe08",
+        "name": "TOD_runtime_language_selector_get",
+        "kind": "function",
+        "confidence": "code-backed",
+        "bytes": "8122854480690000",
+        "comment": "Returns runtime u32 at100D6478, not a save field. Meaning established by native full/short language literals in5BFF78. Bonus menu count/remap and developer-commentary qualifier compare this getter to1."
+      },
+      {
+        "va": "0x5bfe18",
+        "name": "TOD_runtime_language_selector_set",
+        "kind": "function",
+        "confidence": "code-backed",
+        "bytes": "2F83000B419E0014",
+        "comment": "Writes runtime100D6478; numeric11 becomes10, other low32 values are stored without a general valid-language range check."
+      },
+      {
+        "va": "0x5bff78",
+        "name": "TOD_runtime_language_selector_parse",
+        "kind": "function",
+        "confidence": "code-backed",
+        "bytes": "808285687C0802A6",
+        "comment": "Native language tokens select runtime100D6478: jp/japanese0,fr/french2,es/spanish3,de/german4,it/italian5,nl/dutch6,pt/portuguese7,kp/korean9,cn/chinese10,fi/finnish12,se/swedish13,dk/danish14,no/norwegian15. Unmatched input stores1; do not invent a literal label for1."
+      },
+      {
+        "va": "0x5c0280",
+        "name": "TOD_runtime_language_and_context_system_init",
+        "kind": "function",
+        "confidence": "code-backed",
+        "bytes": "F821FF717C0802A6",
+        "comment": "Calls cellSysutilGetSystemParamInt identifiers122 and111. On successful122 query stores adjacent runtime word+4;111 result stores language word with11->10. Native code does not test the111 call's return code before reading its stack output; no successful/failure default is inferred."
+      }
+    ],
+    "limitations": [
+      "All eight remaining IDs have menu unlock-query consumers, not new confirmed direct saved-byte effects.",
+      "Localized labels, individual art/image/video contents and in-game playback remain unconfirmed.",
+      "Runtime language, replay flag and already-played movie status are separate dependencies. Neither arbitrary saved states nor score-only tests are active-effect verdicts.",
+      "The native parser's unmatched value1 is not a proven universal valid-language fallback for system-query failure."
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x10e10",
+        "bytes": "F84100283C4200023842FF24485AEFEC"
+      },
+      {
+        "va": "0x24ed8",
+        "bytes": "F821FF917D2802A6F92100804BFEBF2DE8410028E8010080686800017C0803A6382100707D07FE707CE642787CA6385054A40FFE2064000E7C6307B44E800020"
+      },
+      {
+        "va": "0x25088",
+        "bytes": "F821FF817C0802A6FBE100787C7F1B78F80100904BFEBD75E84100282F8300012F1F0004419E000841990030281F000D7BE3002040810034E881009080628728EBE100787C8803A678630020382100804E800020600000003BFF0001281F000D7BE300204181FFD44BFEE7A1E8410028E8810090EBE10078786300207C8803A6382100804E800020"
+      },
+      {
+        "va": "0x27008",
+        "bytes": "F821FF717CA802A6FBA100787C9D2378FBE10088F8A100A07C7F1B784BFE9DEDE841002857BD063E2F830001381DFFFF2F1F000428800007419E000841990044281F000D3D3F000139600000392986F0418100187D2007B440850030808286EC7C60221499630008E8C100A0EBA10078EBE100887CC803A6382100904E8000203BFF00014BFFFFBC7FABEB784BFFFFD0"
+      },
+      {
+        "va": "0x27098",
+        "bytes": "F821FF817C0802A6FBE100787C7F1B78F80100904BFE9D65E84100282F8300012F1F000438600000419E00084199003C281F000D3D3F0001392986F0418100147D2307B480A286EC7C832A1488640008E8C100907C6307B4EBE10078382100807CC803A64E8000203BFF00014BFFFFC4"
+      },
+      {
+        "va": "0x27108",
+        "bytes": "F821FF717C0802A6FBA10078F80100A07C7D1B784BFE9CF5E84100282F830001419E000C2C1D0004418100784BFE9CDDE84100282C830001418600242F1D0007419A00182F9D000B419E00102C1D000E4082000C600000003BBDFFFF808286EC7BA300203D24000183A987084BFEAADDE84100287C9D1840386000004184000838600001E8A100A07C6307B4EBA10078382100907CA803A64E800020600000003BBD00014BFFFF88"
+      },
+      {
+        "va": "0x2717c",
+        "bytes": "7C9D1840"
+      },
+      {
+        "va": "0x2a4d4",
+        "bytes": "C3A28778"
+      },
+      {
+        "va": "0x2a504",
+        "bytes": "C3E28788"
+      },
+      {
+        "va": "0x2a534",
+        "bytes": "C3028798"
+      },
+      {
+        "va": "0x2a564",
+        "bytes": "C34287A8"
+      },
+      {
+        "va": "0x2a660",
+        "bytes": "80829290"
+      },
+      {
+        "va": "0x2a664",
+        "bytes": "C02298A4"
+      },
+      {
+        "va": "0x2a668",
+        "bytes": "4BFE8329"
+      },
+      {
+        "va": "0x2a684",
+        "bytes": "FC20E890"
+      },
+      {
+        "va": "0x2a688",
+        "bytes": "80829298"
+      },
+      {
+        "va": "0x2a690",
+        "bytes": "4BFE8301"
+      },
+      {
+        "va": "0x2a6ac",
+        "bytes": "FC20F890"
+      },
+      {
+        "va": "0x2a6b0",
+        "bytes": "808292A0"
+      },
+      {
+        "va": "0x2a6b8",
+        "bytes": "4BFE82D9"
+      },
+      {
+        "va": "0x2a6d4",
+        "bytes": "FC20C090"
+      },
+      {
+        "va": "0x2a6d8",
+        "bytes": "808292A8"
+      },
+      {
+        "va": "0x2a6e0",
+        "bytes": "4BFE82B1"
+      },
+      {
+        "va": "0x2a6fc",
+        "bytes": "FC20D090"
+      },
+      {
+        "va": "0x2a700",
+        "bytes": "808292B0"
+      },
+      {
+        "va": "0x2a708",
+        "bytes": "4BFE8289"
+      },
+      {
+        "va": "0x2a724",
+        "bytes": "C26287B8"
+      },
+      {
+        "va": "0x2a728",
+        "bytes": "FC209890"
+      },
+      {
+        "va": "0x2a72c",
+        "bytes": "808292B8"
+      },
+      {
+        "va": "0x2a734",
+        "bytes": "4BFE825D"
+      },
+      {
+        "va": "0x2a754",
+        "bytes": "C2A287C8"
+      },
+      {
+        "va": "0x2a758",
+        "bytes": "FC20A890"
+      },
+      {
+        "va": "0x2a75c",
+        "bytes": "808292C0"
+      },
+      {
+        "va": "0x2a764",
+        "bytes": "4BFE822D"
+      },
+      {
+        "va": "0x2a76c",
+        "bytes": "C2C287D0"
+      },
+      {
+        "va": "0x2a770",
+        "bytes": "FC20B090"
+      },
+      {
+        "va": "0x2a774",
+        "bytes": "808292C4"
+      },
+      {
+        "va": "0x2a77c",
+        "bytes": "4BFE8215"
+      },
+      {
+        "va": "0x251e08",
+        "bytes": "F84100283C4200013842FF3C4836DFF4"
+      },
+      {
+        "va": "0x252248",
+        "bytes": "F84100283C4200013842FF3C4836DD24"
+      },
+      {
+        "va": "0x252254",
+        "bytes": "4836DD24"
+      },
+      {
+        "va": "0x48a8c4",
+        "bytes": "807F000080826A604BDC582DE84100282C0300004182001C807F000080826A644BDC5815E84100282C830000408600243BDE000157C8103A7D28EA14792B0020806B00004BDC7941E84100284BFFF9B0"
+      },
+      {
+        "va": "0x48a908",
+        "bytes": "4BDC7941"
+      },
+      {
+        "va": "0x5a7358",
+        "bytes": "F821FF717C0802A6FB810070FBA10078FBC100807C7C1B787C9D23783BC00000FBE10088F80100A04800001060000000419A0054408600747CFEE21478E6002088A600007CA3077448278299600000007C9EEA14788900207C7F1B783BDE0001886900007C63077448278279600000002F9F00002F0300007C9F1800409EFFB47FE300D0E90100A07FE307B4EB810070EBA100787D0803A6EBC10080EBE10088382100904E8000207FE3F850E90100A0EB8100707FE307B4EBA10078EBC100807D0803A6EBE10088382100904E800020"
+      },
+      {
+        "va": "0x5bfe08",
+        "bytes": "81228544806900004E80002060000000"
+      },
+      {
+        "va": "0x5bfe0c",
+        "bytes": "80690000"
+      },
+      {
+        "va": "0x5bfe18",
+        "bytes": "2F83000B419E001481228544906900004E80002060000000812285443860000A906900004E800020"
+      },
+      {
+        "va": "0x5bfe34",
+        "bytes": "3860000A"
+      },
+      {
+        "va": "0x5bff78",
+        "bytes": "80828568"
+      },
+      {
+        "va": "0x5bffa0",
+        "bytes": "3800000A"
+      },
+      {
+        "va": "0x5bffa8",
+        "bytes": "90090000"
+      },
+      {
+        "va": "0x5bffc4",
+        "bytes": "8082856C"
+      },
+      {
+        "va": "0x5bffdc",
+        "bytes": "808285A0"
+      },
+      {
+        "va": "0x5bfff0",
+        "bytes": "3800000E"
+      },
+      {
+        "va": "0x5bfffc",
+        "bytes": "80828570"
+      },
+      {
+        "va": "0x5c0014",
+        "bytes": "808285A4"
+      },
+      {
+        "va": "0x5c0028",
+        "bytes": "3800000C"
+      },
+      {
+        "va": "0x5c0034",
+        "bytes": "80828574"
+      },
+      {
+        "va": "0x5c004c",
+        "bytes": "808285A8"
+      },
+      {
+        "va": "0x5c0060",
+        "bytes": "38000002"
+      },
+      {
+        "va": "0x5c006c",
+        "bytes": "80828578"
+      },
+      {
+        "va": "0x5c0084",
+        "bytes": "808285AC"
+      },
+      {
+        "va": "0x5c0098",
+        "bytes": "38000004"
+      },
+      {
+        "va": "0x5c00a4",
+        "bytes": "8082857C"
+      },
+      {
+        "va": "0x5c00bc",
+        "bytes": "808285B0"
+      },
+      {
+        "va": "0x5c00d0",
+        "bytes": "38000005"
+      },
+      {
+        "va": "0x5c00dc",
+        "bytes": "80828580"
+      },
+      {
+        "va": "0x5c00f4",
+        "bytes": "808285B4"
+      },
+      {
+        "va": "0x5c0108",
+        "bytes": "38000000"
+      },
+      {
+        "va": "0x5c0114",
+        "bytes": "80828584"
+      },
+      {
+        "va": "0x5c012c",
+        "bytes": "808285B8"
+      },
+      {
+        "va": "0x5c0140",
+        "bytes": "38000009"
+      },
+      {
+        "va": "0x5c014c",
+        "bytes": "80828588"
+      },
+      {
+        "va": "0x5c0164",
+        "bytes": "808285BC"
+      },
+      {
+        "va": "0x5c0178",
+        "bytes": "38000006"
+      },
+      {
+        "va": "0x5c0184",
+        "bytes": "8082858C"
+      },
+      {
+        "va": "0x5c019c",
+        "bytes": "808285C0"
+      },
+      {
+        "va": "0x5c01b0",
+        "bytes": "3800000F"
+      },
+      {
+        "va": "0x5c01bc",
+        "bytes": "80828590"
+      },
+      {
+        "va": "0x5c01d4",
+        "bytes": "808285C4"
+      },
+      {
+        "va": "0x5c01e8",
+        "bytes": "38000007"
+      },
+      {
+        "va": "0x5c01f4",
+        "bytes": "80828594"
+      },
+      {
+        "va": "0x5c020c",
+        "bytes": "808285C8"
+      },
+      {
+        "va": "0x5c0220",
+        "bytes": "38000003"
+      },
+      {
+        "va": "0x5c022c",
+        "bytes": "80828598"
+      },
+      {
+        "va": "0x5c0244",
+        "bytes": "808285CC"
+      },
+      {
+        "va": "0x5c0258",
+        "bytes": "3800000D"
+      },
+      {
+        "va": "0x5c0264",
+        "bytes": "8082859C"
+      },
+      {
+        "va": "0x5c0270",
+        "bytes": "38000001"
+      },
+      {
+        "va": "0x5c0280",
+        "bytes": "F821FF717C0802A63881007038600122FBE10088F80100A048279AB5E84100282F830000409E004483E285443881007480610070907F00043860011148279A91E8410028800100742C00000B4182003C901F0000E88100A0EBE10088382100907C8803A64E8000203860011183E285443881007448279A59E8410028800100742C00000B4082FFCC3800000A901F0000E88100A0EBE10088382100907C8803A64E80002060000000"
+      },
+      {
+        "va": "0x5c028c",
+        "bytes": "38600122"
+      },
+      {
+        "va": "0x5c02b8",
+        "bytes": "38600111"
+      },
+      {
+        "va": "0x5c0308",
+        "bytes": "3800000A"
+      },
+      {
+        "va": "0x8886b0",
+        "bytes": "40000000"
+      },
+      {
+        "va": "0x8886c0",
+        "bytes": "40800000"
+      },
+      {
+        "va": "0x8886d0",
+        "bytes": "40C00000"
+      },
+      {
+        "va": "0x8886e0",
+        "bytes": "41000000"
+      },
+      {
+        "va": "0x8886f0",
+        "bytes": "41200000"
+      },
+      {
+        "va": "0x888700",
+        "bytes": "41400000"
+      },
+      {
+        "va": "0x888708",
+        "bytes": "41500000"
+      },
+      {
+        "va": "0x8891c8",
+        "bytes": "10002B30"
+      },
+      {
+        "va": "0x8891d0",
+        "bytes": "10002B58"
+      },
+      {
+        "va": "0x8891d8",
+        "bytes": "10002B88"
+      },
+      {
+        "va": "0x8891e0",
+        "bytes": "10002BB0"
+      },
+      {
+        "va": "0x8891e8",
+        "bytes": "10002BE0"
+      },
+      {
+        "va": "0x8891f0",
+        "bytes": "10002C10"
+      },
+      {
+        "va": "0x8891f8",
+        "bytes": "10002C40"
+      },
+      {
+        "va": "0x8891fc",
+        "bytes": "10002C58"
+      },
+      {
+        "va": "0x8897dc",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x8a6980",
+        "bytes": "100274F0"
+      },
+      {
+        "va": "0x8a6984",
+        "bytes": "10027500"
+      },
+      {
+        "va": "0x8a83a0",
+        "bytes": "100D6478"
+      },
+      {
+        "va": "0x8a83c4",
+        "bytes": "10028DF0"
+      },
+      {
+        "va": "0x8a83c8",
+        "bytes": "10028DF8"
+      },
+      {
+        "va": "0x8a83cc",
+        "bytes": "10028E00"
+      },
+      {
+        "va": "0x8a83d0",
+        "bytes": "10028E08"
+      },
+      {
+        "va": "0x8a83d4",
+        "bytes": "10028E10"
+      },
+      {
+        "va": "0x8a83d8",
+        "bytes": "1003C600"
+      },
+      {
+        "va": "0x8a83dc",
+        "bytes": "10028E18"
+      },
+      {
+        "va": "0x8a83e0",
+        "bytes": "10028E20"
+      },
+      {
+        "va": "0x8a83e4",
+        "bytes": "10028E28"
+      },
+      {
+        "va": "0x8a83e8",
+        "bytes": "10028E30"
+      },
+      {
+        "va": "0x8a83ec",
+        "bytes": "10028E38"
+      },
+      {
+        "va": "0x8a83f0",
+        "bytes": "1001F410"
+      },
+      {
+        "va": "0x8a83f4",
+        "bytes": "10003168"
+      },
+      {
+        "va": "0x8a83f8",
+        "bytes": "10028EA0"
+      },
+      {
+        "va": "0x8a83fc",
+        "bytes": "10028E40"
+      },
+      {
+        "va": "0x8a8400",
+        "bytes": "10028E48"
+      },
+      {
+        "va": "0x8a8404",
+        "bytes": "10028E50"
+      },
+      {
+        "va": "0x8a8408",
+        "bytes": "10028E58"
+      },
+      {
+        "va": "0x8a840c",
+        "bytes": "10028E60"
+      },
+      {
+        "va": "0x8a8410",
+        "bytes": "10028E68"
+      },
+      {
+        "va": "0x8a8414",
+        "bytes": "10028E78"
+      },
+      {
+        "va": "0x8a8418",
+        "bytes": "10028E80"
+      },
+      {
+        "va": "0x8a841c",
+        "bytes": "10028E88"
+      },
+      {
+        "va": "0x8a8420",
+        "bytes": "10028E98"
+      },
+      {
+        "va": "0x8a8424",
+        "bytes": "10028EA8"
+      },
+      {
+        "va": "0x8a8428",
+        "bytes": "10028EB0"
+      },
+      {
+        "va": "0x10002b30",
+        "bytes": "43484541545F4533545241494C455200"
+      },
+      {
+        "va": "0x10002b58",
+        "bytes": "43484541545F434F4E434550545F4348415200"
+      },
+      {
+        "va": "0x10002b88",
+        "bytes": "43484541545F545241494C4552303100"
+      },
+      {
+        "va": "0x10002bb0",
+        "bytes": "43484541545F434F4E434550545F454E5600"
+      },
+      {
+        "va": "0x10002be0",
+        "bytes": "43484541545F484F575F544F5F4452415700"
+      },
+      {
+        "va": "0x10002c10",
+        "bytes": "43484541545F434F4E434550545F5745415000"
+      },
+      {
+        "va": "0x10002c40",
+        "bytes": "43484541545F53435249505453435245454E00"
+      },
+      {
+        "va": "0x10002c58",
+        "bytes": "43484541545F434F4E434550545F5041494E5400"
+      },
+      {
+        "va": "0x10003168",
+        "bytes": "657300"
+      },
+      {
+        "va": "0x1001f410",
+        "bytes": "707400"
+      },
+      {
+        "va": "0x10026384",
+        "bytes": "000005B90000061900000019000000010000056600000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x100263e4",
+        "bytes": "00000611000006180000004B000000010000056600000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x10026444",
+        "bytes": "000006160000061900000096000000010000056600000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x100264a4",
+        "bytes": "0000061200000618000000FA000000010000056600000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x10026504",
+        "bytes": "000003D2000003DF0000015E000000010000056600000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x10026564",
+        "bytes": "0000061300000618000001C2000000010000056600000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x100265c4",
+        "bytes": "000006150000061900000258000000010000056600000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x100265f4",
+        "bytes": "0000061400000618000002EE000000010000056600000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x100274f0",
+        "bytes": "2D6C616E677561676500"
+      },
+      {
+        "va": "0x10027500",
+        "bytes": "2D6C616E6700"
+      },
+      {
+        "va": "0x10028df0",
+        "bytes": "6368696E65736500"
+      },
+      {
+        "va": "0x10028df8",
+        "bytes": "636E00"
+      },
+      {
+        "va": "0x10028e00",
+        "bytes": "646B00"
+      },
+      {
+        "va": "0x10028e08",
+        "bytes": "666900"
+      },
+      {
+        "va": "0x10028e10",
+        "bytes": "667200"
+      },
+      {
+        "va": "0x10028e18",
+        "bytes": "697400"
+      },
+      {
+        "va": "0x10028e20",
+        "bytes": "6A7000"
+      },
+      {
+        "va": "0x10028e28",
+        "bytes": "6B7000"
+      },
+      {
+        "va": "0x10028e30",
+        "bytes": "6E6C00"
+      },
+      {
+        "va": "0x10028e38",
+        "bytes": "6E6F00"
+      },
+      {
+        "va": "0x10028e40",
+        "bytes": "64616E69736800"
+      },
+      {
+        "va": "0x10028e48",
+        "bytes": "66696E6E69736800"
+      },
+      {
+        "va": "0x10028e50",
+        "bytes": "6672656E636800"
+      },
+      {
+        "va": "0x10028e58",
+        "bytes": "6765726D616E00"
+      },
+      {
+        "va": "0x10028e60",
+        "bytes": "6974616C69616E00"
+      },
+      {
+        "va": "0x10028e68",
+        "bytes": "6A6170616E65736500"
+      },
+      {
+        "va": "0x10028e78",
+        "bytes": "6B6F7265616E00"
+      },
+      {
+        "va": "0x10028e80",
+        "bytes": "647574636800"
+      },
+      {
+        "va": "0x10028e88",
+        "bytes": "6E6F7277656769616E00"
+      },
+      {
+        "va": "0x10028e98",
+        "bytes": "706F727475677565736500"
+      },
+      {
+        "va": "0x10028ea0",
+        "bytes": "736500"
+      },
+      {
+        "va": "0x10028ea8",
+        "bytes": "7370616E69736800"
+      },
+      {
+        "va": "0x10028eb0",
+        "bytes": "7377656469736800"
+      },
+      {
+        "va": "0x1003c600",
+        "bytes": "646500"
+      },
+      {
+        "va": "0x100d6478",
+        "bytes": "00000001"
+      }
+    ]
+  },
+  "bonus_remaining_assets": {
+    "confidence": "asset-backed",
+    "archive_entry": "/built/anark/pause/built.dat",
+    "size": 1152780,
+    "sha256": "26FC24DD3564FDF94F0F6278FC0F0BC5578FE73C6813D3F39CD113FD22CF761B",
+    "concept_descriptors": [
+      {
+        "id": 2,
+        "enum": "CHEAT_CONCEPT_CHAR",
+        "pack_index": 1,
+        "label_tag": 28,
+        "art_index_min": 1,
+        "art_index_max": 66,
+        "availability_call": {
+          "api": "is_cheat_unlocked",
+          "enum": "CHEAT_CONCEPT_CHAR"
+        }
+      },
+      {
+        "id": 6,
+        "enum": "CHEAT_CONCEPT_ENV",
+        "pack_index": 2,
+        "label_tag": 29,
+        "art_index_min": 67,
+        "art_index_max": 112,
+        "availability_call": {
+          "api": "is_cheat_unlocked",
+          "enum": "CHEAT_CONCEPT_ENV"
+        }
+      },
+      {
+        "id": 10,
+        "enum": "CHEAT_CONCEPT_WEAP",
+        "pack_index": 3,
+        "label_tag": 30,
+        "art_index_min": 113,
+        "art_index_max": 131,
+        "availability_call": {
+          "api": "is_cheat_unlocked",
+          "enum": "CHEAT_CONCEPT_WEAP"
+        }
+      },
+      {
+        "id": 13,
+        "enum": "CHEAT_CONCEPT_PAINT",
+        "pack_index": 4,
+        "label_tag": 31,
+        "art_index_min": 132,
+        "art_index_max": 141,
+        "availability_call": {
+          "api": "is_cheat_unlocked",
+          "enum": "CHEAT_CONCEPT_PAINT"
+        }
+      }
+    ],
+    "cinematic_descriptors": [
+      {
+        "id": 0,
+        "enum": "CHEAT_E3TRAILER",
+        "row_index": 17,
+        "movie_literal": "PRE_RCF_E3_2007_FMV",
+        "native_play_movie_argument": "rcf_e3_2007_fmv",
+        "initial_enabled_literal": false
+      },
+      {
+        "id": 4,
+        "enum": "CHEAT_TRAILER01",
+        "row_index": 18,
+        "movie_literal": "PRE_RCF_FLYBY_FMV",
+        "native_play_movie_argument": "rcf_flyby_fmv",
+        "initial_enabled_literal": false
+      },
+      {
+        "id": 8,
+        "enum": "CHEAT_HOW_TO_DRAW",
+        "row_index": 19,
+        "movie_literal": "PRE_RCF_SKETCH_FMV",
+        "native_play_movie_argument": "rcf_sketch_fmv",
+        "initial_enabled_literal": false
+      },
+      {
+        "id": 12,
+        "enum": "CHEAT_SCRIPTSCREEN",
+        "row_index": 20,
+        "movie_literal": "PRE_RCF_SCRIPT_2D_FMV",
+        "native_play_movie_argument": "rcf_script_2d_fmv",
+        "initial_enabled_literal": false
+      },
+      {
+        "id": 12,
+        "enum": "CHEAT_SCRIPTSCREEN",
+        "row_index": 21,
+        "movie_literal": "PRE_RCF_SCRIPT_3D_01_FMV",
+        "native_play_movie_argument": "rcf_script_3d_01_fmv",
+        "initial_enabled_literal": false
+      },
+      {
+        "id": 12,
+        "enum": "CHEAT_SCRIPTSCREEN",
+        "row_index": 22,
+        "movie_literal": "PRE_RCF_SCRIPT_3D_02_FMV",
+        "native_play_movie_argument": "rcf_script_3d_02_fmv",
+        "initial_enabled_literal": false
+      }
+    ],
+    "bytecode_digests": [
+      {
+        "source": "conceptHandler",
+        "function": "onInitialize",
+        "offset": "0xe1e41",
+        "instruction_count": 110,
+        "sha256": "FBCD7B7CF325B80EE046147E995C60EBCF8993E1C7481A1DC605BEEBC2F533B7"
+      },
+      {
+        "source": "conceptHandler",
+        "function": "onHintToggle",
+        "offset": "0xe3bf5",
+        "instruction_count": 57,
+        "sha256": "9587C7E33475E8479C01B20AB85D116B2BB92648AFFD89BAFCFB74ABD44B0D6B"
+      },
+      {
+        "source": "conceptHandler",
+        "function": "goToArt",
+        "offset": "0xe2589",
+        "instruction_count": 45,
+        "sha256": "CD5E49D2AF71AFD2C825AD6DAE58C07033EC64FEF2A052AE9EB57B0F05A87DC2"
+      },
+      {
+        "source": "cineListUpdater",
+        "function": "onInitialize",
+        "offset": "0x10b214",
+        "instruction_count": 269,
+        "sha256": "326296FDC3EBCDDEE39570E03BF27BE549D61BA072019D3E6068E2888F8440C5"
+      },
+      {
+        "source": "cineListUpdater",
+        "function": "handleSelect",
+        "offset": "0x10ba30",
+        "instruction_count": 23,
+        "sha256": "BB97B6F2979C444733F6B8E6AFCA8CA6C89CB2EA0D54A8BBE30BBC31FEC5F9DA"
+      }
+    ],
+    "warning": "Static literal/branch inspection only. Availability calls remain symbolic; no Lua/native execution, art/video contents, current menu visibility or saved-state-driven effect is inferred."
+  },
+  "arena_dispatch": {
+    "confidence": "native-confirmed",
+    "binary_sha256": "0EE9A8414C8FC182BC19FA2A523E6D050D0BE76138B3733AE515798D77D2468C",
+    "request_constructor": {
+      "function_va": "0x23ad0",
+      "runtime_owner_pointer_slot_va": "0x8885b4",
+      "members": [
+        {
+          "offset": "0x8",
+          "type": "u64",
+          "meaning": "Supplied runtime thread token"
+        },
+        {
+          "offset": "0x10",
+          "type": "u32",
+          "meaning": "Request argument r6"
+        },
+        {
+          "offset": "0x14",
+          "type": "u32",
+          "meaning": "Auxiliary runtime token resolved through 1E1C00 then 12DF0"
+        },
+        {
+          "offset": "0x18",
+          "type": "u32",
+          "meaning": "Requested operation r4; arena bridge supplies 5"
+        },
+        {
+          "offset": "0x1c",
+          "type": "u32",
+          "meaning": "Request argument r5"
+        },
+        {
+          "offset": "0x20",
+          "type": "u32",
+          "meaning": "Cleared to 0"
+        },
+        {
+          "offset": "0x24",
+          "type": "u8",
+          "meaning": "Cleared to 0"
+        }
+      ],
+      "warning": "Runtime controller members, not serialized save offsets."
+    },
+    "operation_dispatch": {
+      "function_va": "0x24650",
+      "relative_table_pointer_slot_va": "0x888610",
+      "relative_table_va": "0x24714",
+      "routes": [
+        {
+          "operation": 0,
+          "target_va": "0x24734"
+        },
+        {
+          "operation": 1,
+          "target_va": "0x248d8"
+        },
+        {
+          "operation": 2,
+          "target_va": "0x24880"
+        },
+        {
+          "operation": 3,
+          "target_va": "0x249a8"
+        },
+        {
+          "operation": 4,
+          "target_va": "0x24974"
+        },
+        {
+          "operation": 5,
+          "target_va": "0x24940"
+        },
+        {
+          "operation": 6,
+          "target_va": "0x2490c"
+        },
+        {
+          "operation": 7,
+          "target_va": "0x248d8"
+        }
+      ],
+      "arena_case_va": "0x24940",
+      "arena_operation": 5,
+      "loader": {
+        "constructor_va": "0x62d080",
+        "vtable_va": "0x8564c8",
+        "method_offset": "0x8",
+        "descriptor_va": "0x87bd40",
+        "function_va": "0x62d2e8",
+        "toc_va": "0x8afe5c"
+      },
+      "case_arguments": "Case5 supplies runtime resource-owner+108 members: descriptor+758, word+858, shared owner+108+2C, and descriptor+768 to the constructed UI object's virtual loader.",
+      "alias_gap": "This proves operation5 selects a concrete UI loader/descriptor path, not installation or aliasing of the supplied challenge list as ARENA_CHALLENGE_DATA. No recovered source-index/native-ID/current-display-row equivalence."
+    },
+    "serialized_writer_chains": {
+      "named_bindings": [
+        {
+          "name": "set_challenge_success",
+          "registration_slot_va": "0x89d8e4",
+          "wrapper_va": "0x2c9ca8",
+          "native_va": "0x27a9c8"
+        },
+        {
+          "name": "set_flag",
+          "registration_slot_va": "0x8892b4",
+          "wrapper_va": "0x34698",
+          "native_va": "0x24a80"
+        },
+        {
+          "name": "set_flag",
+          "registration_slot_va": "0x89d85c",
+          "wrapper_va": "0x2cb080",
+          "native_va": "0x27bb10"
+        }
+      ],
+      "success_counter": {
+        "native_va": "0x27a9c8",
+        "formula": "saved56D8 + native_id*4",
+        "increment_store_vas": [
+          "0x27aad0",
+          "0x27ab50"
+        ],
+        "meaning": "Native success transaction increments the BE32 counter modulo32 bits; it does not set these script milestone flags."
+      },
+      "global_flag": {
+        "native_vas": [
+          "0x24a80",
+          "0x27bb10"
+        ],
+        "formula": "BE64 word5528 + (flag_id//64)*8, integer bit(flag_id%64)",
+        "store_vas": [
+          "0x24aa8",
+          "0x27bb38"
+        ],
+        "meaning": "OR the named global event bit; separate from arena counter increment."
+      },
+      "milestone_flags": [
+        {
+          "enum": "LVL_IFF_CHALLENGE_1_DONE",
+          "id": 74,
+          "word_offset": "0x5530",
+          "word_bit": 10
+        },
+        {
+          "enum": "LVL_IFF_CHALLENGE_2_DONE",
+          "id": 75,
+          "word_offset": "0x5530",
+          "word_bit": 11
+        },
+        {
+          "enum": "LVL_IFF_CKPT_IN_ARENA",
+          "id": 85,
+          "word_offset": "0x5530",
+          "word_bit": 21
+        },
+        {
+          "enum": "LVL_IFF_RETURN_CHALLENGE_9_DONE",
+          "id": 88,
+          "word_offset": "0x5530",
+          "word_bit": 24
+        },
+        {
+          "enum": "LVL_IFF_RETURN_CHALLENGE_10_DONE",
+          "id": 89,
+          "word_offset": "0x5530",
+          "word_bit": 25
+        }
+      ],
+      "challenges": [
+        {
+          "enum": "IFF_A_1",
+          "native_id": 1,
+          "save_counter_offset": "0x56dc"
+        },
+        {
+          "enum": "IFF_A_4",
+          "native_id": 4,
+          "save_counter_offset": "0x56e8"
+        },
+        {
+          "enum": "IFF_A_6",
+          "native_id": 6,
+          "save_counter_offset": "0x56f0"
+        },
+        {
+          "enum": "IFF_B_10",
+          "native_id": 12,
+          "save_counter_offset": "0x5708"
+        }
+      ]
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x23ad0",
+        "name": "TOD_ui_construct_runtime_operation_request",
+        "kind": "function",
+        "comment": "Stores runtime thread token/arguments and requested operation; arena bridge supplies operation 5. Not a saved record or recovered Lua list alias."
+      },
+      {
+        "va": "0x24650",
+        "name": "TOD_ui_dispatch_runtime_operation_loader",
+        "kind": "function",
+        "comment": "Guarded 8-entry relative switch: operation 5 \u2192 24940 \u2192 constructed UI virtual loader 62D2E8. Table installation/ARENA_CHALLENGE_DATA alias remains unresolved."
+      },
+      {
+        "va": "0x24714",
+        "name": "TOD_ui_runtime_operation_switch",
+        "kind": "data",
+        "size": 32,
+        "comment": "Eight signed BE32 offsets relative to 24714; entry 5 targets 24940. Runtime UI routing, not challenge IDs or source indices."
+      }
+    ],
+    "unresolved": [
+      "The requested script list's installation/alias as ARENA_CHALLENGE_DATA remains unresolved beyond the concrete UI loader.",
+      "Runtime request fields cannot be reconstructed from serialized milestone flags/counters.",
+      "Current trip/script/list/menu and callback acceptance cannot be inferred solely from saved predicate values.",
+      "Milestone call ordering is static source/bytecode evidence, not an atomic save snapshot or reconstructed engine wait timing."
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x23ad0",
+        "bytes": "F821FF217CE802A6FB0100A0F8E100F07CB82B78FB2100A8FB4100B07C9923787CDA3378FB6100B8FB8100C0FBA100C87C7C1B78481BE0FD6000000083A2867C786300203B600000FB9D00084BFEF2D5E841002838800000907D00143861007038A00030787C0020935D00107F83E378933D0018931D001C937D00209B7D0024488043E9600000008142869C816286987F83E37838A000053920000238800000936100789361007090A1009091210094916100749141007C9081009C4BFEEE35E8410028E80100F0EB0100A0EB2100A87C0803A6EB4100B0EB6100B8EB8100C0EBA100C8382100E04E80002060000000"
+      },
+      {
+        "va": "0x24650",
+        "bytes": "F821FF617C6802A6FB410070FB610078FB810080FBA10088FBC10090FBE10098F86100B04BFEC59DE841002878630020388000014BFED07DE84100284BFEFAC5E8410028880300102F800000419E01C480A3000039600001808300048343000C7D852214996300107CFA605038C7EB5054C900367D4548507D3F4B787D0A20509103000C7BFE00207FC3F3784BFED345E84100288362867C801B001893FB00402800000741810040781A1788806286D87D9A182E7D8B07B47C0B1A147C0903A64E80042000000020000001C40000016C00000294000002600000022C000001F8000001C4834286DC38000001981B0046887B00442C8300004086002060000000386000643960008D440000028BDB00442F1E0000419AFFEC4BFEEC49E8410028786300204BFED61DE8410028807B00404BFEF961E84100287863002048003CB56000000083FA010880FF0B6C3947FFFC79480020838800002F9C0000419E006483C286E43BE0000083BA010857E928347BC4002080BD0B6C7D892A14396C0010797D0020807D00004BFED339E84100282C03000041820020807B00404BFEF8F5E84100287FA4EB78786300204BFEE355E84100283BFF00017C9CF8004086FFAC839B00403B4000019B5C10AB807B00404BFED1A1E8410028386000009B5B004548814F5DE8410028EB6100B0EB4100707F6803A6EB810080EB610078EBA10088EBC10090EBE10098382100A04E80002083E30008838300003BDF000F57DD00363B7D14B07FFDE214936300084BFFFE58834286DC7FC3F37880E286E083FE000083BA010883C701087BBC0020811F000838FD045C38DE002C389D044C80BC054C8008000078840020F841002878C600207C0903A678E70020804800044E800421E84100284BFFFE64834286DC7FC3F378814286E080DE0000809A010880AA0108788900208106000838E4035838C5002C3884034880A904484BFFFFA8834286DC7FC3F37883A286E080DE0000809A010880BD0108789C00208106000838E40A7438C5002C38840A6480BC0B644BFFFF74834286DC7FC3F378818286E0813E000083FA0108816C01087BFE00208109000838FF076838CB002C389F075880BE08584BFFFF40834286DC7FC3F378814286E080FE000083BA010880CA01087BBC00208107000838C6002C38FD0560389D055080BC06504BFFFF0C834286DC7FC3F378808286E080BE0000819A010881240108798B00208105000838EC066438C9002C388C065480AB07544BFFFED860000000"
+      },
+      {
+        "va": "0x24714",
+        "bytes": "00000020000001C40000016C00000294000002600000022C000001F8000001C4"
+      },
+      {
+        "va": "0x24a80",
+        "bytes": "546AE8F880C286EC546306BE390A552038E000017D0507B47CE418367D253214E80900087C8B0378F96900084E800020"
+      },
+      {
+        "va": "0x29390",
+        "bytes": "80828B68"
+      },
+      {
+        "va": "0x29394",
+        "bytes": "C0228B6C"
+      },
+      {
+        "va": "0x29398",
+        "bytes": "4BFE95F9"
+      },
+      {
+        "va": "0x293a4",
+        "bytes": "80828B70"
+      },
+      {
+        "va": "0x293a8",
+        "bytes": "C0228B74"
+      },
+      {
+        "va": "0x293ac",
+        "bytes": "4BFE95E5"
+      },
+      {
+        "va": "0x2946c",
+        "bytes": "80828BC0"
+      },
+      {
+        "va": "0x29470",
+        "bytes": "C0228BC4"
+      },
+      {
+        "va": "0x29474",
+        "bytes": "4BFE951D"
+      },
+      {
+        "va": "0x294a8",
+        "bytes": "80828BD8"
+      },
+      {
+        "va": "0x294ac",
+        "bytes": "C0228BDC"
+      },
+      {
+        "va": "0x294b0",
+        "bytes": "4BFE94E1"
+      },
+      {
+        "va": "0x294bc",
+        "bytes": "80828BE0"
+      },
+      {
+        "va": "0x294c0",
+        "bytes": "C0228BE4"
+      },
+      {
+        "va": "0x294c4",
+        "bytes": "4BFE94CD"
+      },
+      {
+        "va": "0x34698",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BFDE92DE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB7880829B347FC5F3784BFDCB95E8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BFDE171E841002838800001C02298A42C0300007FE3FB784182FFB84BFDE955E841002839210080FC20081E7C204FAE806100804BFF033D600000004BFFFFA8"
+      },
+      {
+        "va": "0x27a9c8",
+        "bytes": "2B8300167C0802A6F821FF61FBC10090FB810080FBA10088FBE10098F80100B07C7E1B7838C0000038E00016419D0104386000003B800000481238F16000000083A290C4806290C8939D0000938300004BFD5171E84100287C6C1B787BC30020799C002083AC1A684805408160000000FC200E5E80E291547F83E3781D7E00343D4B0001D8210070E8810070390A17807C8407B47D0607B47CA63A1483E5000C4BFD5251E84100282C1FFFFF2F1D00004182003C57E9103A57E020367BAB00207D290214419A002838A900107FFF07B47CA707B47D635B7838A000017FE4FB787CCB38AE2C8600004186006857C3103A81629030398356D07D8A07B47FEA5A14811F000838880001909F0008EBC100B0EB8100807FC803A6EBA10088EBC10090EBE10098382100A04E800020600000008122908080A290C0808290BC806900044BFD4ED1E84100284BFFFEE860000000481EC059600000007F83E3787FE4FB7838A0FFFF4BFD7FDDE841002857C3103A81629030398356D07D8A07B47FEA5A14811F000838880001909F0008EBC100B0EB8100807FC803A6EBA10088EBC10090EBE10098382100A04E80002060000000"
+      },
+      {
+        "va": "0x27bb10",
+        "bytes": "546AE8F880C29030546306BE390A552038E000017D0507B47CE418367D253214E80900087C8B0378F96900084E800020"
+      },
+      {
+        "va": "0x296b98",
+        "bytes": "80829FC4"
+      },
+      {
+        "va": "0x296b9c",
+        "bytes": "C0229A70"
+      },
+      {
+        "va": "0x296ba0",
+        "bytes": "4BFBC319"
+      },
+      {
+        "va": "0x296bac",
+        "bytes": "80829FC8"
+      },
+      {
+        "va": "0x296bb0",
+        "bytes": "C0229A78"
+      },
+      {
+        "va": "0x296bb4",
+        "bytes": "4BFBC305"
+      },
+      {
+        "va": "0x296c74",
+        "bytes": "80829FF0"
+      },
+      {
+        "va": "0x296c78",
+        "bytes": "C0229AC8"
+      },
+      {
+        "va": "0x296c7c",
+        "bytes": "4BFBC23D"
+      },
+      {
+        "va": "0x296cb0",
+        "bytes": "80829FFC"
+      },
+      {
+        "va": "0x296cb4",
+        "bytes": "C0229AE0"
+      },
+      {
+        "va": "0x296cb8",
+        "bytes": "4BFBC201"
+      },
+      {
+        "va": "0x296cc4",
+        "bytes": "8082A000"
+      },
+      {
+        "va": "0x296cc8",
+        "bytes": "C0229AE8"
+      },
+      {
+        "va": "0x296ccc",
+        "bytes": "4BFBC1ED"
+      },
+      {
+        "va": "0x297cc4",
+        "bytes": "C362975C"
+      },
+      {
+        "va": "0x297cc8",
+        "bytes": "FC20D890"
+      },
+      {
+        "va": "0x297ccc",
+        "bytes": "8082A4B0"
+      },
+      {
+        "va": "0x297cd4",
+        "bytes": "4BFBB1E5"
+      },
+      {
+        "va": "0x297d0c",
+        "bytes": "C3C29774"
+      },
+      {
+        "va": "0x297d10",
+        "bytes": "FC20F090"
+      },
+      {
+        "va": "0x297d14",
+        "bytes": "8082A4BC"
+      },
+      {
+        "va": "0x297d1c",
+        "bytes": "4BFBB19D"
+      },
+      {
+        "va": "0x297d3c",
+        "bytes": "C3029784"
+      },
+      {
+        "va": "0x297d40",
+        "bytes": "FC20C090"
+      },
+      {
+        "va": "0x297d44",
+        "bytes": "8082A4C4"
+      },
+      {
+        "va": "0x297d4c",
+        "bytes": "4BFBB16D"
+      },
+      {
+        "va": "0x297dc0",
+        "bytes": "C20297B4"
+      },
+      {
+        "va": "0x297dc4",
+        "bytes": "FC208090"
+      },
+      {
+        "va": "0x297dc8",
+        "bytes": "8082A4DC"
+      },
+      {
+        "va": "0x297dd0",
+        "bytes": "4BFBB0E9"
+      },
+      {
+        "va": "0x2c9ca8",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BF88FD5E84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082F0A47FC5F3784BF8770DE8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BF88EC9E841002838800001C022E9102C0300007FE3FB784182FFB84BF87F3DE841002839210080FC20081E7C204FAE806100804BFB0C75600000004BFFFFA8"
+      },
+      {
+        "va": "0x2cb080",
+        "bytes": "F821FF617C8802A638010070FBC10090781E0020F88100B038A00000388000017FC6F378FBE100987C7F1B784BF87BFDE84100282F8300007FC5F378388000027FE3FB78409E00347FE3FB788082F0F07FC5F3784BF86335E8410028E8A100B038600000EBC10090EBE100987CA803A6382100A04E8000204BF87AF1E841002838800001C022E9102C0300007FE3FB784182FFB84BF86B65E841002839210080FC20081E7C204FAE806100804BFB09E5600000004BFFFFA8"
+      },
+      {
+        "va": "0x62d080",
+        "bytes": "F821FF717D6802A6FBA100787C7D1B78810296B83943000CFB8100703B80000079430020F96100A0911D0000939D0004480921616000000038FD107478E4002038DD149838A0000F78C30020939D1050939D1054939D1058939D105C939D1060939D1064939D1068939D106C9B8400049384001490A40018939D1090939D10AC480090F96000000039200001C00296BC38600500D01D10989B9D10AB907D1094993D10A99B9D10A0939D1090939D10A4993D10A8E80100A0EB810070EBA100787C0803A6382100904E80002060000000"
+      },
+      {
+        "va": "0x62d2e8",
+        "bytes": "F821FF317D0802A6FBE100C87C7F1B78FB010090FB4100A0FB8100B0FBC100C0FB210098FB6100A8FBA100B8F90100E07C9C23787CBA2B787CD833787CFE3B7848009D8960000000801F10682F800000419E037C3B3F000C4BFF9BE960000000907F00087B2300207BF90020480914E560000000817F000039800000939F1494919F1070814B00147F23CB7838FF10B078FD0020812A0000F84100287D2903A6804A00044E800421E84100284BFFE5ED600000007C7C1B784BFFE5F1600000007C7B1B784BFFE5C56000000078680020387F11087B860020786500207B6700207B4400207FA3EB784800AAB160000000807F0008388000004BFFB2B960000000809F10AC807F00084BFF9B4960000000807F00084BFF9B4D600000007FA4EB78807F00084BFF9B2560000000839F00084BFFE54960000000786400207B8300204BFF9B19600000004BFFE541600000008B4300102C9A00004186017080C300003B600001810300048143000C7F8642149B6300107FAAE0503B5DFF50574500367C8628507CBD2B787C0440509003000C7BA30020809F106880BF00084808D75D60000000809F1064380000013860FFFF93BF000498040010907F11104BF92965600000002B03000F41990060834296C0787B17887FBBD02E7FA607B47CA6D2147CA903A64E800420000002680000004000000260000002B0000002B80000029000000298000002A000000040000002A8000001DC000001DC000002700000027800000280000002884BF9293160000000393E00102F830002419E00087FC9F378792A0020838A00042C1C00004082009C4BFFE469600000007C7A1B784BFFE46D60000000786400207B4300204800547D600000007B030020480051B16000000083E296547F23CB783B200000933F00044BFFEF59EB0100E0EB2100987F0803A6EB4100A0EB010090EB6100A8EB8100B0EBA100B8EBC100C0EBE100C8382100D04E8000206000000081030008816300003988000F5589003638E900B07FA95A1490E300084BFFFEAC38E00000F8E100704BF92831600000002883000F41850064816296C4786417887D04582E7D0C07B47D2C5A147D2903A64E8004200000019C00000044000001EC000001AC000001A4000001C4000001BC000001B400000044000001940000018C0000018C000001D4000001CC000001E4000001DC600000004BF927F9600000003BBE00102F030002419A00087FDDF3783BC100784BFFE30D600000007BDC002078660020388100707BA300207F85E37838E0000039000000480391E1600000002F830000409EFEA47F83E3784BF92DDD60000000907F11104BFFFE90393E00A04BFFFE784BFFE2BD60000000888300102C0400004182004C80E300003B20000180C3000483A3000C7F6732149B2300107D9DD850396CFF20556900367D4748507D3D4B787CAA305090A3000C7BA300204813D5A16000000093BF10684BFFFC3080C300088103000038A6000F54A40036380400E07FA44214900300084BFFFFD0393E00204BFFFDF4393E00804BFFFDEC393E00C04BFFFDE4393E00E04BFFFDDC393E00B04BFFFDD4393E00D04BFFFDCC393E00304BFFFDC4393E00604BFFFDBC393E00704BFFFDB4393E00904BFFFDAC393E00504BFFFDA4393E00404BFFFD9C3BBE00A04BFFFECC3BBE00904BFFFEC43BBE00804BFFFEBC3BBE00404BFFFEB43BBE00504BFFFEAC3BBE00704BFFFEA43BBE00604BFFFE9C3BBE00304BFFFE943BBE00E04BFFFE8C3BBE00C04BFFFE843BBE00D04BFFFE7C3BBE00B04BFFFE743BBE00204BFFFE6C"
+      },
+      {
+        "va": "0x8564d0",
+        "bytes": "0087BD40"
+      },
+      {
+        "va": "0x85a978",
+        "bytes": "000346980088FF38"
+      },
+      {
+        "va": "0x86c4f8",
+        "bytes": "002C9CA80089FF20"
+      },
+      {
+        "va": "0x86c580",
+        "bytes": "002CB0800089FF20"
+      },
+      {
+        "va": "0x87bd40",
+        "bytes": "0062D2E8"
+      },
+      {
+        "va": "0x87bd44",
+        "bytes": "008AFE5C"
+      },
+      {
+        "va": "0x8885b4",
+        "bytes": "101AEF80"
+      },
+      {
+        "va": "0x888610",
+        "bytes": "00024714"
+      },
+      {
+        "va": "0x888624",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x888aa0",
+        "bytes": "10000FE8"
+      },
+      {
+        "va": "0x888aa4",
+        "bytes": "42940000"
+      },
+      {
+        "va": "0x888aa8",
+        "bytes": "10001008"
+      },
+      {
+        "va": "0x888aac",
+        "bytes": "42960000"
+      },
+      {
+        "va": "0x888af8",
+        "bytes": "10001108"
+      },
+      {
+        "va": "0x888afc",
+        "bytes": "42AA0000"
+      },
+      {
+        "va": "0x888b10",
+        "bytes": "10001160"
+      },
+      {
+        "va": "0x888b14",
+        "bytes": "42B00000"
+      },
+      {
+        "va": "0x888b18",
+        "bytes": "10001180"
+      },
+      {
+        "va": "0x888b1c",
+        "bytes": "42B20000"
+      },
+      {
+        "va": "0x8892b4",
+        "bytes": "10002E580085A978"
+      },
+      {
+        "va": "0x898f50",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89967c",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x899694",
+        "bytes": "40800000"
+      },
+      {
+        "va": "0x8996a4",
+        "bytes": "40C00000"
+      },
+      {
+        "va": "0x8996d4",
+        "bytes": "41400000"
+      },
+      {
+        "va": "0x899990",
+        "bytes": "42940000"
+      },
+      {
+        "va": "0x899998",
+        "bytes": "42960000"
+      },
+      {
+        "va": "0x8999e8",
+        "bytes": "42AA0000"
+      },
+      {
+        "va": "0x899a00",
+        "bytes": "42B00000"
+      },
+      {
+        "va": "0x899a08",
+        "bytes": "42B20000"
+      },
+      {
+        "va": "0x899ee4",
+        "bytes": "10000FE8"
+      },
+      {
+        "va": "0x899ee8",
+        "bytes": "10001008"
+      },
+      {
+        "va": "0x899f10",
+        "bytes": "10001108"
+      },
+      {
+        "va": "0x899f1c",
+        "bytes": "10001160"
+      },
+      {
+        "va": "0x899f20",
+        "bytes": "10001180"
+      },
+      {
+        "va": "0x89a3d0",
+        "bytes": "10006808"
+      },
+      {
+        "va": "0x89a3dc",
+        "bytes": "10006820"
+      },
+      {
+        "va": "0x89a3e4",
+        "bytes": "10006830"
+      },
+      {
+        "va": "0x89a3fc",
+        "bytes": "10006870"
+      },
+      {
+        "va": "0x89d85c",
+        "bytes": "10002E580086C580"
+      },
+      {
+        "va": "0x89d8e4",
+        "bytes": "10019E680086C4F8"
+      },
+      {
+        "va": "0x8a9514",
+        "bytes": "008564C8"
+      },
+      {
+        "va": "0x10000fe8",
+        "bytes": "4C564C5F4946465F4348414C4C454E47455F315F444F4E4500"
+      },
+      {
+        "va": "0x10001008",
+        "bytes": "4C564C5F4946465F4348414C4C454E47455F325F444F4E4500"
+      },
+      {
+        "va": "0x10001108",
+        "bytes": "4C564C5F4946465F434B50545F494E5F4152454E4100"
+      },
+      {
+        "va": "0x10001160",
+        "bytes": "4C564C5F4946465F52455455524E5F4348414C4C454E47455F395F444F4E4500"
+      },
+      {
+        "va": "0x10001180",
+        "bytes": "4C564C5F4946465F52455455524E5F4348414C4C454E47455F31305F444F4E4500"
+      },
+      {
+        "va": "0x10002e58",
+        "bytes": "7365745F666C616700"
+      },
+      {
+        "va": "0x10006808",
+        "bytes": "4946465F415F3100"
+      },
+      {
+        "va": "0x10006820",
+        "bytes": "4946465F415F3400"
+      },
+      {
+        "va": "0x10006830",
+        "bytes": "4946465F415F3600"
+      },
+      {
+        "va": "0x10006870",
+        "bytes": "4946465F425F313000"
+      },
+      {
+        "va": "0x10019e68",
+        "bytes": "7365745F6368616C6C656E67655F7375636365737300"
+      }
+    ]
+  },
+  "arena_dispatch_assets": {
+    "confidence": "asset-backed",
+    "assets": [
+      {
+        "archive_entry": "/levels/imperial fight fest/scripts/challenge1.lua",
+        "size": 8610,
+        "sha256": "AD15AA65CB5FC5BDE11A3ABDC7E279B48DD940C6002667E23D6DFEF5F38294A3"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge1.lc",
+        "size": 4848,
+        "sha256": "F93872D904D8CFFDA179DEAFE8198C292B058F4DA4B79F03A06D70DE5AD79818"
+      },
+      {
+        "archive_entry": "/levels/imperial fight fest/scripts/challenge4.lua",
+        "size": 6795,
+        "sha256": "541802BC503650E97A9DE0752AE72128E53C46F9DA98D3FFF6287FD37EC912C3"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge4.lc",
+        "size": 4053,
+        "sha256": "11454F1E03C683479BBC29D6A8AEB5E4DEC2BC276A44F0DFDD203608E2F56F3D"
+      },
+      {
+        "archive_entry": "/levels/imperial fight fest/scripts/challenge6.lua",
+        "size": 11110,
+        "sha256": "493CB01EDA629A3B539CBDB20BC99A7DAAA0ED5BB0C84821A0506A1B7953B472"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge6.lc",
+        "size": 6257,
+        "sha256": "7BB15D4D9F5DB186E0AD86FCE2BD9FA929C61C2AA8A3F40B795FCFE3AE1A5465"
+      },
+      {
+        "archive_entry": "/levels/imperial fight fest/scripts/challenge10.lua",
+        "size": 6025,
+        "sha256": "4CC82EE1A3605AC11341A4222741035323ECE2238753A57125AB59063D7C4547"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge10.lc",
+        "size": 3593,
+        "sha256": "161976BE346F2B4A01C53918B04B8D69514F09EE60FC3461606A3073A2E5B07D"
+      }
+    ],
+    "compiled_root_digests": [
+      {
+        "asset": "/built/levels/imperial fight fest/scripts/challenge1.lc",
+        "code_offset": "0x868",
+        "instruction_count": 674,
+        "sha256": "5523F6ECF0A3757B1F3563057A0F4BDA098E5F8FCE6C19A7653D6CB8D8ABA820"
+      },
+      {
+        "asset": "/built/levels/imperial fight fest/scripts/challenge4.lc",
+        "code_offset": "0x9d9",
+        "instruction_count": 383,
+        "sha256": "939FF7813E14F6A45D49985ED6E5CEE7923660847D3BEFE6EAFA2BA8348EE662"
+      },
+      {
+        "asset": "/built/levels/imperial fight fest/scripts/challenge6.lc",
+        "code_offset": "0xb2d",
+        "instruction_count": 849,
+        "sha256": "D1CEED0BD3218096949587071B5CCE1C589204994FD7ECB36022C86CFE833547"
+      },
+      {
+        "asset": "/built/levels/imperial fight fest/scripts/challenge10.lc",
+        "code_offset": "0x871",
+        "instruction_count": 358,
+        "sha256": "CC8FF2B4BCC90E6F37C8DE18A8578A50D78A5B06FD06DBC60630E9C363CA82A8"
+      }
+    ],
+    "saved_milestone_writers": [
+      {
+        "script": "challenge1",
+        "native_id": 1,
+        "save_counter_offset": "0x56dc",
+        "milestone_enum": "LVL_IFF_CHALLENGE_1_DONE",
+        "milestone_flag_id": 74,
+        "ordered_actions": [
+          {
+            "pc": 624,
+            "call_pc": 626,
+            "api": "set_challenge_success",
+            "argument_enum": "IFF_A_1"
+          },
+          {
+            "pc": 636,
+            "call_pc": 638,
+            "api": "set_flag",
+            "argument_enum": "LVL_IFF_CHALLENGE_1_DONE"
+          }
+        ],
+        "milestone_condition": "Milestone flag is clear on reaching this block"
+      },
+      {
+        "script": "challenge4",
+        "native_id": 4,
+        "save_counter_offset": "0x56e8",
+        "milestone_enum": "LVL_IFF_CHALLENGE_2_DONE",
+        "milestone_flag_id": 75,
+        "ordered_actions": [
+          {
+            "pc": 228,
+            "call_pc": 230,
+            "api": "set_challenge_success",
+            "argument_enum": "IFF_A_4"
+          },
+          {
+            "pc": 307,
+            "call_pc": 309,
+            "api": "set_flag",
+            "argument_enum": "LVL_IFF_CHALLENGE_2_DONE"
+          },
+          {
+            "pc": 323,
+            "call_pc": 325,
+            "api": "set_flag",
+            "argument_enum": "LVL_IFF_CKPT_IN_ARENA"
+          }
+        ],
+        "milestone_condition": "Milestone flag is clear on reaching this block"
+      },
+      {
+        "script": "challenge6",
+        "native_id": 6,
+        "save_counter_offset": "0x56f0",
+        "milestone_enum": "LVL_IFF_RETURN_CHALLENGE_9_DONE",
+        "milestone_flag_id": 88,
+        "ordered_actions": [
+          {
+            "pc": 708,
+            "call_pc": 710,
+            "api": "set_flag",
+            "argument_enum": "LVL_IFF_RETURN_CHALLENGE_9_DONE"
+          },
+          {
+            "pc": 719,
+            "call_pc": 721,
+            "api": "set_challenge_success",
+            "argument_enum": "IFF_A_6"
+          }
+        ],
+        "milestone_condition": "challenge_6_timer_timeup is false on reaching this block"
+      },
+      {
+        "script": "challenge10",
+        "native_id": 12,
+        "save_counter_offset": "0x5708",
+        "milestone_enum": "LVL_IFF_RETURN_CHALLENGE_10_DONE",
+        "milestone_flag_id": 89,
+        "ordered_actions": [
+          {
+            "pc": 229,
+            "call_pc": 231,
+            "api": "set_challenge_success",
+            "argument_enum": "IFF_B_10"
+          },
+          {
+            "pc": 288,
+            "call_pc": 290,
+            "api": "set_flag",
+            "argument_enum": "LVL_IFF_RETURN_CHALLENGE_10_DONE"
+          },
+          {
+            "pc": 304,
+            "call_pc": 306,
+            "api": "set_flag",
+            "argument_enum": "LVL_IFF_CKPT_IN_ARENA"
+          }
+        ],
+        "milestone_condition": "Milestone flag is clear on reaching this block"
+      }
+    ],
+    "flag_before_counter_case": {
+      "script": "challenge6",
+      "flag_call_pc": 710,
+      "wait_call_pc": 718,
+      "wait_literal": 6.0,
+      "counter_call_pc": 721,
+      "warning": "Source wait literal only, not reconstructed engine timing or an asserted duration of an observable save window."
+    },
+    "separate_state_warning": "Story milestone flags, arena checkpoint flag and success counters are separate serialized dependencies and separate script calls. Editing a counter does not perform the script's flag/cinematic/checkpoint/inventory actions; their relationship is not an atomic transaction.",
+    "scope_warning": "Static reached-block relationships only; no Lua execution, current script proof, complete failure-path reconstruction or in-game edit acceptance.",
+    "index_warning": "Script filename numbers, source selector indices, exported native challenge IDs and current display rows are distinct. challenge10 uses exported IFF_B_10/native ID12; no menu-row equality is established.",
+    "asset_byte_guards": [
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge1.lc",
+        "first_pc": 624,
+        "end_pc_exclusive": 627,
+        "offset": "0x1228",
+        "bytes": "C51900114500001259000111",
+        "meaning": "set_challenge_success(IFF_A_1)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge1.lc",
+        "first_pc": 636,
+        "end_pc_exclusive": 639,
+        "offset": "0x1258",
+        "bytes": "051B0011C51A001259000111",
+        "meaning": "set_flag(LVL_IFF_CHALLENGE_1_DONE)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge1.lc",
+        "first_pc": 631,
+        "end_pc_exclusive": 636,
+        "offset": "0x1244",
+        "bytes": "C5030011C51A0012990001115880081194048000",
+        "meaning": "Set flag path runs only while milestone flag is clear."
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge4.lc",
+        "first_pc": 228,
+        "end_pc_exclusive": 231,
+        "offset": "0xd69",
+        "bytes": "C51000034500000459000103",
+        "meaning": "set_challenge_success(IFF_A_4)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge4.lc",
+        "first_pc": 307,
+        "end_pc_exclusive": 310,
+        "offset": "0xea5",
+        "bytes": "C51800034511000459000103",
+        "meaning": "set_flag(LVL_IFF_CHALLENGE_2_DONE)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge4.lc",
+        "first_pc": 231,
+        "end_pc_exclusive": 236,
+        "offset": "0xd75",
+        "bytes": "05110003451100049900010358800103541E8000",
+        "meaning": "Set flag path runs only while milestone flag is clear."
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge4.lc",
+        "first_pc": 323,
+        "end_pc_exclusive": 326,
+        "offset": "0xee5",
+        "bytes": "C5180003C51A000459000103",
+        "meaning": "set_flag(LVL_IFF_CKPT_IN_ARENA)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge6.lc",
+        "first_pc": 719,
+        "end_pc_exclusive": 722,
+        "offset": "0x1669",
+        "bytes": "451C00124500001359000112",
+        "meaning": "set_challenge_success(IFF_A_6)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge6.lc",
+        "first_pc": 708,
+        "end_pc_exclusive": 711,
+        "offset": "0x163d",
+        "bytes": "051B0012451B001359000112",
+        "meaning": "set_flag(LVL_IFF_RETURN_CHALLENGE_9_DONE)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge10.lc",
+        "first_pc": 229,
+        "end_pc_exclusive": 232,
+        "offset": "0xc05",
+        "bytes": "C51100034500000459000103",
+        "meaning": "set_challenge_success(IFF_B_10)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge10.lc",
+        "first_pc": 288,
+        "end_pc_exclusive": 291,
+        "offset": "0xcf1",
+        "bytes": "051700034512000459000103",
+        "meaning": "set_flag(LVL_IFF_RETURN_CHALLENGE_10_DONE)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge10.lc",
+        "first_pc": 232,
+        "end_pc_exclusive": 237,
+        "offset": "0xc11",
+        "bytes": "05120003451200049900010358800103D4178000",
+        "meaning": "Set flag path runs only while milestone flag is clear."
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge10.lc",
+        "first_pc": 304,
+        "end_pc_exclusive": 307,
+        "offset": "0xd31",
+        "bytes": "051700038518000459000103",
+        "meaning": "set_flag(LVL_IFF_CKPT_IN_ARENA)"
+      },
+      {
+        "archive_entry": "/built/levels/imperial fight fest/scripts/challenge6.lc",
+        "first_pc": 693,
+        "end_pc_exclusive": 722,
+        "offset": "0x1601",
+        "bytes": "4503001258000912D40C80000280001207030012050A0012450A001386D80913411A0014010B001559000212851A0012C51A00130112001459800112051B0012451B001359000112851B00125980001205190012C11B00135900011285090012011C001359000112451C00124500001359000112",
+        "meaning": "Timeout false branch sets flag88, then wait literal6, then native counter success callback."
+      }
+    ]
+  },
+  "grid_lifecycle": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 static lifecycle, detached byte models and snapshot observations. Display bytes are not saved logical values; readiness is not a checksum, visit or completion verdict. No native/Lua execution or original file modification.",
+    "layout": {
+      "base": "0x114d8",
+      "stride": "0x60dc",
+      "count": 21,
+      "copied_header_size": "0xc8",
+      "accumulator_member": "0xc8",
+      "ready_member": "0xcc",
+      "payload_member": "0xcd",
+      "encoded_length_member": "0x60d0",
+      "group_flags_member": "0x60d4",
+      "group_flag_count": 7,
+      "opaque_tail_member": "0x60db",
+      "runtime_definition_member": "0x20",
+      "runtime_logical_buffer_member": "0x24",
+      "runtime_display_latch_member": "0x40024",
+      "runtime_image_pointer_member": "0x40028"
+    },
+    "owner_provenance": {
+      "getter_va": "0x244510",
+      "constructor_va": "0x244dd8",
+      "context_vtable_va": "0x84c0b0",
+      "context_offset": "0x70",
+      "frame_method_va": "0x247e78",
+      "frame_grid_offset": "0x1af14",
+      "presnapshot_grid_offset": "0x1af84",
+      "rule": "244510 returns the allocation base through TOC897CC0 -> singleton101E72B8 without adjustment. Constructor244DD8 computes allocation+70 and installs vtable84C0B0 there; its +38 descriptor869238 identifies frame247E78. That frame passes receiver+1AF14 to selector24DEA8. Therefore the first context's grid address is allocation+70+1AF14=allocation+1AF84, exactly the getter-based pre-snapshot24EAC8 grid address.",
+      "limits": "This proves the constructor's first context/subobject relationship, not equality for every alternate context, every runtime instance or pointers retained in a detached save."
+    },
+    "selection_lifecycle": {
+      "selector_va": "0x24dea8",
+      "rule": "The selector exits only when runtime display latch40024 equals1, not on every nonzero byte. It compares selected definition POINTER to current runtime20; the same pointer skips flush/reload/header copy and continues position/group processing. A different pointer first encodes the prior logical buffer into the prior definition's saved slot, then stores the new pointer and checks that slot's ready byte.",
+      "header_refresh": "Ready nonzero restores only encoded logical data, then refreshes the image from the selected runtime definition's baked layer; it does NOT recopy the saved C8-byte header. Ready zero initializes logical/image data from the baked layer and copies exactlyC8 header bytes. Saved header runtime pointer/handle bits can therefore remain historical even when current runtime definition metadata changed; no equality or current-handle validity is established.",
+      "groups": "Both selected paths can reach24E8A0. Its flag checks/stores have no ready-byte test: a selected unready block can receive group flags before its logical grid is encoded and readiness published. Previously nonzero flag bytes are retained; zero can become1 under the existing volume/extent checks.",
+      "scope": "Definition identity, not just saved-slot equality, controls switching. All actual resource loading, hero containment and runtime validity requirements still apply. No field edit safety or universal transition cause inferred."
+    },
+    "menu_synchronization": {
+      "activation_va": "0x25bbf0",
+      "browse_va": "0x25d1d0",
+      "exit_va": "0x25b918",
+      "rule": "Activation calls2517B8->24DAB8 to encode the active logical buffer BEFORE251278->24DDE8 modifies the image and sets latch40024=1. Browsing loads the selected ready saved stream into the logical buffer through251F78->24DA88. Selecting the active definition's slot refreshes its baked image then overlays it; another slot uses24D660's binary image instead. The runtime definition pointer20 is not replaced by this browse restore.",
+      "exit": "25B918 reads active definition20 and, if present, restores THAT definition's saved slot into the logical buffer through251F78 before calling251948->24DB00(-1,0). The refresh clears latch40024 and rebuilds the baked image, even though it does not encode a newly browsed buffer on exit. This provides a concrete buffer-restoration dependency, not proof of every menu exit path.",
+      "limits": "Map activation, browse and exit are identified by the native method relationships and opposite runtime/menu setup; no recovered localized menu label, current UI state, thread synchronization or gameplay acceptance assumed."
+    },
+    "image_only_consumers": {
+      "active_overlay_va": "0x24dde8",
+      "other_slot_mask_va": "0x24d660",
+      "active_overlay": "For each of512x512 logical bytes, logical0 suppresses image input to0; any nonzero logical byte retains that input. Image input0 yields0, input1..127 yields(input+110) modulo256, input128..255 yieldsinput-17. Only the separate image buffer is written. The colors/alpha meaning and palette remain unknown.",
+      "other_slot_mask": "24D660 writes image0 for logical0, image127 for ANY nonzero logical byte, and raises display latch40024=1. It does not rewrite logical1/2 to127 or make those stored state classes globally interchangeable.",
+      "latch": "Both image-only helpers set40024=1.24DB00 assigns its third argument to that byte before resource lookup; refresh can clear the latch even if the baked resource later fails.24DEA8's exact equality1 gate suppresses its selection/cell-clearing/group-recording work while in this display mode.",
+      "preview_scope": "image_byte_preview evaluates a single detached unsigned-byte branch, not a reconstructed actual image, saved byte replacement or native call."
+    },
+    "publication_and_restore": {
+      "encoder_va": "0x35c5b8",
+      "decoder_va": "0x35c460",
+      "initializer_va": "0x35e070",
+      "encoder_order": "The encoder writes payload incrementally, then stores encoded length60D0, accumulatorC8 and readyCC=1 in that order. It does NOT clear an already-nonzero ready byte at entry. This is ordered metadata publication, not a proven atomic transaction or runtime concurrency lock.",
+      "decoder_trust": "35C460 uses declared encoded length60D0 and output cap40000. It neither reads/checks accumulatorC8 nor tests readyCC or validates header fields/group flags. Readiness is an outer selector/menu gate. A short stream returns without filling the untouched output tail; no automatic zero initialization or accumulator-based repair occurs in this decoder.",
+      "safe_preview": "restore_buffer_preview requires an explicit full initial buffer and overlays only safely decoded prefix bytes. It rejects truncated/oversized declared input through the existing bounded decoder and never emulates native out-of-range reads.",
+      "initializer_footprint": [
+        "0xcc",
+        "0x60d0..0x60d3",
+        "0x60d4..0x60da"
+      ],
+      "initializer_limits": "35E070 clears readyCC, encoded length60D0 and seven flags60D4..60DA only. It does not clear accumulatorC8, copied header, encoded payload or final60DB. A retained accumulator does not validate unready bytes; no zero/padding/default claim is made for untouched storage.",
+      "source_boundary": "Flush passes source runtime+24; its40000-byte logical end is therefore runtime40024, the separate display latch. The encoder's repeated-byte lookahead is limited by a65535-extra-run counter, not remaining logical source length, and can reach beyond that end before its post-run total-size test. Adjacent runtime bytes can affect an overlong final token; source/runtime latch state is not recoverable from a detached save. Safe inspectors clip declared output without recreating or normalizing that native overread."
+    },
+    "opaque_members": {
+      "copied_header_bytes": [
+        "0xd..0xf",
+        "0x1d..0x1f"
+      ],
+      "final_byte": "0x60db",
+      "rule": "These remain semantically unresolved. Selected header copies preserve the source bytes; the checked initializer and compression/image/group routines do not establish a named role for the final byte. Whole-save copies can retain it. Absence of a known assignment is not evidence of padding or an unused byte."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x24dde8",
+        "kind": "function",
+        "name": "TOD_grid_active_image_overlay_verified",
+        "comment": "Image-only mask/remapping from logical bytes; sets runtime display latch40024=1; no saved logical-grid normalization."
+      },
+      {
+        "va": "0x24d660",
+        "kind": "function",
+        "name": "TOD_grid_other_slot_binary_image_verified",
+        "comment": "Maps logical0/nonzero to separate image0/127; raises display latch. Stored logical state classes remain unchanged."
+      },
+      {
+        "va": "0x25b918",
+        "kind": "function",
+        "name": "TOD_map_exit_restore_active_grid_verified",
+        "comment": "Reached exit path restores active definition's saved slot after browsing, then refreshes image/clears display latch; no browse-buffer flush."
+      },
+      {
+        "va": "0x24da88",
+        "kind": "function",
+        "name": "TOD_grid_restore_selected_stream_to_runtime_verified",
+        "comment": "Forwards explicit slot to decoder with runtime+24 destination; leaves runtime definition20 unchanged."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x10660",
+        "bytes": "F84100283C4200013842FFE84834BDF4"
+      },
+      {
+        "va": "0x12670",
+        "bytes": "F84100283C4200013842FFE848349F3C"
+      },
+      {
+        "va": "0x244510",
+        "bytes": "81227D88"
+      },
+      {
+        "va": "0x244514",
+        "bytes": "80690000"
+      },
+      {
+        "va": "0x244518",
+        "bytes": "4E800020"
+      },
+      {
+        "va": "0x244e4c",
+        "bytes": "82227D88829100007A9D00203B3400707FA3EB787F35CB784BDCE0BDE841002882C27DD482627DE082027DE481E27DE881C27DEC83627DC883427DCC83027DD082E27DDC81827DF081627DF481427DF881027DFC80E27E0080C27E0480027DBC92C10080926100889201008C91E1009091C1009482427DC082227DC493610074934100789301007C82C27DD892E10084918100989161009C914100A0910100A482627DB090E100A890C100AC80A27E0880827E0C80627E1081227E2082027E1481E27E1881C27E1C90A100B0908100B4906100B891210070901D00007B3E00203BF900707FC3F3783AF9263C4BDCDFE9E84100287BE30020925E0000"
+      },
+      {
+        "va": "0x244e50",
+        "bytes": "82910000"
+      },
+      {
+        "va": "0x244e58",
+        "bytes": "3B340070"
+      },
+      {
+        "va": "0x244e60",
+        "bytes": "7F35CB78"
+      },
+      {
+        "va": "0x244ec0",
+        "bytes": "82427DC0"
+      },
+      {
+        "va": "0x244f28",
+        "bytes": "7B3E0020"
+      },
+      {
+        "va": "0x244f44",
+        "bytes": "925E0000"
+      },
+      {
+        "va": "0x247e78",
+        "bytes": "F821FF317D0802A6FB0100783F030006C1A27E7039400000C0027E7438F8B324DBA100B838D8B338DBC100C078EB0020DBE100C878C5002038000001FB810098388000017C7C1B787D635B78FB210080FBA100A0F90100E0FAE10070FB410088FB610090FBC100A8FBE100B09145000CD1A500007B990020D005000491450008980B00684BDCC225E84100283C9C00023864AF147863002048005F99"
+      },
+      {
+        "va": "0x247f04",
+        "bytes": "3C9C0002"
+      },
+      {
+        "va": "0x247f08",
+        "bytes": "3864AF14"
+      },
+      {
+        "va": "0x247f10",
+        "bytes": "48005F99"
+      },
+      {
+        "va": "0x24d660",
+        "bytes": "78650020380000013D25000438C0000098090024600000007D8332143940020038E00000390C00247D4903A660000000790400203D2500043908020089840000800900287D6C00D07D4702147D845B787D2A32147C80FE7679240020540CC9BE38E70200558B383E7D4B00D0994400004200FFC038C600012FA6020040FEFF9C4E80002060000000"
+      },
+      {
+        "va": "0x24d670",
+        "bytes": "98090024"
+      },
+      {
+        "va": "0x24d6cc",
+        "bytes": "99440000"
+      },
+      {
+        "va": "0x24da88",
+        "bytes": "38A300247CC802A67C83237878A40020F821FF91F8C100804BDC2BC1E8410028E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x24dab8",
+        "bytes": "7C691B787C8802A6F821FF91F88100803863002480090020786300202F80000078090020419E0010808900104BDC4B8DE8410028E8A10080382100707CA803A64E80002060000000"
+      },
+      {
+        "va": "0x24db00",
+        "bytes": "F821FF217CC802A6FB8100C0787C0020FBC100D0FBE100D8FAE10098FB0100A0FB2100A8FB4100B0FB6100B8FBA100C8F8C100F03D3C0004800300207C7F1B782F8000007C9E237898A90024419E011C80E27F983C80000238A10074608450D038C00000806700A84BDC5939E84100285463063E2C030000418200F038E0FFFF80DF00207BC00020E9227FA078E300208181007C7FA04A1480A100747FE01850830600147FBBFB787EFEC0507F7AFE767EF9D0383AE000007D59C0503B0100703B2100717D0A61D6550B003A7F455A147B4300207EFDBB783BC000003BE0000083630000480000084199007057E9103A7F05C37820C9001C7F83E3787F6034307F26CB78780400203BFF00014BFFFADD3D9C00042B9F000788A100703BDE00012B1E01FF814C0028289E01FF7D1D52143BBD0200790B002098AB0000409DFFAC3BE000003B5A000441C500147B440020836400004BFFFF983B5A00043AF700012CB7020040E6FF6CEB8100F0EAE100987F8803A6EB0100A0EB2100A8EB4100B0EB6100B8EB8100C0EBA100C8EBC100D0EBE100D8382100E04E80002060000000"
+      },
+      {
+        "va": "0x24db48",
+        "bytes": "98A90024"
+      },
+      {
+        "va": "0x24dca0",
+        "bytes": "81227F987C0802A6F821FF31FBE100C87C9F23783C800002FB210098FB010090FB4100A0FB6100A8FB8100B0FBA100B8FBC100C0F80100E07C791B78806900A8608450D038A1007038C000004BDC57B5E84100285463063E2F830000419E00B8810100783B00000080C100707B3B00207CFF41D654E5003A7F462A147B4700207F1DC3783BC000003BE00000838700004800000C600000004199006C3D3B000457E6103A7CBDCA142086001C39650024800900287F8324303BFF00017D9D02147864002079850020796600207F63DB783BDE00014BFFF975281F00073BBD02002B1E01FF289E01FF4081FFB03BE000003B5A000441C500147B4A0020838A00004BFFFF9C3B5A00043B1800012CB8020040E6FF6CEB0100E0EB2100987F0803A6EB4100A0EB010090EB6100A8EB8100B0EBA100B8EBC100C0EBE100C8382100D04E80002060000000"
+      },
+      {
+        "va": "0x24dde8",
+        "bytes": "78650020380000013D25000438C0000098090024600000007D4332143880020038E00000390A00247C8903A6600000003D2500047D873214790B002038E7020039080200800900287D4C0214880B0000794A00207C8000D07C0C2378896A00007D89FE767C8B00D07C8048387D8000D0798B0020380CFF81388BFF807C89FE76552CC9BE558B383E7D8B00503960006E798400203924FFFF7D24FE767C8958382169006E7C8C5A14988A00004200FF8438C600012FA6020040FEFF604E800020"
+      },
+      {
+        "va": "0x24ddf8",
+        "bytes": "98090024"
+      },
+      {
+        "va": "0x24de34",
+        "bytes": "880B0000"
+      },
+      {
+        "va": "0x24de44",
+        "bytes": "896A0000"
+      },
+      {
+        "va": "0x24de5c",
+        "bytes": "380CFF81"
+      },
+      {
+        "va": "0x24de60",
+        "bytes": "388BFF80"
+      },
+      {
+        "va": "0x24de74",
+        "bytes": "3960006E"
+      },
+      {
+        "va": "0x24de90",
+        "bytes": "988A0000"
+      },
+      {
+        "va": "0x24dea8",
+        "bytes": "F821FF417C8802A6FB21008878790020FB6100983D390004FB010080FB410090FB8100A0FBA100A8FBC100B0FBE100B8F88100D0880900247C7B1B782F800001419E02383BA100703B8000007BA500207CA32B787CBF2B784BDC2471E841002848000020600000004BF92FA1600000007C7C1B787FE3FB784BDC2B41E84100287FE3FB784BDC2645E84100285466063E7FE3FB782C0600004082FFD02C9C0000418601D84BDC5355E84100287BBF002083027FA87B9A002048000014600000007BA300204BDC4005E84100287FE3FB784BDC5ED9E8410028547E063E7FE3FB782F1E0000419A011C4BDC4EA1E8410028786A0020880A000C2F800000419EFFC480EA00047C7E1B782F070535409AFFB4810A00182F88FFFF550B3830550320367C835A14419E0184819800007C8462142C04000041820174813A00147884002039490030794300204BDC2B71E84100282C8300004186FF6C813B00207F89F000419E01C02C0900004182001C793800203B5B00247B430020809800104BDC464DE84100287BCA002080A27FAC93DB0020806A00101D6360DC3CEB000138C715907CC407B47FE42A148BBF00142C9D000040860144808A00147F23CB7838A0020038C0000038E000004BFFFC3183BB002080027FAC38A000C87FA4EB78835D00101F1A60DC3D3800017D490214386A14D8786300204BDC4B15E8410028480000083BC00000813B00202F090000419A006C2F9E0000419E0064793F0020801F00182C00FFFF4182008C80C27FA8540B3830540720367C875A1480A600007C042A142C8000004186006C7B9F00207804002083DF00143B9E00307B8300204BDC2A5DE84100282F030000409A0074807B00204800078960000000EB2100D0EB0100807F2803A6EB410090EB210088EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E800020808A00004BFFFE8C7B9F00207BC8002083DF0014800800003B9E0030780400207B8300204BDC29EDE84100282F030000419AFF94819F00147F23CB78E8AC0030E8CC00384BFFF82D4BFFFF7C399B002478630020798400204BDC24B9E84100283900FFFF7F23CB7838A00000790400204BFFF9414BFFFEE87D3E4B784BFFFEEC"
+      },
+      {
+        "va": "0x24dedc",
+        "bytes": "88090024"
+      },
+      {
+        "va": "0x24dee4",
+        "bytes": "2F800001"
+      },
+      {
+        "va": "0x24dee8",
+        "bytes": "419E0238"
+      },
+      {
+        "va": "0x24e004",
+        "bytes": "7F89F000"
+      },
+      {
+        "va": "0x24e008",
+        "bytes": "419E01C0"
+      },
+      {
+        "va": "0x24e024",
+        "bytes": "4BDC464D"
+      },
+      {
+        "va": "0x24e034",
+        "bytes": "93DB0020"
+      },
+      {
+        "va": "0x24e050",
+        "bytes": "8BBF0014"
+      },
+      {
+        "va": "0x24e058",
+        "bytes": "40860144"
+      },
+      {
+        "va": "0x24e070",
+        "bytes": "4BFFFC31"
+      },
+      {
+        "va": "0x24e07c",
+        "bytes": "38A000C8"
+      },
+      {
+        "va": "0x24e09c",
+        "bytes": "4BDC4B15"
+      },
+      {
+        "va": "0x24e118",
+        "bytes": "48000789"
+      },
+      {
+        "va": "0x24e1a8",
+        "bytes": "4BDC24B9"
+      },
+      {
+        "va": "0x24e1c0",
+        "bytes": "4BFFF941"
+      },
+      {
+        "va": "0x24e8a0",
+        "bytes": "F821FF117C8802A6FB4100C07C7A1B7838610070FBC100E078600020FBE100E87C0303783BC000007C1F0378FA610088FA810090FAA10098FAC100A0FAE100A8FB0100B0FB2100B8FB6100C8FB8100D0FBA100D8F88101004BDC1A79E841002848000020600000004BF925A9600000007C7E1B787FE3FB784BDC2149E84100287FE3FB784BDC1C4DE84100285465063E7FE3FB782F850000409EFFD02C1E0000418201447BD8002082627FE03B60000082C27FD882827FDC82BA00107F7EDB781D9560DC7D6CDA143D4B0001390A75A07D0707B47D27B21488C9000C2C860000408600F8577F1838577D28347F9FE8503B3C00207EFACA147AF90020813900002F09FFFF419A00D455232036801400007D2302142F890000419E00C0793C0020A3BC000A2C1D0000418200B03BE00000396000007E779B783AA00001600000005564083C815C00043BFF00017D0452143880000079090020A0E900002C87FFFF54E6383054E520367D2532144186000C817700007C895A14807800147884002039830030798300204BDC2139E84100287F1DF8002F8300007FEBFB78419E00348019000C2C00000041820028815A00101C8A60DC7D04F2143D28000138E975A07CE607B47CA6B2149AA5000C60000000409AFF70600000003B7B00012F3B0007409AFED8EA610100EA8100907E6803A6EAA10098EA610088EAC100A0EAE100A8EB0100B0EB2100B8EB4100C0EB6100C8EB8100D0EBA100D8EBC100E0EBE100E8382100F04E800020"
+      },
+      {
+        "va": "0x24e978",
+        "bytes": "88C9000C"
+      },
+      {
+        "va": "0x24e980",
+        "bytes": "408600F8"
+      },
+      {
+        "va": "0x24ea68",
+        "bytes": "9AA5000C"
+      },
+      {
+        "va": "0x24ea7c",
+        "bytes": "2F3B0007"
+      },
+      {
+        "va": "0x24eac8",
+        "bytes": "F821FF917CA802A6F8A100804BFF5A3D600000003C8300023864AF84786300204BFFEFD160000000E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x24eadc",
+        "bytes": "3C830002"
+      },
+      {
+        "va": "0x24eae0",
+        "bytes": "3864AF84"
+      },
+      {
+        "va": "0x251278",
+        "bytes": "F84100283C42FFFF384200184BFFCB64"
+      },
+      {
+        "va": "0x2517b8",
+        "bytes": "F84100283C42FFFF384200184BFFC2F4"
+      },
+      {
+        "va": "0x251948",
+        "bytes": "F84100283C42FFFF384200184BFFC1AC"
+      },
+      {
+        "va": "0x251f78",
+        "bytes": "F84100283C42FFFF384200184BFFBB04"
+      },
+      {
+        "va": "0x252818",
+        "bytes": "F84100283C42FFFF384200184BFFAE3C"
+      },
+      {
+        "va": "0x25b918",
+        "bytes": "F821FEE17C8802A6FBA101087C7D1B78386300B8FBC10110786900203BC00001FBE10118F88101309BDD6815800900447D234B782F80FFFF409E019080DD0B0C7CC3337880A600202C05000078A9002041820010808900104BFF6609E84100287BA300203BE0FFFF4BFFF3F138BD01043880000078A300204BFF76B9E8410028381D010838800000780300204BFF76A5E84100287BE40020807D0B0C38A000004BFF5F91E8410028813D0054792300203FE900013D630006399FC5F03940000079830020914BB50C4BFF39C9E8410028891D68172C88000038FF5F1078E30020408600D83901008038800019791D00207FA3EB784BFF741DE841002838E0067B38C000027FA4EB783861007090E1008890C100E44BFF36BDE8410028386000014BFF54F1E8410028386000004824FBE56000000038800001386000044BFF4805E841002838800001386000074BFF47F5E8410028388000013860000D4BFF47E5E841002838800001386000034BFF47D5E84100284BFF544DE8410028389F8D5C789E00207FC3F3788BBE15A82F1D0000419A000C4800317560000000E9610130EBA10108EBC101107D6803A6EBE10118382101204E8000204BFF3EC9E84100289BDD68174BFFFF204BFF5D49E84100284BFFFE6C60000000"
+      },
+      {
+        "va": "0x25b970",
+        "bytes": "4BFF6609"
+      },
+      {
+        "va": "0x25b9b4",
+        "bytes": "38A00000"
+      },
+      {
+        "va": "0x25b9b8",
+        "bytes": "4BFF5F91"
+      },
+      {
+        "va": "0x25bbf0",
+        "bytes": "38E000007D4802A6F821FED1F9410140FB610108FB810110FBA10118FBC10120FBE1012898E368157C7F1B784807587560000000787D00203B6000007FA3EB7848074D59600000007C7C1B787FA3EB7848074FD960000000391F09C880A2842878670020790400207B860020386000024BFF5559E8410028817F00547965002038C000003C85000690DF67E4937F67E83F8B00018064B4FC4BFF7191E84100287C7E1B78387CC5F0786300204BFF505DE8410028393C5F10792300209B7F6817800300342F800000409E0298807F0B0C7BFD002078690020812900202C090000913F0B084182009C793B0020801F0AD0813B00107C8048004186005479230020809F0ACC38A0020080DF0AC83CE00008913F0AD04BFF5B95E8410028907F0ADC807F0AD04BFF43C5E8410028809F0AD880DF0AD47863002038A002003CE000024BFF5B69E8410028907F0AE0801F0ADC2F000000419A0008901F0794801F0AE02F800000419E0008901F01887BFD0020809F0B087FA3EB784BFFF0A1807F0B0C786300204BFF5A45E8410028807F0B0C4BFF54F9E8410028815F0B08C00284042C0A0000C1A2842C38600000C1828430C1628434907F6800D01F67F0D1BF67F8D19F67F4D17F67FC907F68044182007879440020811E0014C1228438C10283E480C40000C1680030C0660004ED8300F2C0460030C0260000ECEB1028C1A60008EC01607AED4D037AFC60502CECC71824ED660272D17F680080BE001481640000C0850038C0AB0038EC442828EC221824EC010232D01F68048BC4001C2C9E000040860108809F68103920000083C283CC3864000138800001907F681038600004E97E552865600002F81E5528913F0B284BFF6949E841002838800001386000074BFF6939E8410028388000013860000D4BFF6929E841002838800001386000034BFF6919E8410028386000004BFF508DE8410028386000014824F781600000004BFF5CA9E84100287FA3EB783BBC8D5C4BFFEE413981008038800007799B00207F63DB784BFF6F55E8410028386100703940067B38E000027F64DB789141008890E100E44BFF31F5E84100287BA3002083E300342F1F0000419A000C48002DE560000000EB810140EB6101087F8803A6EBA10118EB810110EBC10120EBE10128382101304E800020FC800050FD005850D09F6804D11F68004BFFFEEC600000004BFF65B9E841002839800001999F68174BFFFD5C60000000"
+      },
+      {
+        "va": "0x25bd74",
+        "bytes": "4BFF5A45"
+      },
+      {
+        "va": "0x25bd80",
+        "bytes": "4BFF54F9"
+      },
+      {
+        "va": "0x25d1d0",
+        "bytes": "F821FEC17C0802A6FBE10138FB210108FB410110FB610118FB810120FBA10128FBC10130F801015081230B0C7C7F1B78834900202F9A0000419E023880630AD02C03FFFF4182022C786300204BFF4EADE84100282C83FFFF7C7E1B784186021438BF00B83880000078BC00207C7D1B787F83E3784BFF3FE5E84100285463063E2F030000409A02C47F83E378388000014BFF3FC9E8410028547B063E2F1B0000409A01FC7F1DF000419A01C87BBC00207F83E3787BF900204BFF4031E8410028814283CC7C7C1B787F23CB78939F0AD07B5B00201D9C60DC3D0C00017D68521438EB14D878E4002090FF0B084BFFDB4D809F0ACC38A0020080DF0AC83CE00008807F0AD04BFF45C5E8410028907F0ADC807F0AD04BFF2DF5E8410028809F0AD880DF0AD438A002003CE00002786300204BFF4599E8410028809F0AD0907F0AE0807F0B0C4BFF4C65E841002883DF0AD0835B00107F9ED000419E02E0807F0B0C4BFF54E9E8410028807F0AD04BFF40EDE841002883C2841C7C7B1B788BBE00002C1D00004182028C838284207B9C00203880060C7F83E3784BFF4F31E84100287C7D1B78887E00002C830000418602407F83E3787BA4002038A000004BFF3B1DE84100282F030000419A0298786400208064000838FF0A4880A284C87866002078E400207B7C0020386000013BDF09C84BFF3DF9E84100287F83E378480735BD600000003BE000027C7B1B787F83E378480738396000000080A28428786700207B6600207BC40020386000024BFF3DBDE84100287F23CB784BFFD96938C100803880001478DA00203B20067B7F43D3784BFF5A09E84100287F44D378386100709321008893E100E44BFF1CB1E8410028E9610150EB210108EB4101107D6803A6EB610118EB810120EBA10128EBC10130EBE10138382101404E80002038BDFFEC38C0FFEB7CA7FE703800FFEB7CC438387D2428507D23FE707C1C18387FBC48507BBC00207F83E3784BFF3E21E84100287F9DF000419EFF9C836283CC1D2360DC4800000C600000001D2360DC3F290001399915907D8A07B47D0ADA14896800142C0B00004082FDAC387DFFEC3880FFEB7C66FE703BA0FFEB7C8530387D2518507D20FE707FBC00387FBC48507BBC00207F83E3784BFF3DB5E84100287C9DF0004086FFA84BFFFF2C391EFFEA3980FFEB7D19FE7038E0FFEB7D8AC8387CCA40507CCBFE707CE458387FA430507BA300204BFF3D79E84100287F9DF000419EFD0C836283CC1D2360DC4800004460000000391DFFEA3980FFEB7D19FE703BA0FFEB7D8AC8387CEA40507CEBFE707FA658387FA638507BA300204BFF3D31E84100287C9DF0004186FCC41D2360DC3C89000138A415907CA307B47D23DA14880900142C0000004182FFAC4BFFFCA07F83E3784BFF39D9E841002838A000018062842498BE00004BFF20B5E84100284BFFFDA4838284207B8300204BFF39B1E84100283800000180628424981E00004BFF208DE84100284BFFFD583920FFFF807F0B0C38A00000792400204BFF4331E8410028807F0B0C4BFF3C55E84100284BFFFD0C806284C44BFFFD70"
+      },
+      {
+        "va": "0x25d314",
+        "bytes": "4BFF4C65"
+      },
+      {
+        "va": "0x25d324",
+        "bytes": "7F9ED000"
+      },
+      {
+        "va": "0x25d330",
+        "bytes": "4BFF54E9"
+      },
+      {
+        "va": "0x25d618",
+        "bytes": "4BFF4331"
+      },
+      {
+        "va": "0x25d624",
+        "bytes": "4BFF3C55"
+      },
+      {
+        "va": "0x35c460",
+        "bytes": "800219E038E00000FBC1FFF0FBE1FFF83FC000033FE0000363DEFFFB63FFFFFF38A000001D2360DC3D0900017CC80214386614D878630020810360D07F054040409800887F87F840419D0080380500C1392500C07C0A07B47D2607B47D6352147D8332147F87F04038C5000138000000896B000D894C000D419D00287900002078AC00205568063E7D2060507D6850503809FFFF7C0CFE767D6860387C0850507C005000418200347C0722147CC53378780B002038E70001994B0000810360D07F0540404198FF80EBC1FFF0EBE1FFF84E80002060000000392500C2398500C37D2807B47D8607B47D6342147D4332147C0603787D043A143D800004892B000D880A000D552B402E7D6A0378392A00023809FFFF2C890000780B0020394B00017D4903A6408600104800002460000000419E001C790A002038E70001390800017F87600098CA00004200FFE838A500044BFFFEE860000000"
+      },
+      {
+        "va": "0x35c498",
+        "bytes": "810360D0"
+      },
+      {
+        "va": "0x35c49c",
+        "bytes": "7F054040"
+      },
+      {
+        "va": "0x35c4a0",
+        "bytes": "40980088"
+      },
+      {
+        "va": "0x35c4a8",
+        "bytes": "419D0080"
+      },
+      {
+        "va": "0x35c5b8",
+        "bytes": "FBA1FFE83FA00003818219E0FBC1FFF0FBE1FFF87C7E1B7863BDFFFF386000003BE0000038C000001C8460DC3CA40001480000546000000038051590790A00207C0907B47D6A00D07D49621438FF000179600FE0386300017FE0385038A5000138C60001990A00152B035FFF409900087FE108083D0000036107FFFF7F863840419D00E87D46F21478C90020794B00203D09FFFC38E80001880B00017CE9FE76890B00007D6040507D6748387C0740507F804000409EFF847C06E8004182FF7C3805159038E515917C0907B47CEB07B43800FFFF7D2962147D6B62147807042038C600027CE903A6394A000238E0000099090015990B0015480000106000000038E700014240001879490020394A0001896900007C8B40004186FFE879000020396515927D2000D0394515937C004B787D6807B47D4A07B47C00FE767D6862147D0A62147CE0007878E9C622386300047FE0FA1438A500047CC63A14992B001598E800154BFFFF043D240001394975A03BA915907D5E07B47FA607B47CBE62147C866214906500083860000193E4001098640014EBA1FFE8EBC1FFF0EBE1FFF84E80002060000000"
+      },
+      {
+        "va": "0x35c620",
+        "bytes": "2B035FFF"
+      },
+      {
+        "va": "0x35c6bc",
+        "bytes": "42400018"
+      },
+      {
+        "va": "0x35c6c8",
+        "bytes": "89690000"
+      },
+      {
+        "va": "0x35c73c",
+        "bytes": "90650008"
+      },
+      {
+        "va": "0x35c744",
+        "bytes": "93E40010"
+      },
+      {
+        "va": "0x35c748",
+        "bytes": "98640014"
+      },
+      {
+        "va": "0x35e070",
+        "bytes": "3880000738000000392000007C8903A63960000039400000980300CC912360D07CC35A14396B000178C50020994560D44200FFF04E800020"
+      },
+      {
+        "va": "0x35e088",
+        "bytes": "980300CC"
+      },
+      {
+        "va": "0x35e08c",
+        "bytes": "912360D0"
+      },
+      {
+        "va": "0x35e09c",
+        "bytes": "994560D4"
+      },
+      {
+        "va": "0x84c0e8",
+        "bytes": "00869238"
+      },
+      {
+        "va": "0x84c0f0",
+        "bytes": "00869240"
+      },
+      {
+        "va": "0x869238",
+        "bytes": "00247E78"
+      },
+      {
+        "va": "0x86923c",
+        "bytes": "0088FF38"
+      },
+      {
+        "va": "0x869240",
+        "bytes": "00248798"
+      },
+      {
+        "va": "0x869244",
+        "bytes": "0088FF38"
+      },
+      {
+        "va": "0x897cc0",
+        "bytes": "101E72B8"
+      },
+      {
+        "va": "0x897cf8",
+        "bytes": "0084C0B0"
+      },
+      {
+        "va": "0x897ee4",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x897f10",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a1900",
+        "bytes": "101EFB20"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -34039,6 +37275,17 @@
     ]
   },
   "annotations": [
+{"va":"0x0024DDE8","name":"TOD_grid_active_image_overlay_verified","kind":"function","confidence":"confirmed","bytes":"7865002038000001","comment":"Image-only mask/remapping from logical bytes; sets runtime display latch40024=1; no saved logical-grid normalization.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; grid_lifecycle native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0024D660","name":"TOD_grid_other_slot_binary_image_verified","kind":"function","confidence":"confirmed","bytes":"7865002038000001","comment":"Maps logical0/nonzero to separate image0/127; raises display latch. Stored logical state classes remain unchanged.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; grid_lifecycle native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0025B918","name":"TOD_map_exit_restore_active_grid_verified","kind":"function","confidence":"confirmed","bytes":"F821FEE17C8802A6","comment":"Reached exit path restores active definition's saved slot after browsing, then refreshes image/clears display latch; no browse-buffer flush.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; grid_lifecycle native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x0024DA88","name":"TOD_grid_restore_selected_stream_to_runtime_verified","kind":"function","confidence":"confirmed","bytes":"38A300247CC802A6","comment":"Forwards explicit slot to decoder with runtime+24 destination; leaves runtime definition20 unchanged.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; grid_lifecycle native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00023AD0","name":"TOD_ui_construct_runtime_operation_request","kind":"function","confidence":"confirmed","bytes":"F821FF217CE802A6","comment":"Stores runtime thread token/arguments and requested operation; arena bridge supplies operation 5. Not a saved record or recovered Lua list alias.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_dispatch native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00024650","name":"TOD_ui_dispatch_runtime_operation_loader","kind":"function","confidence":"confirmed","bytes":"F821FF617C6802A6","comment":"Guarded 8-entry relative switch: operation 5 \u2192 24940 \u2192 constructed UI virtual loader 62D2E8. Table installation/ARENA_CHALLENGE_DATA alias remains unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_dispatch native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00024714","name":"TOD_ui_runtime_operation_switch","kind":"data","confidence":"confirmed","bytes":"00000020000001C40000016C00000294000002600000022C000001F8000001C4","comment":"Eight signed BE32 offsets relative to 24714; entry 5 targets 24940. Runtime UI routing, not challenge IDs or source indices.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_dispatch native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x005BFE08","name":"TOD_runtime_language_selector_get","kind":"function","confidence":"confirmed","bytes":"8122854480690000","comment":"Returns runtime u32 at100D6478, not a save field. Meaning established by native full/short language literals in5BFF78. Bonus menu count/remap and developer-commentary qualifier compare this getter to1.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_remaining native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x005BFE18","name":"TOD_runtime_language_selector_set","kind":"function","confidence":"confirmed","bytes":"2F83000B419E0014","comment":"Writes runtime100D6478; numeric11 becomes10, other low32 values are stored without a general valid-language range check.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_remaining native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x005BFF78","name":"TOD_runtime_language_selector_parse","kind":"function","confidence":"confirmed","bytes":"808285687C0802A6","comment":"Native language tokens select runtime100D6478: jp/japanese0,fr/french2,es/spanish3,de/german4,it/italian5,nl/dutch6,pt/portuguese7,kp/korean9,cn/chinese10,fi/finnish12,se/swedish13,dk/danish14,no/norwegian15. Unmatched input stores1; do not invent a literal label for1.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_remaining native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x005C0280","name":"TOD_runtime_language_and_context_system_init","kind":"function","confidence":"confirmed","bytes":"F821FF717C0802A6","comment":"Calls cellSysutilGetSystemParamInt identifiers122 and111. On successful122 query stores adjacent runtime word+4;111 result stores language word with11->10. Native code does not test the111 call's return code before reading its stack output; no successful/failure default is inferred.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_remaining native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x000273D0","name":"TOD_arena_menu_first_victory_weapon_reward","kind":"function","confidence":"confirmed","bytes":"F821FF917D4802A6","comment":"Named menu weapon-reward getter resolves source index to native ID; returns configured positive weapon ID only for raw saved count0, else-1. High-bit counts are nonzero, not a signed-positive test.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_table native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00026088","name":"TOD_arena_menu_select_source_index","kind":"function","confidence":"confirmed","bytes":"F821FF717C8802A6","comment":"Writes Lua.selection source index, resolves/stores runtime native ID+D8, and requests runtime phase change. No new saved selection field assigned.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_table native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00282AF8","name":"TOD_arena_selector_prepare_operation5","kind":"function","confidence":"confirmed","bytes":"F821FF817C0802A6","comment":"select_arena_challenge identifier consumer validates actor typeB9 and requests thread operation5. Does not itself prove supplied-list alias/installation as ARENA_CHALLENGE_DATA.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; arena_table native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
@@ -34049,7 +37296,7 @@
 {"va":"0x0084A4B8","name":"TOD_hero_inventory_dispatch_table_verified","kind":"data","confidence":"confirmed","bytes":"008666C0008667500086672800866720008667800086671000874B38008667680086670800866700008666D8","comment":"11 descriptor pointers installed at hero+1E00. Slot+28 points8666D8->1F5570 history updater; exact owner and gated call established.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; equipment_lifecycle native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0023EE40","name":"TOD_bonus_hero_head_basis_consumer","kind":"function","confidence":"confirmed","bytes":"80A27C007C0802A6","comment":"Unsigned score8708>=50 and rawstate86F9 nonzero permit the native transform path. State1/2/3 choose basis multipliers2.0/4.0/0.5; other nonzero bytes choose1.0. The nine basis components are multiplied and the resulting matrix is passed through12820/13F70 to13D60. State0 or insufficient score returns without this modification, not an explicit restoration to1.0.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_effects native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x000BE530","name":"TOD_bonus_enemy_head_basis_consumer","kind":"function","confidence":"confirmed","bytes":"80A202307C0802A6","comment":"Unsigned score8708>=100 and rawstate86FB nonzero permit this transform path. State2 chooses0.5; every other nonzero byte chooses2.5. The caller also checks a nonnegative bone-index argument. Basis components are multiplied before the native matrix/bone update calls; raw state values are not Boolean-normalized.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_effects native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
-{"va":"0x003BAA38","name":"TOD_bonus_dev_comments_consumer","kind":"function","confidence":"confirmed","bytes":"812237747C0802A6","comment":"The native qualifier called through251E08 must return exactly1, unsigned score8708 must be>=200 and state86FD must be nonzero. The reached path changes runtime object activation via24EC28 and dispatches runtime member+6C states0/1/2 to3BA658/3BA720/3BA5B8; the other branch uses24F4F8 and clears runtime low-nibble flags.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_effects native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x003BAA38","name":"TOD_bonus_dev_comments_consumer","kind":"function","confidence":"confirmed","bytes":"812237747C0802A6","comment":"The runtime language getter5BFE08 called through251E08 must return exactly1, unsigned score8708 must be>=200 and state86FD must be nonzero. The reached path changes runtime object activation via24EC28 and dispatches runtime member+6C states0/1/2 to3BA658/3BA720/3BA5B8; the other branch uses24F4F8 and clears runtime low-nibble flags.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_effects native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x004838B8","name":"TOD_bonus_wrench_asset_mask_init","kind":"function","confidence":"confirmed","bytes":"F821FF717CC802A6","comment":"Raw saved byte86FF indexes the byte table reached through runtime model+54->+6C. The resulting byte selects a64-bit shift that is ORed into runtime object+118 after clearing the model-defined selection bits. One consumer runs this during initialization; another repeats it on its own modulo8 update gate. Neither local block checks score8708 or clamps the raw state index.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_effects native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00483D78","name":"TOD_bonus_wrench_asset_mask_update","kind":"function","confidence":"confirmed","bytes":"786400207CA802A6","comment":"Raw saved byte86FF indexes the byte table reached through runtime model+54->+6C. The resulting byte selects a64-bit shift that is ORed into runtime object+118 after clearing the model-defined selection bits. One consumer runs this during initialization; another repeats it on its own modulo8 update gate. Neither local block checks score8708 or clamps the raw state index.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_effects native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x0035BC40","name":"TOD_bonus_james_zurkon_factory_choice","kind":"function","confidence":"confirmed","bytes":"F821FF217D6802A6","comment":"If runtime word101EFB08+8 is nonzero OR raw saved state8701 is nonzero, factory call250BF8 receives native pairC3/657; otherwise it receives4B/311. Reached objects then receive309848 setup and51F9E0 finalization. This function does not locally test score8708.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; bonus_effects native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
@@ -39443,7 +42690,7 @@
     {"va":"0x0035D450","name":"TOD_blueprint_popcount","kind":"function","confidence":"confirmed","bytes":"812331CC38600000","comment":"Counts all32 bits in object+31CC;101F5048+31CC is state+86F4.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x00027098","name":"TOD_bonus_state_get_menu","kind":"function","confidence":"confirmed","bytes":"F821FF817C0802A6","comment":"Returns86F8+adjustedID; runtime condition remaps IDs>4.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x00027008","name":"TOD_bonus_state_set_menu","kind":"function","confidence":"confirmed","bytes":"F821FF717CA802A6","comment":"Mode-adjusted slot; low8 input stored if1..8 else0; not per-definition bound.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
-    {"va":"0x00027108","name":"TOD_bonus_unlocked_menu","kind":"function","confidence":"confirmed","bytes":"F821FF717C0802A6","comment":"Unsigned score8708 versus mode-adjusted definition threshold; not state-byte predicate.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
+    {"va":"0x00027108","name":"TOD_bonus_unlocked_menu","kind":"function","confidence":"confirmed","bytes":"F821FF717C0802A6","comment":"Unsigned score8708 versus runtime-language-adjusted definition threshold; not state-byte predicate. Language meaning and named enum operand caveat are confirmed separately in bonus_remaining.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py; bonus_remaining parser/system-init evidence."},
     {"va":"0x0027A638","name":"TOD_bonus_score_set_native","kind":"function","confidence":"confirmed","bytes":"808290303D240001","comment":"Named set_cheat_points writes8708 without earned-bit mask updates.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0027A648","name":"TOD_bonus_state_set_raw","kind":"function","confidence":"confirmed","bytes":"3804FFFF3CA30001","comment":"Named set_cheat_state writes86F8+ID with0 or1..8; no explicit slot bounds observed.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0027A678","name":"TOD_bonus_enable_all_native","kind":"function","confidence":"confirmed","bytes":"F821FF917C6802A6","comment":"Named enable_all_cheats calls35D480 on101F5048.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},

@@ -162,7 +162,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     return "\r\n\r\nCode-confirmed behavior, when the separate runtime gates pass:\r\n" +
                         effect.GetProperty("rule").GetString() + "\r\n" + effect.GetProperty("scope").GetString() +
                         "\r\nThis describes a native consumer, not an active-effect verdict from this save. Viewing never applies the effect or changes its state.";
-            return "\r\nThe effect's runtime consumer is not yet mapped in this pass; no behavior is guessed from its name.";
+            foreach (var effect in TodResearch.Map.GetProperty("bonus_remaining").GetProperty("effects").EnumerateArray())
+                if (effect.GetProperty("id").GetInt32() == id)
+                    return "\r\n\r\nConfirmed shipped menu unlock-query operand, not a direct saved-byte effect:\r\n" +
+                        effect.GetProperty("rule").GetString() + "\r\n" + effect.GetProperty("scope").GetString() +
+                        "\r\nThe query passes a named enum to a language-remapped menu API; it is not necessarily a query of this physical slot. Runtime language, movie history and replay state are not captured here. No current availability or active-effect verdict is inferred.";
+            return "\r\nNo confirmed consumer is displayed for this physical slot; no behavior is guessed from its name.";
         }
 
         private string EquipmentHistoryDetails()
@@ -206,6 +211,18 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 text.AppendLine(flag.GetProperty("enum").GetString() + ": " + ((word & (1UL << bit)) != 0 ? "Set" : "Clear") + ".");
             }
             text.AppendLine(assets.GetProperty("alias_warning").GetString());
+            var dispatch = TodResearch.Map.GetProperty("arena_dispatch_assets");
+            foreach (var writer in dispatch.GetProperty("saved_milestone_writers").EnumerateArray())
+                if (writer.GetProperty("native_id").GetInt32() == id)
+                {
+                    text.AppendLine("Confirmed compiled " + writer.GetProperty("script").GetString() + " writer sequence: " +
+                        string.Join(" → ", writer.GetProperty("ordered_actions").EnumerateArray().Select(action =>
+                            action.GetProperty("api").GetString() + "(" + action.GetProperty("argument_enum").GetString() + ")")) + ".");
+                    text.AppendLine("Milestone condition: " + writer.GetProperty("milestone_condition").GetString() + ".");
+                    if (id == 6) text.AppendLine("The flag88 call precedes a source wait(6) literal and then the success counter call; actual engine elapsed timing is not reconstructed.");
+                    text.AppendLine(dispatch.GetProperty("separate_state_warning").GetString());
+                    text.AppendLine(dispatch.GetProperty("index_warning").GetString());
+                }
             text.AppendLine("Named first-victory weapon-reward getter requires configured signed weapon ID >0 and the raw completion counter exactly0. Any nonzero bits hide that reward, including negative signed counters; this differs from the signed-positive menu partition/activation tests. Current runtime configuration and accepted rewards are not inferred.");
             return text.ToString();
         }
@@ -222,7 +239,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     string details = $"{item.Name} · ID {item.Id} · save offset {TodResearch.Hex(item.Offset)}\r\n" +
                         $"XP bits: 0x{item.XpBits:X8}; ammo bits: 0x{item.AmmoBits:X8}. Stored level is zero-based.\r\n" +
                         $"Ownership byte: 0x{item.Ownership:X2} (nonzero = script-owned, not necessarily usable). Unlock byte: 0x{item.Unlock:X2} at {TodResearch.Hex(0x5754 + item.Id)}.\r\n" +
-                        $"Unknown record +0x12/+0x13: {item.UnknownTail:X4}. Set modifier bits: [{bits}]. Start node 0 need not be purchased.\r\n" +
+                        $"Unknown record +0x12/+0x13: {item.UnknownTail:X4}. Standalone record reset465C98 writes only the first18 of20 bytes, preserving these two. Bulk initialization466A60 first zero-fills all32 records, so the same bytes are zero there. Selective restart copies the first484 save bytes before selected record resets; these tails survive those observed steps, not necessarily every later callback. Viewing never resets or normalizes them.\r\n" +
+                        $"Set modifier bits: [{bits}]. Start node 0 need not be purchased.\r\n" +
                         "Checkpoint ammo lifecycle: native35CF40 captures these saved ammo floats into a runtime-only checkpoint bank. Qualified successful purchase paths merge finite ammo as max(saved, checkpoint) through35D358. If checkpoint validbyteEF is set, hero setup23E650 can restore ammo through13DD0/465DC0, clamping to a definition/level/modifier-dependent maximum and zero fallback. This is not a verbatim copy or a checkpoint embedded in GAME.SAV; active checkpoint and runtime capacity are not inferred.\r\n" + item.Warning;
                     rows.Add(new(new[] { item.Id.ToString(), item.Name, item.ScriptOwned ? "Yes" : "No", item.StoredLevel.ToString(),
                         Number(item.XpBits), Number(item.AmmoBits), $"0x{item.ModifierMask:X8}", $"0x{item.Unlock:X2}", TodResearch.Hex(item.Offset), item.Warning }, details));
@@ -244,6 +262,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     (0x440, "Saved boot type", "code-backed", "Named get_boot_type reads this BE32 word. Native BOOT_NORMAL/GRIND/GRAV/CHARGE IDs0..3. set_boot_type wrapper converts its argument, but native26F60 ignores it and always writes0. No editing or runtime compatibility inferred."),
                     (0x458, "Equipped armor ID", "code-backed", "Native IDs 0..4; ownership and unlock availability are separate."),
                     (0x480, "Selected skin ID", "code-backed", "Native IDs 0..8. Select 26FC0 requires ownership; purchase 27AA0 also writes this ID."),
+                    (0x484, "Unknown prefix gap bytes", "code-backed storage; meaning unknown", "Four opaque bytes before world records start at488. Prefix initializer35DC80 ends its last scalar store at484 exclusively; the world loop starts at488. The first484-byte selective-restart preservation copy also excludes these bytes. Their value at restart is not derived as zero or copied from the live save by those steps; full snapshots include the raw bytes. Not proven padding or unused storage; viewing never repairs them."),
                     (0x8708, "Weighted skill-point total", "code-backed", "Not completion count. Native setter adds the shipped definition value for a newly earned bit."),
                     (0x8740, "Next-level selection", "code-backed", "Named set_next_level/get_next_level store/read this word. Not necessarily the current planet; unknown IDs are retained."),
                     (0x8754, "First-restart segment median", "code-backed", "Float32 BE. 3CED40 writes the median of positive finalized segment scalars through3CEB10 only when old906EC is zero. Units unverified; later restarts skip recomputing it in this path. Empty native input reads undefined scratch; this inspector does not recompute it or invent a zero default."),
@@ -427,7 +446,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         header + $"Unknown last byte60DB: {data[offset + 0x60DB]:X2}.\r\n" + status + "\r\n" + result + "\r\n" +
                         "Persistent 512×512 byte grid; native index=first coordinate*512+second coordinate. The native 14×14 brush has129 nonzero mask bytes and clears when (center class & brush byte)==candidate class; minimum-edge loops may skip rather than clamp. Projection requires runtime geometry not available from this save. Cells0/1/2 are not interchangeable booleans; unknown values are preserved. " +
                         "Seven group flags record conditional volume containment and affect map image display; the treasure mapper can bypass flag display requirements. They are not mission/collectible completion flags. " +
-                        "Readiness is not visit/completion status. Runtime geometry pointer bits are not portable and never dereferenced. Safe decoding bounds both input and output; native final runs may be clipped. Original compressed bytes are never rewritten.";
+                        "Readiness is not visit/completion status. Runtime geometry pointer bits are not portable and never dereferenced. Safe decoding bounds both input and output; native final runs may be clipped. Original compressed bytes are never rewritten.\r\n\r\n" +
+                        "Confirmed synchronization: map activation encodes the active logical grid before applying a separate display overlay. Browsing another ready slot changes the logical buffer without replacing the active definition; the reached exit path restores that active definition's own saved slot. Display bytes are not replacements for saved cell classes.\r\n" +
+                        "Ready reload does not recopy the C8-byte header, so saved handles can be historical. Group flags may update before readiness is published. Native decoding does not validate the accumulator and a short stream leaves the preexisting output tail untouched; this inspector does not invent that tail or repair a mismatch.\r\n" +
+                        TodResearch.Map.GetProperty("grid_lifecycle").GetProperty("publication_and_restore").GetProperty("initializer_limits").GetString();
                     rows.Add(new(new[] { slot.ToString(), ready != 0 ? "Yes" : "No", length.ToString(CultureInfo.InvariantCulture), decodedSize,
                         savedAccumulator.ToString(CultureInfo.InvariantCulture), $"0x{ready:X2}", TodResearch.Hex(offset), status, level }, details));
                 }
@@ -468,7 +490,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "State0 alone does not mean locked; nonzero is not a confirmed active/on label. Localized state names are not recovered.\r\n" +
                         $"Title lookup ID {item.GetProperty("title_lookup_id")}; description lookup ID {item.GetProperty("description_lookup_id")}. " +
                         $"Shipped state-name lookup IDs: {item.GetProperty("state_name_lookup_ids")}.\r\n" +
-                        "Menu indices and unlock thresholds can be remapped by a runtime mode not captured in the save; this table does not assert current menu availability. " +
+                        "Menu indices and unlock thresholds can be remapped by a runtime language selector not captured in the save; this table does not assert current menu availability. Language ID1 is the native default/fallback, not a recovered English literal. " +
                         "Enable-all writes score840 and replaces zero states with1, preserving nonzero states and earned skill bits. " + note + BonusEffectDetails(id)));
                 }
                 return new(new[] { "ID", "Bonus", "Stored state", "Shipped score", "State-name count", "State offset", "Definition VA", "Notes" }, rows.AsReadOnly());

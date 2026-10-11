@@ -36,6 +36,68 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Language-dependent bonus menu queries do not become physical-state effects", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            bytes[0x86F8] = 255;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8708, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Bonuses & cheats");
+            Equal("255", table.Rows[0].Cells[2]);
+            True(table.Rows[0].Details.Contains("rows17") && table.Rows[0].Details.Contains("replay bypass applies only to rows1..16"), "Bonus movies must retain distinct movie-history and replay predicates.");
+            True(table.Rows[2].Details.Contains("art indexes1..66") && table.Rows[2].Details.Contains("not necessarily a query of this physical slot"), "Named enum operands must not silently bypass native language remapping.");
+            True(table.Rows[5].Details.Contains("language getter5BFE08") && table.Rows[5].Details.Contains("not an asserted English literal"), "Language ID1 is the native fallback, not an invented localized label.");
+            var report = TodResearch.Map.GetProperty("bonus_remaining");
+            Equal(8, report.GetProperty("effects").GetArrayLength());
+            Equal("0x100d6478", report.GetProperty("runtime_language").GetProperty("va").GetString());
+            Equal(3, InspectionPresentation.Simplify("Bonuses & cheats", table).Columns.Length);
+            True(bytes.SequenceEqual(before), "Menu-query research must not normalize states or execute movie/bonus APIs.");
+        });
+        Check("Arena milestone writes remain separate from counters and preserve script ordering", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x56D8 + 6 * 4, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Arena challenges");
+            Equal("-1", table.Rows[6].Cells[3]);
+            True(table.Rows[6].Details.Contains("set_flag(LVL_IFF_RETURN_CHALLENGE_9_DONE) → set_challenge_success(IFF_A_6)") && table.Rows[6].Details.Contains("wait(6) literal"), "Flag-before-counter ordering must not imply an atomic transaction or reconstructed duration.");
+            True(table.Rows[12].Details.Contains("challenge10") && table.Rows[12].Details.Contains("native ID12"), "Script filename numbers are not native IDs.");
+            Equal(5, TodResearch.Map.GetProperty("arena_dispatch").GetProperty("operation_dispatch").GetProperty("arena_operation").GetInt32());
+            True(TodResearch.Map.GetProperty("arena_dispatch").GetProperty("operation_dispatch").GetProperty("alias_gap").GetString().Contains("not installation"), "A loader route must not become a recovered challenge-table alias.");
+            True(bytes.SequenceEqual(before), "Milestone details must not repair counters or set story flags.");
+        });
+        Check("Grid synchronization details distinguish display bytes, retained headers and native trust", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            int offset = 0x114D8;
+            bytes[offset + 0xCC] = 255;
+            bytes[offset + 0x60DB] = 0xFE;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(offset + 0xC8, 4), 0xDEADBEEF);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Stored state blocks");
+            True(table.Rows[0].Details.Contains("ready byte0xFF") && table.Rows[0].Details.Contains("Unknown last byte60DB: FE"), "Raw readiness and opaque tail must remain visible.");
+            True(table.Rows[0].Details.Contains("does not recopy the C8-byte header") && table.Rows[0].Details.Contains("does not validate the accumulator") && table.Rows[0].Details.Contains("preexisting output tail"), "Native trust boundaries must not turn into invented validation, zero-filling or header refresh.");
+            True(TodResearch.Map.GetProperty("grid_lifecycle").GetProperty("owner_provenance").GetProperty("rule").GetString().Contains("allocation+70+1AF14"), "The first-context subobject identity must remain qualified.");
+            Equal(4, InspectionPresentation.Simplify("Stored state blocks", table).Columns.Length);
+            True(bytes.SequenceEqual(before), "Grid lifecycle inspection must never re-encode or overwrite retained bytes.");
+        });
+        Check("Record-reset ownership preserves opaque tails and does not invent prefix-gap defaults", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt16BigEndian(bytes.AsSpan(0x26, 2), 0xABCD);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x484, 4), 0xFE123456);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var weapons = inspection.Table("Weapons & gadgets");
+            True(weapons.Rows[1].Details.Contains("ABCD") && weapons.Rows[1].Details.Contains("first18 of20") && weapons.Rows[1].Details.Contains("Bulk initialization"), "Record reset and bulk initialization must not imply the same opaque-byte behavior.");
+            var raw = inspection.Table("Counters & nearby fields");
+            var gap = raw.Rows.Single(r => r.Cells[0] == "0x484");
+            Equal("FE123456", gap.Cells[4]);
+            True(gap.Details.Contains("not derived as zero"), "Unwritten gap is not an initializer default.");
+            True(!InspectionPresentation.Simplify("Counters & nearby fields", raw).Rows.Any(r => r.Cells[0].Contains("prefix gap")), "Unknown bytes should stay in Technical/details, not add raw summary rows.");
+            Equal("0x12", TodResearch.Map.GetProperty("inventory_reset").GetProperty("record_reset").GetProperty("written_byte_range").GetProperty("end_exclusive").GetString());
+            True(bytes.SequenceEqual(before), "Ownership inspection must never run a reset or change opaque bytes.");
+        });
         Check("Equipment history shows qualified dispatch and distinct fallbacks without normalizing raw IDs", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -61,7 +123,7 @@ internal static partial class Program
             Equal(14, table.Rows.Count); Equal("255", table.Rows[1].Cells[2]);
             True(table.Rows[1].Details.Contains("other nonzero bytes choose1.0") && table.Rows[1].Details.Contains("not an active-effect verdict"), "Native unknown-state fallback must not become an active effect or safe edit permission.");
             True(table.Rows[7].Details.Contains("Neither local block checks score8708") && table.Rows[7].Details.Contains("capacity/content"), "Missing local score checks must not imply safe replacement indexing.");
-            True(table.Rows[0].Details.Contains("not yet mapped"), "Unmapped effects must not be guessed from enum names.");
+            True(table.Rows[0].Details.Contains("menu unlock-query operand") && table.Rows[0].Details.Contains("not a direct saved-byte effect"), "Menu queries must not become guessed saved-byte effects.");
             Equal(6, TodResearch.Map.GetProperty("bonus_effects").GetProperty("effects").GetArrayLength());
             Equal(3, InspectionPresentation.Simplify("Bonuses & cheats", table).Columns.Length);
             True(bytes.SequenceEqual(before), "Bonus inspection must preserve every raw byte.");
@@ -592,7 +654,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1293, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1304, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

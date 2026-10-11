@@ -95,8 +95,8 @@ def inspect(elf_path, save_path=None):
          "Unsigned score8708>=100 and rawstate86FB nonzero permit this transform path. State2 chooses0.5; every other nonzero byte chooses2.5. The caller also checks a nonnegative bone-index argument. Basis components are multiplied before the native matrix/bone update calls; raw state values are not Boolean-normalized.",
          "Runtime actor/model/bone validity and call timing independently apply. A saved state does not establish that every enemy is changed, and state0 does not explicitly restore a previous matrix here."),
         (5, [0x3BAA38], "Developer-commentary runtime dispatch (native)",
-         "The native qualifier called through251E08 must return exactly1, unsigned score8708 must be>=200 and state86FD must be nonzero. The reached path changes runtime object activation via24EC28 and dispatches runtime member+6C states0/1/2 to3BA658/3BA720/3BA5B8; the other branch uses24F4F8 and clears runtime low-nibble flags.",
-         "CHEAT_DEV_COMMENTS is an exported identifier, not a recovered localized menu/voice label. Qualifier meaning, runtime state names, exact commentary clip and every audio dependency are unconfirmed."),
+         "The runtime language getter5BFE08 called through251E08 must return exactly1, unsigned score8708 must be>=200 and state86FD must be nonzero. The reached path changes runtime object activation via24EC28 and dispatches runtime member+6C states0/1/2 to3BA658/3BA720/3BA5B8; the other branch uses24F4F8 and clears runtime low-nibble flags.",
+         "CHEAT_DEV_COMMENTS is an exported identifier, not a recovered localized menu/voice label. The language qualifier is confirmed separately in bonus_remaining; ID1 is the native fallback/default, not an asserted English literal. Runtime state names, exact commentary clip and every audio dependency remain unconfirmed."),
         (7, [0x4838B8, 0x483D78], "Wrench replacement runtime asset mask (native)",
          "Raw saved byte86FF indexes the byte table reached through runtime model+54->+6C. The resulting byte selects a64-bit shift that is ORed into runtime object+118 after clearing the model-defined selection bits. One consumer runs this during initialization; another repeats it on its own modulo8 update gate. Neither local block checks score8708 or clamps the raw state index.",
          "The asset table's current capacity/content and resulting replacement name are not recoverable from this save. Unknown state255 remains an index, not a safe effect option. No global absence of eligibility checks or always-active result is claimed."),
@@ -136,7 +136,7 @@ def inspect(elf_path, save_path=None):
                                      "bytes": elf.read(a, 8).hex().upper(), "comment": comment}
                                     for a, name, comment in annotations],
         "limitations": ["Only six native bonus IDs have newly traced consumers here; this is not a complete effect catalog.",
-            "Runtime/menu ID remapping does not apply to these direct physical-byte reads. No current runtime mode value is inferred from the save.",
+            "Runtime/menu ID remapping does not apply to these direct physical-byte reads. No current runtime language value is inferred from the save.",
             "Local missing score checks in two consumers do not prove all callers or other effect dependencies ignore availability.",
             "Arbitrary states and raw unsigned scores are exposed without normalization; no safe edit range or console acceptance is claimed."],
         "instruction_guards": [{"va": hex(a), "bytes": b.hex().upper()} for a, b in sorted(guards.items())]}

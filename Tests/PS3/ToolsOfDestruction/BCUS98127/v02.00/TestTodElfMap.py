@@ -246,7 +246,11 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["arena_menu"]["instruction_guards"]
                 + MAPPING["equipment_lifecycle"]["instruction_guards"]
                 + MAPPING["bonus_effects"]["instruction_guards"]
-                + MAPPING["arena_table"]["instruction_guards"]):
+                + MAPPING["arena_table"]["instruction_guards"]
+                + MAPPING["inventory_reset"]["instruction_guards"]
+                + MAPPING["bonus_remaining"]["instruction_guards"]
+                + MAPPING["arena_dispatch"]["instruction_guards"]
+                + MAPPING["grid_lifecycle"]["instruction_guards"]):
             if "bytes" not in entry: continue
             va = int(entry["va"], 0)
             expected = bytes.fromhex(entry["bytes"])

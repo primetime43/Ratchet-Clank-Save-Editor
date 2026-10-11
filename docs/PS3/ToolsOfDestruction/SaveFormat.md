@@ -463,7 +463,7 @@ python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodMissions.py --elf
 
 The exact USA ELF's named blueprint and cheat APIs establish `0x86F4` as a BE32 blueprint bitmask and `0x86F8–0x8705` as fourteen native bonus-state bytes. `0x8706–0x8707` remains unknown; `0x8708` is the shared weighted skill-point score used for bonus availability, not a count of earned bits. Full call chains, definition/state catalogs and runtime-index caveats are in the [ELF research](BCUS98127/v02.00/ElfMap.md#blueprints-and-bonuscheat-states).
 
-The supplied USA plaintext has blueprint mask `0x0007DEE4`: all thirteen bits in the native grant-all mask and no additional bits. All fourteen bonus-state bytes are zero and score is 750. State zero does not prove locked. Menu indices can be remapped by a runtime mode that is not inferred from the save; shipped definition thresholds are not a current-availability verdict. The native enable-all routine writes score840 and changes only zero states to1, without awarding earned skill bits. Unknown bytes and unexpected bit/state values must remain unchanged.
+The supplied USA plaintext has blueprint mask `0x0007DEE4`: all thirteen bits in the native grant-all mask and no additional bits. All fourteen bonus-state bytes are zero and score is 750. State zero does not prove locked. Menu indices can be remapped by the runtime language selector, whose current value is not inferred from the save; shipped definition thresholds are not a current-availability verdict. The native enable-all routine writes score840 and changes only zero states to1, without awarding earned skill bits. Unknown bytes and unexpected bit/state values must remain unchanged.
 
 Reproduce without modifying either input:
 
@@ -546,6 +546,8 @@ The [qualified equipment-history and bonus-effect pass](BCUS98127/v02.00/ElfMap.
 
 The [compiled arena pass](BCUS98127/v02.00/ElfMap.md#compiled-arena-selector-inputs-and-independent-reward-predicates) additionally maps four shipped selector-input lists,14 signed-positive activation dependencies and independent story bits74/75/88/89. Named first-victory weapon rewards require a **raw-zero** completion counter, unlike signed-positive menu rules. The input-list alias to the live runtime menu table is still unresolved; no current arena availability is inferred.
 
+The [inventory reset footprint](BCUS98127/v02.00/ElfMap.md#inventory-reset-footprint-and-opaque-prefix-byte-ownership) confirms that standalone record reset leaves opaque `+12/+13` bytes untouched, unlike bulk initialization. Four prefix bytes `484..487` are outside the prefix initializer and its restart preservation copy; their meaning/default is not inferred. Technical inspection retains the exact bytes without repairing them.
+
 Collect paired saves with exactly one intentional change, using copies rather than the only original. Autosave time and unrelated engine state can still change, so repeated pairs are needed.
 
 | Controlled change | Candidate offsets or region | Question |
@@ -564,5 +566,7 @@ Collect paired saves with exactly one intentional change, using copies rather th
 | Win one named arena challenge | `0x56D8+4*nativeId`, `0x41C`, inventory/quick-select state | Verify the direct counter and currency/weapon transaction together; runtime menu order is not native ID order |
 | Trigger one named tutorial/story/equipment event | Five BE64 words `0x5528–0x5550` | Verify the corresponding global flag and its script/reset dependencies independently of inventory, arena counters and per-level flags |
 | Move, save, reload | `0x906E8`, `0x8740` and unmapped persisted state | Verify load-selection updates; find any persisted checkpoint/position linkage separately from runtime object |
+
+The USA build-specific [bonus language/content pass](BCUS98127/v02.00/ElfMap.md#bonus-content-queries-and-runtime-language-selection) confirms eight menu unlock-query operands without promoting them to direct saved-state effects or current availability. [Arena milestone writers](BCUS98127/v02.00/ElfMap.md#arena-operation-routing-and-separate-milestone-writers) establish separate flag/counter calls and their ordering; challenge filename numbers are not native IDs, and flags are not repaired from counters. [Grid synchronization](BCUS98127/v02.00/ElfMap.md#grid-browsing-synchronization-and-restore-trust-boundaries) distinguishes active/browsed logical buffers from temporary images, historical copied headers and native readiness/accumulator trust boundaries. These are guarded static relationships plus detached snapshot observations, not in-game edit acceptance.
 
 Do not expose speculative fields in the editor until their meaning, bounds, dependencies and in-game load behavior are verified. No internal game checksum algorithm has been established for this sample.
