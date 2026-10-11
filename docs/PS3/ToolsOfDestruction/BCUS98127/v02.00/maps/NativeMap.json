@@ -21392,7 +21392,7 @@
           "offset": "0x10",
           "name": "reward_channel_a_accumulated",
           "type": "f32",
-          "comment": "2CF218/2CFAB8 reward scaling; player-facing channel name unresolved."
+          "comment": "2CF218/2CFAB8 experience reward scaling; reward_channels independently confirms the weapon-XP consumer, not hero XP418. Historical generic field key retained."
         },
         {
           "offset": "0x14",
@@ -21495,13 +21495,13 @@
           "offset": "0x90",
           "name": "runtime_accumulated_time",
           "type": "f32",
-          "comment": "Runtime2CDBF8+0 after adding this segment's threshold-adjusted time."
+          "comment": "2CDBF8 returns saved-state+8744 through89F07C; copies that accumulated elapsed float after the reference fallback. Historical runtime-prefixed key retained, not runtime-only storage; units unverified."
         },
         {
           "offset": "0x94",
           "name": "runtime_accumulated_reference",
           "type": "f32",
-          "comment": "Runtime2CDBF8+4 after adding configuration+20."
+          "comment": "2CDBF8+4 is saved8748; copies the accumulated configuration+20 reference float. Historical runtime-prefixed key retained, not runtime-only storage; units unverified."
         },
         {
           "offset": "0x98",
@@ -22855,7 +22855,7 @@
         "clip_axis_1": 800,
         "clip_axis_2": 400
       },
-      "unknown_members": "Header+08,+0D..0F,+1D..1F and saved tail+60DB remain unresolved. No completion meaning inferred."
+      "unknown_members": "Header+0D..0F,+1D..1F and saved tail+60DB remain unresolved. Header+08 is the copied runtime generation/slot handle independently guarded by grid_aux_fields; the legacy observation key preserves raw bits. No completion meaning inferred."
     },
     "projection": {
       "consumer_va": "0x24d570",
@@ -26900,26 +26900,26 @@
       {
         "offset": "0x8758",
         "type": "u32 BE",
-        "display_name": "Adaptation event counter (native)",
+        "display_name": "Decryptor wins (native)",
         "initializer": 0,
         "update_va": "0x3b5ab8",
-        "rule": "Update routine loads the saved unsigned word and increments it with wrapping32-bit arithmetic when runtime byte5381 is nonzero; the pre-increment count also determines a threshold used against runtime byte5383. Exact event meaning is not yet named."
+        "rule": "Update routine loads the saved unsigned word and increments it with wrapping32-bit arithmetic when runtime byte5381 is nonzero; the pre-increment count also determines a threshold used against runtime byte5383. Independently guarded adaptation_context identifies the outcome as DECRYPTWIN, not a universal lifetime statistic."
       },
       {
         "offset": "0x875c",
         "type": "u32 BE",
-        "display_name": "Adaptation gated counter (native)",
+        "display_name": "Decryptor SIXAXIS losses (native)",
         "initializer": 0,
         "update_va": "0x3b5ab8",
-        "rule": "Runtime byte5381 nonzero resets this saved word to0. On the other branch, saved byte114D3 (independently mapped sixaxis_enabled) nonzero permits wrapping32-bit increment; otherwise no increment. This is not proof of a death or playthrough counter."
+        "rule": "Runtime byte5381 nonzero resets this saved word to0. On the other branch, saved byte114D3 (independently mapped sixaxis_enabled) nonzero permits wrapping32-bit increment; otherwise no increment. Independently guarded adaptation_context identifies this as a SIXAXIS-gated Decryptor loss counter since success, not deaths or all attempts."
       },
       {
         "offset": "0x8760",
         "type": "f32 BE",
-        "display_name": "Adaptation modifier (native)",
+        "display_name": "Decryptor spark-speed multiplier",
         "initializer": 1.0,
         "update_va": "0x3b5ab8",
-        "rule": "Native update adds a branch-selected adjustment and uses two fsel operations with0.6 and1.0 bounds. Runtime byte5381 nonzero ultimately stores1.0. Values in snapshots are exposed verbatim, not clamped or normalized."
+        "rule": "Native update adds a branch-selected adjustment and uses two fsel operations with0.6 and1.0 bounds. Runtime byte5381 nonzero ultimately stores1.0. Independently guarded adaptation_context proves this multiplies the dc_set_spark_speed-controlled runtime base, not global combat difficulty. Snapshots are exposed verbatim, not clamped or normalized."
       }
     ],
     "update": {
@@ -26940,7 +26940,7 @@
         "Runtime5381 zero and runtime5383<=threshold: add0 and bound the ordered finite result to0.6..1.0.",
         "Runtime5381 zero: independently increment875C only if saved sixaxis_enabled114D3 is nonzero."
       ],
-      "context_limit": "Caller3B8BF0 dispatches a seven-state runtime machine; Ghidra omits its switch cases. No exact gameplay outcome name for5381/5383 or player-facing difficulty label was established.",
+      "context_limit": "Caller3B8BF0 dispatches a seven-state Decryptor runtime machine. Later adaptation_context decodes its omitted cases, named DECRYPTWIN/DECRYPTLOSE exports and dc_set_spark_speed chain. Exact arithmetic here is not a universal lifetime-statistic or global difficulty guarantee.",
       "constants": {
         "lower": 0.6000000238418579,
         "upper": 1.0,
@@ -27341,6 +27341,1056 @@
         "bytes": "00000000"
       }
     ]
+  },
+  "tail_aux_fields": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 static evidence and detached save observations only. No gameplay-tested edits, native execution, inferred seconds, or localized difficulty/event names.",
+    "saved_subobject": {
+      "getter_va": "0x2cdbf8",
+      "getter_toc": "0x89ff20",
+      "pointer_slot_va": "0x89f07c",
+      "pointer": "0x101f8264",
+      "save_offset": "0x8744",
+      "proof": "Getter loads r2+signed(F15C); descriptor TOC89FF20 resolves89F07C=101F8264, exactly save101EFB20+8744. This is saved state, not a runtime-only aggregate."
+    },
+    "fields": [
+      {
+        "offset": "0x8744",
+        "type": "f32 BE",
+        "display_name": "Accumulated adjusted segment scalar (native)",
+        "initializer": 0.0,
+        "rule": "Finalizer2CE328 adds segment+00 adjusted elapsed when it is at least configured reference+20 timesfloat32(0.1), otherwise adds that reference. Native fsel behavior is retained; the shortcut is only for ordered finite values."
+      },
+      {
+        "offset": "0x8748",
+        "type": "f32 BE",
+        "display_name": "Accumulated segment reference scalar (native)",
+        "initializer": 0.0,
+        "rule": "The same finalizer adds the current segment configuration+20 to this saved float. Neither aggregate is a segment count or inferred number of seconds."
+      },
+      {
+        "offset": "0x874c",
+        "type": "f32 BE",
+        "display_name": "Segment timing gate A remaining (native)",
+        "initializer": null,
+        "rule": "Reset callback2CDC30 stores runtime configuration+10FCC here. Update2CE620 advances this saved float through69B810; active segment elapsed updates require this gate and8750 both strictly greater than0 after the helper. Event cause and time unit remain unnamed."
+      },
+      {
+        "offset": "0x8750",
+        "type": "f32 BE",
+        "display_name": "Segment timing gate B remaining (native)",
+        "initializer": null,
+        "rule": "Reset callback2CDC00 stores runtime configuration+10FD0 here; the same scaled-step countdown and strict-positive elapsed-update gate applies. It is not proof of a death/health/checkpoint field."
+      }
+    ],
+    "initializer": {
+      "parent_va": "0x35e110",
+      "subobject_va": "0x35d9a0",
+      "rule": "35E110 passes save+5528; inner+321C resolves8744. Stores35DBB0/35DBB4 clear8748/8744. The initializer does not explicitly write874C/8750; their current nonzero values are not initialization defaults."
+    },
+    "segment_finalization": {
+      "va": "0x2ce328",
+      "threshold_ratio_slot_va": "0x89f0ac",
+      "threshold_ratio": 0.10000000149011612,
+      "source": "Existing saved segment+00 adjusted elapsed and runtime segment configuration+20 reference; only a valid, unfinished segment and normal non-reset path reach these stores.",
+      "log_copies": [
+        {
+          "record_offset": "0x90",
+          "save_source_offset": "0x8744"
+        },
+        {
+          "record_offset": "0x94",
+          "save_source_offset": "0x8748"
+        }
+      ],
+      "correction": "Log90/94 were previously described as runtime accumulated values because the helper pointer was unresolved. Their immediate sources are confirmed saved floats8744/8748, copied after accumulation; retained log values need not equal current aggregates."
+    },
+    "aggregate_consumer": {
+      "caller_va": "0x2cdfb0",
+      "calculator_va": "0x2cdc78",
+      "runtime_pointer_slot_va": "0x89f078",
+      "runtime_pointer": "0x101e8d70",
+      "rule": "2CDFB0 loads saved8744/8748, calls2CDC78 and writes its returned scalar to separate runtime101E8D70+00. Calculator uses their difference and a reference/total ratio with runtime configuration bounds. Runtime result is not written back into either saved aggregate and has no confirmed localized difficulty label."
+    },
+    "countdown_update": {
+      "va": "0x2ce620",
+      "thunk_va": "0x24ecb8",
+      "helper_va": "0x69b810",
+      "context_pointer_slot_va": "0x89f0b0",
+      "context_pointer": "0x10731da0",
+      "context_scope": "Context10731DA0 is outside906F0 saved state; its float+4 supplies the scaled step. This is not another newly discovered save field.",
+      "rule": "Helper step=float32(scale*context+4), scale1.0 at these call sites. Ordered finite remaining<step: writepositive0 and return1. Otherwise writefloat32(remaining-step) and return0; equality yields0 with return0, not an expiration event return1. Native unordered comparison also follows subtraction, so inspection does not sanitize NaN.",
+      "elapsed_gate": "After advancing both gates,2CE620 requires8750>0 and874C>0 before adding runtime delta to segment+00/+04; native pause/reset/validity/completion conditions independently apply.",
+      "explicit_clear": {
+        "call_instruction_va": "0x3c04d0",
+        "stores": [
+          "0x3c04dc",
+          "0x3c04e0"
+        ],
+        "rule": "A runtime state-machine branch calls the saved subobject getter and stores0 at both gates. Its gameplay event/state names are not recovered; no unreachable-case conclusion is taken from Ghidra's omitted switch."
+      }
+    },
+    "unresolved": [
+      "Tail906E4 still has no confirmed semantic name.",
+      "Countdown reset causes, runtime configuration field names, units and localized player-facing adaptation meaning remain unresolved.",
+      "No guarantee that every possible lifecycle preserves accumulated values or gates, and no new editing permission."
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x24ecb8",
+        "bytes": "F84100283C4200013842FF3C4844CB4C"
+      },
+      {
+        "va": "0x2cdbf8",
+        "bytes": "8062F15C4E800020"
+      },
+      {
+        "va": "0x2cdbfc",
+        "bytes": "4E800020"
+      },
+      {
+        "va": "0x2cdc00",
+        "bytes": "F821FF917C6802A6F86100804BFFFFED8082F1603D240001C0090FD0D003000CE8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x2cdc18",
+        "bytes": "C0090FD0"
+      },
+      {
+        "va": "0x2cdc1c",
+        "bytes": "D003000C"
+      },
+      {
+        "va": "0x2cdc30",
+        "bytes": "F821FF917C6802A6F86100804BFFFFBD8082F1603D240001C0090FCCD0030008E8010080382100707C0803A64E800020"
+      },
+      {
+        "va": "0x2cdc48",
+        "bytes": "C0090FCC"
+      },
+      {
+        "va": "0x2cdc4c",
+        "bytes": "D0030008"
+      },
+      {
+        "va": "0x2cdc78",
+        "bytes": "C062F170FF8118004FDCF382419E008C80A2F160ED8110288162F1583C850001C162F168C022F16CFCA06050FCA5586EC00B001CC0840FB0ED420024C0E40FB4C1240FACC0C40FA4FDAA1828FC0D1AAEFC405828FDA202EEED072028C0E40FA8EC2C0172ED293828ECC63828ED4D223AED815024FC8C1828FC041B2EFC405828FC2202EEED213A7AEDA139BAFC254B6E4E800020600000008062F1603D230001C0290FA84E800020"
+      },
+      {
+        "va": "0x2cdfb0",
+        "bytes": "F821FF617C0802A6FBC1008083C2F158F80100B0DBC10090DBE10098FBA10078FBE10088C03E0000C19E0004EC01602AC3E2F170FDBF0028FFCD07EE4BFFFC0DC0430004C02300004BFFFC818122F17CD03E000083A900007FA3EB784BFFFF357C7F1B787FA3EB782F9F0000419E00844BFFFEA1C03F0000C083002CC0430024C06300284BFFFCEDC0BE0000EC81282AD03E0004FC7F2028FC4327EEFC1E100040820028E88100B0EBA10078EBC100807C8803A6EBE10088CBC10090CBE10098382100A04E800020E86100B0EBA10078EBC100807C6803A6EBE10088CBC10090CBE10098382100A04BFFFD40600000004BFFFCA9D3FE0004E88100B0EBA10078EBC100807C8803A6EBE10088CBC10090CBE10098382100A04E80002060000000"
+      },
+      {
+        "va": "0x2ce328",
+        "bytes": "F821FF617C8802A6FBA10080FBE100907C7D1B78DBE10098FB610070FB810078FBC10088F88100B048003511600000005460063E7BBF00202F8000007FE3FB78419E0030EBC100B0EB6100707FC803A6EB810078EBA10080EBC10088EBE10090CBE10098382100A04E800020600000004BFFFBA92C0300007C7E1B784182FFC88863002CC3E2F1702C8300004086FFB88122F1788162F1783D490001806A0144398300011C83009C3D040001918A014438C887507FA65A14480030B1600000003B9D0014786300207B9C00204800248D600000008362F188786600207F84E3787F65DB78386000014BF82DA9E84100287FE3FB78480035ED6000000038FD0054786600207F65DB7878E40020386000014BF82D81E84100284BFFF7B97C7B1B787FE3FB784BFFFA75C082F18CC1A30020FC20F890C13B0000EC6D0132C19E0000FC4C1828FC026B2EED69002AC0FB0004D17B0000C1030020ED47402AD15B0004C0DE0000D0DC0088C0A30020D0BC008CC09B0000D09C0090C07B0004D07C009480BE000890BC0098D3FE0004D3FE0000C0430024C083002CC06300284BFFF85DD03C00844BFFFAE58122F158C0490000D05C0080C1890004EDA2602AFC3F6828FC016FEED01E000CEBC100B0EB6100707FC803A6EB810078EBA10080EBC10088EBE10090CBE10098382100A04E800020"
+      },
+      {
+        "va": "0x2ce450",
+        "bytes": "C082F18C"
+      },
+      {
+        "va": "0x2ce478",
+        "bytes": "D17B0000"
+      },
+      {
+        "va": "0x2ce484",
+        "bytes": "D15B0004"
+      },
+      {
+        "va": "0x2ce49c",
+        "bytes": "D09C0090"
+      },
+      {
+        "va": "0x2ce4a4",
+        "bytes": "D07C0094"
+      },
+      {
+        "va": "0x2ce620",
+        "bytes": "F821FF717C0802A6DBE10088F80100A0FBA10070FBC10078FBE100804BFFFF9548003221600000005463063E2F830000419E0028EBE100A0EBA100707FE803A6EBC10078EBE10080CBE10088382100904E800020600000004BFFF581C3E2F168FC20F89038A3000C83A2F1907C7F1B7878A400207FA3EB784BF80621E8410028FC20F890389F00087FA3EB78788400204BF80609E8410028C01F000CC1A2F170FC0068004C4013824182FF8CC03F0008FC8168004CC433824186FF7C8122F17C83A900007FA3EB784BFFF8592F0300007C7F1B78419A009483C2F158815E00502C0A00004182007C897F002C2C8B00004086FF448182F1947FA3EB78C19F0000C09F0004C06C00A4EDA3202AEC43602AD1BF0004D05F00004BFFF789C03F0000C083002CC0430024C0630028C3FE00044BFFF5D1FF1F0800D03E0004419AFEF8EBC100A0EBA100707FC803A6EBE10080EBC10078CBE10088382100904BFFF65C4BFFF6594BFFFF8480E2F15880C700502F860000419EFEC0E90100A0EBA10070EBC100787D0803A6EBE10080CBE10088382100904BFFF594"
+      },
+      {
+        "va": "0x35d9bc",
+        "bytes": "7C7F1B78"
+      },
+      {
+        "va": "0x35db64",
+        "bytes": "393F321C"
+      },
+      {
+        "va": "0x35db70",
+        "bytes": "79280020"
+      },
+      {
+        "va": "0x35db84",
+        "bytes": "39400000"
+      },
+      {
+        "va": "0x35dbb0",
+        "bytes": "91480004"
+      },
+      {
+        "va": "0x35dbb4",
+        "bytes": "91480000"
+      },
+      {
+        "va": "0x35e11c",
+        "bytes": "787D0020"
+      },
+      {
+        "va": "0x35e124",
+        "bytes": "7C7E1B78"
+      },
+      {
+        "va": "0x35e198",
+        "bytes": "381E5528"
+      },
+      {
+        "va": "0x35e1ac",
+        "bytes": "4BFFF7F5"
+      },
+      {
+        "va": "0x3c04d0",
+        "bytes": "4BF0D72960000000388000009083000C90830008"
+      },
+      {
+        "va": "0x3c04dc",
+        "bytes": "9083000C"
+      },
+      {
+        "va": "0x3c04e0",
+        "bytes": "90830008"
+      },
+      {
+        "va": "0x69b810",
+        "bytes": "C003000438600001EC210032C0040000FF810000409D0014380000007C6307B4900400004E800020EC400828386000007C6307B4D04400004E80002060000000"
+      },
+      {
+        "va": "0x89f078",
+        "bytes": "101E8D70"
+      },
+      {
+        "va": "0x89f07c",
+        "bytes": "101F8264"
+      },
+      {
+        "va": "0x89f080",
+        "bytes": "101B9EE8"
+      },
+      {
+        "va": "0x89f088",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x89f090",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x89f0ac",
+        "bytes": "3DCCCCCD"
+      },
+      {
+        "va": "0x89f0b0",
+        "bytes": "10731DA0"
+      },
+      {
+        "va": "0x89f0b4",
+        "bytes": "10731D00"
+      }
+    ]
+  },
+  "adaptation_context": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00 native Decryptor context. Labels describe the traced save-update path, not universal lifetime statistics, gameplay-tested edits, or global combat difficulty. Runtime members are not saved fields.",
+    "named_context": {
+      "name": "Decryptor minigame",
+      "caller_va": "0x3b8bf0",
+      "caller_end_exclusive": "0x3ba168",
+      "proof": "Three native help strings identify Decryptor; independently exported START/WIN/LOSE tags identify outcome branches after the saved-word updater.",
+      "help_strings": [
+        {
+          "slot_va": "0x8a365c",
+          "name_va": "0x10027170",
+          "native_text": "decryptor basics(with sixaxis)"
+        },
+        {
+          "slot_va": "0x8a3664",
+          "name_va": "0x10027190",
+          "native_text": "decryptor basics(with sticks)"
+        },
+        {
+          "slot_va": "0x8a3668",
+          "name_va": "0x100271b0",
+          "native_text": "decryptor [holding X stabalizes ball]"
+        }
+      ],
+      "named_tags": [
+        {
+          "name": "GEN_TXT_GPLAY_DECRYPTSTART",
+          "id": 905,
+          "id_hex": "0x389",
+          "name_va": "0x1000d440",
+          "export_slot_va": "0x88d058",
+          "export_load_va": "0x85774",
+          "export_call_va": "0x8577c"
+        },
+        {
+          "name": "GEN_TXT_GPLAY_DECRYPTWIN",
+          "id": 906,
+          "id_hex": "0x38a",
+          "name_va": "0x1000d460",
+          "export_slot_va": "0x88d060",
+          "export_load_va": "0x85788",
+          "export_call_va": "0x85790"
+        },
+        {
+          "name": "GEN_TXT_GPLAY_DECRYPTLOSE",
+          "id": 907,
+          "id_hex": "0x38b",
+          "name_va": "0x1000d480",
+          "export_slot_va": "0x88d068",
+          "export_load_va": "0x8579c",
+          "export_call_va": "0x857a4"
+        },
+        {
+          "name": "GEN_TXT_GPLAY_DECRYPTTKO",
+          "id": 908,
+          "id_hex": "0x38c",
+          "name_va": "0x1000d4a0",
+          "export_slot_va": "0x88d070",
+          "export_load_va": "0x857b0",
+          "export_call_va": "0x857b8"
+        }
+      ]
+    },
+    "seven_state_dispatch": {
+      "runtime_member": "0x20",
+      "entry_latch_member": "0x28",
+      "table_pointer_slot_va": "0x8a364c",
+      "table_va": "0x3b8c74",
+      "count": 7,
+      "entry_type": "signed32 relative to table base",
+      "states": [
+        {
+          "index": 0,
+          "case_va": "0x3b8dfc"
+        },
+        {
+          "index": 1,
+          "case_va": "0x3b9694"
+        },
+        {
+          "index": 2,
+          "case_va": "0x3b93a8"
+        },
+        {
+          "index": 3,
+          "case_va": "0x3b9190"
+        },
+        {
+          "index": 4,
+          "case_va": "0x3b9144"
+        },
+        {
+          "index": 5,
+          "case_va": "0x3b8f68"
+        },
+        {
+          "index": 6,
+          "case_va": "0x3b8e6c"
+        }
+      ],
+      "rule": "Unsigned state>6 exits; state0..6 loads signed32 table[state] and branches to table+displacement. Indices are runtime-only, not save status or named state enums.",
+      "analysis_caveat": "Ghidra's original function body omits orphaned switch cases. Bounded raw table/case bytes are authoritative; disposable-session disassembly expansion was discarded without changing the original ELF or persistent project."
+    },
+    "runtime_outcomes": {
+      "success_flag_member": "0x5381",
+      "retry_byte_member": "0x5383",
+      "updater_call_va": "0x3b9978",
+      "flag_branch_va": "0x3b9984",
+      "win_tag_load_va": "0x3b99ac",
+      "lose_tag_load_va": "0x3b9c2c",
+      "rule": "After3B5AB8, runtime5381 nonzero selects named DECRYPTWIN; zero selects DECRYPTLOSE branch. This establishes Decryptor success/loss context for the independently mapped save arithmetic.",
+      "writes": "Result helper3B7CD8 return1 leads3B9ECC storing1 in5381. Return2 leads3B9CAC clearing5381 and incrementing5383. Another failure path3B9E94 clears5381 and increments5383. Byte stores wrap modulo256; these are runtime observations, not another saved counter.",
+      "scope": "Cancel/give-up and other result-helper outcomes exist. The retry byte's full lifecycle is not claimed as a universal attempt total."
+    },
+    "saved_fields": [
+      {
+        "offset": "0x8758",
+        "type": "u32 BE",
+        "display_name": "Decryptor wins (native)",
+        "rule": "Incremented by the traced success branch, wrapping32; the same outcome flag selects DECRYPTWIN. This labels the retained native counter, not a guarantee of all-time wins across resets or every gameplay path."
+      },
+      {
+        "offset": "0x875c",
+        "type": "u32 BE",
+        "display_name": "Decryptor SIXAXIS losses (native)",
+        "rule": "The traced loss branch increments only when saved sixaxis_enabled114D3 is nonzero; success clears it. It is a gated since-success loss counter, not a generic death count or all Decryptor attempts."
+      },
+      {
+        "offset": "0x8760",
+        "type": "f32 BE",
+        "display_name": "Decryptor spark-speed multiplier",
+        "rule": "3B9590..959C multiplies this saved float by runtime51DC, stores runtime51D8. Named dc_set_spark_speed sets runtime51DC, proving specific spark-speed scaling rather than a general combat-difficulty modifier. Existing save_aux_fields documents native finite0.6..1 clamp and success reset1.0; raw snapshots are not normalized."
+      }
+    ],
+    "spark_speed_binding": {
+      "script_name": "dc_set_spark_speed",
+      "registration_va": "0x89e688",
+      "name_va": "0x1001b670",
+      "wrapper_descriptor_va": "0x86b688",
+      "wrapper_va": "0x2a7a28",
+      "callee_va": "0x28e678",
+      "wrapper_call_va": "0x2a7b1c",
+      "base_store_va": "0x28e708",
+      "base_runtime_member": "0x51dc",
+      "scaled_runtime_member": "0x51d8",
+      "saved_multiplier_load_va": "0x3b9590",
+      "multiply_va": "0x3b9598",
+      "scaled_store_va": "0x3b959c",
+      "scope": "Script-controlled base speed is a runtime member, not an additional save float; physical units and every downstream motion effect remain unverified."
+    },
+    "instruction_guards": [
+      {
+        "va": "0x85774",
+        "bytes": "8082D120C022D1244BF8D215"
+      },
+      {
+        "va": "0x85788",
+        "bytes": "8082D128C022D12C4BF8D201"
+      },
+      {
+        "va": "0x8579c",
+        "bytes": "8082D130C022D1344BF8D1ED"
+      },
+      {
+        "va": "0x857b0",
+        "bytes": "8082D138C022D13C4BF8D1D9"
+      },
+      {
+        "va": "0x28e678",
+        "bytes": "F821FF717C0802A6FBC100783BC100C0DBE10088FBE10080FFE008907BDF0020906100C07FE3FB78F80100A04BFE86A52FA30000419E007C7FE3FB784BFE86953880047180A300402C05000078A30020418200184BFC0B3DE84100285463063E2C8300004086002080E2908080C2955C8082929480A29558806700044BFC12E5E84100287FC3F3784BFE864980C30040D3E651DCE88100A0EBC10078EBE100807C8803A6CBE10088382100904E8000208122908080A2955880829280806900044BFC12A1E84100284BFFFF7060000000"
+      },
+      {
+        "va": "0x28e708",
+        "bytes": "D3E651DC"
+      },
+      {
+        "va": "0x2a7a28",
+        "bytes": "F821FF617C0802A6FBC100903BC1007080A29740FBA100887BDD002038C00000388000017FA7EB78FBE10098F80100B07C7F1B784BFA88DDE84100282F8300007FA6EB783880000238A000007FE3FB78409E00387FE3FB788082EA0C7FC5F3784BFA9981E8410028E88100B038600000EBA10088EBC100907C8803A6EBE10098382100A04E8000204BFAB1F9E84100287FA5EB782C030000388000037FE3FB784182FFB44BFAB11DE84100282C8300004186FFA438A00000388000017FE3FB784BFA9DE1E841002838800002C022E9107C651B787FE3FB782F05000078BD0020419A002083BD00004BFAA169E84100287FA3EB784BFE6B5D600000004BFFFF6C7FE3FB788082E94438A000004BFA98D5E84100284BFFFF54"
+      },
+      {
+        "va": "0x2a7b1c",
+        "bytes": "4BFE6B5D"
+      },
+      {
+        "va": "0x3b5ab8",
+        "bytes": "80E2363488C353813D0700012F8600008148875820AA00027CABFE707CA058387D2A021421690004419E0060398A000191888758880353837C0B0040418100B4C00236243D670001C1423620C1623640C0EB8760ECC0382AFCA65828FC8559AEFC645028FC4322AED04B876088E353812F070000419A005C38600000D14B8760906B875C4E800020892353837C8958404085FFB03D670001C002363CC1423620C1623640C0EB8760ECC0382AFCA65828FC8559AEFC645028FC4322AED04B876088E353812F070000409AFFB060000000888B14D32F8400004D9E002080AB875C38050001900B875C4E800020600000007D405850C1A2363879480020F901FFF0C821FFF0FD800E9CFC006018EC0003724BFFFF3460000000"
+      },
+      {
+        "va": "0x3b6860",
+        "bytes": "F821FF817C0802A6FBE100787C7F1B7878630020F80100904BE9AB81E8410028807F00144BF40FAD600000005463063E2F830000419E004838BF0020808236908102365C3860000678AB002039200001E9440000F95F00C8906B0000992B0008C00800B4D00B0004EBE100907FE803A6EBE10078382100804E80002039400000907F51B4600000005548103A55402036396000147D8802147D6903A638EC51F07D7F3A14600000007966002038E00000396B000198E600004200FFF0394A00012C2A00144082FFC4813F4D88380000002C89FFFF901F51BC901F51B84186001C8102369455202036552338307D801A14816800007C0C5A1438DF00208142365C39200000C062362078C40020C042369838A00001C182369C901F4D8CD07F51C8D05F51CCD19F51D0913F51EC98A4000891240000C02A00B4C1A236A0D0240004993F5388D1BF51DC993F5380993F5381913F4D90993F5383993F5384993F5385993F5386993F5387EBE100907FE803A6EBE10078382100804E80002060000000"
+      },
+      {
+        "va": "0x3b8bf0",
+        "bytes": "380300207C8802A6F821FE01FB2101C078190020DBE101F8FB4101C8FB6101D0FB8101D8FBC101E8FBE101F0FA810198FAA101A0FAC101A8FAE101B0FB0101B8FBA101E0F8810210801900007C7A1B783BC000002B8000063B6000003BE000003B800000419D01648162372C780917887CC9582E7CC507B47C655A147C6903A64E8004200000018800000A20000007340000051C000004D0000002F4000001F83AC000017F03C378388000019ADA53854BFFEDA9810236A482E236A838E00000EB1A00C880C236ACEA880000EB3700007F1DA038834600107FA8CC365500043E7F9A0040419C0034541C482C81260000540038307D60E0507CAB4A1478B50020809500647FC440507F6820507F67F3787CE6FE707CA7307878FA0020807A00404BE99989E841002883C236843D830001394CB03C887E0000795B00202C03000083FB0000839F0050418213FC83E236887BFF0020388004A97FE3FB784BE9954DE84100288B1E00002C9800007C7D1B78418613B07FE3FB787BA4002038A000004BE98139E84100282F030000419A13E0787D0020809D00087B9700207F63DB787884002038A0000038C0000081170000F84100287D0903A6805700044E800421E841002860000000EB210210EA8101987F2803A6EAA101A0EAC101A8EAE101B0EB0101B8EB2101C0EB4101C8EB6101D0EB8101D8EBA101E0EBC101E8EBE101F0CBE101F8382102004E80002039010100790700207CE33B787CFF3B784BE96C3DE84100284800003C7FE3FB784BE9866DE8410028C0223620787E00207B4300207FC4F3784BFFCF2D546A063E2C0A000040820AD47FE3FB784BE96761E84100287FE3FB784BE986E5E8410028546C063E2C8C00004086FFB44BFFFF508BF900083BC000002C1F00009BD900084182FF3C80BA00143B9A0018C19A51E0388000007B830020D18500604BE9A1B1E841002883BA001482A23690831D0054833800106B34000292980010E87A00C8EAD500007CB618004186FEF4812236A438E00000818236A880C236ACE9090000EB6C00007C64403882E600107C88DC365500043E7F170040419800345416482C83E60000541538307D75B0507C6BFA14787E0020835E00647CE8D0507D5A40507CE053787C06FE707C67307878F80020807800404BE96009E8410028787F00207FE3FB784BE98DA9E84100282F830018409EFE6C7FE3FB783880001838A000004BE9975DE84100284BFFFE5489190008380000002C8800009819000840860BF84BE99CEDE8410028C1823624FF0160004F58D382409AFE2882A2365C3A80000682C236A43B000001929900009B19000880E236A839000000C3F500B4D3F90004E9560000E97A00C880C236AC7D695038E98700007D2764368086001054E9043E7F844840419C00345524482C81060000552038307CC020507F2642147B230020836300647EFB38507F87D8507F85BB787CBDFE707F28E878817A0014790A0020C1A237283AA100D0797C00203B4B003038FC00207B440020834A004038BC0010E93C00183AC100E0E87C0010396000017DA038CE79280022C144000C787B0022C0E4000838E1007091210180C1610180392100F0ED2D52FA39400000D121018082E1018091010180C10101807AFF002CECCD3A3AD0C10180C0840004C04400008321018090610180C0A101807B3F000EEC6D217A7F43D3787FE6FB78D061018083BA00008281018093610180C00101807A9E002CEC2D103AD0210180819D00587C2028CE7C00E0CE830101807C00A9CE7C20B1CE7B1E000EF9410080F96100887DA039CE7FC5F3787DA049CE83EC0000F84100287FE903A6E8E100D0E90100D8E92100E0E94100E8804C00044E800421E84100287F43D378388000014BE98881E84100284BFFFC788AF900083B8000002F9700009B990008409E0804C3E236204BE99B0DE8410028FC01F8004C4113824082FC4C8362365C38C000053860000190D9000098790008C17B00B4D17900044BFFFC2C810236A438E0000083C236A8E8BA00C880C236ACE8080000EAFE00007CB60038830600107EC8BC365500043E7C180040408006D878E500203BA0000082E500407EE3BB784BE994C5E84100288AD900082C9600003F0300019BB900083AD8B03C40860780387A007838800000787F00207FE3FB784BE98025E84100285478063E2F180000419A09708A9A53812F940000409E06AC80C2365C38E000023880000190F90000989900087B430020C16600B438800000D17900044BFFDB9983F900002F1F0003419AFB647AC500207CA32B7883C50000829E004883B40000F84100287FA903A6805400043BA100A03A8100B04E800421E8410028831A00147B060020819700003AB80030C02237283AC600207AAB002038A60010EB4600183B000000E92600103AA000017DA0B0CE7B4A0022C12B000C79240022C0CB00083AC1007093410180C14101803B4100C0ED014ABAD10101808101018091410180C0E10180791C002CECA131FAD0A10180C06B0004C1AB00008001018091210180C0810180781C000EEC41193AD0410180832C005883C1018090810180C00101807BDB002CEFE1683AD3E10180806101807C2030CE7F86E3787C0028CE787B000E7C20E9CE7EE3BB787C00A1CE7F65DB78FB010080FAA100887DA0B1CE7DA0D1CE83790000F84100287F6903A6E8E100A0E90100A8E92100B0E94100B8805900044E800421E84100287EE3BB78388000014BE9861DE84100284BFFFA14893900083AA000002C0900009AB90008418201EC828236A438E00000810236A8E99A00C880C236ACEB740000E94800007D98D83883A600107F0854365500043E7C9D004041840034540B482C80660000540038307C8058507CC41A1478DC002080BC00647EC540507FC828507FC7B3787CF7FE707CC7B87878FF0020807F00404BE99271E84100283FE300017C7E1B78393FC5F03ABF8D5C792300204BE978B5E84100287AA30020800300342F000000419A00142F800003419E000C2C00000440820BB0838236343D3C0001818987582C8C0000408604C0881A53832F000000409A04B88B6914D32F9B0000419E0A683900FFFF8082373C38C00000C022374079070020392000013900000039400000386000013AE000013A800000FAE10070FA8100784BE97CCDE84100283C9C000188E414D32C07000040820B5C3ABFB03C83C236847ABB0020881E0000817B00002C800000830B005041860B7C83E236887BFF0020388003897FE3FB784BE98D85E8410028895E00002F0A00007C7D1B78419A0B307FE3FB787BA4002038A000004BE97971E84100282F830000419E0BBC787F0020809F00087B1D00207F63DB787884002038A0000038C00000831D0000F84100287F0903A6805D00044E800421E8410028812236483EBC00013B8000017B4300209B890008C0D58760C0FA51DCECA601F2D0BA51D84BFFEE318BFA53852F9F0000419E025C3B7A0078388000017B7F00207FE3FB784BE97C69E84100285467063E2C070000408200207FE3FB78388000024BE97C4DE8410028547E063E2C9E0000418607C038000000388000007B430020981A53854BFFE44983E236A4838236A838E00000E97A00C880C236ACE93F0000E89C00007D75483883C600107EA824365500043E7F1E0040419800345416482C82E60000540538307FA5B0507C7DBA1478740020831400647F3840507F48C0507F4CCB787D8AFE707C67507878FE0020807E00404BE99029E84100283F63000138FBB03C78E600207CC3337881060000814800484800015C838236A438E00000836236A8EAFA00C880C236ACEB1C0000EABB00007EF6C038828600107EC8AC365500043E7F140040409801A078EC00203BBA002C82EC00407AFC00207F83E3784BE98FBDE8410028891900082F8800003F03000138C000003AB8B03C98D90008409E03687BBF0020388000007FE3FB784BE97B1DE8410028547D063E2C1D0000418203048142365C38788D5C38C000023B0000012C83000090D900009B190008C02A00B4D03900044186002C787400207E83A37883740000811B004881880000F84100287D8903A6804800044E800421E841002880BA001438171E00C1A2373438800000781600207EC3B378C0450060D05A51E0D1A5006038A0000083D60000835E001C82FA0000F84100287EE903A6805A00044E800421E84100287F83E3784BE9987DE8410028817900002F8B0001419EF5EC7FE3FB787ABF00204BE98051E84100287FE3FB78833F000081590048808A0000F84100287C8903A6804A00044E800421E84100284BFFF5B47B5800207F03C3784BFFE4C92C0300017C7E1B78418206A42C830002418604842F030003419AF4642F830000419EF58482C2365C38C0000338A0000190D9000098B900087F03C378C11600B438800001D11900044BFFE1ED4BFFF5585407482C81260000540A38307D6A38507FAB4A147BA50020806500647C8340507C0818507C1F23787FFEFE707FA7F0784BFFFE345403482C81860000541438307D7418507CCB621478CA002083EA00647D3F40507EA8F8507EA74B787CE4FE707CC720784BFFF8FC807A00143BA000013BC000064BF3DED1600000008102365C9BB9000893D900007B430020C14800B438800001D15900044BFFD4E580A2364838000000980500089BBA53864BFFF93C82FE001438A0000183A2365CEB970048FB9A00C898B9000890B90000C3FD00B4D3F900044BFFF480881A53835414063E2C1400094182037438800001989A53804BFFFC28C3E23620FC20F890C04236244BE97F95E84100284BFFF7F07B5800207F03C3784BFFC141881A53812F000000419A02587AD5002083C236848115000088DE00002F86000083080050419E05A483E236887BFF00203880038A7FE3FB784BE988E5E841002888FE00002C0700007C7D1B784182062C7FE3FB787BA4002038A000004BE974D1E84100282C83000041860714787E0020809E00087B1F00207EA3AB787884002038A0000038C0000082BF0000F84100287EA903A6805F00044E800421E84100284BFFF7D87F84E378C02237387B4300204BFFC3355463063E2F030000409AFD8C8082365C907900003860000198790008C08400B4D0990004839A0014C07A51E0D07C00604BFFFD647BB400207F83E3783BC0FFFF4BE97BF9E841002882C236C8C00236D038160048D0140048907400047E83A37893D40044901400004BE96531E84100287AB6002083C2368483F600008B7E00002C1B0000829F0050418202CC83E236887BFF0020388001917FE3FB784BE987CDE84100287C7B1B78887E00002C830000418602807FE3FB787B64002038A000004BE973B9E84100282F030000419A0440786B0020806B00087A8900207864002038A0000038C000007EC3B37880E90000F84100287CE903A6804900044E800421E84100287F83E3784BE95401E8410028787F00207FE3FB784BE981A1E84100282F830018409EFBAC7FE3FB783880001838A000004BE98B55E84100284BFFFB94C0223620C042374C4BE99061E84100284BFFF3FC7FE3FB78388000014BE9769DE84100285469063E2C0900004182F6B08BFA53812C9F00004086F6A48162365C398000017B430020999900089199000038800001C18B00B4D19900044BFFD215814236489BEA00084BFFF674891A53833C0055553968FFFF600555567D7DFE707E8B28967C7DA050546C083C7D4C1A147F0B5000419A03B47AD5002083C236848095000088FE00002F87000082840050419E037083E236887BFF00203880038B7FE3FB784BE98665E8410028895E00002C0A00007C7D1B78418203247FE3FB787BA4002038A000004BE97251E84100282C8300004186048C787F0020809F00087A8C00207EA3AB787884002038A0000038C0000082AC0000F84100287EA903A6804C00044E800421E84100287F03C3784BFFD6E94BFFF550899A53839BFA5381394C0001995A53834BFFFB80391FB03C83C23684791B00208AFE0000829B00002C17000083140050418203F083E236887BFF0020388005EE7FE3FB784BE985ADE841002888BE00002C8500007C7D1B78418603A47FE3FB787BA4002038A000004BE97199E84100282F030000419A03EC78670020808700087B1E00207F63DB787884002038A0000038C00000817E00003B600001F84100287D6903A6805E00044E800421E84100289B7A53874BFFF8207FE3FB784BE97235E841002838A000018062368C98BE00004BE95911E84100284BFFFD6483E236887BE300204BE9720DE8410028388000018062368C989E00004BE958E9E84100284BFFFD187FE3FB78388000004BE97475E8410028547B063E2C9B00004186EFF47B580020388000007F03C3789BDA53854BFFDC71814236A4806236A838E00000EB9A00C880C236ACEBEA0000E96300007F89F83882A600107D285C365500043E7F950040419C0034541B482C80E60000541E38307CDED8507D863A147985002082C500647EF640507FA8B0507FB4BB787E80FE707D87007878FD00203AA00000807D00404BE9884DE84100283E8300013874B03C786C00207D836378814C0000838A004883FC0000F84100287FE903A6805C00044E800421E8410028893A5383388000038102365C396900019ABA5381997A53833B400001909900009B590008C12800B47F03C37838800001D13900044BFFDB914BFFEEFC386101003880001E787F00209BDA53817FE3FB784BE98F55E8410028801A00147FE4FB78386100909001010093C101644BE951F9E84100284BFFF94038C0FFFF8082374438A00001C022374078C700203900000038C0000039200000394000003AC0000038600002F8A10070FAC100784BE97269E84100284BFFF59C806237304BFFFBC883E236887BE300204BE9704DE8410028388000018062368C989E00004BE95729E84100284BFFFA407FE3FB784BE97029E8410028396000018062368C997E00004BE95705E84100284BFFFCC083E236887BE300204BE97001E8410028392000018062368C993E00004BE956DDE84100284BFFFC7438C0FFFF808237483BC00000C022374078C7002038C00000390000003920000039400000386005F3FBC10078FBC100704BE98731E84100284BFFFC187FE3FB784BE96FA1E8410028392000018062368C993E00004BE9567DE84100284BFFF9B88303000083B80048815D0000F84100287D4903A6805D00044E800421E84100284BFFF4343C7E0006388000023BC3B3247BC300204BEAB275600000004BFFF4907FE3FB784BE96F3DE8410028398000018062368C999E00004BE95619E84100284BFFF4B483E236887BE300204BE96F15E8410028392000018062368C993E00004BE955F1E84100284BFFF4687FE3FB784BE96EF1E841002838C000018062368C98DE00004BE955CDE84100284BFFFC4083E236883AC000017BE300204BE96EC5E84100288062368C9ADE00004BE955A5E84100284BFFFBF4808237304BFFFB7C808237304BFFF8F4808237304BFFF44C808237304BFFFC1C7FE3FB783A8000014BE96E81E84100288062368C9A9E00004BE95561E84100284BFFEC3483E236883B2000017BE300204BE96E59E84100288062368C9B3E00004BE95539E84100284BFFEBE8808237304BFFEC2860000000"
+      },
+      {
+        "va": "0x3b8c44",
+        "bytes": "2B800006"
+      },
+      {
+        "va": "0x3b8c58",
+        "bytes": "8162372C"
+      },
+      {
+        "va": "0x3b8c60",
+        "bytes": "7CC9582E"
+      },
+      {
+        "va": "0x3b8c64",
+        "bytes": "7CC507B4"
+      },
+      {
+        "va": "0x3b8c68",
+        "bytes": "7C655A14"
+      },
+      {
+        "va": "0x3b8c74",
+        "bytes": "0000018800000A20000007340000051C000004D0000002F4000001F8"
+      },
+      {
+        "va": "0x3b9590",
+        "bytes": "C0D58760"
+      },
+      {
+        "va": "0x3b9594",
+        "bytes": "C0FA51DC"
+      },
+      {
+        "va": "0x3b9598",
+        "bytes": "ECA601F2"
+      },
+      {
+        "va": "0x3b959c",
+        "bytes": "D0BA51D8"
+      },
+      {
+        "va": "0x3b9978",
+        "bytes": "4BFFC141"
+      },
+      {
+        "va": "0x3b997c",
+        "bytes": "881A5381"
+      },
+      {
+        "va": "0x3b9984",
+        "bytes": "419A0258"
+      },
+      {
+        "va": "0x3b99ac",
+        "bytes": "3880038A"
+      },
+      {
+        "va": "0x3b9c2c",
+        "bytes": "3880038B"
+      },
+      {
+        "va": "0x3b9cb0",
+        "bytes": "394C0001"
+      },
+      {
+        "va": "0x3b9cb4",
+        "bytes": "995A5383"
+      },
+      {
+        "va": "0x3b9e90",
+        "bytes": "39690001"
+      },
+      {
+        "va": "0x3b9e94",
+        "bytes": "9ABA5381"
+      },
+      {
+        "va": "0x3b9e98",
+        "bytes": "997A5383"
+      },
+      {
+        "va": "0x3b9ecc",
+        "bytes": "9BDA5381"
+      },
+      {
+        "va": "0x86b688",
+        "bytes": "002A7A28"
+      },
+      {
+        "va": "0x86b68c",
+        "bytes": "0089FF20"
+      },
+      {
+        "va": "0x88d058",
+        "bytes": "1000D44044624000"
+      },
+      {
+        "va": "0x88d060",
+        "bytes": "1000D46044628000"
+      },
+      {
+        "va": "0x88d068",
+        "bytes": "1000D4804462C000"
+      },
+      {
+        "va": "0x88d070",
+        "bytes": "1000D4A044630000"
+      },
+      {
+        "va": "0x89e688",
+        "bytes": "1001B670"
+      },
+      {
+        "va": "0x89e68c",
+        "bytes": "0086B688"
+      },
+      {
+        "va": "0x8a3554",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a364c",
+        "bytes": "003B8C74"
+      },
+      {
+        "va": "0x8a365c",
+        "bytes": "10027170"
+      },
+      {
+        "va": "0x8a3664",
+        "bytes": "10027190"
+      },
+      {
+        "va": "0x8a3668",
+        "bytes": "100271B0"
+      },
+      {
+        "va": "0x1000d440",
+        "bytes": "47454E5F5458545F47504C41595F44454352595054535441525400"
+      },
+      {
+        "va": "0x1000d460",
+        "bytes": "47454E5F5458545F47504C41595F4445435259505457494E00"
+      },
+      {
+        "va": "0x1000d480",
+        "bytes": "47454E5F5458545F47504C41595F444543525950544C4F534500"
+      },
+      {
+        "va": "0x1000d4a0",
+        "bytes": "47454E5F5458545F47504C41595F44454352595054544B4F00"
+      },
+      {
+        "va": "0x1001b670",
+        "bytes": "64635F7365745F737061726B5F737065656400"
+      },
+      {
+        "va": "0x10027170",
+        "bytes": "646563727970746F7220626173696373287769746820736978617869732900"
+      },
+      {
+        "va": "0x10027190",
+        "bytes": "646563727970746F7220626173696373287769746820737469636B732900"
+      },
+      {
+        "va": "0x100271b0",
+        "bytes": "646563727970746F72205B686F6C64696E6720582073746162616C697A65732062616C6C5D00"
+      }
+    ]
+  },
+  "grid_aux_fields": {
+    "confidence": "code-backed",
+    "warning": "Exact USA v02.00. Copied runtime handle bits are historical metadata, not portable stable IDs or proof of current pool validity. Never resolve a saved handle against runtime memory.",
+    "runtime_header": {
+      "size": "0xc",
+      "geometry_pointer_member": "0x0",
+      "class_member": "0x4",
+      "handle_member": "0x8",
+      "handle_type": "BE uint32: high16 generation, low16 pool slot",
+      "pool_slots": 512,
+      "generation_bits": 16,
+      "slot_bits": 16,
+      "allocator_va": "0x64d828",
+      "loader_va": "0x64dcf0",
+      "single_loader_va": "0x64dab0",
+      "resolver_va": "0x64dc50",
+      "release_va": "0x64d9e0",
+      "pool_reset_va": "0x64db68",
+      "allocation": "64D828 selects an unused slot below512, increments its16-bit generation at runtime owner+840+2*slot, sets its used bit, stores class at definition+04 and (generation<<16)|slot at definition+08. Generation arithmetic wraps16 bits; generation1 is not a permanent invariant.",
+      "loading": "64DCF0 iterates16-byte descriptors from resource+58/count+5C.64DAB0 loads one descriptor. Both allocate using descriptor+0C class, preserve allocated definition+08 across copying descriptor+04 payload for descriptor+08 bytes, restore class at definition+04 and assign descriptor+00 geometry pointer at definition+00. These first12bytes are runtime-generated/refilled rather than portable baked payload identity.",
+      "resolution": "64DC50 indexes the runtime slot table using low16 input bits, rejects the pool sentinel, resolves the allocator's separate handle and returns the definition only if its+08 equals the entire requested generation/slot word. No input slot bounds or null-resolution safety are claimed. This code is inspected, never executed.",
+      "release": "64D9E0 reads low16 at definition+0A, releases the allocator handle, resets the slot entry, increments the generation again and clears the used bit.64DB68 resets512 slot/generation entries and occupancy words.",
+      "save_link": "24E074..24E0A0 copies exactlyC8bytes from the selected runtime class535 definition into the unready saved block. Hence save block+08 contains copied runtime generation/slot bits, not a game-wide object UID or stable planet identifier."
+    },
+    "opaque_fields": [
+      {
+        "member": "0xd",
+        "bytes": 3,
+        "meaning": "Unresolved copied source bytes; not asserted padding/reserved."
+      },
+      {
+        "member": "0x1d",
+        "bytes": 3,
+        "meaning": "Unresolved copied source bytes; not asserted padding/reserved."
+      },
+      {
+        "member": "0x60db",
+        "bytes": 1,
+        "meaning": "Unresolved final physical block byte.35E070 clears only seven flags60D4..60DA, readinessCC and encoded length60D0; it does not assign60DB. Lack of an initializer write is not proof of padding or permanent zero."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x24e074",
+        "bytes": "83BB002080027FAC38A000C87FA4EB78835D00101F1A60DC3D3800017D490214386A14D8786300204BDC4B15E8410028"
+      },
+      {
+        "va": "0x24e07c",
+        "bytes": "38A000C8"
+      },
+      {
+        "va": "0x24e09c",
+        "bytes": "4BDC4B15"
+      },
+      {
+        "va": "0x35e070",
+        "bytes": "3880000738000000392000007C8903A63960000039400000980300CC912360D07CC35A14396B000178C50020994560D44200FFF04E800020"
+      },
+      {
+        "va": "0x35e09c",
+        "bytes": "994560D4"
+      },
+      {
+        "va": "0x64d828",
+        "bytes": "F821FF417CA802A6FBC100B083C29CA8FB8100A0FB210088FB410090FB610098FBA100A8FBE100B8F8A100D0E89E08387C7C1B787C8320F87C6000742B80003F7C090378409D007C39400007397E0830796C0020394AFFFF396BFFF8E90C00007D0740F87CE600742886003F7CC933784185FFE0216A0008556030327D2902143BE9FFC0281F01FF408100403BA00000EB8100D07FA3EB78EB2100887F8803A6EB410090EB610098EB8100A0EBA100A8EBC100B0EBE100B8382100C04E800020380000404BFFFFB87F9A07B47F43D3784BF509D9E841002883A29CAC7865002038C0001038610074809D000038E000004BF70F3160000000A3210076A3610074B3210072B36100708001007038800000815D00007804002C794300204BF71265600000002F030000419AFF64787D00207F43D3787FA4EB784BF50DD1E841002857E9103A57E3083C7D2007B47C6B07B47F40F214211F01FF7C6BF21438BE08005504E8F87F7E032E7D442A14B33A0002A3230840795E0020550706BE3999000138C00001B1830840E93E00007CC538367CA44B78F89E0000939D0004A3630840577A801E7FF9D378933D00084BFFFEE4"
+      },
+      {
+        "va": "0x64d9a4",
+        "bytes": "39990001"
+      },
+      {
+        "va": "0x64d9ac",
+        "bytes": "B1830840"
+      },
+      {
+        "va": "0x64d9c0",
+        "bytes": "939D0004"
+      },
+      {
+        "va": "0x64d9c8",
+        "bytes": "577A801E"
+      },
+      {
+        "va": "0x64d9cc",
+        "bytes": "7FF9D378"
+      },
+      {
+        "va": "0x64d9d0",
+        "bytes": "933D0008"
+      },
+      {
+        "va": "0x64d9e0",
+        "bytes": "F821FF517D0802A6FB410080FB610088FB810090F90100C0FBA10098A3A3000A3880000083829CA857BB13BA80629CAC7F5BE2147D9CDA2E81430000A0DA0002B1810070B0C1007280E100707943002078E4002C4BF70CE56000000057A50BFC81029CB0207D01FF7D45E214381C08005469E8F8A0E80002547D06BE7D690214A1880000A08A084038A00001796B002038C400017D9CDB2EB0CA0840B0FA00027CA4E836E92B00007D232078F86B0000E80100C0EB410080EB6100887C0803A6EB810090EBA10098382100B04E800020"
+      },
+      {
+        "va": "0x64da78",
+        "bytes": "B0CA0840"
+      },
+      {
+        "va": "0x64da8c",
+        "bytes": "F86B0000"
+      },
+      {
+        "va": "0x64dab0",
+        "bytes": "F821FF717C0802A6FBC10080FBE10088FB810070FBA10078F80100A08383000C7C7E1B787F8307B44BFFFD512F830000787F0020419E002C83BF00087FE3FB78809E000480BE0008481CCEB16000000093BF0008939F0004807E0000907F0000E88100A07FE3FB78EB810070EBA100787C8803A6EBC10080EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x64db00",
+        "bytes": "93BF0008"
+      },
+      {
+        "va": "0x64db04",
+        "bytes": "939F0004"
+      },
+      {
+        "va": "0x64db0c",
+        "bytes": "907F0000"
+      },
+      {
+        "va": "0x64db68",
+        "bytes": "F821FF817C0802A6FBC1007083C29CACFBE10078F80100907C7F1B78807E00002F83FFFF419E0010786300204BF70E65600000007BE7002080629CB43880001038A0020038C002004BF712896000000081629CB081829CA839200200388000007D8863787D2903A6394C084088AB000388CB000088EB0001880B0002907E000079030020795E002039080004394A000298A30003B09E000098C3000098E30001980300024200FFDC38A00000F8AC0838F8AC0800F8AC0808F8AC0810F8AC0818F8AC0820F8AC0828F8AC0830E8810090EBC10070EBE100787C8803A6382100804E80002060000000"
+      },
+      {
+        "va": "0x64dc50",
+        "bytes": "F821FF717C8802A6FBE100887C7F1B7881629CA880E29CB057E313BAF88100A07D435A1438800000A12700007D0B1A2E5500043EA16A00027F8900005569043E409E0010A0A700027C0548004182003881829CACB1610072B10100708101007080EC00007904002C78E300204BF70EED600000007863002080C300087C86F8004186000838600000EBE100A07FE803A6EBE10088382100904E80002060000000"
+      },
+      {
+        "va": "0x64dc68",
+        "bytes": "57E313BA"
+      },
+      {
+        "va": "0x64dcc8",
+        "bytes": "80C30008"
+      },
+      {
+        "va": "0x64dccc",
+        "bytes": "7C86F800"
+      },
+      {
+        "va": "0x64dcf0",
+        "bytes": "F821FF517C0802A6FB210078FB410080FB610088FB810090FBA10098FBC100A0FBE100A8F80100C048003711600000008343005C7C791B782F9A0000419E00683B6000006000000057642036813900583B7B00017C644A14787E0020839E000C7F8307B44BFFFAD52C030000787F00207FE3FB784182002883BF000880BE0008809E0004481CCC356000000093BF0008939F000480BE000090BF00007C9AD8004086FFA8E8C100C0EB210078EB4100807CC803A6EB610088EB810090EBA10098EBC100A0EBE100A8382100B04E800020"
+      },
+      {
+        "va": "0x64dd68",
+        "bytes": "83BF0008"
+      },
+      {
+        "va": "0x64dd7c",
+        "bytes": "93BF0008"
+      },
+      {
+        "va": "0x64dd80",
+        "bytes": "939F0004"
+      },
+      {
+        "va": "0x64dd88",
+        "bytes": "90BF0000"
+      },
+      {
+        "va": "0x8a9b04",
+        "bytes": "10722E80"
+      },
+      {
+        "va": "0x8a9b08",
+        "bytes": "100E6C10"
+      },
+      {
+        "va": "0x8a9b0c",
+        "bytes": "1069068C"
+      },
+      {
+        "va": "0x8a9b14",
+        "bytes": "10723680"
+      }
+    ]
+  },
+  "grid_aux_assets": {
+    "definition_candidates": [
+      {
+        "level_archive": "apogee space station",
+        "resource": "/built/levels/apogee space station/gameplay.dat",
+        "resource_sha256": "3441D5A08E07CB0EBF073E7B1295BA03F288184F12DC6B63439587687ED5201F",
+        "descriptor_offset": "0x43450",
+        "payload_offset": "0xc0ef0",
+        "size": 200,
+        "stored_slot": 6,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "E5DF1781DB61DFCFBFA9593E66149CA1A559BFE2CDFBACFCE93A538F3002D3F2",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "apogee space station",
+        "resource": "/built/levels/apogee space station/gameplay.dat",
+        "resource_sha256": "3441D5A08E07CB0EBF073E7B1295BA03F288184F12DC6B63439587687ED5201F",
+        "descriptor_offset": "0x43460",
+        "payload_offset": "0xc0fb8",
+        "size": 200,
+        "stored_slot": 5,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "DFC6FF08E666948F6C4B46CA14C84BC411B4986E582FAC869620592FDBA242F1",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "cobalia",
+        "resource": "/built/levels/cobalia/gameplay.dat",
+        "resource_sha256": "8BFD84522592FAE8A25ADC2E23BD82CC1E4E44C0AD4072237C5B4F12458245B2",
+        "descriptor_offset": "0x7dcc0",
+        "payload_offset": "0x104768",
+        "size": 200,
+        "stored_slot": 7,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "B4F8455C8B3B780A1EE9916AC1D8A4CCCDE056FB667EE76AAF989CF00373EDFD",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "cragmite ruins",
+        "resource": "/built/levels/cragmite ruins/gameplay.dat",
+        "resource_sha256": "29F862E827A4AA0D6763B40253401856E46B0952167E7F4D37757B3116DC1E2F",
+        "descriptor_offset": "0x29870",
+        "payload_offset": "0x95b2c",
+        "size": 200,
+        "stored_slot": 8,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "71A520546C6F009283E48EDE63AABBD474A0354D10EB37FFF34D91965B15C81A",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "fastoon",
+        "resource": "/built/levels/fastoon/gameplay.dat",
+        "resource_sha256": "3284BEE2499838A976393BF09CC05316884967EB492F545AEAB6CED3248F9010",
+        "descriptor_offset": "0x35de0",
+        "payload_offset": "0x79b90",
+        "size": 200,
+        "stored_slot": 9,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "E676B2970B8B4882092173BB2E6B55B9322114A5936ECD7206FB2E95AC2CA2EB",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "fastoon_return",
+        "resource": "/built/levels/fastoon_return/gameplay.dat",
+        "resource_sha256": "83699AFEDA45A6A5CCCA332DAAF95B419A6D8CC8B1003ABC2AF796B4E3073CB2",
+        "descriptor_offset": "0x442b0",
+        "payload_offset": "0xccda8",
+        "size": 200,
+        "stored_slot": 10,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "E51081100E88FFE7AEF3065289BBD57237C72B740BB21B3782FB776632CD8BB2",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "imperial fight fest",
+        "resource": "/built/levels/imperial fight fest/gameplay.dat",
+        "resource_sha256": "0526F077A82B1CA8494D3D3D89FC2E10CDA595593C21A0FE6F08B748D93F6EDA",
+        "descriptor_offset": "0x33cc0",
+        "payload_offset": "0x8c2b0",
+        "size": 200,
+        "stored_slot": 11,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "C6E8D16C168575D64C22D82548B75D05BD6035C74F1AECF5DC400DA5FC1E7167",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "iris",
+        "resource": "/built/levels/iris/gameplay.dat",
+        "resource_sha256": "D04D55112A71D29EA39F765F6D2BDF6D0487E1077FD2EC5207233D48FF4591F6",
+        "descriptor_offset": "0x32140",
+        "payload_offset": "0x90858",
+        "size": 200,
+        "stored_slot": 13,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "4DD88F0DD477308BD0FFEF285FE2AF2D214B5C45C1136BF2DD04A7A69F32AF67",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "iris",
+        "resource": "/built/levels/iris/gameplay.dat",
+        "resource_sha256": "D04D55112A71D29EA39F765F6D2BDF6D0487E1077FD2EC5207233D48FF4591F6",
+        "descriptor_offset": "0x32150",
+        "payload_offset": "0x90920",
+        "size": 200,
+        "stored_slot": 12,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "BB390BE047F22777EE5DC0022B62D62B4BB3D7134B621B69560D0794B3AF65A9",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "kerchu city",
+        "resource": "/built/levels/kerchu city/gameplay.dat",
+        "resource_sha256": "440D4357CB7196F0990B0C4EE3FC9938C14EA0C1CA540C68B26F7DD1696F4956",
+        "descriptor_offset": "0x414f0",
+        "payload_offset": "0xdac64",
+        "size": 200,
+        "stored_slot": 1,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "49BD7A27DB51035987E919A95ABFB60F55AB8DC0FB7FEA4A92FB0C3A7ACF7B9A",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "kerchu city",
+        "resource": "/built/levels/kerchu city/gameplay.dat",
+        "resource_sha256": "440D4357CB7196F0990B0C4EE3FC9938C14EA0C1CA540C68B26F7DD1696F4956",
+        "descriptor_offset": "0x41500",
+        "payload_offset": "0xdad2c",
+        "size": 200,
+        "stored_slot": 0,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "F6248237D8208E209E33A82B9A72A5C95A2D5884838FA0C035B969CF7B6E15B8",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "meridian city",
+        "resource": "/built/levels/meridian city/gameplay.dat",
+        "resource_sha256": "C14E257EC6F5DFEB139788A5F3C195316A4533799E3114C58D2C735757ABAA02",
+        "descriptor_offset": "0x919e0",
+        "payload_offset": "0xec308",
+        "size": 200,
+        "stored_slot": 14,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "A26C546C736A526748C4EBA6DE8CB7862A699D295E71CE1223185245937E4188",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "metropolis",
+        "resource": "/built/levels/metropolis/gameplay.dat",
+        "resource_sha256": "C5FA86CE289C4BB653BDA54488AE7B96B0385FF76F0BDD3B26E38AF9D8AAC599",
+        "descriptor_offset": "0x140540",
+        "payload_offset": "0x1efd68",
+        "size": 200,
+        "stored_slot": 15,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "5B9262509BEDF190B13098ADE0A9EAD6E800CA1EA17B96AC46E743201844BAE3",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "pirate base",
+        "resource": "/built/levels/pirate base/gameplay.dat",
+        "resource_sha256": "82940CA77F4E49D283E118FEDCBEBD668E346540AF0033BC832C2B559867D534",
+        "descriptor_offset": "0x39150",
+        "payload_offset": "0xbb998",
+        "size": 200,
+        "stored_slot": 16,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "BB651829E4349F4FA43B8B5B2AE507BB089AF9D8183EA1A6AABAC628C23EBBD7",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "rykan v",
+        "resource": "/built/levels/rykan v/gameplay.dat",
+        "resource_sha256": "53D2D69E37DCF1A1B061053E0689B4BCC8FE98F6D8FC36041867250411F61B43",
+        "descriptor_offset": "0x3d150",
+        "payload_offset": "0xac420",
+        "size": 200,
+        "stored_slot": 17,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "D466FD7DA50E403CD49F70D26F93ED317148C0DE2FD1B2745B75EEA2233E318D",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "sargasso",
+        "resource": "/built/levels/sargasso/gameplay.dat",
+        "resource_sha256": "DC3B32D5C0F732FD0E33FDD381FCEE2E1671C95B3B4D7A835E313979E535959D",
+        "descriptor_offset": "0x449d0",
+        "payload_offset": "0x15157c",
+        "size": 200,
+        "stored_slot": 2,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "499C50325442C60865A6A443AB09076225FEF9D9D0ACACD2F898243D22A290BA",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "slags_fleet",
+        "resource": "/built/levels/slags_fleet/gameplay.dat",
+        "resource_sha256": "F828E7067506654FF6A456510CC05C9BC17D525E3B455E8589F635A2990FE343",
+        "descriptor_offset": "0x3e3e0",
+        "payload_offset": "0xa15f0",
+        "size": 200,
+        "stored_slot": 18,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "E44B2B076EE55E315ED0FA7A4126C470AD72C1F65F7445CF2CC5D6D3A026FA5B",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "stratus city",
+        "resource": "/built/levels/stratus city/gameplay.dat",
+        "resource_sha256": "90DA43490147BBD9FFFFBA1208C6BEE44F28AEF4A8C26C4D7A0BAF4B1A8F71AE",
+        "descriptor_offset": "0x46740",
+        "payload_offset": "0xb0030",
+        "size": 200,
+        "stored_slot": 19,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "CEF8D661FE895706916F59751FF327C99CD804FC5EC23D6FBEBB98CEB0423A17",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      },
+      {
+        "level_archive": "zordoom prison",
+        "resource": "/built/levels/zordoom prison/gameplay.dat",
+        "resource_sha256": "F8A59D93380C61B331A076430B29D62D01D0104345A263BC76B550767D9E7E49",
+        "descriptor_offset": "0x53980",
+        "payload_offset": "0xd03d8",
+        "size": 200,
+        "stored_slot": 20,
+        "source_first12_hex": "000000000000000000000000",
+        "source_body_sha256": "CD3253009D58D4B75AC3B13838EF9A3C534213AA64A919C08E6799A2E57096AC",
+        "source_unknown_0d_to_0f": "000000",
+        "source_unknown_1d_to_1f": "000000"
+      }
+    ],
+    "scope": "Bounded in-memory scan of original sibling level_cached.psarc gameplay.dat resources for class535/strideC8 descriptors. Reports first referenced payload per matching descriptor, not a complete resource schema or count of every volume instance. Exact body matches are separate actual-save observations. Shipped opaque-byte zeros do not establish padding."
   },
   "reset_categories": {
     "confidence": "code-backed",
@@ -27835,6 +28885,23 @@
     ]
   },
   "annotations": [
+{"va":"0x003B8BF0","name":"TOD_decryptor_state_machine_checked","kind":"function","confidence":"confirmed","bytes":"380300207C8802A6","comment":"Seven bounded switch cases, named Decryptor help and WIN/LOSE exports; saved counter update and runtime spark-speed scaling. Not universal lifetime stats.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x002A7A28","name":"TOD_lua_dc_set_spark_speed_wrapper","kind":"function","confidence":"confirmed","bytes":"F821FF617C0802A6","comment":"Named dc_set_spark_speed registration89E688/descriptor86B688 reaches native28E678; runtime base speed, not saved float.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0028E678","name":"TOD_decryptor_set_base_spark_speed","kind":"function","confidence":"confirmed","bytes":"F821FF717C0802A6","comment":"Stores script-provided runtime base at51DC; caller3B9590..959C scales by saved8760 into runtime51D8.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x003B8C74","name":"TOD_decryptor_state_case_table","kind":"data","confidence":"confirmed","bytes":"0000018800000A20000007340000051C000004D0000002F4000001F8","comment":"Seven signed32 relative targets decoded within3B8BF0..3BA168; numeric runtime states, not save enums.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0089E688","name":"TOD_lua_dc_set_spark_speed_registration","kind":"data","confidence":"confirmed","bytes":"1001B6700086B688","comment":"Named API string1001B670 and wrapper descriptor86B688; static binding, never execute game scripts.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x1001B670","name":"TOD_dc_set_spark_speed_script_name","kind":"string","confidence":"confirmed","bytes":"64635F7365745F737061726B5F737065656400","comment":"Native script name corroborates specific Decryptor spark-speed multiplier context, not general difficulty.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x002CDBF8","name":"TOD_saved_segment_aggregates_getter","kind":"function","confidence":"confirmed","bytes":"8062F15C4E800020","comment":"TOC89FF20 signedF15C resolves89F07C=101F8264, saved base+8744. Not runtime-only totals.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x002CDC00","name":"TOD_saved_segment_gate_B_reset","kind":"function","confidence":"confirmed","bytes":"F821FF917C6802A6","comment":"Loads runtime configuration10FD0 into saved8750; reset event and units unresolved.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x002CDC30","name":"TOD_saved_segment_gate_A_reset","kind":"function","confidence":"confirmed","bytes":"F821FF917C6802A6","comment":"Loads runtime configuration10FCC into saved874C; actual10.0 is observation, not initializer default.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x002CDC78","name":"TOD_segment_aggregate_scalar_calculator","kind":"function","confidence":"confirmed","bytes":"C062F170FF811800","comment":"Saved8744/8748 feed a runtime scalar via2CDFB0; localized adaptation meaning unverified.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0089F07C","name":"TOD_saved_segment_aggregate_gate_pointer","kind":"data","confidence":"confirmed","bytes":"101F8264","comment":"Original pointer101F8264 to saved8744..8754; fourf32 aggregate/gate members, excludes8754 median.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0064D828","name":"TOD_definition_allocate_generation_slot","kind":"function","confidence":"confirmed","bytes":"F821FF417CA802A6","comment":"512 runtime slots, wrapping16-bit generation; stores(generation<<16)|slot atdefinition+08.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0064D9E0","name":"TOD_definition_release_generation_slot","kind":"function","confidence":"confirmed","bytes":"F821FF517D0802A6","comment":"Releases pool entry, increments generation, resets slot and occupancy; copied save handle is not stable UID.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0064DAB0","name":"TOD_definition_load_single_preserve_handle","kind":"function","confidence":"confirmed","bytes":"F821FF717C0802A6","comment":"Preserves allocated+08 across payloadcopy, restoresclass+04 andgeometry+00; first12 bytes runtime-generated.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0064DC50","name":"TOD_definition_resolve_generation_slot","kind":"function","confidence":"confirmed","bytes":"F821FF717C8802A6","comment":"Uses the low 16-bit slot, then requires equality of the entire generation/slot word. No general slot bounds or null-safety guarantee.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0064DCF0","name":"TOD_definition_load_array_preserve_handles","kind":"function","confidence":"confirmed","bytes":"F821FF517C0802A6","comment":"Iterates16-byte descriptors, preservesruntime+08 acrossassetcopy, fillsgeometry/classprefix; gridcopiesC8.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
+{"va":"0x0064DB68","name":"TOD_definition_pool_reset_512_slots","kind":"function","confidence":"confirmed","bytes":"F821FF817C0802A6","comment":"Resetsruntime512slot/generationentries andoccupancy. Runtimegenerations are not persistent save identities.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; adaptation_context / tail_aux_fields / grid_aux_fields native guards and source-pointer chains."},
 {"va":"0x001E3380","name":"TOD_hero_subclass_float_attribute_dispatch","kind":"function","confidence":"confirmed","bytes":"2F8405037C0802A6","comment":"Subclass callback delegates to23E368 except attribute503; named health attribute6C therefore reaches hero1780/current1784.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
 {"va":"0x00240FF8","name":"TOD_hero_health_add_clamped_to_capacity","kind":"function","confidence":"confirmed","bytes":"F821FEF17C8802A6","comment":"Adds incoming float to runtime current health1784, clamps against runtime capacity1788 for finite values; no zero lower clamp or saved health offset inferred.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
 {"va":"0x0084BE54","name":"TOD_hero_float_attribute_callback","kind":"data","confidence":"confirmed","bytes":"00868D78","comment":"Base hero vtable+24 descriptor868D78 targets23E368 with TOC88FF38; health attribute6C proven by guarded dispatch.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
@@ -27845,7 +28912,7 @@
 {"va":"0x000778C8","name":"TOD_camera_adjust_runtime_orientation","kind":"function","confidence":"confirmed","bytes":"F821FF517D0802A6","comment":"Angular/basis calculation updates runtime scalarF4 and basisC0; not a save write, vector copy or confirmed yaw axis.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
 {"va":"0x0084AF18","name":"TOD_first_person_state_methods_A","kind":"data","confidence":"confirmed","bytes":"00867488008674C000866500008674B8008674C800867480008674A8008674A0008674B0","comment":"Method descriptors at+C/+10 associate entry20F3F0 and update20F598; exact first_person_option evidence.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
 {"va":"0x0084AF48","name":"TOD_first_person_state_methods_B","kind":"data","confidence":"confirmed","bytes":"008674D800867548008665000086752800867538008675300087B5980086752000867540","comment":"Method descriptors at+C/+10 associate entry2108D8 and update210B80; entry-derived flag3F is runtime only.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
-{"va":"0x003B5AB8","name":"TOD_update_saved_adaptation_words_checked","kind":"function","confidence":"confirmed","bytes":"80E2363488C35381","comment":"Saved8758/875C/8760 event-counter, Sixaxis-gated counter and finite bounded modifier update; runtime flag meanings unknown.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
+{"va":"0x003B5AB8","name":"TOD_update_saved_adaptation_words_checked","kind":"function","confidence":"confirmed","bytes":"80E2363488C35381","comment":"Saved 8758/875C/8760 Decryptor wins, Sixaxis losses since success and spark-speed multiplier update; traced WIN/LOSE caller branches establish the context, not universal lifetime statistics.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
 {"va":"0x008A3554","name":"TOD_adaptation_saved_state_ptr","kind":"data","confidence":"confirmed","bytes":"101EFB20","comment":"TOC word101EFB20 proves3B5AB8 addresses serialized state; runtime5381/5383 are not save fields.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
 {"va":"0x008A3560","name":"TOD_adaptation_lower_bound_f32","kind":"data","confidence":"confirmed","bytes":"3F19999A","comment":"Literal float32 lower bound3F19999A (~0.6), not safe edit guidance or a NaN repair rule.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
 {"va":"0x008A355C","name":"TOD_adaptation_decrement_f32","kind":"data","confidence":"confirmed","bytes":"BD4CCCCD","comment":"Literal BD4CCCCD (~-0.05) for runtime5381zero/5383above-threshold branch; event branch finally resets1.0.","evidence":"Exact hash-verified BCUS98127 v02.00 ELF; first_person_option / save_aux_fields / health_persistence instruction guards and native pointer provenance."},
@@ -36439,6 +37506,87 @@
   ],
   "structures": [
 {
+  "name": "TOD_RuntimeDefinitionPrefix_verified",
+  "size": "0xc",
+  "comment": "Runtime-generated first 12 bytes copied into C8-byte saved grid headers. Complements the older header type; do not follow the pointer or handle, or automatically apply this type.",
+  "fields": [
+    {
+      "offset": "0x0",
+      "name": "geometry_pointer_bits",
+      "type": "u32",
+      "comment": "Runtime-assigned geometry pointer; copied bits cannot resolve geometry from the save."
+    },
+    {
+      "offset": "0x4",
+      "name": "definition_class",
+      "type": "u32",
+      "comment": "Runtime class 535 for the saved grid volume, restored after copying the asset payload."
+    },
+    {
+      "offset": "0x8",
+      "name": "generation_slot_handle_bits",
+      "type": "u32",
+      "comment": "High 16-bit generation and low 16-bit pool slot; runtime 512-slot pool and entire-handle equality check. Historical bits do not establish a stable global UID or current validity."
+    }
+  ]
+},
+{
+  "name": "TOD_SaveSegmentAggregateGates_verified",
+  "size": "0x10",
+  "comment": "Saved 8744..8754: four float members, excluding the median at 8754. Units and reset event names remain unverified; this narrow type is not automatically applied.",
+  "fields": [
+    {
+      "offset": "0x0",
+      "name": "accumulated_adjusted_segment_scalar",
+      "type": "f32",
+      "comment": "Finalization adds adjusted elapsed, or the reference fallback below reference * float32(0.1). Log +90 copies this saved aggregate after accumulation."
+    },
+    {
+      "offset": "0x4",
+      "name": "accumulated_segment_reference",
+      "type": "f32",
+      "comment": "Finalization adds the configuration +20 reference; log +94 copies this saved aggregate. Units remain unknown."
+    },
+    {
+      "offset": "0x8",
+      "name": "timing_gate_A_remaining",
+      "type": "f32",
+      "comment": "Reset from runtime configuration +10FCC; scaled countdown and strictly positive gate. Actual-save 10.0 is not a proven default or seconds value."
+    },
+    {
+      "offset": "0xc",
+      "name": "timing_gate_B_remaining",
+      "type": "f32",
+      "comment": "Reset from runtime configuration +10FD0; same countdown. Actual-save 300.0 is not a proven default or seconds value."
+    }
+  ]
+},
+{
+  "name": "TOD_SaveDecryptorState_verified",
+  "size": "0xc",
+  "comment": "Saved8758..8764 named Decryptor context. Complements earlier generic type without replacing analyst definitions; no new edits or lifetime-statistic guarantee.",
+  "fields": [
+    {
+      "offset": "0x0",
+      "name": "decryptor_wins_native",
+      "type": "u32",
+      "comment": "The traced DECRYPTWIN path increments with wrapping; not a complete all-time win tally across lifecycles."
+    },
+    {
+      "offset": "0x4",
+      "name": "sixaxis_losses_since_success",
+      "type": "u32",
+      "comment": "The DECRYPTLOSE path increments only with saved Sixaxis nonzero; success clears it. Not general attempts or deaths."
+    },
+    {
+      "offset": "0x8",
+      "name": "spark_speed_multiplier",
+      "type": "f32",
+      "comment": "Scales the runtime dc_set_spark_speed base. Finite update bounds 0.6..1.0 and success reset 1.0 are not edit validation."
+    }
+  ]
+},
+{
   "name": "TOD_RuntimeHeroHealthAttribute_verified",
   "size": "0xc",
   "comment": "Runtime hero1780..178C, not GAME.SAV. Attribute6C callback points to1780, accessor reads+4; health update uses+8 as upper bound. No automatic application to dynamic objects.",
@@ -36983,7 +38131,7 @@
           "offset": "0x10",
           "name": "reward_channel_a_accumulated",
           "type": "f32",
-          "comment": "2CF218/2CFAB8 reward scaling; player-facing channel name unresolved."
+          "comment": "2CF218/2CFAB8 experience reward scaling; reward_channels independently confirms the weapon-XP consumer, not hero XP418. Historical generic field key retained."
         },
         {
           "offset": "0x14",
@@ -37083,13 +38231,13 @@
           "offset": "0x90",
           "name": "runtime_accumulated_time",
           "type": "f32",
-          "comment": "Runtime2CDBF8+0 after adding this segment's threshold-adjusted time."
+          "comment": "2CDBF8 returns saved-state+8744 through89F07C; copies that accumulated elapsed float after the reference fallback. Historical runtime-prefixed key retained, not runtime-only storage; units unverified."
         },
         {
           "offset": "0x94",
           "name": "runtime_accumulated_reference",
           "type": "f32",
-          "comment": "Runtime2CDBF8+4 after adding configuration+20."
+          "comment": "2CDBF8+4 is saved8748; copies the accumulated configuration+20 reference float. Historical runtime-prefixed key retained, not runtime-only storage; units unverified."
         },
         {
           "offset": "0x98",

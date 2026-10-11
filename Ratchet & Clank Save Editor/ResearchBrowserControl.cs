@@ -34,7 +34,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Gameplay segments, timing & retained log", TodResearch.Map.GetProperty("gameplay_segments"), 0));
             topics.Add(JsonTopic("Reward channels, caches & diminishing returns", TodResearch.Map.GetProperty("reward_channels"), 0));
             topics.Add(JsonTopic("Replay/restart lifecycle & retained segment median", TodResearch.Map.GetProperty("save_tail"), 0));
-            topics.Add(JsonTopic("Native adjustment counters, Sixaxis gate & modifier", TodResearch.Map.GetProperty("save_aux_fields"), 0));
+            topics.Add(JsonTopic("Decryptor counter arithmetic, Sixaxis gate & multiplier", TodResearch.Map.GetProperty("save_aux_fields"), 0));
+            topics.Add(JsonTopic("Decryptor named outcomes & spark-speed binding", TodResearch.Map.GetProperty("adaptation_context"), 0));
+            topics.Add(JsonTopic("Saved segment aggregates & countdown gates", TodResearch.Map.GetProperty("tail_aux_fields"), 0));
             topics.Add(JsonTopic("Per-world object bits & spawn rules", TodResearch.Map.GetProperty("world_object_flags"), 0));
             topics.Add(JsonTopic("Object counters & equipment", TodResearch.Map.GetProperty("objects"), 0));
             topics.Add(JsonTopic("Mission lists & flags", TodResearch.Map.GetProperty("mission_lists"), 0));
@@ -47,6 +49,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Persistent grids, map labels & volume headers", TodResearch.Map.GetProperty("persistent_grid"), 0));
             topics.Add(JsonTopic("Map-menu order, images & native grid checks", TodResearch.Map.GetProperty("grid_routing"), 0));
             topics.Add(JsonTopic("Map rectangles, world projection & clearing brush", TodResearch.Map.GetProperty("grid_geometry"), 0));
+            topics.Add(JsonTopic("Copied runtime definition handles & unresolved grid bytes", TodResearch.Map.GetProperty("grid_aux_fields"), 0));
+            topics.Add(JsonTopic("Shipped grid definition fingerprints & copied header bodies", TodResearch.Map.GetProperty("grid_aux_assets"), 0));
             topics.Add(JsonTopic("Settings, load destinations & runtime limits", TodResearch.Map.GetProperty("settings"), 0));
             topics.Add(JsonTopic("First-person camera coupling & unknown option limits", TodResearch.Map.GetProperty("first_person_option"), 0));
             topics.Add(JsonTopic("Shipped pause-menu settings & API dispatch", TodResearch.Map.GetProperty("settings_menu"), 0));

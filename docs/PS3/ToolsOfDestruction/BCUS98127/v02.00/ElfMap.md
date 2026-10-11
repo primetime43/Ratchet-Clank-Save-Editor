@@ -2,6 +2,47 @@
 
 Research notes for the supplied USA **BCUS98127 v02.00** `EBOOT.ELF`. This map covers startup, PS3 imports, scripting, physics bindings, rendering/SPU diagnostics, audio/middleware anchors and save I/O. It is a starting point, not a complete reconstruction of the game.
 
+## Decryptor state, saved timing aggregates and copied runtime handles
+
+Three parallel tasks added126 native byte guards,17 ELF annotations and three narrow types. The new `adaptation_context`, `tail_aux_fields` and `grid_aux_fields` sections reproduce named Decryptor behavior, four newly typed saved floats and the formerly opaque grid-header word. `grid_aux_assets` embeds only non-private resource fingerprints/descriptor metadata; original binaries and saves are not bundled. All findings are scoped to the exact USA v02.00 ELF and remain read-only.
+
+### Decryptor outcomes and spark-speed scaling
+
+The previously behavior-qualified words now have specific context:
+
+| Save offset | Native meaning | Actual save / caveat |
+| --- | --- | --- |
+| `8758`, BE32 | Decryptor wins in the traced success path | 0; wrapping native counter, not guaranteed all-time wins |
+| `875C`, BE32 | Sixaxis-enabled losses since success | 0; increments only with saved Sixaxis byte`114D3` nonzero, clears on success; not all attempts/deaths |
+| `8760`, float32 | Decryptor spark-speed multiplier | 1.0; ordered finite updates bounded0.6..1.0 and success resets1.0, not safe edit limits |
+
+Caller `3B8BF0` dispatches seven numeric runtime states through signed32 relative table `3B8C74`, pointer slot`8A364C`. All targets are decoded inside `3B8BF0..3BA168`, independently of Ghidra's omitted switch body. Native help strings explicitly name Decryptor Sixaxis/stick control and stabilizing the ball with X. Independently exported lookup keys `GEN_TXT_GPLAY_DECRYPTSTART/WIN/LOSE` have IDs`389/38A/38B`; after updater`3B9978`, runtime flag`5381` nonzero selects WIN at`3B99AC`, zero selects LOSE at`3B9C2C`. This names the checked outcome path without claiming a complete lifetime statistic or every cancellation/retry lifecycle. Runtime retry byte`5383` increments with8-bit wrap and is not another saved counter.
+
+Named API `dc_set_spark_speed` at registration`89E688` reaches descriptor`86B688`, wrapper`2A7A28`, native`28E678`, storing runtime base speed`51DC`. Instructions `3B9590..959C` multiply that base by saved`8760` and store runtime`51D8`. This establishes a **specific spark-speed multiplier**, not a generic combat-difficulty setting; physical speed units and every downstream motion effect remain unverified. [Inspect-TodAdaptationContext.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodAdaptationContext.py) reproduces53 guards. The app now shows three clearly named Decryptor rows in the simple player summary, with raw bits and lifecycle qualifications retained in Technical/details. `TOD_SaveDecryptorState_verified` complements the earlier generic type without overwriting it.
+
+### Four saved timing floats and corrected log provenance
+
+Getter `2CDBF8`, TOC`89FF20`, resolves slot`89F07C = 101F8264 = saved base+8744`. These are saved floats, not runtime-only totals:
+
+| Save offset | Role | Actual snapshot |
+| --- | --- | --- |
+| `8744` | Accumulated adjusted segment scalar | 0.0 |
+| `8748` | Accumulated segment configuration reference | 0.0 |
+| `874C` | Timing gate A remaining | 10.0 (`41200000`) |
+| `8750` | Timing gate B remaining | 300.0 (`43960000`) |
+
+On a valid, unfinished segment's normal finalization path, `2CE328` adds segment`+00` adjusted elapsed to`8744` when ordered finite elapsed is at least reference`+20 × float32(0.1)`; otherwise it adds the reference itself. It adds configuration reference`+20` to`8748`, then copies the updated saved totals into log`+90/+94`. Retained log values need not match current totals. Historical runtime-prefixed field keys/types remain for compatibility, but their comments now state the saved source.
+
+Initializer `35D9A0` clears only these two totals, not explicitly the gate floats. Reset callbacks `2CDC30` / `2CDC00` load runtime configuration`10FCC/10FD0` into the gates; an independently guarded state-machine branch clears both. `2CE620 → 24ECB8 → 69B810` advances them using runtime context`10731DA0+4` and scale1.0. Ordered finite remaining<step writes positivezero and returns1; equality writeszero but returns0. After advancement both gates must be strictly positive before segment elapsed can tick, alongside independent pause/reset/validity conditions. Time units and event names remain unverified: **10/300 are observations, not defaults or seconds**. `2CDFB0 → 2CDC78` consumes the saved totals into a separate runtime scalar, not back into either saved word. [Inspect-TodTailAux.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodTailAux.py) reproduces40 guards. These four technical rows remain out of the simple summary; no timer simulation or edits occur.
+
+### Grid header word is a copied generation/slot handle
+
+Generic definition allocator `64D828` assigns header`+08 = (generation<<16)|slot`: high16 wrapping generation, low16 slot in a512-slot runtime pool. Loaders `64DCF0` / `64DAB0` preserve this value across resource-payload copy and refill geometry pointer`+00` and class`+04`. Resolver `64DC50` uses the low16 slot and requires entire-handle equality against the resolved definition's`+08`; this is not a proven general slot-bounds/null-safety contract. Release `64D9E0` increments generation and clears occupancy; pool reset `64DB68` resets512 entries. The class535 selector copies exactly`C8` bytes into the saved grid block, including these historical handle bits. **Never treat them as stable game-wide IDs, current validity, or pointers to follow from a save.**
+
+All19 ready copied headers match the original shipped class535 candidate bodies at`+0C..C7`; every source first12-byte prefix iszero and refilled at runtime. The bounded in-memory candidate scan records each original `gameplay.dat` fingerprint, descriptor/payload offsets and body hash. It is not a complete resource schema or an inventory of every volume instance. Actual ready handles have generation1 and slots5..76, with duplicate handles across different levels—further reason not to label them global UIDs. [Inspect-TodGridAux.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodGridAux.py) reproduces33 guards and the optional asset comparison. `TOD_RuntimeDefinitionPrefix_verified` supplies the refined12-byte type without replacing the older volume-header type. The app shows the split in grid details only; out-of-range slots/unready values are preserved, not resolved or repaired.
+
+Copied bytes`+0D..0F`, `+1D..1F` and final saved byte`60DB` remain opaque. The initializer writes only seven group flags`60D4..DA`, readiness and encoded length; observed source zeros and lack of a write do not establish padding. Tail`906E4` and unknown option meanings remain unresolved. No new edit safety, full-game reversal or cross-build acceptance is claimed.
+
 ## Runtime health and checkpoint ammo: qualifying restoration paths
 
 Three parallel tasks produced the health/checkpoint, auxiliary-word and first-person findings below. This pass adds132 native byte guards,16 annotations and two narrow types. [Inspect-TodHealthPersistence.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodHealthPersistence.py) reproduces61 exact guards in `health_persistence`; all source observations are read-only.
@@ -22,7 +63,7 @@ The actual first inventory bank includes Combuster ammo100; no second-player run
 
 ## Three saved auxiliary words: event branch, Sixaxis gate and bounded modifier
 
-The parallel auxiliary pass adds20 native byte guards in `save_aux_fields`, reproduced by [Inspect-TodSaveAux.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSaveAux.py). These are behavior-qualified field roles, not recovered player-facing names.
+The earlier parallel auxiliary pass adds20 native byte guards in `save_aux_fields`, reproduced by [Inspect-TodSaveAux.py](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSaveAux.py). The later Decryptor pass above now supplies named outcome/spark-speed context; the arithmetic below remains valid and its field labels are refined accordingly.
 
 | Save offset | Type / actual value | Confirmed behavior |
 | --- | --- | --- |
@@ -34,7 +75,7 @@ Initializer `35E110` passes save`+5528` to `35D9A0`; its inner member`+321C` is 
 
 For ordinary old counter values, threshold is `4 - min(old8758,2)`. The report preserves the exact low32-bit sign-mask expression for extreme counters; the shortcut is not a validation rule. With runtime`5381` zero, runtime`5383` above threshold subtracts float32`0.05`, otherwise the adjustment iszero; either path bounds an ordered finite result to0.6..1.0. With runtime`5381` nonzero an intermediate positive adjustment can be computed, but the final store overwrites it with1.0 and clears`875C`. Thus the intermediate `+0.1` constant must not be reported as an independently retained increase.
 
-The seven-state caller does not yet yield confirmed gameplay names for the event bytes. Do not label these deaths, wins, a combat-help setting or player-facing difficulty. Sixaxis is the independently named saved gate, not proof of an original name for either counter. Native `fsel` is not a NaN-sanitization contract. Fixtures preserve NaN payloads, infinities, out-of-bound floats and large unsigned words without repair; original hashes remain unchanged. The app exposes these in Technical player data and an embedded Research topic, keeping the simple summary unchanged.
+The later seven-state decoding above identifies the named Decryptor WIN/LOSE paths and spark-speed multiplier. These are not deaths, a combat-help setting or global combat difficulty; the Sixaxis gate still qualifies the since-success loss counter. Native `fsel` is not a NaN-sanitization contract. Fixtures preserve NaN payloads, infinities, out-of-bound floats and large unsigned words without repair; original hashes remain unchanged. The app now includes three named Decryptor summary rows, with raw arithmetic and lifecycle limits retained in details/Research.
 
 ## First-person option: entry latch and qualified camera coupling
 
@@ -140,7 +181,7 @@ Reproduction tools (all read-only; `--save` accepts the detached plaintext worki
 
 ## Files to use in IDA or Ghidra
 
-- [Shared address map](maps/NativeMap.json): 1255 annotations, 118 imports, evidence, byte signatures and 38 structure definitions.
+- [Shared address map](maps/NativeMap.json): 1272 annotations, 118 imports, evidence, byte signatures and 41 structure definitions.
 - [Ghidra importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra/ImportTodMap.java): applies labels, plate comments and data types.
 - [IDA importer](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/IDA/import_tod_map.py): IDAPython script for labels, repeatable comments and local types; no IDC needed.
 - [Save-format notes](../../SaveFormat.md): file-relative offsets, inventory records and wrapper headers.
@@ -758,7 +799,7 @@ Selector `24DEA8` iterates enabled definitions (`+C` nonzero), requires class `+
 | --- | --- |
 | `+00`, BE32 | Runtime geometry pointer bits; never follow from the save, not a portable pointer/stable UID |
 | `+04`, BE32 | Volume class; selector requires `0x535` |
-| `+08`, BE32 | Unnamed common-object word |
+| `+08`, BE32 | Copied runtime generation/slot handle, independently proven above; not a stable game-wide UID or current validity |
 | `+0C`, byte | Definition enabled when nonzero; `+0D..0F` unresolved |
 | `+10`, BE32 | Physical saved block slot |
 | `+14`, BE32 | Baked resource layer index |
@@ -859,7 +900,7 @@ The translation center gives256; negative`t` gives555, an out-of-grid result, **
 
 `24D788` uses the **14×14 mask at`10060DE8`**, via TOC`897EC8`:129bytes`FF`,67bytes0. Nominal ranges are `[center-7,center+7)` on both coordinates. Mask index is first-loop index+14*second-loop index. Original assembly preserves converted **center class in r24** (`24D8D0`) and loads candidate class in r7 (`24D958`); clearing condition at`24D978/97C` is **`(center_class & brush_byte)==candidate_class`**, then writes0 at`24D9B4`. It is not a candidate-only mask test. Zero mask bytes can still match class0; they are not unconditional skips. Minimum-edge negative starting coordinates fail unsigned bounds/loop comparisons and skip the loop; maximum-edge loops stop at512. Do not replace this behavior with a symmetric clamped brush.
 
-Seven geometry checks cover unsigned rectangle extremes/last-group boundaries, nonboolean flags, retained unready fields, mask shape, exact class-source distinction, qualified projection/order and unchanged actual input. Original types remain intact; `TOD_SaveGridRectangleGroup_verified` supplies the refined field names. Header`+08`, `+0D..0F`, `+1D..1F` and final tail`+60DB` remain unnamed.
+Seven geometry checks cover unsigned rectangle extremes/last-group boundaries, nonboolean flags, retained unready fields, mask shape, exact class-source distinction, qualified projection/order and unchanged actual input. Original types remain intact; `TOD_SaveGridRectangleGroup_verified` supplies the refined field names. Later `grid_aux_fields` proves header`+08` is a copied runtime generation/slot handle; only`+0D..0F`, `+1D..1F` and final tail`+60DB` remain unnamed here.
 
 ### Shipped pause-menu settings dispatch
 
@@ -1024,8 +1065,8 @@ Finalizer `2CE328` increments saved **BE32 count at10144**, writes a `0x9C` reco
 | `+84` | BE float32 | Timing modifier from `2CDD20` with elapsed reset to zero and config24/28/2C |
 | `+88` | BE float32 | Segment+00 adjusted elapsed before clearing |
 | `+8C` | BE float32 | Loaded segment config+20 reference time |
-| `+90` | BE float32 | Runtime `2CDBF8` result+0, accumulated adjusted time |
-| `+94` | BE float32 | Runtime `2CDBF8` result+4, accumulated reference time |
+| `+90` | BE float32 | Saved `8744` through `2CDBF8` result+0, accumulated adjusted scalar; units unverified |
+| `+94` | BE float32 | Saved `8748` through `2CDBF8` result+4, accumulated reference scalar; units unverified |
 | `+98` | BE uint32 | Segment+08 reset-event counter, copied with `lwz/stw` |
 
 **Assembly is essential here:** the decompiler incorrectly represents the counter as a float. Actual log entries contain raw00000001/00000002/00000003, which are integer counts, not tiny denormal time values. Exact time units, difficulty terminology and reset-event cause remain unverified; the inspector applies no time conversion or percentage label.
@@ -1143,7 +1184,7 @@ One snapshot and a stripped executable cannot establish every script-defined key
 
 Import the matching ELF using `PowerPC:BE:64:64-32addr`. Add `Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra` to Script Manager's script directories, run `ImportTodMap.java`, and choose the JSON map. Look for `TOD_` labels and the `/RatchetClank/ToolsOfDestruction` data-type category. The unmapped third TOC base remains in JSON and is skipped as a standalone label.
 
-The live Ghidra checks cover 1254 mapped annotations (the third TOC reference base is unmapped), 38 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry/save-tail/reward-channel/mission-key/pack-boot/segment-loader/world-footprint/health-checkpoint/auxiliary-word/first-person-coupling instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
+The live Ghidra checks cover 1271 mapped annotations (the third TOC reference base is unmapped), 41 structure layouts, repeat-import idempotence and preservation of custom labels/comments. The portable suite verifies the original ELF hash, annotation bytes, serialization/configuration/catalog/progression/collectible/world-state/object/mission-list/bonus/state-storage/settings/arena/global-flag/gameplay-segment/world-object-bitset/reset-category/persistent-grid/grid-routing/grid-geometry/save-tail/reward-channel/mission-key/pack-boot/segment-loader/world-footprint/health-checkpoint/auxiliary-word/first-person-coupling/decryptor-context/segment-aggregate-gate/definition-handle instruction guards and ownership/acquisition relationships. Research decoders reproduce their bundled catalogs independently from the original ELF and check the actual USA plaintext snapshot. When research notes change, the importers retain older notes under `Previous ToD map` markers and keep one current note; custom prose is preserved. Shipped pause-menu evidence separately checks asset identity, four Lua function digests and17asset byte guards without executing scripts or treating asset offsets as ELF VAs. The reference-save inspector verifies unchanged hashes for every original file. Comparison-tool checks use generated fixtures, **not in-game captures**.
 
 For a fresh headless research project, run descriptor preparation **before** analysis, then import annotations. Do not use this fixed-build preparation script on a different ELF:
 

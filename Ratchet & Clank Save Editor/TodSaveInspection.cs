@@ -204,7 +204,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     rows.Add(new(new[] { TodResearch.Hex(offset), field.GetProperty("display_name").GetString(), bits.ToString(CultureInfo.InvariantCulture), Number(bits), $"{bits:X8}", "code-backed" },
                         field.GetProperty("type").GetString() + ". " + field.GetProperty("rule").GetString() + "\r\n" +
                         TodResearch.Map.GetProperty("save_aux_fields").GetProperty("update").GetProperty("context_limit").GetString() +
-                        "\r\nThese behavior-qualified native fields are not named deaths, wins or a player-facing difficulty setting. Raw values remain unchanged, including nonfinite floats and values outside native update bounds."));
+                        "\r\nNamed DECRYPTWIN/DECRYPTLOSE exports and dc_set_spark_speed establish Decryptor context, not all-time wins, all attempts or global combat difficulty. Raw values remain unchanged, including nonfinite floats and values outside native update bounds."));
+                }
+                foreach (var field in TodResearch.Map.GetProperty("tail_aux_fields").GetProperty("fields").EnumerateArray())
+                {
+                    int offset = TodResearch.Offset(field.GetProperty("offset")); uint bits = U32(offset);
+                    rows.Add(new(new[] { TodResearch.Hex(offset), field.GetProperty("display_name").GetString(), bits.ToString(CultureInfo.InvariantCulture), Number(bits), $"{bits:X8}", "code-backed" },
+                        field.GetProperty("type").GetString() + ". " + field.GetProperty("rule").GetString() +
+                        "\r\nSaved subobject getter2CDBF8 resolves89F07C=101F8264, save base+8744. Log+90/+94 copies saved8744/8748 after accumulation; retained log values need not equal current aggregates. Countdown units and event names remain unverified. The supplied USA reference's10/300 values are snapshots, not defaults or seconds. Viewing does not run the native update, clear gates or repair raw bits."));
                 }
                 return new(new[] { "Offset", "Field", "uint32 BE", "float32 BE", "Raw bits", "Confidence" }, rows.AsReadOnly());
             }
@@ -346,7 +353,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     bool matches = U32(offset + 4) == 0x535 && U32(offset + 0x10) == slot;
                     header.AppendLine(matches ? "Header matches native class/slot selection." : "Header does not match class535/physical slot; retained/empty/malformed bytes are not repaired.");
                     header.AppendLine($"Copied runtime geometry pointer bits 0x{U32(offset):X8} (not followed); optional volume reference 0x{U32(offset + 0x18):X8}; coordinate sign byte 0x{data[offset + 0x1C]:X2}.");
-                    header.AppendLine($"Definition enabled byte 0x{data[offset + 0xC]:X2}; unknown word +08: {U32(offset + 8):X8}; unknown bytes +0D..0F: {Convert.ToHexString(data.AsSpan(offset + 0xD, 3))}; +1D..1F: {Convert.ToHexString(data.AsSpan(offset + 0x1D, 3))}.");
+                    uint handle = U32(offset + 8);
+                    header.AppendLine($"Copied runtime definition handle +08: 0x{handle:X8}; generation {handle >> 16}, slot {handle & 0xFFFF}. Native pool has512 slots; this raw slot is {((handle & 0xFFFF) < 512 ? "within" : "outside")} that range. This is not a current runtime-validity test or stable game-wide UID; no handle or pointer is followed, including for unready blocks.");
+                    header.AppendLine($"Definition enabled byte 0x{data[offset + 0xC]:X2}; unknown bytes +0D..0F: {Convert.ToHexString(data.AsSpan(offset + 0xD, 3))}; +1D..1F: {Convert.ToHexString(data.AsSpan(offset + 0x1D, 3))}. Source byte zeros do not establish padding.");
                     for (int group = 0; group < 7; group++)
                     {
                         int g = offset + 0x20 + group * 0x18;

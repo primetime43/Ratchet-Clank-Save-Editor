@@ -36,6 +36,52 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Decryptor summary uses named outcomes and spark scaling, not generic difficulty or lifetime statistics", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8758, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x875C, 4), 7);
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(0x8760, 4), 0.75f);
+            byte[] before = bytes.ToArray();
+            var raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+            var summary = InspectionPresentation.Simplify("Counters & nearby fields", raw);
+            Equal("4294967295", summary.Rows.Single(r => r.Cells[0] == "Decryptor wins").Cells[1]);
+            Equal("7", summary.Rows.Single(r => r.Cells[0] == "Decryptor Sixaxis losses since success").Cells[1]);
+            Equal("0.75×", summary.Rows.Single(r => r.Cells[0] == "Decryptor spark-speed multiplier").Cells[1]);
+            True(raw.Rows.Single(r => r.Cells[0] == "0x8760").Details.Contains("dc_set_spark_speed") && raw.Rows.Single(r => r.Cells[0] == "0x8758").Details.Contains("not all-time wins"), "Named native context still needs lifecycle caveats.");
+            Equal(7, TodResearch.Map.GetProperty("adaptation_context").GetProperty("seven_state_dispatch").GetProperty("states").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Decryptor inspection must not change counter values or speed.");
+        });
+        Check("Saved aggregate and gate floats stay raw, unit-qualified and independent of retained logs", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8744, 4), 0x7FC12345);
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(0x8748, 4), -12.5f);
+            BinaryPrimitives.WriteSingleBigEndian(bytes.AsSpan(0x874C, 4), 10f);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8750, 4), 0x80000000);
+            byte[] before = bytes.ToArray();
+            var inspection = TodSaveInspection.Read(bytes, "BCUS98127");
+            var table = inspection.Table("Counters & nearby fields");
+            Equal("7FC12345", table.Rows.Single(r => r.Cells[0] == "0x8744").Cells[4]);
+            Equal("80000000", table.Rows.Single(r => r.Cells[0] == "0x8750").Cells[4]);
+            True(table.Rows.Single(r => r.Cells[0] == "0x874C").Details.Contains("snapshots, not defaults or seconds"), "Observed countdowns must not imply units or initialization defaults.");
+            True(inspection.Table("Gameplay records").Rows[0].Details.Contains("saved-state+8744") && inspection.Table("Gameplay records").Rows[0].Details.Contains("saved8748"), "Log source provenance must be corrected from runtime-only storage.");
+            Equal(21, InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Count);
+            True(bytes.SequenceEqual(before), "Viewing must not decay gates or recompute aggregates from stale records.");
+        });
+        Check("Copied grid handles split raw generations and slots without following or repairing them", () =>
+        {
+            byte[] bytes = ResearchFixture(); int block = 0x114D8 + 20 * 0x60DC;
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(block + 8, 4), 0xABCDFFFF);
+            bytes[block + 0xD] = 0x11; bytes[block + 0x1D] = 0x22; bytes[block + 0x60DB] = 0xCD;
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Stored state blocks");
+            string detail = table.Rows[20].Details;
+            True(detail.Contains("0xABCDFFFF") && detail.Contains("generation 43981, slot 65535") && detail.Contains("outside that range"), "Raw handle decomposition must retain out-of-pool slots.");
+            True(detail.Contains("no handle or pointer is followed") && detail.Contains("not a current runtime-validity test") && detail.Contains("110000") && detail.Contains("220000") && detail.Contains("CD"), "Unready copied handles and opaque bytes must remain informational.");
+            Equal(19, TodResearch.Map.GetProperty("grid_aux_assets").GetProperty("definition_candidates").GetArrayLength());
+            True(bytes.SequenceEqual(before), "Handle inspection must not resolve runtime pools or normalize copied bytes.");
+        });
         Check("Saved auxiliary words retain extreme and nonfinite values without changing the simple summary", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -48,8 +94,8 @@ internal static partial class Program
             Equal("2147483648", table.Rows.Single(r => r.Cells[0] == "0x875C").Cells[2]);
             Equal("7FC12345", table.Rows.Single(r => r.Cells[0] == "0x8760").Cells[4]);
             True(table.Rows.Single(r => r.Cells[0] == "0x875C").Details.Contains("sixaxis_enabled"), "Saved gate must remain Sixaxis, not combat help.");
-            True(table.Rows.Single(r => r.Cells[0] == "0x8760").Details.Contains("not named deaths, wins"), "Native event meanings remain qualified.");
-            Equal(18, InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Count);
+            True(table.Rows.Single(r => r.Cells[0] == "0x8760").Details.Contains("not all-time wins, all attempts"), "Named Decryptor context must not become universal statistics.");
+            Equal(21, InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Count);
             True(bytes.SequenceEqual(before), "Viewing new auxiliary words must not sanitize input.");
         });
         Check("Health and checkpoint ammo evidence remains runtime-qualified and read-only", () =>
@@ -431,7 +477,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1255, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1272, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -870,7 +916,7 @@ internal static partial class Program
                 Equal(expected.Item2, grid.Columns.Count);
             }
             views.SelectedItem = "Player summary";
-            Equal(18, grid.Rows.Count);
+            Equal(21, grid.Rows.Count);
             True(!grid.Rows.Cast<DataGridViewRow>().Any(row => row.Cells[0].Value.ToString().Contains("Unknown")), "Unknown and candidate fields belong in Technical, not the player summary.");
             views.SelectedItem = "Upgrade nodes";
             var weaponFilter = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");

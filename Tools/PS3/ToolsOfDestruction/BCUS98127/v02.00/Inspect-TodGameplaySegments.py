@@ -65,7 +65,7 @@ def inspect(elf_path, save_path=None):
         (4, "current_attempt_elapsed", "f32", "Same tick delta as adjusted_elapsed; reset and finalization clear it. Time units not independently confirmed."),
         (8, "reset_events", "u32", "2CE518 increments with lwz/addi/stw, modulo32; finalization copies bits to log98. Not float despite decompiler output."),
         (12, "finalized_runtime_score", "f32", "Finalizer stores max(0, runtime baseline + runtime modifier). Not a completion percentage."),
-        (16, "reward_channel_a_accumulated", "f32", "2CF218/2CFAB8 reward scaling; player-facing channel name unresolved."),
+        (16, "reward_channel_a_accumulated", "f32", "2CF218/2CFAB8 experience reward scaling; reward_channels independently confirms the weapon-XP consumer, not hero XP418. Historical generic field key retained."),
         (20, "bolts_reward_accumulated", "f32", "2CEF70 accumulates at14; consumer3842B8 calls369AA8, whose hero state store is41C (bolts). Not wallet balance."),
         (24, "raritanium_reward_accumulated", "f32", "2CEBC0 accumulates at18; consumer3842B8 calls36A458, whose hero state store is420 (raritanium). Not wallet balance."),
         (28, "cached_reward_total_a", "f32", "2CF4C8 computes and reloads this per-segment reward total."),
@@ -76,8 +76,8 @@ def inspect(elf_path, save_path=None):
         (0x84, "post_reset_timing_modifier", "f32", "2CDD20 result using zeroed elapsed time and configuration24/28/2C."),
         (0x88, "adjusted_elapsed", "f32", "Copies segment+0 before reset; no time-unit conversion applied."),
         (0x8C, "configured_reference_time", "f32", "Copies runtime segment configuration+20, not save data."),
-        (0x90, "runtime_accumulated_time", "f32", "Runtime2CDBF8+0 after adding this segment's threshold-adjusted time."),
-        (0x94, "runtime_accumulated_reference", "f32", "Runtime2CDBF8+4 after adding configuration+20."),
+        (0x90, "runtime_accumulated_time", "f32", "2CDBF8 returns saved-state+8744 through89F07C; copies that accumulated elapsed float after the reference fallback. Historical runtime-prefixed key retained, not runtime-only storage; units unverified."),
+        (0x94, "runtime_accumulated_reference", "f32", "2CDBF8+4 is saved8748; copies the accumulated configuration+20 reference float. Historical runtime-prefixed key retained, not runtime-only storage; units unverified."),
         (0x98, "reset_events", "u32", "Raw copy of segment+8 via lwz/stw; integer counter, not seventh float.")]
     encode = lambda entries: [{"offset": hex(o), "name": n, "type": t, "comment": c} for o, n, t, c in entries]
     report = {"confidence": "code-backed", "warning": "Exact USA v02.00 static evidence; no new editable fields or runtime compatibility claims. Segment names/slot association require loaded configuration; slot order is not a planet mission list.",

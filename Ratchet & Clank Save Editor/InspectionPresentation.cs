@@ -97,7 +97,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private static bool Include(string view, string[] c)
         {
             if (view == "Counters & nearby fields")
-                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x43C or 0x440 or 0x458 or 0x480 or 0x8708 or 0x8740 or 0x8754 or 0x906E8 or 0x906EC;
+                return Offset(c[0]) is 0x280 or 0x418 or 0x41C or 0x420 or 0x424 or 0x428 or 0x42C or 0x430 or 0x434 or 0x43C or 0x440 or 0x458 or 0x480 or 0x8708 or 0x8740 or 0x8754 or 0x8758 or 0x875C or 0x8760 or 0x906E8 or 0x906EC;
             if (view == "Game settings") return !c[3].StartsWith("unmapped", StringComparison.Ordinal);
             if (view == "Arena challenges") return c[0] != "0";
             if (view == "Global event flags") return c[2] != "Unmapped";
@@ -157,13 +157,16 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 0x280 => "Acquisition counter", 0x418 => "Hero XP", 0x41C => "Bolts", 0x420 => "Raritanium", 0x424 => "Special bolts spent",
                 0x428 => "Bolt multiplier", 0x43C => "Saved pack type", 0x440 => "Saved boot type",
-                0x458 => "Equipped armor", 0x480 => "Selected skin", 0x8708 => "Skill-point score", _ => c[1]
+                0x458 => "Equipped armor", 0x480 => "Selected skin", 0x8708 => "Skill-point score",
+                0x8758 => "Decryptor wins", 0x875C => "Decryptor Sixaxis losses since success", 0x8760 => "Decryptor spark-speed multiplier", _ => c[1]
             };
             string value = c[2];
             // The multiplier is a float32 field, unlike the nearby integer counters.
             if (Offset(c[0]) == 0x428)
                 value = Number(c[3]) is var multiplier && multiplier != "Invalid value" ? multiplier + "×" : multiplier;
             if (Offset(c[0]) == 0x8754) value = Number(c[3]);
+            if (Offset(c[0]) == 0x8760)
+                value = Number(c[3]) is var spark && spark != "Invalid value" ? spark + "×" : spark;
             if (Offset(c[0]) is 0x43C or 0x440 && uint.TryParse(value, out uint selection))
             {
                 bool pack = Offset(c[0]) == 0x43C;

@@ -48,7 +48,7 @@ def inspect(elf_path, save_path=None):
             "consumer_va": "0x25bf68",
             "semantics": "25BF68 consumes group+04/+08 as rectangle origins and+0C/+10 as extents, transforms them to map-display rectangle endpoints, clips endpoints and adjusts texture UVs. Group+0C is therefore horizontal extent, not merely a boolean activation word; it also gates containment flag recording and image visibility when nonzero. Axes are map-display coordinates, not raw world coordinates.",
             "display_constants": {"coordinate_1_factor": "400/512", "coordinate_2_factor": "200/512", "clip_axis_1": 800, "clip_axis_2": 400},
-            "unknown_members": "Header+08,+0D..0F,+1D..1F and saved tail+60DB remain unresolved. No completion meaning inferred."},
+            "unknown_members": "Header+0D..0F,+1D..1F and saved tail+60DB remain unresolved. Header+08 is the copied runtime generation/slot handle independently guarded by grid_aux_fields; the legacy observation key preserves raw bits. No completion meaning inferred."},
         "projection": {"consumer_va": "0x24d570", "caller_va": "0x24d9c0",
             "geometry_pointer_member": "0x0", "sign_member": "0x1c",
             "normalizer": "sqrt(geometry[0]^2 + geometry[1]^2 + geometry[2]^2)",
