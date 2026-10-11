@@ -298,8 +298,18 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     uint value = U32(field.Item1);
                     rows.Add(new(new[] { TodResearch.Hex(field.Item1), field.Item2, value.ToString(CultureInfo.InvariantCulture), Number(value), $"{value:X8}", field.Item3 },
                         field.Item4 + (field.Item1 is 0x42C or 0x430 or 0x434 ? EquipmentHistoryDetails() : "") +
-                        (field.Item1 == 0x8728 ? "\r\nReached native reset489F68 explicitly clears this word and neighboring872C/8730 after2CDBB0 and before465DC0. Neighbor meanings and all reset invocation causes remain unknown. This is not lifetime history; zero does not prove no previously recorded targets." : "") +
+                        (field.Item1 == 0x8728 ? "\r\nRestoration362C20 consumes a sequential runtime index before testing this saved bit. An already-recorded bit returns false without adding it to runtime pending; caller375C48 then replaces the target index withFFFFFFFF. A clear bit adds it to runtime pending, leaving saved progress unchanged. Shift counts32..63 select zero but still return true; these are raw instruction cases, not proven target counts or IDs.\r\nReached native reset489F68 explicitly clears this word and neighboring872C/8730 after2CDBB0 and before465DC0. Neighbor meanings and all reset invocation causes remain unknown. The neighbors now have confirmed counter behavior, but no proven gameplay event names. This is not lifetime history; zero does not prove no previously recorded targets." : "") +
                         (field.Item1 == 0x906EC ? "\r\nThe restart dispatcher uses an object-local private bank, not a proven alias of the normal save-manager staging buffer. Phase1 captures live bytes once on entry; later polls do not recapture. Phase4 exact selector0/1 invokes selective restart/full private-bank restore before publishing phase5. Selective restart zeroes both mission groups and clears the log count, but retains prior private-bank log bytes8764..10144, not necessarily current live bytes. Runtime phase, choice and capture history are absent from this file; no action is executed here." : "")));
+                }
+                foreach (var field in TodResearch.Map.GetProperty("saved_event_counters").GetProperty("fields").EnumerateArray())
+                {
+                    int offset = TodResearch.Offset(field.GetProperty("offset")); uint bits = U32(offset);
+                    var report = TodResearch.Map.GetProperty("saved_event_counters");
+                    rows.Add(new(new[] { TodResearch.Hex(offset), field.GetProperty("display_name").GetString(), bits.ToString(CultureInfo.InvariantCulture), Number(bits), $"{bits:X8}", "code-backed; event name unknown" },
+                        field.GetProperty("type").GetString() + ". " + field.GetProperty("rule").GetString() + "\r\n" +
+                        report.GetProperty("scaling").GetProperty(field.GetProperty("offset").GetString()).GetProperty("rule").GetString() + "\r\n" +
+                        report.GetProperty("reset").GetString() + "\r\n" + report.GetProperty("warning").GetString() +
+                        "\r\nViewing preserves raw words and never dispatches events, resolves handles, changes runtime parameters or repairs counter relationships."));
                 }
                 foreach (var field in TodResearch.Map.GetProperty("save_aux_fields").GetProperty("fields").EnumerateArray())
                 {

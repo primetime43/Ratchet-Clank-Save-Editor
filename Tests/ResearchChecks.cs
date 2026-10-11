@@ -36,6 +36,28 @@ internal static partial class Program
     private static void ResearchChecks(string root)
     {
         Directory.CreateDirectory(Path.GetFullPath("artifacts"));
+        Check("Saved event counters preserve integer words without inventing deaths, kills or runtime scaling", () =>
+        {
+            foreach (uint value in new uint[] { 0, 3, 0x80000000, uint.MaxValue })
+            {
+                byte[] bytes = ResearchFixture();
+                BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x872C, 4), value);
+                BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x8730, 4), uint.MaxValue - value);
+                byte[] before = bytes.ToArray();
+                var raw = TodSaveInspection.Read(bytes, "BCUS98127").Table("Counters & nearby fields");
+                var summary = InspectionPresentation.Simplify("Counters & nearby fields", raw);
+                foreach (string name in new[] { "Saved event counter", "Handle-qualified event counter" })
+                {
+                    uint expected = name == "Saved event counter" ? value : uint.MaxValue - value;
+                    var row = raw.Rows.Single(r => r.Cells[1] == name);
+                    Equal(expected.ToString("X8"), row.Cells[4]);
+                    Equal(expected.ToString(), summary.Rows.Single(r => r.Cells[0] == name).Cells[1]);
+                    True(row.Details.Contains("not proven deaths, kills") && row.Details.Contains("Snapshot zero is not absence") && row.Details.Contains("never dispatches events"), "Unknown names, reset history and runtime boundaries must remain explicit.");
+                }
+                True(bytes.SequenceEqual(before), "Viewing must not increment, reset or normalize either counter.");
+            }
+            Equal(101, TodResearch.Map.GetProperty("saved_event_counters").GetProperty("instruction_guards").GetArrayLength());
+        });
         Check("Bonus-target progress stays separate from current pending targets and collection eligibility", () =>
         {
             foreach (uint mask in new uint[] { 0, 1, 0x80000001, uint.MaxValue })
@@ -52,6 +74,7 @@ internal static partial class Program
                 Equal(System.Numerics.BitOperations.PopCount(mask) + " recorded bits", friendly.Cells[1]);
                 True(friendly.Details.Contains("not the current runtime pending-target set") && friendly.Details.Contains("total target count remain unknown") && friendly.Details.Contains("Viewing never dispatches collection"), "Summary must not invent remaining targets, reward eligibility or a percentage.");
                 True(friendly.Details.Contains("Neighbor meanings") && friendly.Details.Contains("zero does not prove no previously recorded targets"), "Native reset evidence must not assign neighbor names or lifetime retention.");
+                True(friendly.Details.Contains("Restoration362C20") && friendly.Details.Contains("leaving saved progress unchanged") && friendly.Details.Contains("still return true"), "Restore registration must not invent target totals or modify saved progress.");
                 True(inspection.Table("Special bolts").Rows[0].Details.Contains("no explicit duplicate-bit precheck") && inspection.Table("Special bolts").Rows[0].Details.Contains("separately reread runtime pending mask"), "The two grant paths must stay distinct.");
                 True(bytes.SequenceEqual(before), "Viewing must preserve progress, destination and unrelated saved bits.");
             }
@@ -597,7 +620,7 @@ internal static partial class Program
             Equal("3735928559", word.Cells[2]); Equal("DEADBEEF", word.Cells[4]);
             True(word.Details.Contains("meaning remains unresolved") && word.Details.Contains("not proof of padding"), "Copied tail words must remain semantically qualified.");
             var summary = InspectionPresentation.Simplify("Counters & nearby fields", raw);
-            Equal(22, summary.Rows.Count);
+            Equal(24, summary.Rows.Count);
             True(!summary.Rows.Any(r => r.Cells[0] == "Unknown final tail word"), "Unknown words must stay out of the simple summary.");
             True(bytes.SequenceEqual(before), "Viewing must not reproduce initialization or overwrite the unknown tail word.");
         });
@@ -631,7 +654,7 @@ internal static partial class Program
             Equal("80000000", table.Rows.Single(r => r.Cells[0] == "0x8750").Cells[4]);
             True(table.Rows.Single(r => r.Cells[0] == "0x874C").Details.Contains("snapshots, not defaults or seconds"), "Observed countdowns must not imply units or initialization defaults.");
             True(inspection.Table("Gameplay records").Rows[0].Details.Contains("saved-state+8744") && inspection.Table("Gameplay records").Rows[0].Details.Contains("saved8748"), "Log source provenance must be corrected from runtime-only storage.");
-            Equal(22, InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Count);
+            Equal(24, InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Count);
             True(bytes.SequenceEqual(before), "Viewing must not decay gates or recompute aggregates from stale records.");
         });
         Check("Copied grid handles split raw generations and slots without following or repairing them", () =>
@@ -660,7 +683,7 @@ internal static partial class Program
             Equal("7FC12345", table.Rows.Single(r => r.Cells[0] == "0x8760").Cells[4]);
             True(table.Rows.Single(r => r.Cells[0] == "0x875C").Details.Contains("sixaxis_enabled"), "Saved gate must remain Sixaxis, not combat help.");
             True(table.Rows.Single(r => r.Cells[0] == "0x8760").Details.Contains("not all-time wins, all attempts"), "Named Decryptor context must not become universal statistics.");
-            Equal(22, InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Count);
+            Equal(24, InspectionPresentation.Simplify("Counters & nearby fields", table).Rows.Count);
             True(bytes.SequenceEqual(before), "Viewing new auxiliary words must not sanitize input.");
         });
         Check("Health and checkpoint ammo evidence remains runtime-qualified and read-only", () =>
@@ -1042,7 +1065,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1394, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1400, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -1482,7 +1505,7 @@ internal static partial class Program
                 Equal(expected.Item2, grid.Columns.Count);
             }
             views.SelectedItem = "Player summary";
-            Equal(22, grid.Rows.Count);
+            Equal(24, grid.Rows.Count);
             True(!grid.Rows.Cast<DataGridViewRow>().Any(row => row.Cells[0].Value.ToString().Contains("Unknown")), "Unknown and candidate fields belong in Technical, not the player summary.");
             views.SelectedItem = "Upgrade nodes";
             var weaponFilter = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "UpgradeWeaponFilter");
