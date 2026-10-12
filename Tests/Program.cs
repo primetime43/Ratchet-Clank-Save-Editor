@@ -25,6 +25,7 @@ internal static partial class Program
             if (args.SequenceEqual(new[] { "--new-edits" }))
             {
                 NewEditSmokeChecks();
+                AmmoUpgradeEditingChecks();
                 Console.WriteLine($"All {passed} lightweight edit checks passed.");
                 return 0;
             }

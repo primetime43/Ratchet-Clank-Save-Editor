@@ -98,6 +98,8 @@ A direct set changes current and may raise peak, but does not change additions. 
 
 IDs in order: 0 Heli Pack, 1 Thruster Pack, 2 Hydro Pack, 3 Grind Boots, 4 Gravity Boots, 5 Charge Boots, 6 Treasure Mapper, 7 Box Basher, 8 Armor Magnetizer, 9 O2 Mask, 10 Qwark Info Bot, 11 Golden Groovitron, 12 Verdigris Upgrade, 13 Praxus Upgrade, 14 Hexagonal Washer, 15 Statues, 16 Souls, 17 Ship Parts, 18 Turrets, 19 Timer, 20 Timer Detonator, 21 Timer Clock, 22 Arena Count. Timer names do not establish units.
 
+Golden Groovitron's current/peak/positive-addition words are at `0x330/0x38C/0x3E8`. They are separate from event 286 (`0x5548`, bit 30 of the big-endian u64): the USA sample has all three words set to 1 while the event is clear. The native object query reads only current. Do not treat these as mirrored flags or repair their disagreement.
+
 Fixed +1 producers are confirmed for Charge Boots, Statues and Souls. Souls updates its counters **before** later linked-handle checks. A configured producer sets a global flag before adding its selected object, without locally rejecting an already-set flag. See [object grants](BCUS98127/v02.00/ElfMap.md#object-grants).
 
 ## Player state

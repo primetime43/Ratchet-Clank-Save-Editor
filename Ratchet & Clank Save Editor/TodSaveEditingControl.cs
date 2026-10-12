@@ -12,6 +12,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly TableLayoutPanel fieldsPanel = new() { Name = "MappedEditFields", Dock = DockStyle.Top, AutoSize = true, ColumnCount = 2 };
         private readonly Label notice = new() { Name = "MappedEditNotice", AutoSize = true, Dock = DockStyle.Fill };
         private IReadOnlyList<TodEditField> fields = Array.Empty<TodEditField>();
+        private byte[] snapshot;
         private readonly Dictionary<string, decimal> pending = new(StringComparer.Ordinal);
         private readonly Dictionary<string, string> numericText = new(StringComparer.Ordinal);
         private readonly Dictionary<string, string> invalidNumbers = new(StringComparer.Ordinal);
@@ -63,6 +64,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             pending.Clear();
             numericText.Clear();
             invalidNumbers.Clear();
+            snapshot = data == null ? null : (byte[])data.Clone();
             fields = TodSaveEditing.Fields(data, region);
             category.Items.Clear();
             bool available = fields.Count > 0;
@@ -81,11 +83,24 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (rendering) return;
             if (value == EffectiveDefault(field)) pending.Remove(field.Key);
             else pending[field.Key] = value;
-            if (field.Storage == TodEditStorage.WeaponLevel)
+            if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade)
             {
-                string key = "ammo_" + field.Key["weapon_level_".Length..];
+                string key = "ammo_" + field.Offset / 20;
                 var ammo = fields.Single(item => item.Key == key);
                 if (pending.TryGetValue(key, out decimal amount) && amount == EffectiveDefault(ammo)) pending.Remove(key);
+                // A reverted upgrade can lower the limit of a hidden ammo entry.
+                if (numericText.TryGetValue(key, out string typed))
+                {
+                    using var input = new NumericTextBox { Minimum = ammo.Minimum, Maximum = EffectiveMaximum(ammo),
+                        AllowDecimal = true, FieldName = ammo.Label, Text = typed };
+                    if (input.TryGetValue(out decimal parsed))
+                    {
+                        invalidNumbers.Remove(key);
+                        if (parsed == EffectiveDefault(ammo)) pending.Remove(key);
+                        else pending[key] = parsed;
+                    }
+                    else { pending.Remove(key); invalidNumbers[key] = input.ValidationMessage; }
+                }
                 if (!pending.ContainsKey(key) && !invalidNumbers.ContainsKey(key)) numericText.Remove(key);
             }
             EditsChanged?.Invoke(this, EventArgs.Empty);
@@ -97,11 +112,16 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 string key = "weapon_level_" + field.Key["ammo_".Length..];
                 var level = fields.FirstOrDefault(item => item.Key == key);
-                if (level != null && pending.TryGetValue(key, out decimal selected) && selected > level.Current)
-                    return field.Maximum;
+                if ((level != null && pending.TryGetValue(key, out decimal selected) && selected > level.Current) ||
+                    pending.Any(edit => edit.Value == 1 && fields.Any(item => item.Key == edit.Key &&
+                        item.Storage == TodEditStorage.AmmoUpgrade && item.Offset / 20 == field.Offset / 20)))
+                    return EffectiveMaximum(field);
             }
             return field.Current;
         }
+
+        private decimal EffectiveMaximum(TodEditField field) => field.Category == "Weapon ammo"
+            ? TodAmmoUpgradeEditing.Maximum(snapshot, field, pending) : field.Maximum;
 
         public bool ValidateInputs()
         {
@@ -120,6 +140,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 "Bonus effects" => "Required skill scores: hero head 50, enemy head 100, James Zurkon 400, mirror 500. Zurkon Off clears only the saved request; a runtime override can still select the alternate. No points or unlocks are granted. Not yet tested in-game.",
                 "Gadget ammo" => "Ammo for already-owned consumables only. Groovitron and traversal gadgets stay read-only because of linked state. Values use the native float storage and reference capacities, not a promised use count. Not yet tested in-game.",
+                "Ammo upgrades" => "Add missing ordinary capacity nodes next to already-installed nodes. Existing upgrades cannot be removed. Adding a node refills to the new capacity; Weapon ammo previews it and allows an override. Raritanium is unchanged: this is a direct save edit, not a purchase. Other node types stay read-only. Not yet tested in-game.",
                 "Weapon levels" => "Levels stay within the weapon's existing 1–5 or 6–10 tier. A change sets matching XP; increases refill ammo, decreases keep ammo. Weapon ammo shows the planned refill and allows an override. No ownership, upgrades or purchases are granted. Not yet tested in-game.",
                 _ => defaultNotice
             };
@@ -158,7 +179,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     {
                         var numeric = new NumericTextBox
                         {
-                            Minimum = field.Minimum, Maximum = field.Maximum,
+                            Minimum = field.Minimum, Maximum = EffectiveMaximum(field),
                             AllowDecimal = true, FieldName = field.Label, Value = value
                         };
                         // Text survives category changes, including incomplete/invalid input.

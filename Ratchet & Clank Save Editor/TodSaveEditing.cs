@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade }
     public sealed record TodEditOption(decimal Value, string Label)
     {
         public override string ToString() => Label;
@@ -102,6 +102,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
             TodWeaponLevelEditing.AddFields(data, fields);
             TodGadgetAmmoEditing.AddFields(data, fields);
+            TodAmmoUpgradeEditing.AddFields(data, fields);
 
             void Appearance(string key, string label, int ownedBase, int selectedOffset, string[] names)
             {
@@ -168,14 +169,15 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 if (!fields.TryGetValue(edit.Key, out var field))
                     throw new InvalidDataException("This field is not editable in the current save: " + edit.Key);
-                if (edit.Value < field.Minimum || edit.Value > field.Maximum ||
+                decimal maximum = field.Category == "Weapon ammo" ? TodAmmoUpgradeEditing.Maximum(original, field, edits) : field.Maximum;
+                if (edit.Value < field.Minimum || edit.Value > maximum ||
                     (field.Storage != TodEditStorage.Float && edit.Value != decimal.Truncate(edit.Value)) ||
                     (field.Options != null && !field.Options.Any(option => option.Value == edit.Value)))
                     throw new InvalidDataException("Invalid value for " + field.Label + ".");
                 if (field.Storage == TodEditStorage.Float)
                 {
                     float value = (float)(edit.Value / field.Scale);
-                    if (!float.IsFinite(value) || value > (float)(field.Maximum / field.Scale))
+                    if (!float.IsFinite(value) || value > (float)(maximum / field.Scale))
                         throw new InvalidDataException("Value exceeds the reference limit for " + field.Label + ".");
                 }
             }
@@ -184,16 +186,16 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 edit.Value != fields[edit.Key].Current).ToArray();
             foreach (var edit in levelChanges)
                 TodWeaponLevelEditing.Apply(original, result, fields[edit.Key], edit.Value, fields);
+            TodAmmoUpgradeEditing.Apply(original, result, fields, edits);
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (field.Storage == TodEditStorage.WeaponLevel) continue; // Coupled plan already applied.
+                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade) continue; // Coupled plans already applied.
                 if (edit.Value == field.Current)
                 {
-                    // An explicitly supplied ammo value overrides the level-up
-                    // refill, even when it requests the original amount/bits.
-                    if (field.Category == "Weapon ammo" && levelChanges.Any(level =>
-                        fields[level.Key].Offset / 20 == field.Offset / 20))
+                    // Explicit ammo overrides either coupled refill, retaining
+                    // the original float bits for a same-value request.
+                    if (field.Category == "Weapon ammo")
                         original.AsSpan(field.Offset, 4).CopyTo(result.AsSpan(field.Offset, 4));
                     continue; // Preserve noncanonical flags/raw float bits.
                 }

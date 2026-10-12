@@ -349,6 +349,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     details += "\r\nAmmo-capacity calculation: " + capacity.GetProperty("modifier_order").GetProperty("rule").GetString() +
                         "\r\n" + capacity.GetProperty("saved_inputs").GetProperty("index_limit").GetString() +
                         "\r\n" + capacity.GetProperty("modifier_order").GetProperty("limits").GetString();
+                    if (item.Id == 19)
+                    {
+                        bool goldenEvent = (BinaryPrimitives.ReadUInt64BigEndian(data.AsSpan(0x5548, 8)) & (1UL << 30)) != 0;
+                        details += $"\r\nGolden Groovitron: current {U32(0x330)}, peak {U32(0x38C)}, positive additions {U32(0x3E8)}; separate acquired event {(goldenEvent ? "set" : "clear")}." +
+                            "\r\nThese are not mirrored flags. The native object query reads current only; the observed activation branch uses it for instance components, not a saved-ammo bypass. Unlimited-ammo dependencies remain unconfirmed, so linked edits stay read-only.";
+                    }
                     if (item.Id == 27)
                     {
                         var reset = TodResearch.Map.GetProperty("load_reset_dependencies").GetProperty("ammo_reset");

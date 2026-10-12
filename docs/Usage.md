@@ -36,11 +36,12 @@ Changing encrypted metadata needs original signing keys that the editor does not
 - Ammo for already-owned combat weapons, bounded by shipped level/modifier definitions.
 - Ammo for seven already-owned consumables: Zurkon, ConfusionGas, Slinkonator, MiniLeech, MaxiLeech, Morph and Copter. Groovitron and traversal gadgets remain read-only because of linked state.
 - Combat weapon levels within the existing 1–5 or 6–10 tier. A change sets XP to that level's reference threshold. Increasing a level refills ammo; decreasing keeps it. The ammo page previews a refill and lets you override it. Inconsistent records stay read-only; this does not buy or grant another tier.
+- Missing ordinary ammo-capacity upgrades adjacent to installed nodes. Add-only: no removal or ownership grants. Adding refills to the new capacity; the ammo page allows an override. Raritanium is unchanged, so this is not a simulated purchase. Save and reopen to expose further adjacent nodes. Fully upgraded saves have no additions to offer.
 - Selection of already-owned armor and skins; no ownership is granted.
 - Hero head size, enemy head size, James Zurkon and mirror mode, requiring existing skill scores of 50, 100, 400 and 500 respectively. Unknown saved states stay read-only; points and earned skill bits are unchanged. Zurkon Off clears the saved request, but a separate runtime override can still select the alternate.
 - Quick-select slots 0–23: Empty or owned items passing the native initial-flags filter. Slots 24–31 and unknown current values are retained; stored indices are not wheel positions. New duplicates are rejected, including duplicates in the last eight slots. Clear the old slot and assign the new one before saving to move an item.
 
-Fields with nonfinite, out-of-range or unrecognized inputs stay read-only. Arbitrary XP, upgrade masks, ownership, story flags, counters and other progress remain inspection-only because their dependencies are not fully reproduced.
+Fields with nonfinite, out-of-range or unrecognized inputs stay read-only. Arbitrary XP or masks, non-ammo upgrades, ownership, story flags, counters and other progress remain inspection-only because their dependencies are not fully reproduced.
 
 Changes are staged until **Save All** and use the existing backup/encryption checks. These edits are based on USA v02.00 research; the save layout check cannot identify every executable revision. In-game acceptance and live ammo capacities are not yet validated. Other games and regions keep currency editing only.
 

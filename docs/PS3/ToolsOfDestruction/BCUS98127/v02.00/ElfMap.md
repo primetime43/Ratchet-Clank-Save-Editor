@@ -110,11 +110,19 @@ Runtime weapons borrow the canonical inventory record. Local ammo admission and 
 
 Seven consumable records now have a bounded ammo policy: IDs 16/17/18/20/21/22/23, reference capacities 4/2/3/2/1/3/3. Require ownership, stored level 0, finite zero XP, no modifiers and finite ammo within capacity. Only ammo at record `+8` changes. Fractional values are native float storage, not a proved use count. Groovitron (19) remains excluded because Golden Groovitron object 11 and event flag 286 are separate linked state; IDs 24–31 remain excluded.
 
+Golden Groovitron's object query reads only current count at `0x330`, not event 286. The sample has object counts 1/1/1 with that event clear. In `0x475710`, the object query selects runtime float components later copied to a spawned instance; the separate spawn-attempt path debits 1.0 ammo even when creation returns zero. This does not establish successful firing or the complete unlimited-ammo mechanism. No linked-state repair or edit is enabled.
+
 ### Purchases and ordering
 
 Upgrade purchase publishes the modifier, conditionally refills ammo, then debits raritanium and notifies runtime systems. Signed wallet admission differs from vendor adjacency/duplicate checks; the transaction itself can charge for an already-set bit.
 
-The add-only topology audit covers 204 nodes: 15 starts, 175 ordinary and 14 special. Of the 189 positive nodes, 182 have complete numeric definitions; seven special nodes have unspecified values and are excluded. Candidate additions require an owned record and an attainable existing mask. Ordinary nodes need an installed neighbor; special nodes use all positive neighbors as a conservative gate. This is a research frontier, not an implemented upgrade editor or a purchase verdict. The supplied save already has every positive node, so it cannot confirm an addition transition.
+The topology audit covers 204 nodes: 15 starts, 175 ordinary and 14 special. Of the 189 positive nodes, 182 have complete numeric definitions. Seven specials have unspecified numeric values; that is not proof of a zero effect.
+
+The editor offers only the 38 ordinary ammo-capacity nodes: positive integer additions of 1/2/4/5/20/30, none percentages or specials. Require a consistent owned weapon, valid XP/level/ammo, an attainable existing mask and an installed adjacent node (start0 implicit). Bits are add-only. Capacity is recomputed in native float32 order and refilled; explicit ammo overrides the refill up to the new limit. Wallet, ownership and callbacks are untouched. Ten nodes are reachable from an empty mask. Other node types remain research candidates only.
+
+The supplied save already has every positive node, so it cannot confirm an addition transition. Synthetic checks do not establish in-game acceptance.
+
+Special query `0x466630` returns true for any enabled declared node of type `MOD_SPECIAL` (16); numeric value, price and ownership are not inputs. Actor wrapper `0x46B328` supplies the borrowed saved mask. Predator consumer `0x478AA8` allows one prior matching target token with special enabled, but rejects two or more; an earlier runtime component check can also reject. This is local target admission, not a projectile-count guarantee. All seven blank-value special bits are set in the sample, but their edits remain read-only pending weapon-specific dependency checks.
 
 The level-five weapon purchase path requires ownership, exactly stored level 4, replay state and definition prerequisites. Dispatch and later recheck sample those conditions separately. Level/XP/ammo publication precedes bolt payment. Repeated normal acquisition can charge an already-owned record.
 
@@ -215,8 +223,8 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Topic | Map sections |
 | --- | --- |
 | Save/load/restart | `serialization`, `snapshot_lifecycle`, `restart_execution`, `save_tail`, `load_selection` |
-| Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_level_editing`, `gadget_ammo_editing`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
-| Purchases | `weapon_purchase`, `upgrade_purchase`, `upgrade_edit_candidates`, `armor_consumer`, `currency_mutation` |
+| Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_level_editing`, `gadget_ammo_editing`, `groovitron_linked_state`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
+| Purchases | `weapon_purchase`, `upgrade_purchase`, `upgrade_edit_candidates`, `ammo_upgrade_editing`, `special_modifier_effects`, `armor_consumer`, `currency_mutation` |
 | Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
 | XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow` |
 | Collectibles and bonuses | `collectibles`, `collectible_producers`, `blueprint_producers`, `bonuses`, `bonus_effects`, `bonus_remaining`, `bonus_selection`, `bonus_selection_assets` |
@@ -239,4 +247,4 @@ The main gaps are field meanings and runtime relationships, not just addresses:
 - Timer units, unnamed reset/event categories and every lifecycle dependency.
 - In-game tests of new edits, persisted health/checkpoint behavior and other regions/builds.
 
-Ghidra import/preservation tests and software regressions pass for the mapped build. IDA has mocked safety tests, not a live import test. Neither establishes complete gameplay coverage. See the [tools guide](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md) for reproducible checks.
+Earlier map revisions passed Ghidra import/preservation checks; the latest annotations have byte checks but have not been re-imported live. IDA has mocked safety tests, not a live import test. Neither establishes complete gameplay coverage. See the [tools guide](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md) for reproducible checks.

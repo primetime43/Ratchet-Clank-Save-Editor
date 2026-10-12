@@ -108155,6 +108155,492 @@
     },
     "survey_limit": "Bounded direct GETGLOBAL operands in global_cached .lc only. Zero direct grant GETGLOBAL occurrences do not exclude aliases, indirect calls, native callbacks or other archives. No script executed; no placement identity inferred from an object symbol."
   },
+  "groovitron_linked_state": {
+    "confidence": "exact-build-native-branch-and-detached-save-evidence",
+    "saved_fields": {
+      "ordinary_ammo": "0x184",
+      "golden_current": "0x330",
+      "golden_peak": "0x38c",
+      "golden_positive_additions": "0x3e8",
+      "golden_event": {
+        "id": 286,
+        "word_offset": "0x5548",
+        "bit": 30
+      }
+    },
+    "ordinary_definition": {
+      "weapon_id": 19,
+      "config_name": "Groovitron",
+      "initial_flags": "0x0000080A",
+      "shipped_capacity": 3
+    },
+    "object_query": {
+      "thunk_va": "0x24f7b8",
+      "leaf_va": "0x23d940",
+      "rule": "Returns current object word at hero inventory+304+4*ID !=0. For ID11 this is saved330; neither peak, additions nor event286 is read by this leaf."
+    },
+    "activation_branch": {
+      "va": "0x475710",
+      "golden_query_call_va": "0x475968",
+      "golden_branch": "When the earlier runtime predicate routes here, query object11. Nonzero writes four float components 1,1,0.250980407,1 at weapon instance+14 pointer+140; zero skips those stores. The spawn-initialization path47591C..475930 copies those16 bytes to the spawned instance+14 pointer+140. These are runtime appearance-like components, not saved ammo or capacity; a property name is not proved.",
+      "ammo_path": "Spawn-attempt branch loads1.0 into f31 at475850, passes it to46AD80 at475954, then returns to47578C which loads0.0 for gate46A420. The debit is not locally conditioned on object11 or event286. A zero spawn result at4758E4 skips instance initialization but still reaches475940/debit; this is not proof of successful firing.",
+      "scope": "The observed branch does not establish the complete Golden unlimited-ammo mechanism or rule out runtime definition overrides and other callbacks. No Golden-to-capacity contract is inferred."
+    },
+    "editor_policy": "Keep Groovitron ammo and Golden grant/event edits read-only. Shipped MaxAmmo3 and a local one-unit debit do not by themselves validate Golden linked-state editing or a global ownership/capacity policy.",
+    "shared_guard_sections": [
+      "ammo_capacity",
+      "weapon_ammo_debit",
+      "quick_select_eligibility",
+      "global_flags"
+    ],
+    "function_guards": [
+      {
+        "va": "0x475710",
+        "size": "0x2c8",
+        "sha256": "A8FB632BD29E920AC04200B7E277848AE31FA4EB9A7E29A5B467E1464554BB0D"
+      },
+      {
+        "va": "0x475358",
+        "size": "0x148",
+        "sha256": "158BA859D847A04AD931BF28A9D1019E17E058B03AF11E5769009AA7F0217410"
+      },
+      {
+        "va": "0x23d940",
+        "size": "0x30",
+        "sha256": "78BA1A1F4EFF54A68EFECB41A4E8EFAE33A88DC58230873797F250B5AAF5646E"
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x24f7b8",
+        "bytes": "F8410028"
+      },
+      {
+        "va": "0x24f7bc",
+        "bytes": "3C42FFFF"
+      },
+      {
+        "va": "0x24f7c0",
+        "bytes": "38420018"
+      },
+      {
+        "va": "0x24f7c4",
+        "bytes": "4BFEE17C"
+      },
+      {
+        "va": "0x4753d4",
+        "bytes": "3800080A"
+      },
+      {
+        "va": "0x4753f0",
+        "bytes": "F8010070"
+      },
+      {
+        "va": "0x475408",
+        "bytes": "38800013"
+      },
+      {
+        "va": "0x475470",
+        "bytes": "4BFF1329"
+      },
+      {
+        "va": "0x475788",
+        "bytes": "419900C8"
+      },
+      {
+        "va": "0x47578c",
+        "bytes": "C3E26348"
+      },
+      {
+        "va": "0x475794",
+        "bytes": "FC20F890"
+      },
+      {
+        "va": "0x475798",
+        "bytes": "4BFF4C89"
+      },
+      {
+        "va": "0x475850",
+        "bytes": "C3E26354"
+      },
+      {
+        "va": "0x4758e4",
+        "bytes": "419A005C"
+      },
+      {
+        "va": "0x47591c",
+        "bytes": "80BF0014"
+      },
+      {
+        "va": "0x475920",
+        "bytes": "80830014"
+      },
+      {
+        "va": "0x475924",
+        "bytes": "E9250140"
+      },
+      {
+        "va": "0x475928",
+        "bytes": "E8050148"
+      },
+      {
+        "va": "0x47592c",
+        "bytes": "F9240140"
+      },
+      {
+        "va": "0x475930",
+        "bytes": "F8040148"
+      },
+      {
+        "va": "0x475940",
+        "bytes": "FC20F890"
+      },
+      {
+        "va": "0x475954",
+        "bytes": "4BFF542D"
+      },
+      {
+        "va": "0x47595c",
+        "bytes": "4BFFFE30"
+      },
+      {
+        "va": "0x475960",
+        "bytes": "3880000B"
+      },
+      {
+        "va": "0x475968",
+        "bytes": "4BDD9E51"
+      },
+      {
+        "va": "0x475974",
+        "bytes": "2C840000"
+      },
+      {
+        "va": "0x475978",
+        "bytes": "4186FE00"
+      },
+      {
+        "va": "0x47597c",
+        "bytes": "80DF0014"
+      },
+      {
+        "va": "0x475980",
+        "bytes": "C0026354"
+      },
+      {
+        "va": "0x475984",
+        "bytes": "38A60140"
+      },
+      {
+        "va": "0x475988",
+        "bytes": "C1A26358"
+      },
+      {
+        "va": "0x475990",
+        "bytes": "D009000C"
+      },
+      {
+        "va": "0x475994",
+        "bytes": "D1A90008"
+      },
+      {
+        "va": "0x475998",
+        "bytes": "D0090000"
+      },
+      {
+        "va": "0x47599c",
+        "bytes": "D0090004"
+      },
+      {
+        "va": "0x4759a0",
+        "bytes": "4BFFFDD8"
+      },
+      {
+        "va": "0x8a6268",
+        "bytes": "00000000"
+      },
+      {
+        "va": "0x8a6274",
+        "bytes": "3F800000"
+      },
+      {
+        "va": "0x8a6278",
+        "bytes": "3E808081"
+      }
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x475710",
+        "name": "TOD_golden_object11_components_and_ammo_attempt_verified",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "F821FF517C0802A6FB610080787B0020",
+        "comment": "Object11 query24F7B8 at475968 uses saved current330 only. A nonzero result writes runtime float components1,1,0.250980407,1, later copied to a spawned instance; no saved capacity/event store here. The spawn-attempt branch independently passes1.0 to46AD80 at475954, even if spawn returned0. Not proof of firing success or the complete Golden unlimited-ammo mechanism.",
+        "evidence": "Exact-build full-body hash; GroovitronState instruction guards; objects.catalog ID11; shared weapon_ammo_debit and ammo_capacity guards."
+      }
+    ],
+    "warning": "USA v02.00 static evidence only. Runtime predicates, use acceptance, linked mutations and gameplay behavior are not executed or certified.",
+    "save_observation": {
+      "sha256": "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463",
+      "groovitron": {
+        "id": 19,
+        "record_offset": "0x17c",
+        "ammo_offset": "0x184",
+        "ammo_bits": "00000000",
+        "ammo": 0,
+        "xp": 0,
+        "modifier_mask": "0x00000000",
+        "owned": 1,
+        "stored_level": 0
+      },
+      "golden_object": {
+        "id": 11,
+        "current": 1,
+        "peak": 1,
+        "positive_additions": 1,
+        "current_nonzero_query": true
+      },
+      "golden_event286_set": false,
+      "object_query_and_event_agree_in_snapshot": false,
+      "qualification": "The object query and named event are separate storage, not a synchronized invariant. No disagreement repair, Golden grant or ammo edit is licensed."
+    }
+  },
+  "special_modifier_effects": {
+    "reference_build": "BCUS98127 v02.00",
+    "elf_sha256": "0EE9A8414C8FC182BC19FA2A523E6D050D0BE76138B3733AE515798D77D2468C",
+    "report_tool": "Inspect-TodSpecialModifiers.py",
+    "catalog": [
+      {
+        "id": 5,
+        "config_name": "BuzzBlade",
+        "node": 6,
+        "save_mask_offset": "0x70",
+        "mask_bit": "0x40",
+        "type_id": 16,
+        "value": null,
+        "cost": 1200
+      },
+      {
+        "id": 6,
+        "config_name": "Predator",
+        "node": 8,
+        "save_mask_offset": "0x84",
+        "mask_bit": "0x100",
+        "type_id": 16,
+        "value": null,
+        "cost": 500
+      },
+      {
+        "id": 7,
+        "config_name": "AlphaNova",
+        "node": 10,
+        "save_mask_offset": "0x98",
+        "mask_bit": "0x400",
+        "type_id": 16,
+        "value": null,
+        "cost": 2000
+      },
+      {
+        "id": 8,
+        "config_name": "FlameThrower",
+        "node": 9,
+        "save_mask_offset": "0xac",
+        "mask_bit": "0x200",
+        "type_id": 16,
+        "value": null,
+        "cost": 1500
+      },
+      {
+        "id": 10,
+        "config_name": "Reaper",
+        "node": 13,
+        "save_mask_offset": "0xd4",
+        "mask_bit": "0x2000",
+        "type_id": 16,
+        "value": null,
+        "cost": 800
+      },
+      {
+        "id": 11,
+        "config_name": "Rocket",
+        "node": 5,
+        "save_mask_offset": "0xe8",
+        "mask_bit": "0x20",
+        "type_id": 16,
+        "value": null,
+        "cost": 2500
+      },
+      {
+        "id": 12,
+        "config_name": "RoboHive",
+        "node": 9,
+        "save_mask_offset": "0xfc",
+        "mask_bit": "0x200",
+        "type_id": 16,
+        "value": null,
+        "cost": 2500
+      }
+    ],
+    "enum": {
+      "id": 16,
+      "name": "MOD_SPECIAL",
+      "name_va": "0x10000428",
+      "value_load_va": "0x80c28",
+      "value_slot_va": "0x88b36c",
+      "export_call_va": "0x80ed4"
+    },
+    "predicate": {
+      "va": "0x466630",
+      "definition_pointer_member": "0x48",
+      "count_offset": "0x6a4",
+      "array_offset": "0x464",
+      "stride": "0x18",
+      "rule": "Returns true when any enabled mask index below declared NumMods has type16. Zero count returns false. Reads type+0 only: kind+4, value+8, price+0C and labels are not inputs. No ownership, topology, wallet or playable-level gate.",
+      "boundary": "Native count is not locally clamped to24; synthetic preview and bundled configs are bounded. Valid definition pointers are assumed by native code."
+    },
+    "actor_wrapper": {
+      "va": "0x46b328",
+      "record_pointer_member": "0x2c",
+      "definition_pointer_member": "0x30",
+      "rule": "Loads saved modifier mask from borrowed record+0C and queries definition+30 through466630. Does not check record null or ownership; returns the low result byte."
+    },
+    "predator_consumer": {
+      "va": "0x478aa8",
+      "bytes": 540,
+      "sha256": "5F2CB76E8ADE61E2E96992BB8848302C0968A15535932BB85EFF0CC2ED1CC8DD",
+      "query_call_va": "0x478bc8",
+      "runtime_list_offset": "0x320",
+      "count_offset": "0x3c0",
+      "entry_stride": "0x10",
+      "rule": "Counts exact12-byte target-token matches in the runtime list. A first match-free target returns1 without special query. For repeated targets, a runtime component6C whose float+8 is ordered below2.0 rejects before querying the modifier. Otherwise no MOD_SPECIAL rejects; MOD_SPECIAL admits exactly one previous match and rejects two or more. Every path publishes the request in a32-entry runtime ring first.",
+      "boundary": "This proves a local duplicate-target admission effect, not a final projectile count, complete target eligibility or whole weapon behavior. Runtime lists/components/ring are not saved fields."
+    },
+    "edit_policy": "Keep these seven nodes read-only for now. A blank numeric value is not itself a predicate blocker: the native special query does not read it. Weapon-specific effects and activation dependencies require separate qualification; do not replace unspecified values with zero.",
+    "instruction_guards": [
+      {
+        "va": "0x466630",
+        "bytes": "8163004879690020812906A42F890000419E004C38A9FFFF396B046478A300203940000038030001390000017C0903A67D065030796900207CC72038396B00182C070000394A000141820010818900002C8C0010418600144200FFD8386000007C6307B44E800020386000017C6307B44E800020"
+      },
+      {
+        "va": "0x46b328",
+        "bytes": "F821FF917C8802A6F88100808123002C806300308089000C4BFFB2F160000000E8010080786306207C0803A6382100704E800020"
+      },
+      {
+        "va": "0x80c28",
+        "bytes": "C3C2B434"
+      },
+      {
+        "va": "0x88b36c",
+        "bytes": "41800000"
+      },
+      {
+        "va": "0x80ec8",
+        "bytes": "FC20F0908082B4F87FA3EB784BF91ABD"
+      },
+      {
+        "va": "0x88b430",
+        "bytes": "10000428"
+      },
+      {
+        "va": "0x478bc4",
+        "bytes": "7BE300204BFF276160000000547F063E2C9F0000418600602B1E00013860000040990074"
+      },
+      {
+        "va": "0x478c38",
+        "bytes": "E881009038600000EBC100707C6307B4"
+      },
+      {
+        "va": "0x478c58",
+        "bytes": "E881009038600001EBC100707C6307B4"
+      },
+      {
+        "va": "0x8a63e0",
+        "bytes": "40000000"
+      }
+    ],
+    "recommended_annotations": [
+      {
+        "va": "0x00466630",
+        "name": "TOD_any_enabled_special_modifier",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "81630048",
+        "comment": "Any enabled declared node of type16 (MOD_SPECIAL). Does not read numeric value/kind/cost or ownership; pointer/count safety is not checked locally.",
+        "evidence": "SpecialModifiers exact-build instruction guards; enum16 export; actor wrapper; full Predator consumer body SHA-256."
+      },
+      {
+        "va": "0x0046B328",
+        "name": "TOD_actor_special_modifier_from_saved_mask",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "F821FF91",
+        "comment": "Actor+2C borrowed inventory record supplies saved mask+0C; actor+30 definition passed to466630. No null/ownership check. Result reduced to low byte.",
+        "evidence": "SpecialModifiers exact-build instruction guards; enum16 export; actor wrapper; full Predator consumer body SHA-256."
+      },
+      {
+        "va": "0x00478AA8",
+        "name": "TOD_predator_duplicate_target_local_admission",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "F821FF81",
+        "comment": "Counts exact12-byte token matches at runtime+320. Repeat targets require special predicate and fewer than2 previous matches after component6C float+8 below2.0 rejection. Writes request ring even on rejection. Not complete target or projectile eligibility.",
+        "evidence": "SpecialModifiers exact-build instruction guards; enum16 export; actor wrapper; full Predator consumer body SHA-256."
+      }
+    ],
+    "save_observation": {
+      "bytes": 591600,
+      "sha256": "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463",
+      "records": [
+        {
+          "id": 5,
+          "raw_mask": "0x3ffe",
+          "special_bit_set": true
+        },
+        {
+          "id": 6,
+          "raw_mask": "0xfffe",
+          "special_bit_set": true
+        },
+        {
+          "id": 7,
+          "raw_mask": "0x7fe",
+          "special_bit_set": true
+        },
+        {
+          "id": 8,
+          "raw_mask": "0x7ffe",
+          "special_bit_set": true
+        },
+        {
+          "id": 10,
+          "raw_mask": "0x3ffe",
+          "special_bit_set": true
+        },
+        {
+          "id": 11,
+          "raw_mask": "0xffe",
+          "special_bit_set": true
+        },
+        {
+          "id": 12,
+          "raw_mask": "0x7ffe",
+          "special_bit_set": true
+        }
+      ],
+      "warning": "A snapshot confirms stored bit values, not a before/after activation or native acceptance test."
+    }
+  },
+  "ammo_upgrade_editing": {
+    "scope": "BCUS98127 supplied v02.00; direct add-only file edits, not purchases or in-game validation",
+    "catalog_section": "upgrade_edit_candidates",
+    "candidate_count": 38,
+    "candidate_filter": "Positive ordinary MOD_AMMO node; complete finite positive integral absolute value and cost; not a special or percentage node",
+    "native_guard_sections": ["upgrade_purchase", "ammo_capacity", "weapon_level_editing"],
+    "baseline": "Require the verified owned combat level/XP/ammo dependencies, defined mask bits, and an installed graph attainable from implicit start0. Only nodes adjacent to the original installed graph are offered; reopen after saving to expose the next frontier.",
+    "write_policy": "OR selected node bits, retain all existing nodes and start bit; calculate maximum in physical-index float32 order. Refill absolutely to the new maximum when capacity changes. Preserve raritanium, ownership, counters, unlocks and other bytes; no removals, callbacks or payment simulation.",
+    "combined_edits": "Within-tier level/XP plan, then mask/capacity refill, then explicit ammo. Validate ammo against final capacity. Same-value explicit ammo restores original float bits.",
+    "observation_limit": "The supplied save has every positive upgrade already installed. Addition behavior can be checked synthetically but no actual purchase transition or in-game acceptance was captured."
+  },
   "upgrade_edit_candidates": {
     "confidence": "exact-build native guards and shipped literal topology audit",
     "warning": "Research candidates only. No new save-edit authorization or gameplay validation. Shipped values are not captured runtime overrides.",
@@ -126097,6 +126583,42 @@
     ]
   },
   "annotations": [
+    {
+      "va": "0x00475710",
+      "name": "TOD_golden_object11_components_and_ammo_attempt_verified",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF517C0802A6FB610080787B0020",
+      "comment": "Object11 query24F7B8 at475968 uses saved current330 only. A nonzero result writes runtime float components1,1,0.250980407,1, later copied to a spawned instance; no saved capacity/event store here. The spawn-attempt branch independently passes1.0 to46AD80 at475954, even if spawn returned0. Not proof of firing success or the complete Golden unlimited-ammo mechanism.",
+      "evidence": "Exact-build full-body hash; GroovitronState instruction guards; objects.catalog ID11; shared weapon_ammo_debit and ammo_capacity guards."
+    },
+    {
+      "va": "0x00466630",
+      "name": "TOD_any_enabled_special_modifier",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "81630048",
+      "comment": "Any enabled declared node of type16 (MOD_SPECIAL). Does not read numeric value/kind/cost or ownership; pointer/count safety is not checked locally.",
+      "evidence": "SpecialModifiers exact-build instruction guards; enum16 export; actor wrapper; full Predator consumer body SHA-256."
+    },
+    {
+      "va": "0x0046B328",
+      "name": "TOD_actor_special_modifier_from_saved_mask",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF91",
+      "comment": "Actor+2C borrowed inventory record supplies saved mask+0C; actor+30 definition passed to466630. No null/ownership check. Result reduced to low byte.",
+      "evidence": "SpecialModifiers exact-build instruction guards; enum16 export; actor wrapper; full Predator consumer body SHA-256."
+    },
+    {
+      "va": "0x00478AA8",
+      "name": "TOD_predator_duplicate_target_local_admission",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF81",
+      "comment": "Counts exact12-byte token matches at runtime+320. Repeat targets require special predicate and fewer than2 previous matches after component6C float+8 below2.0 rejection. Writes request ring even on rejection. Not complete target or projectile eligibility.",
+      "evidence": "SpecialModifiers exact-build instruction guards; enum16 export; actor wrapper; full Predator consumer body SHA-256."
+    },
     {"va":"0x000B8A68","kind":"function","name":"TOD_weapon_config_XP_indexed_get","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"WeaponConfig indexed XP getter uses lfsx data+230+4*index; unsigned index>19 calls error helper, then can continue if it returns. This is not the scalar same-name XP property at+14 or HeroConfig's100-entry u32 XP bank.","evidence":"weapon_level_editing instruction guards, scoped registration and exact reference assets; reproduced by Inspect-TodWeaponLevels.py."},
     {"va":"0x000B8950","kind":"function","name":"TOD_weapon_config_XP_indexed_set","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"WeaponConfig indexed XP setter uses stfsx data+230+4*index after numeric conversion.20 physical float slots; out-of-range diagnostic is not a proven terminal bound. Threshold arrays are runtime definitions, not saved XP+4.","evidence":"weapon_level_editing instruction guards, scoped registration and exact reference assets; reproduced by Inspect-TodWeaponLevels.py."},
     {"va":"0x000B4940","kind":"function","name":"TOD_weapon_config_NumLevels_get","confidence":"confirmed","bytes":"38A000007C0802A6","comment":"Reads unsigned definition-data+460 then converts to float for Lua. Shipped weapon.lua publishes highest populated zero-based index, not a count; combat references return9 for ten rows.","evidence":"weapon_level_editing instruction guards, scoped registration and exact reference assets; reproduced by Inspect-TodWeaponLevels.py."},
