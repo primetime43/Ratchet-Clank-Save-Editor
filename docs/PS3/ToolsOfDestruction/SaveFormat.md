@@ -1,659 +1,333 @@
 # Tools of Destruction save format
 
-Offset map checked against the PS3 `BCES00052_SAVE_1` plaintext sample and the supplied `BCUS98127_SAVE_1` encrypted USA save. Decrypted `GAME.SAV` contains big-endian game state; `PARAM.SFO` is a little-endian metadata container, and `PARAM.PFD` is a separate big-endian integrity database. The game data begins with repeating inventory records, not an identified magic/version/length header. Do not apply the HD trilogy's `USR-DATA` block header to this file.
+[Game overview](README.md) · [USA v02.00 findings](BCUS98127/v02.00/ElfMap.md) · [Research tools](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md)
 
-**Status:** the wrapper headers are mapped; game-state structures are partially mapped. A byte pattern is not enough to establish a field's gameplay meaning. No new fields are enabled for editing.
+This reference covers the supplied PS3 saves: USA `BCUS98127` and Europe `BCES00052`. Field meanings come from the **USA v02.00 executable** unless marked as sample observations. The European layout matches the inspected ranges, but no European executable has been checked.
 
-Three native producers request+1 for Charge Boots5, Souls16 and Statues15 through the saved current/additions/unsigned-peak updater. Souls publishes before linked-handle checks; a configured producer ORs a global flag before rereading and adding its selected object, without a local already-set-flag rejection. These are reached code-path rules, not unique pickup totals or collection/award history. Runtime actor scratch is not another saved field; inspection preserves independent raw banks and never dispatches a grant. [Object grants and publication order](BCUS98127/v02.00/ElfMap.md#object-grant-producers-and-global-flag-publication-order).
+`GAME.SAV` is `0x906F0` bytes (591,600). Its integers and floats are big-endian. It starts with inventory records, not a known magic/version header. Offsets below refer to **decrypted** game data; range ends are exclusive. IDs and counts are decimal unless prefixed with `0x`.
 
-Named ownership normalizes any nonzero record byte+10 independently of definition-gated ammo/level getters. Visible finite ammo is floored without a saved store; visible level is raw byte+1, not a normalized saved level. A separately mapped removal leaf requests XP/ammo setters, clears ownership, then rereads/decrements the acquisition/removal counter with low32 wrapping. Its gameplay caller remains unresolved. Inspection retains the raw bytes and never substitutes query projections or executes removal. [Query and removal boundaries](BCUS98127/v02.00/ElfMap.md#inventory-ownership-queries-attribute-visibility-and-qualified-removal-leaf).
+The editor exposes this research read-only. Currency editing is documented in the [main README](../../../README.md). Unknown bytes must be preserved; matching a layout does not establish that a new edit is safe to load in-game.
 
-The native CrateAmmo refill producer uses declared CrateAmmo[0], a runtime factor and remaining saved level/modifier-dependent capacity to select an addition request. It has no local floor1 or call to the separate below-capacity method. Ceiling for non-Ravager IDs happens only after the clamped add, so a later helper/display value must not replace saved ammo or imply an actual gained count. Subsequent acquisition and UI gates also remain distinct. [CrateAmmo request and publication evidence](BCUS98127/v02.00/ElfMap.md#crateammo-refill-requests-versus-admission-and-later-rounding).
+## Contents
 
-Settings setters publish saved values before runtime application:114BC retains the supplied index even when the runtime selector falls back to0; rumble114D4 can precede eight-port stop requests; surround114D5 can remain set when an engine gate skips applying it. Changing one volume at114C4/114C8/114CC reapplies all three in effects/voice/music order, with separate reads and a runtime engine gate. These are request/store relationships, not proof of hardware success or new saved mappings. [Settings publication and application evidence](BCUS98127/v02.00/ElfMap.md#settings-saved-publication-versus-runtime-application).
-
-Inventory-owner setup installs the canonical hero save pointer at runtime inventory+4; selected-record creation binds that same20-byte record at runtime weapon+2C and its definition at+30. Separate local ammo admission46A420 has runtime-word/recordless/flag0x10 bypasses. Without those, positive request requires ammo≥request; zero/negative/unordered request requires ordered ammo>0. Debit46AD80 independently negates its amount then calls the clamped ADD leaf. A qualified caller checks request0 before later request1 debit around another helper, so saved ammo alone cannot establish live eligibility, exact delta or firing cost. No new save offsets or editing permissions result. [Borrowed-record and ammo branch evidence](BCUS98127/v02.00/ElfMap.md#weapon-borrowed-inventory-record-local-ammo-admission-and-debit).
-
-The generic ammo-subtraction caller43A6C0 is now linked to initialized native item27 `WPN_GELANATOR`, through a qualified hero save pointer to ammo224. After a separate ordered runtime threshold gate, actor+50 zero selects a clamped1.0 subtraction then sets that byte; any nonzero selects clamped1.0 addition then clears it. These are runtime members, not mapped saved-mode fields, and sibling paths can update the byte without these direct ammo calls. Saved ammo is not a mode/reservation ledger, conserved refund or one-ammo-per-shot count. [Paired transition evidence](BCUS98127/v02.00/ElfMap.md#gelanator-paired-ammo-debit-and-refund-behind-runtime-gates).
-
-Ammo maximum resolution uses the raw inventory level byte+11 and modifier mask+0C after resolving ID+0. Unlike the XP setter, this native path has no local20-slot/NumLevels bound. Matching masked modifiers add absolute values to the base and nonzero-kind values to a factor initially1; one final multiplication combines them, with per-operation binary32 rounding. Shipped-definition arithmetic matches14 level-9 weapon ammo snapshots, not proof of live capacities, safe edits or reset/firing history. [Indexing and modifier arithmetic](BCUS98127/v02.00/ElfMap.md#ammo-capacity-raw-saved-level-indexing-and-modifier-arithmetic).
-
-The selected load/resource reset also sends +0 to native item27 `WPN_GELANATOR` ammo at saved224 through a definition/level/modifier-dependent clamp; it is not an unconditional raw-zero assignment. A separate runtime-only latch is armed, then consumed by setup only when saved906EC is zero and that latch is nonzero: configured floats refresh saved874C/8750 before the latch clears. Snapshot values cannot prove that latch, live maxima, timing units or reset history. [Ammo and deferred-gate dependencies](BCUS98127/v02.00/ElfMap.md#load-reset-dependencies-gelanator-ammo-and-deferred-timing-gates).
-
-Selected load/resource entry39A328 invokes489F68 before later asset gates. That reset resolves a runtime level name, writes saved906E8, marks ONE visited byte889+408*ID, then clears8730/8728/872C after2CDBB0. The19-name inverse lookup returns0 on no match, so destination0/visited0 do not prove a successful name match. The separate closed reinitialization-only chain clears runtime admission+F4 and runtime word+40, not serialized progress. The USA snapshot has destination0, only visited slot0 set and all three words zero; this is not invocation history or current-planet proof. [Publication/reset boundaries](BCUS98127/v02.00/ElfMap.md#load-resource-entry-publishes-destination-and-visited-state-before-counter-reset).
-
-Bonus-target registration now has a confirmed conditional initialization path: runtime owner+F4 must be zero to reach explicit zero stores for next index+11C and pending mask+FC. A separate path clears that same admission byte through container10330730+10, resolving to owner10330740. Rejected/already-recorded targets still consume sequential indices; these runtime values are not stored in GAME.SAV and cannot be reconstructed from saved8728 alone. Helper effects, exact reset causes, target names and stable cross-load order remain unresolved. [Initialization and pointer-base evidence](BCUS98127/v02.00/ElfMap.md#bonus-target-registration-initialization-and-reinitialization-admission).
-
-Named `get_space_stat` and `space_combat_reset` now establish an important boundary for saved8728/872C/8730: the eight numeric stat routes read a **separate runtime owner**, not these saved words. Stat3 counts runtime pending bits, and stat7 tests pending-empty; neither can be synthesized from saved target progress8728. The selected persistent-counter producer runs after an explicit live-stat reset. Saved zero words do not establish zero live stats, event names or current target counts. [Named space-stat and reset evidence](BCUS98127/v02.00/ElfMap.md#named-space-statistics-and-persistent-counter-boundaries).
-
-The exact USA v02.00 ELF links **saved BE64 bank8720** to five native **SKILLPOINT_DANCE (48)** producers. They OR a runtime actor index, then compare all64 bits exactly to000000000FFFFFFF; high bits prevent that request. Signed-negative indices skip the write but still test the old bank; PPC shift counts are not clamped to0..27. Selected actor methods now assign all28 low indices with code-backed internal enemy configuration associations, including a separately qualified Shingle Pirate class-method link. These are reference associations, not localized names,28 unique physical enemies, complete variants or current eligibility. Earned bit48 in8710 is independent: the supplied save has a zero progress bank and a retained award. [Actor index/name catalog](BCUS98127/v02.00/ElfMap.md#dance-progress-actor-indices-and-named-configuration-associations), [bank and award linkage](BCUS98127/v02.00/ElfMap.md#dance-skill-progress-bank-and-independent-earned-award).
-
-The USA v02.00 ELF and matching level assets now establish72-byte reference object definitions, numeric class IDs, load modes and segment associations for18,214 definitions across19 worlds. This is an **external asset catalog**, not another saved object table. Physical saved bit indices cannot be relabeled from class IDs/definition ordinals without runtime allocation evidence; rejected entries reserve slots and later spawns use the same allocator. Actual clear bitsets do not establish object presence or history. [Object-definition and allocator evidence](BCUS98127/v02.00/ElfMap.md#shipped-object-definitions-and-conditional-pool-slot-identity).
-
-## Object publication and equipment restart boundaries
-
-Recorded object-state bits do not alone schedule or force runtime restoration. The event callback can run before bit publication/current-world lookup; the restore path consumes a separate pending latch before checking the bit. Runtime UID records, latches and post-helper state remain distinct from physical saved pool-slot bits. Suppression eligibility gates its saved write, not the downstream helper, and the observed read/store pair is not proof of atomic OR. [Exact callback and restore evidence](BCUS98127/v02.00/ElfMap.md#object-callback-publication-and-one-shot-restore-gates).
-
-Selective restart overwrites the initialized prefix with live bytes before independently filtering quick-select/history in place. It clears pack43C only for PACK_WING3 while retaining selector438 and boot440, so selector1/type0 can result without a selector repair. Pack/boot setters notify even on unchanged values; Lua's admitted converted int32 pack payload is zero-extended and cannot supply arbitrary high32 bits to the native64 zero test. Viewing preserves independent raw fields and never executes filtering or equip callbacks. [Equipment publication evidence](BCUS98127/v02.00/ElfMap.md#equipment-publication-and-independent-restart-filters).
-
-## Currency mutation and separate runtime bookkeeping
-
-Saved wallets41C/420 have two confirmed native update routes: hero-side wrapped-difference-sign selection against999999999, without a lower clamp, and reward-side unbounded low32 additions. The former is not universal saturation for arbitrary raw words. Reward-side runtime accumulators are written first and are outside GAME.SAV, not persisted totals. Some consumers truncate rewards to signed64 then test/pass low32; pickup-side cache debit uses a full requested word, not the capped-wallet difference, with unsigned/signed source distinctions. The read-only viewer preserves unusual balances and does not infer payout/history or apply native caps. [Exact-build mutation evidence](BCUS98127/v02.00/ElfMap.md#currency-mutation-routes-and-runtime-cache-debit).
-
-## Award producers and purchase/equip boundaries
-
-Skill duplicate calls return before score/notification/automatic-final-award work, preserving mismatches. Golden-bolt leaf calls scan all19 worlds even without adding a new bit. Cheapskate47 uses an admitted Combuster ammo purchase's original request<=1 after ammo/payment, not the clipped quantity. These are qualified code paths, not award history recovered from current bits. [Producer evidence](BCUS98127/v02.00/ElfMap.md#skill-award-producers-and-publication-ordering).
-
-Armor ownership/payment commit before equip routing, which can defer the equipped-ID store through a runtime-only queue. Saved ownership/unlock/equipped state therefore remain independent. The queued consumer's state2 deadline branch admits unordered NaN; no current timing/effect is inferred. Native skin purchase checks signed balance without its own ownership/availability rejection; admitted repeat charging is a leaf-code consequence, not demonstrated UI behavior. [Purchase/effect evidence](BCUS98127/v02.00/ElfMap.md#armor-purchase-and-deferred-equip-versus-skin-leaf-charging).
-
-## Private restart-bank ownership
-
-Restart UI phase1 captures live bytes once on its qualified entry path into a separate runtime private bank; later polls do not refresh it. Exact selector0 chooses selective restart, selector1 full private restore, with phase5 published only after the action returns. Selective restart reaches nested zero-fills that clear **both entire mission groups**, correcting the earlier constructor-loop-only flag-retention interpretation. Log bytes `[8764,10144)` remain from prior private-bank contents while count10144 is cleared; Decryptor words8758/875C/8760 reset to0/0/1.0. These are code ownership boundaries, not current phase, active statistics or gameplay acceptance. [Exact-build evidence and correction](BCUS98127/v02.00/ElfMap.md#private-restart-bank-capture-and-nested-initializer-ownership).
-
-## Weapon progression and mission byte ownership
-
-Native save launchers capture a separate staging bank before starting the save thread; later transfer reads staging, not live state. Load name/size admission uses the first matching record, then successful worker status and a qualified later poll gate the full restore. The Check-thread existence probe is separate from actual auto-load and supplies runtime-only manager fields. Restore applies audio settings and requests the saved destination after copying bytes. None of this proves atomicity, payload semantics or successful gameplay acceptance. [Staging and deferred-load evidence](BCUS98127/v02.00/ElfMap.md#save-staging-and-deferred-load-application).
-
-Weapon XP uses a cap selected from the pre-update stored level, further limited by runtime definition flags/count; high XP alone does not cross stored4/5 through the ordinary setter. Inclusive threshold promotions can also lower levels on decreased XP. Level increases add the new ammo maximum before clipping rather than assigning it absolutely; progress fractions are not locally clamped. Raw float bits and unusual levels remain visible without guessed runtime progress. [Exact-build evidence](BCUS98127/v02.00/ElfMap.md#weapon-xp-boundaries-and-additive-ammo-updates).
-
-The constructor's inner mission loops preserve flags at that step, but later35E110/35D9A0 nested zero-fills clear both whole mission groups, including IDs/counts/flags. Selective restart reaches the same clears. Completion still retains destination flags and sets mask0x2 instead of copying source optional/unknown bits; compaction leaves inactive residual entry bytes. Native searches trust raw counts before capacity checks, and completing into a full list can overwrite its own count. Read-only inspection remains bounded and never invokes these paths. Actual counts/flags are all0, not evidence of an occupied completion event. [Corrected initialization and mutation evidence](BCUS98127/v02.00/ElfMap.md#mission-mutation-and-retained-entry-flags).
-
-## Object reset/restore, quick-select mutation and opaque-tail ownership
-
-The three 23-word object banks at `304/360/3BC` are independently saved current/high-water/positive-addition values. Selective restart copies them first, then preserves IDs `0..9,11` and clears all three words for IDs `10,12..22`. The reached hero-restore block separately sets current counts to 1 for IDs `0,1,2,3,4,9`, raises high-water values by unsigned comparison, and leaves additions unchanged. These are not universal lifetime pickup counters.
-
-The native Souls consumer reads additions as **signed32 >25**, requires current Souls count 0, and reaches `SKILLPOINT_SOULS` ID52 under additional runtime gates. Actual Souls counters are 0/0/0 while the independent skill bit is set; this is preserved without recomputing awards or inferring a captured event. Quick-select searches/removes across 32 slots but inserts automatically only into the first 24; explicit insertion removes duplicates before replacement without compaction. Selective restart clears item IDs24,26..31 across all 32 stored slots.
-
-Unknown word `906E4` is zeroed at the selective restart's staging-copy boundary because no preservation range includes it; full snapshot/initial restore and alternate staging copy instead transfer its raw bits. Its gameplay meaning is still unknown. Settings initializer writes 46/48 bytes and leaves `114D6/114D7` untouched; full settings preservation copies include both. Zero observations do not prove padding or defaults. The program adds read-only detail explanations and a Technical-only raw final-word row. See [exact-build lifecycle evidence](BCUS98127/v02.00/ElfMap.md#object-counter-lifecycles-quick-select-mutation-and-opaque-tail-ownership).
-
-### Arena counter IDs are not menu rows
-
-Native saved win counters remain23 signed words at `56D8..5734`, distinct from one-based Lua source indices and current display rows. The shipped arena UI stably places non-positive completion counts before positive counts, preserving source order within each partition, and routes selection/images through retained source index `chalNum`. Default selection translates a runtime native ID back to its first matching source index; `get_num_challenges` reads runtime table `.num`, not a fixed counter-bank count. The current source-index-to-ID table is unresolved, so the program explains these distinctions without reconstructing menu order from the save. [Native and fingerprinted UI evidence](BCUS98127/v02.00/ElfMap.md#arena-native-ids-source-indices-and-display-rows).
-
-## Decryptor, saved timing aggregates and copied definition handles
-
-The latest parallel pass names previously behavior-qualified words: `8758` is the native Decryptor wins counter in the traced success path; `875C` counts Sixaxis-enabled losses since success, not all attempts; `8760` is a Decryptor spark-speed multiplier. Named WIN/LOSE exports and `dc_set_spark_speed` provenance establish the context. Actual values remain0/0/1.0; these are retained native fields, not guaranteed lifetime statistics. The simple player summary now includes these three named values. No new editing is enabled.
-
-Saved floats `8744/8748` accumulate adjusted segment/reference scalars and supply log`+90/+94`, correcting their earlier runtime-only source descriptions. Finalization uses a reference fallback when ordered finite adjusted elapsed is below reference×float32(0.1). Saved floats `874C/8750` are countdown gates; both must remain positive after their native step before elapsed updates proceed. Actual gate values10.0/300.0 are **observations, not defaults or seconds**; event names/units remain unverified. Technical view preserves nonfinite and unusual values without updating them or rebuilding totals from retained logs.
-
-Copied grid header`+08` is now proven as high16 runtime generation / low16 pool slot, not a stable world/object ID. Allocator/loaders generate and preserve it; the native resolver requires whole-handle equality. Actual19 ready headers have generation1, slots5..76 with duplicates across levels, and bodies`+0C..C7` exactly match original shipped class535 candidates. The copied handles/pointers are informational and never followed. The bounded candidate scan is not a complete resource schema; source zeros do not establish padding for`+0D..0F`, `+1D..1F` or final byte`60DB`. See [exact native/asset evidence and tools](BCUS98127/v02.00/ElfMap.md#decryptor-state-saved-timing-aggregates-and-copied-runtime-handles). Tail`906E4` and other unproven semantics remain unresolved.
-
-## Auxiliary state, health and checkpoint ammo lifecycle
-
-Three additional words have native behavior/type proof: unsigned counters`0x8758` and`0x875C`, and float32 modifier`0x8760`. Actual values are0/0/1.0. The later Decryptor proof above identifies the first as a win-path counter; the second resets on success or increments on loss when saved Sixaxis-enabled byte`114D3` permits it. The modifier's ordered finite update is bounded to float32 representations of0.6..1.0, with success ultimately resetting1.0. This is specific Decryptor spark-speed scaling, not deaths, all attempts or global combat difficulty. Raw extreme and nonfinite snapshots remain unchanged; named simple values retain lifecycle caveats. [Exact auxiliary proof](BCUS98127/v02.00/ElfMap.md#three-saved-auxiliary-words-event-branch-sixaxis-gate-and-bounded-modifier).
-
-Current health is confirmed at **runtime hero`+1784`**, upper bound at`+1788`, not at a new save offset. Saved XP`418` drives a conditional changed-level refresh from a runtime BSS table; XP alone does not recover current health or capacity. Runtime checkpoint`10330610` is outside the serialized state. It captures32 ammo floats from inventory member`+8`; qualified successful vendor paths merge higher finite ammo into that bank. Valid-checkpoint hero setup restores through a definition/level/modifier-dependent clamped setter, not a verbatim copy. No active checkpoint is inferred from this save. [Health/checkpoint evidence](BCUS98127/v02.00/ElfMap.md#runtime-health-and-checkpoint-ammo-qualifying-restoration-paths).
-
-Saved unknown word`114C0` remains unnamed, but its entry-latched runtime flags now have paired update proof: nonzero saved values permit qualified mode10 camera angular/basis adjustment, while zero bypasses those paths. Actualword1 is not proof of the current camera or hold/toggle behavior; opaque`114D6/114D7` remain unresolved. [Camera coupling evidence](BCUS98127/v02.00/ElfMap.md#first-person-option-entry-latch-and-qualified-camera-coupling). All findings are embedded read-only in the program and scoped to the exact USA v02.00 executable; no new editing controls are enabled.
-
-## Pack/boot state, reference segment names and initializer ownership
-
-Three previously unnamed BE32 saved words now have native API provenance:
-
-| Offset | Meaning | Caveat |
-| --- | --- | --- |
-| `0x438` | Pack dispatch selector | Known consumers test exactly1, not arbitrary nonzero |
-| `0x43C` | Pack type | `PACK_HELI/THRUSTER/HYDRO/WING` IDs0..3; count sentinel4 remains unmapped |
-| `0x440` | Boot type | `BOOT_NORMAL/GRIND/GRAV/CHARGE` IDs0..3; native setter ignores its argument and writes0 |
-
-Actual three words arezero, corresponding to native `PACK_HELI` and `BOOT_NORMAL`; this does not prove ownership or current usability. Named getters/setters, enum exports, numeric conversion and dispatch consumers are traced in the [exact-build evidence](BCUS98127/v02.00/ElfMap.md#three-newly-named-saved-words). No new editing controls are enabled; unusual IDs and selector/type mismatches are not repaired.
-
-The native loader and19 original `gameplay.dat` catalogs establish **56 reference segment-name associations** at `0x488 + world*0x408 + slot*0x30`. These names come from ordered loaded asset metadata, not GAME.SAV strings or retained statistics logs. Physical slot0 is reserved in the name catalog; unmatched slots and world19 remain unnamed, not assumed padding or unused. Native folder IDs distinguish metropolis0 from meridian city17 and fastoon_return18. The inspector shows qualified USA v02.00 reference names with asset fingerprints and raw physical indices retained. See [loader/relocation/hash evidence](BCUS98127/v02.00/ElfMap.md#ordered-segment-names-from-the-native-loader-and-real-level-data).
-
-World initializer `35DFA8` writes998 of1,032 bytes: ten45-byte segment prefixes,512 object-bitset bytes and36 bytes at world`3E0..403`. It leaves680 bytes across20 worlds untouched: ten3-byte segment tails`2D..2F` plus worldtail`404..407` per world. Full snapshot/initial restore copies include those bytes, but this does not establish padding or retention through every later lifecycle. Segment word`28` is zeroed with a BE32 store; its logical meaning remains unresolved. Actual inspected words/tails arezero; fixture tests preserve extreme/nonfinite values and raw first/last-slot bytes.
-
-The combined world layout also reconciles existing findings: world`3C0..3DF` belongs to the spawn-suppression bitset and `3EC` is the known special-bolt collected mask, separate from reward tracking. [Initializer ownership evidence](BCUS98127/v02.00/ElfMap.md#exact-world-initializer-ownership-and-opaque-bytes) documents the exact stores and copy scope.
-
-## Newly confirmed reward and restart state
-
-For each physical world block `W = 0x488 + world*0x408` (20 initialized,19 named), saved float caches `W+3E0/3E4/3E8` represent unassigned experience/bolts/raritanium reward totals. Separate BE32 ladder indices `W+3F0/3F4` and float32 remainders `W+3F8/3FC` track diminishing bolts/raritanium rewards. Nonzero byte `W+403` reuses cached totals. The independent special-bolt collected mask is at `W+3EC`; only `W+404..407` remains opaque. The same channels occupy segment cached members `+1C/+20/+24`; channel A accumulated at `+10` has a confirmed **weapon-XP** consumer, not a proven hero-XP balance. Actual caches, indices and remainders arezero across all20 world blocks. Runtime thresholds/budgets are not in this save, so current payouts are not calculated.
-
-Saved float32 `0x8754` is a median of positive finalized segment `+0C` scalars, written by the first-restart path only when old `906EC` iszero. Scalar units remain unverified. Actual value is4.471639156341553 (`408F17AB`) with currently zero segment inputs. Later restarts skip recomputing it in this path; this does not guarantee retention through every lifecycle. The native empty-input calculation reads undefined scratch, not a confirmed zero default.
-
-Saved BE32 `0x906EC` has native engine replay context: CLI option `-replay` writes1; selective restart computes `min(wrapping_u32(old+1),1000)`. `FFFFFFFF` wraps tozero before the cap. This does not establish a localized Challenge Mode label or completed-playthrough count. `0x906E4` remains unnamed.
-
-81 native mission title/description ID pairs now enrich the bounded active/completed list decoder. These are lookup keys, not recovered localized names or fixed slots. All38 named-world list counts in the actual snapshot arezero; unused record bytes are not interpreted as active missions. The loader and fingerprinted reference assets above now establish56 physical segment-name associations; changed runtime tables remain outside this snapshot.
-
-See [exact native addresses, evidence and reproduction tools](BCUS98127/v02.00/ElfMap.md#parallel-save-research-rewards-replay-lifecycle-and-mission-keys). All new fields are view-only; raw unusual values and unknown bytes are preserved.
-
-All offsets are hexadecimal and relative to the named file. Ranges use an **exclusive** end. Evidence levels:
-
-- **Documented:** established container format or existing currency offsets.
-- **Code-backed:** verified against the exact USA v02.00 ELF; not a substitute for in-game load tests or cross-region validation.
-- **Observed:** exact bytes, lengths, names or repeating patterns in this sample.
-- **Candidate:** plausible gameplay meaning; needs controlled comparison saves.
-- **Unknown:** retained without a guessed meaning.
-
-## Reference files
-
-| File | Bytes | Purpose |
-| --- | ---: | --- |
-| `GAME.SAV` | 591,600 (`0x906F0`) | Game state, already plaintext in this sample |
-| `PARAM.SFO` | 2,736 (`0xAB0`) | Save metadata, title, account binding and subtitle |
-| `PARAM.PFD` | 32,768 (`0x8000`) | PS3 integrity database, version 3 |
-| `ICON0.PNG` | 108,305 | 320 × 176 RGBA save icon |
-| `PIC1.PNG` | 696,304 | 1000 × 560 RGBA background |
-
-The SFO subtitle is `Planet Sargasso `, including a trailing space. Presence of a PFD does **not** establish that `GAME.SAV` is encrypted. This sample has both a PFD and readable game state, but no `RPCS3_BLIST` field. Use **Open Decrypted Folder** if opening this exact sample in the editor. The survey does not validate PFD cryptographic integrity or console acceptance.
-
-Sample `GAME.SAV` SHA-256: `BEB457F9F5C750C46F2AD27E9DEFB15090785311696EAE7D5178904205DD949C`. Original files were read only and their hashes checked again after inspection. Account-binding values and opaque PFD keys are omitted from reports.
-
-The table above describes the European sample only. The supplied USA save has an encrypted `GAME.SAV` of the same `0x906F0` length. Its ciphertext SHA-256 is `FA16668A09319AF0193F53674C7ED0DE7434189EA488E3FAB5AF4782D2D10D48`; the working-copy plaintext SHA-256 is `F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463`. The editor's normal `SaveSession` / `Encryption` path decrypted a private copy after a full backup; all five original hashes remained unchanged. Plaintext, save images, account IDs and PFD bindings are not tracked or embedded.
+- [File layout](#game-data-overview)
+- [Inventory and equipment](#inventory-and-equipment)
+- [Player state](#player-state)
+- [Worlds and gameplay segments](#worlds-and-gameplay-segments)
+- [Flags and counters](#flags-and-counters)
+- [Gameplay log and missions](#gameplay-log-and-missions)
+- [Settings](#settings)
+- [Compressed map grids](#compressed-map-grids)
+- [PS3 container files](#ps3-container-files)
+- [Reference samples](#reference-files)
+- [Known gaps](#known-gaps)
 
 ## Game data overview
 
-These ranges cover the entire sample, including unknown areas. The whole-buffer copy is now verified in the USA executable; most internal subranges remain an observed partition rather than a fully understood schema.
-
-| Range | Size | Contents | Evidence |
-| --- | ---: | --- | --- |
-| `0x00000–0x00280` | `0x280` | 32 item/weapon records with IDs 0–31, stride `0x14` | Count, stride and several fields code-backed |
-| `0x00280–0x00284` | 4 | Acquisition/removal counter, sample 46 | Code-backed updates; not equated to flagged-record count |
-| `0x00284–0x0041C` | `0x198` | 32 quick-select IDs; three 23-word object-counter banks; hero XP at `0x418` | Named-API and lifecycle evidence; runtime usability is not inferred |
-| `0x0041C–0x00420` | 4 | Bolts, uint32 BE | Documented |
-| `0x00420–0x00424` | 4 | Raritanium, uint32 BE | Documented |
-| `0x00424–0x00428` | 4 | Special bolts spent; both samples 32 | Code-backed balance getter and skin purchase |
-| `0x00428–0x0042C` | 4 | Bolt multiplier; EU 8.0, USA 1.0 | Code-backed getter and update |
-| `0x0042C–0x08764` | `0x8338` | Armor, skins, per-level collectible records, skill points and other state | Partially mapped; preserve unknown portions |
-| `0x08764–0x10144` | `0x79E0` | 200 physical gameplay log slots, stride `0x9C`; USA snapshot has27 retained nonzero entries | Code-backed boundaries and scalar provenance |
-| `0x10144–0x10148` | 4 | Gameplay log count, BE32; supplied USA snapshot0 | Code-backed finalizer and initializer |
-| `0x10148–0x10AF8` | `0x9B0` | Twenty active mission lists, stride `0x7C` | Code-backed structure |
-| `0x10AF8–0x114A8` | `0x9B0` | Twenty completed mission lists, stride `0x7C` | Code-backed structure |
-| `0x114A8–0x114D8` | `0x30` | Fifteen named options, one unknown word, two unknown bytes | Code-backed settings APIs |
-| `0x114D8–0x906E4` | `0x7F20C` | 21 native512×512 RLE grids, stride `0x60DC` | Copied volume headers, seven group flags and native map-label associations; pixel meanings partly unresolved |
-| `0x906E4–0x906E8` | 4 | Unresolved tail word | Unknown |
-| `0x906E8–0x906EC` | 4 | Saved load-level ID | Code-backed, not necessarily current runtime planet |
-| `0x906EC–0x906F0` | 4 | Engine replay/restart word | Native `-replay` CLI store confirmed; localized mode/playthrough count unverified |
-
-The documented currency offsets are implemented in `SaveProfile.cs`. The multiplier at `0x428` is now established by the supplied executable's saved-state pointer, getter and update path; see the progression map below. **RAM addresses are not automatically save offsets**: the executable snapshot linkage establishes the conversion only for the identified saved-state block in the supplied build.
-
-### Inventory records
-
-For record ID `i`, the base is `i * 0x14`, for `i = 0..31`. All 32 sample IDs match their array index; initializer `0x466A60` independently establishes the count and stride in code.
-
-| Relative offset | Size | Type | Meaning |
-| --- | ---: | --- | --- |
-| `+0x00` | 4 | uint32 BE | Item/weapon ID used for definition lookup |
-| `+0x04` | 4 | float32 BE | Weapon XP; progress and level recalculation use it |
-| `+0x08` | 4 | float32 BE | Ammo; script getter integerizes the float |
-| `+0x0C` | 4 | uint32 BE | Modifier mask selecting weapon-definition upgrade entries |
-| `+0x10` | 1 | uint8 | Script ownership flag: any nonzero value satisfies `is_weapon_owned`; other getters also check definition flags |
-| `+0x11` | 1 | uint8 | Zero-based stored level; eligible script getter returns this plus one |
-| `+0x12` | 2 | Opaque bytes | Unknown; preserve |
-
-Do not decode the final four bytes as one meaningful BE integer. IDs 1–15 contain `01 09 00 00`; other records contain `01 00 00 00`. The code confirms that `09` is stored level 9, exposed as level 10 when eligible. All 32 sample records satisfy the script ownership predicate, including empty-looking slots; ownership alone does not prove a usable weapon. The initializer at `0x465C98` does not write the final two bytes; this does not prove they are padding.
-
-The names below come from RatchetHax's ID catalog; the values and offsets are observed in the sample. Weapon names can change with upgrades. Ammo, XP, stored level and the mask's modifier-selection role are now code-backed in the USA build. Specific upgrade-node meanings, prerequisites, prices and valid editing combinations still need verification.
-
-| ID | Base | Catalog name | Ammo float | Modifier mask |
-| ---: | --- | --- | ---: | --- |
-| 0 | `0x000` | Unknown | 0 | `00000000` |
-| 1 | `0x014` | Combuster | 100 | `00003FFE` |
-| 2 | `0x028` | Fusion Grenade | 10 | `000007FE` |
-| 3 | `0x03C` | Shock Ravager | 36 | `00003FFE` |
-| 4 | `0x050` | Tornado Launcher | 5 | `00000FFE` |
-| 5 | `0x064` | Buzz Blades | 260 | `00003FFE` |
-| 6 | `0x078` | Predator Launcher | 30 | `0000FFFE` |
-| 7 | `0x08C` | Alpha Disruptor | 5 | `000007FE` |
-| 8 | `0x0A0` | Pyro Blaster | 40 | `00007FFE` |
-| 9 | `0x0B4` | Plasma Beasts | 10 | `00001FFE` |
-| 10 | `0x0C8` | Shard Reaper | 40 | `00003FFE` |
-| 11 | `0x0DC` | Negotiator | 15 | `00000FFE` |
-| 12 | `0x0F0` | Nano-Swarmers | 6 | `00007FFE` |
-| 13 | `0x104` | Mag-Net Launcher | 16 | `0000FFFE` |
-| 14 | `0x118` | Razor Claws | 50 | `00000FFE` |
-| 15 | `0x12C` | RYNO IV | 832 | `00007FFE` |
-| 16–31 | `0x140–0x280` | Unmapped IDs | See JSON survey | All zero masks |
-
-For example, record 1 has `00000001 47A33965 42C80000 00003FFE 01090000`: ID 1, XP ≈83,570.79, ammo 100, modifier mask `0x3FFE`, ownership byte 1, stored level 9 and two unknown bytes. There is no proven checksum, signature, save version or total-length field in this prefix. `0x00000004` is a record field, **not an established header version**.
-
-### Verified snapshot and inventory dependencies
-
-The exact USA v02.00 ELF uses RAM block `0x101EFB20`, length `0x906F0`, as its saved state. Snapshot function `0x35E710` copies it byte-for-byte to the save-manager buffer at object `+0x1FD08`; restore function `0x35E508` copies the same bytes back. Both call byte-copy implementation `0x81A9A8` through thunk `0x252428`. File callback `0x695BF8` hands that buffer and length to the PS3 save API as secure `GAME.SAV` data. Thus `save offset = game-state VA − 0x101EFB20` for this snapshot layout, not for arbitrary game RAM. Details and exact instruction guards are in the [ELF map](BCUS98127/v02.00/ElfMap.md#verified-snapshot-and-weapon-state).
-
-The named Lua getters connect the record to gameplay: ammo `0x33C80 → 0x258C0`, level `0x33A98 → 0x27608`, and progress `0x339C0 → 0x27568 → thunk 0x11940 → 0x465FF0`. The getters use the same RAM base and `0x14` stride. Ammo and level are gated by byte `+0x10` and definition flags; inactive records must not be interpreted as usable weapons solely because their numeric fields look plausible.
-
-Editing must preserve dependencies:
-
-- `0x4660A8` stores XP at `+0x04` and recalculates level at `+0x11` from weapon-specific thresholds. On level increase, it also updates ammo and can notify another system. Writing XP alone does not reproduce the game operation.
-- `0x465FF0` computes progress between thresholds at weapon-data `+0x230 + 4*level`. The next threshold is capped using `0x465F08`; the equal-threshold path returns a fallback constant. The inspected formula does not clamp arbitrary edited XP.
-- `0x465D00` enables a bit in `+0x0C`; if maximum ammo changes, it writes the new maximum into `+0x08`. This helper is not a complete purchase transaction.
-- `0x466500` derives maximum ammo from weapon-data `+0x280 + 4*level`, then applies mask-selected attribute-9 modifiers through `0x466258`. Modifier entries begin at weapon-data `+0x464`, stride `0x18`, with count at `+0x6A4`. Node ordering and values depend on runtime weapon definitions; they are not a universal upgrade catalog embedded in the save.
-
-This confirms structural meaning, **not safe editable bounds or successful loads**. The ELF is USA; the reference save is European. Matching size/layout does not prove cross-region compatibility. The read-only survey JSON retains its original candidate property names for backward compatibility; the new `TOD_SaveInventoryRecord_verified` analysis type contains the refined semantics. No new editor controls are enabled.
-
-### Ownership and unlock state
-
-The full named ownership chain is `0x33F40 → 0x25AF0 → thunk 0x12950 → 0x2D1C10`; the leaf returns whether record byte `+0x10` is nonzero. Acquisition helper `0x466B70` sets it to 1, initializes XP/level, can refill ammo and increments word `0x280`. Removal helper `0x466AE8` resets XP/ammo, clears the byte and decrements that word. The sample counter is 46 despite 32 flagged records, so **do not normalize it to the ownership-byte count** without finding all writers and validating the intended invariant.
-
-The separately named `unlock_weapon` path `0x2A4EC0 → 0x27A5B8` sets byte `0x5754 + item ID` to 1. Predicate `0x2D24C0` combines that byte with definition flags and ownership; unlocking availability is not the same as acquiring possession. The total byte-array length remains unknown. Only IDs 0–31 are interpreted by the comparison tool.
-
-The `hero_give_weapon` binding reaches `0x28B4E8`, which validates the hero and ID, acquires through `0x466B70`, delegates inventory integration, optionally sets XP/ammo and can notify another system. See the [ELF ownership and acquisition map](BCUS98127/v02.00/ElfMap.md#ownership-unlocks-and-acquisition) for exact labels and dependencies. Script helpers are not proof that arbitrary file edits safely reproduce those runtime operations.
-
-### Currency and nearby values
-
-| Offset | Bytes | Interpretation | Evidence |
-| --- | --- | --- | --- |
-| `0x418` | `0022FC63` | uint32 2,292,835 hero XP | Code-backed named `hero_set_xp` chain |
-| `0x41C` | `153814E4` | 355,996,900 bolts | Documented offset; observed value |
-| `0x420` | `0092B08E` | 9,613,454 raritanium | Documented offset; observed value |
-| `0x424` | `00000020` | uint32 32 special bolts spent | Code-backed balance getter and skin purchase |
-| `0x428` | `41000000` | float32 8.0 | Code-backed multiplier; EU sample value |
-| `0x42C` | `00000018` | Last recorded equipped item ID 24 | USA native history updater; EU observation |
-| `0x430` | `0000000F` | Previously recorded equipped item ID 15 | USA native history updater; EU observation |
-
-### Code-backed progression and armor
-
-These meanings were traced in the exact USA v02.00 ELF and checked against the supplied USA plaintext working copy. The shared JSON `progression` section records native functions, all 60 skill definitions, all five armor enums and 478 byte guards. [Inspect-TodProgression.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodProgression.py) independently reproduces that section from the original ELF; its optional save argument reads plaintext only and refuses other sizes or non-sequential inventory IDs.
-
-| Save offset | Stored type | Code-backed meaning | USA observation |
-| --- | --- | --- | --- |
-| `0x428` | float32 BE | Bolt multiplier | 1.0 |
-| `0x444 + 4*i`, `i=0..4` | uint32 BE | Armor ownership; nonzero predicate | All five words 1 |
-| `0x458` | uint32 BE | Equipped armor ID | 4, `ARMOR_QUANTONIUM` |
-| `0x5774 + i`, `i=0..4` | uint8 | Independent armor unlock bytes | All five bytes 1 |
-| `0x8708` | uint32 BE | Weighted skill-point total | 750 |
-| `0x8710–0x8718` | uint64 BE | Skill completion bitset; IDs 0..59 | `0FFFFFFFFFFFFFFF`, all 60 complete |
-| `0x8720–0x8728` | uint64 BE | Dance skill producer progress; exact low28 completion pattern, not earned bit48 | `0000000000000000`; Dance award is independently set |
-| `0x8728` | uint32 BE | Bonus-target progress mask; separate from runtime pending set | `00000000`; target identities/total unknown |
-| `0x872C` | uint32 BE | Wrapping saved event counter; gameplay event name unresolved | 0; not a lifetime history verdict |
-| `0x8730` | uint32 BE | Wrapping handle-qualified event counter; runtime admission not saved here | 0; not a named kills/deaths statistic |
-| `0x8734` | uint32 BE | Quick-select assignment warning counter, updated before native rejection branches | 5; not successful assignments or total requests |
-| `0x8738` | one byte | Quick-select full-list message-request latch, nonzero predicate | `00`; not proof message never requested |
-| `0x8739..0x873F` | seven bytes | Explicit initializer zeros; meanings remain opaque | All zero; not proven padding |
-
-For skill ID `i`, test integer bit `i` of the BE64 word. The equivalent file-byte expression is `0x8710 + 7 - floor(i/8)`, mask `1 << (i % 8)`: ID0 is byte `0x8717` bit0; ID59 is byte `0x8710` bit3. The high four bits and bytes `0x870C–0x8710` remain uninterpreted. The native setter adds each newly earned definition's **point value**, not one; all 60 shipped values sum to 750 and exactly match this save's stored total. It also awards ID59 `SKILLPOINT_HARDCORE` when IDs0..58 become complete. The inspector preserves unknown bits and score mismatches, never repairs them.
-
-Saved8728 now has a verified bonus-target producer: native364300 clears an indexed bit from runtime pending+FC and ORs it into this saved word before a lookup. It then rereads runtime pending, not the saved progress mask. A nonzero pending set can latch named global flag278 SC_PLAYED_BONUS_TARGET_MSG before a message request; zero pending tests saved-destination local special-bolt bit0 and grants it only if absent. A separate direct collector uses runtime+C4 as local ID without that explicit duplicate precheck. Native reset489F68 explicitly clears8728 and neighboring872C/8730; neighbor meanings remain unknown, and zero progress is not proof no targets were previously recorded. The snapshot does not disclose remaining targets, total target count, current scene, pickup locations or reward eligibility. The summary shows recorded bits only, not a completion percentage; no editing is enabled. See [qualified collectible producers](BCUS98127/v02.00/ElfMap.md#bonus-target-progress-and-qualified-special-bolt-producers).
-
-Native36C578 increments872C once before handle resolution, then increments8730 only on a qualified runtime pool/identity admission; both wrap modulo2^32. Their selected consumers use bounded factors from the unsigned counts, not saved multiplier fields or a confirmed global difficulty setting. Both raw words are zero in the supplied save, and reset489F68 clears them. Native362C20 also confirms saved8728 suppresses pending registration for already-recorded bits; it consumes a runtime index before testing the bit and does not modify saved progress. See [counter consumers and target restoration](BCUS98127/v02.00/ElfMap.md#saved-event-counters-bounded-consumers-and-bonus-target-restoration). Gameplay event names, live parameters, target identities and edit safety remain unresolved; the new viewer fields are read-only.
-
-Named `set_qs_weapon_in_slot` reaches native26E20, which updates8734 before applying slot/item rejection branches; ordinary values approach5 but the signed-low32 cap expression does not universally clamp high raw words. The direct API admits32 slots, can clear for any unsigned item>31 and does not remove duplicates, unlike the separately mapped hero insertion route. The separate hero insertion route's reached no-slot warning path suppresses native126 only if byte8738 is nonzero AND unsigned8734>3; otherwise it requests, then stores literal1 after normal return without a success test. Initializer zeros8734/8738 and all seven opaque neighbors; selective restart explicitly preserves the counter's four bytes, not the latch/neighbor bytes in that range. Callback effects/final restart values are not simulated. Quick select details and Research expose these read-only observations without changing simple columns. See [direct assignment and warning flow](BCUS98127/v02.00/ElfMap.md#quick-select-direct-assignment-warning-counter-and-byte-latch).
-
-Armor IDs are 0 `ARMOR_NONE`, 1 `ARMOR_DURAFIBER`, 2 `ARMOR_HYPERPLATE`, 3 `ARMOR_TETRAMESH`, 4 `ARMOR_QUANTONIUM`. Unlock availability, ownership and equipped ID are separate. The native availability getter can itself set unlock byte `0x5778` when word `0x906EC` is nonzero. Equipping also marks ownership and changes a runtime armor attribute; a purchase additionally deducts bolts and sends notifications. A direct file-word edit does not reproduce these transactions.
-
-The multiplier getter's reset is now qualified: any nonzero saved906EC enables a **strict sampled health decrease** check (`cached > current`) that resets multiplier428 and a runtime-only accumulator to1. Equality/healing does not reset; ordinary getter returns do not universally clamp. The separately gated updater calls the getter, subtracts0.5 from the accumulator and advances once if the float32 result is below float32(0.01); only that finite increment path selects1..20 and reseeds the accumulator. Initialization seeds runtime cache/accumulator from current health/saved multiplier, not serialized timer fields. A qualified numeric6B message loop adds hero XP first, then updates the multiplier for a positive finite reread payload (unordered also falls through); its6A sibling adds XP without that explicit update. Event identities/timing remain unknown. See [exact multiplier flow](BCUS98127/v02.00/ElfMap.md#bolt-multiplier-health-sampling-accumulator-and-paired-xp-messages). This is observed **code behavior**, not permission to expose arbitrary multiplier edits. No new editable fields were added: the program's **Skill points**, **Armor**, **Counters & nearby fields** and **Research** views are read-only.
-
-The USA value at `0x418` is 2,315,144 hero XP, now confirmed by the named setter chain below. The saved integer is not current health, maximum health, or a directly stored hero level. Word `0x906EC` is 3; its nonzero predicate gates multiplier updates and final-armor availability, and the restart routine increments/clamps it. The native `-replay` CLI option confirms engine replay context, but not a localized Challenge Mode label or count of completed playthroughs. Saved health remains unresolved; global flags and gameplay-record tail provenance are mapped separately below.
-
-Reproduce from a working-copy plaintext capture:
-
-```powershell
-python Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodProgression.py --elf $ElfPath --save $PlaintextSavePath
-python Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodProgression.py --elf $ElfPath --save $PlaintextSavePath
-```
-
-### Confirmed hero XP and collectibles
-
-The shared map's `collectibles` section is reproduced by [Inspect-TodCollectibles.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodCollectibles.py) from the hash-guarded USA ELF. It contains 19 native level IDs, nine skin IDs, static prices, per-level totals and 267 byte guards. These are static meanings checked against an actual plaintext working copy, not in-game edit/load tests. Original ELF and save files remain unchanged.
-
-| Save offset | Type | Meaning | USA save |
-| --- | --- | --- | --- |
-| `0x418` | uint32 BE | Serialized integer hero XP | 2,315,144 |
-| `0x424` | uint32 BE | Special bolts spent | 32 |
-| `0x45C + 4*i`, `i=0..8` | uint32 BE | Skin ownership, nonzero predicate | Eight owned, ID7 not owned |
-| `0x480` | uint32 BE | Selected skin ID | 0, `SKIN_NONE` |
-| `0x874 + 0x408*i`, `i=0..18` | uint32 BE | Per-native-level special-bolt mask | Counts match all shipped totals, sum 32 |
-
-Named `hero_set_xp` registration resolves to `0x2BAED0 → 0x28A9B0 → 0x252C78 → 0x23E090`. The thunk restores the appropriate TOC; the leaf writes the saved integer at `+0x418`. A separate runtime fractional accumulator and calculated level byte participate in XP updates. No safe editor bounds or serialized health fields follow from this chain. Legacy JSON observation keys containing `unknown_progression_418` are retained for compatibility; the field meaning is now established.
-
-Further exact-build tracing separates script input, live progression and reload. The script setter truncates and converts low32 to float32 before the leaf, discarding ordinary positive fractions. The leaf carries only once when runtime remainder is **strictly greater than1**, checks thresholds against original incoming XP rather than the carried saved value, and never lowers an existing runtime level. Reload binding clears runtime level/remainder first and restores the unsigned saved word through float32 before republishing it. Some integers above2^24 can change; extreme near-u32-maximum rounding also interacts with low32 wrap/carry. These are static findings and nearest-even synthetic previews, not gameplay reload tests or safe editing bounds. The actual USA XP2,315,144 is float32-exact. See [XP publication and reload evidence](BCUS98127/v02.00/ElfMap.md#hero-xp-publication-fractional-carry-and-reload-precision); runtime thresholds, numerical health and live rounding mode remain unresolved.
-
-The fingerprinted Hero configuration now supplies a **shipped reference** of98 XP/HP rows, from XP0/HP10 to XP989,000/HP999. Named native indexed bindings independently confirm100-entry XP/u32 and HP/f32 banks at runtime config+0/+190, consumed by progression; they are not additional saved fields. The actual USA XP exceeds all98 populated thresholds, but that comparison does not establish current health or a live level. Installation/overrides, callbacks and entries98/99 unpopulated by this asset remain unknown. The read-only **Hero XP reference** view presents the numbers without computing a runtime progress percentage; native progress arithmetic uses unsigned wrapping differences and unclamped float32 division. See [named Hero config and shipped rows](BCUS98127/v02.00/ElfMap.md#named-hero-xphp-arrays-and-shipped-progression-reference).
-
-Per-level records begin at `0x488 + 0x408*i`. Initializer `0x35E110` initializes **20 slots**, ending at `0x5528`; only IDs0..18 are native levels. The mask is record member `+0x3EC`, giving save offset `0x874 + 0x408*i`. Count helper `0x35DDD8` counts all 32 set bits; test `0x35DE08` and setter `0x35DEB0` use local collectible IDs0..31 as BE32 integer bit indices. File byte is `maskOffset + 3 - floor(id/8)`, byte mask `1 << (id % 8)`. Physical pickup locations and the other record contents are not mapped.
-
-Native `get_special_bolts_collected` reaches `0x25CF0`; argument19 (`LEVEL_COUNT`) requests a sum over levels0..18, **not a read of slot19**. That initialized slot's mask at `0x550C` remains uninterpreted. Native totals table `0x10062E4C` contains `(0,1,2,0,1,4,1,3,1,2,4,1,2,1,2,2,2,2,1)`, indexed by the decoded level catalog. The USA masks' popcounts match that vector exactly. The setter awards skill ID46 `SKILLPOINT_GOLDEN` when every count meets or exceeds its respective total. The menu has a conditional level3→18 remap; inspector rows show unremapped storage.
-
-`get_special_bolts_owned` reaches `0x25DB8` and returns **collected minus spent** using native signed-32 subtraction. The USA observation is `32 - 32 = 0`. Extra mask bits, excessive counts, negative balances, and unfamiliar IDs are preserved and displayed, never repaired.
-
-### Confirmed skins
-
-Skin ownership words and selected ID are independent. `is_skin_owned` reaches `0x24B08` and tests any nonzero word; `select_skin` reaches `0x26FC0`, requires ownership, and writes `0x480`. `purchase_skin` reaches `0x27AA0`, checks special-bolt balance against definition cost, marks ownership, selects the skin, increments spent word `0x424`, and notifies runtime systems. Repeated purchases and malformed IDs are not established as safe operations. Availability `0x24B38` returns true except ID7, which requires ownership; a zero price is not proof of unlock eligibility.
-
-| ID | Native identifier | Shipped special-bolt cost | USA owned |
-| ---: | --- | ---: | --- |
-| 0 | `SKIN_NONE` | 0 | Yes, selected |
-| 1 | `SKIN_DAN` | 6 | Yes |
-| 2 | `SKIN_SNOWMAN` | 3 | Yes |
-| 3 | `SKIN_CRAGMITE` | 6 | Yes |
-| 4 | `SKIN_PETE` | 6 | Yes |
-| 5 | `SKIN_CRONK` | 4 | Yes |
-| 6 | `SKIN_ZEPHYR` | 4 | Yes |
-| 7 | `SKIN_JAILBIRD` | 0 | No |
-| 8 | `SKIN_FURIOSO` | 3 | Yes |
-
-Cost getter `0x1F0D60` reads the first uint32 of nine 16-byte definitions at `0x840B00`. Remaining definition words are preserved without guessed tag meanings. Owned-skin costs sum to32 in this save and match its spent word; that observation is **not a universal invariant to enforce**, since the purchase routine is a transaction with its own behavior.
-
-The editor's **Hero XP** and **Special bolts spent** summary rows, **Special bolts**, **Skins**, and bundled **Research** topics are read-only. Reproduce the research and input-preservation checks with:
-
-```powershell
-python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodCollectibles.py --elf $ElfPath --save $PlaintextSavePath
-python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodCollectibles.py --elf $ElfPath --save $PlaintextSavePath -v
-```
-
-### Named gameplay records
-
-Physical log record `j` begins at `0x8764 + j * 0x9C`, bounded to `j = 0..199`; the supplied snapshot has retained names in slots0..26. Each has two64-byte location/segment-name fields and28 numeric bytes. Names identify retained locations/scenarios; they do **not** establish active progress, unlock or checkpoint flags. Runtime capacity enforcement and arbitrary edited values are not verified.
-
-| Relative offset | Size | Observed contents |
-| --- | ---: | --- |
-| `+0x00` | `0x40` | Location name and zero fill |
-| `+0x40` | `0x40` | Scenario name and zero fill |
-| `+0x80` | 8 | Two BE float32: runtime baseline and post-reset timing modifier |
-| `+0x88` | 16 | Four BE float32: adjusted elapsed, configured reference, cumulative time and cumulative reference |
-| `+0x98` | 4 | BE uint32 reset-event count, not a float |
-
-Exact USA code now establishes the physical log span **8764..10144**, with200 slots of9C bytes and a saved BE32 count at10144. The27 named entries below are retained contents of the supplied snapshot, **not the buffer capacity or active count**. Its count is0. Initialization clears count without clearing prior log bytes; the inspector now labels these entries **Retained beyond saved count**. Field provenance and named completion bindings are documented in the [gameplay segment/log evidence](BCUS98127/v02.00/ElfMap.md#gameplay-segments-timers-reward-accumulators-and-retained-log). Time units and exact reset-event cause remain unverified.
-
-| Base | Location | Scenario |
-| --- | --- | --- |
-| `0x8764` | metropolis | gameplay_enemy |
-| `0x8800` | cobalia | gameplay_default |
-| `0x889C` | stratus city | gameplay_enemy |
-| `0x8938` | stratus city | gameplay_traversal |
-| `0x89D4` | fastoon | gameplay_scavenger |
-| `0x8A70` | imperial fight fest | gameplay_enemies |
-| `0x8B0C` | apogee space station | gameplay_station |
-| `0x8BA8` | pirate base | gameplay_enemy1 |
-| `0x8C44` | pirate base | gameplay_warehouse |
-| `0x8CE0` | pirate base | gameplay_enemy2 |
-| `0x8D7C` | rykan v | gameplay_battlefield |
-| `0x8E18` | sargasso | gameplay_decryptor |
-| `0x8EB4` | sargasso | gameplay_lombax |
-| `0x8F50` | iris | gameplay_seg1 |
-| `0x8FEC` | iris | gameplay_seg2 |
-| `0x9088` | zordoom prison | gameplay_enemies |
-| `0x9124` | zordoom prison | gameplay_enemies_2 |
-| `0x91C0` | zordoom prison | gameplay_enemies_3 |
-| `0x925C` | kerchu city | gameplay_enemy |
-| `0x92F8` | kerchu city | gameplay_enemy2 |
-| `0x9394` | kerchu city | gameplay_boss |
-| `0x9430` | slags_fleet | gameplay_enemy |
-| `0x94CC` | slags_fleet | gameplay_boss |
-| `0x9568` | cragmite ruins | gameplay_battlefield |
-| `0x9604` | cragmite ruins | gameplay_traversal |
-| `0x96A0` | meridian city | gameplay_enemy |
-| `0x973C` | fastoon_return | gameplay_battleground |
-
-`0x97D8–0x1014A` is an observed all-zero span. Many later regions alternate populated data and long zero spans. **Do not trim them or label them disposable padding:** zero bytes can encode reserved slots or meaningful default state.
-
-## PARAM SFO header and fields
-
-The PSF container uses little-endian integers and 16-byte index entries. The header and index layout follow [RPCS3's PSF loader](https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Loader/PSF.cpp).
-
-| Header offset | Size | Sample value | Meaning |
-| --- | ---: | --- | --- |
-| `0x00` | 4 | `00 50 53 46` | Magic `\0PSF` |
-| `0x04` | 4 | `0x00000101` | Format version |
-| `0x08` | 4 | `0xC4` | Key table offset |
-| `0x0C` | 4 | `0x140` | Value table offset |
-| `0x10` | 4 | 11 | Field count |
-
-Index entries begin at `0x14`: `+0` uint16 key-relative offset, `+2` uint16 type, `+4` uint32 used length, `+8` uint32 capacity, `+0xC` uint32 value-relative offset. Key offsets are relative to `0xC4`; value offsets are relative to `0x140`. Used length and reserved capacity are not interchangeable.
-
-| Field | Index | Data | Type | Used / capacity | Sample value |
-| --- | --- | --- | --- | --- | --- |
-| ACCOUNT_ID | `0x14` | `0x140` | `0004` binary | 16 / 16 | Redacted |
-| ATTRIBUTE | `0x24` | `0x150` | `0404` integer | 4 / 4 | 0 |
-| CATEGORY | `0x34` | `0x154` | `0204` text | 3 / 4 | SD |
-| DETAIL | `0x44` | `0x158` | `0204` text | 1 / 1024 | Empty |
-| PARAMS | `0x54` | `0x558` | `0004` binary | 1024 / 1024 | Ownership-related blob; internal fields not mapped here |
-| PARAMS2 | `0x64` | `0x958` | `0004` binary | 12 / 12 | Opaque binary |
-| PARENTAL_LEVEL | `0x74` | `0x964` | `0404` integer | 4 / 4 | 3 |
-| SAVEDATA_DIRECTORY | `0x84` | `0x968` | `0204` text | 17 / 64 | BCES00052_SAVE_1 |
-| SAVEDATA_LIST_PARAM | `0x94` | `0x9A8` | `0204` text | 1 / 8 | Empty |
-| SUB_TITLE | `0xA4` | `0x9B0` | `0204` text | 17 / 128 | Planet Sargasso, trailing space |
-| TITLE | `0xB4` | `0xA30` | `0204` text | 41 / 128 | Ratchet & Clank: Tools of Destruction™ |
-
-## PARAM PFD header and tables
-
-Layout follows [flatz's PFD structures](https://github.com/bucanero/pfd_sfo_tools/blob/master/pfdtool/src/pfd_internal.h). Multi-byte integers are big-endian. Cryptographic fields remain opaque in this survey.
+These boundaries cover the whole file, including fields whose purpose is still unknown.
 
 | Range | Contents |
 | --- | --- |
-| `0x00–0x08` | uint64 magic `0x50464442` |
-| `0x08–0x10` | uint64 version 3 |
-| `0x10–0x20` | 16-byte IV/header key |
-| `0x20–0x60` | 64-byte encrypted signature block |
-| `0x60–0x68` | uint64 hash bucket capacity 57 |
-| `0x68–0x70` | uint64 reserved entry count 114 |
-| `0x70–0x78` | uint64 used entry count 2 |
-| `0x78–0x240` | 57 uint64 bucket indices |
-| `0x240–0x7B60` | 114 entry slots, `0x110` bytes each |
-| `0x7B60–0x7FD4` | 57 × 20-byte bucket signatures |
-| `0x7FD4–0x8000` | 44 trailing bytes |
+| `0x00000–0x00280` | 32 inventory records, `0x14` bytes each |
+| `0x00280–0x00284` | Acquisition/removal counter |
+| `0x00284–0x00304` | 32 quick-select IDs |
+| `0x00304–0x00418` | Three banks of 23 object counters |
+| `0x00418–0x00488` | XP, currency, equipment, armor, skins and four unknown bytes |
+| `0x00488–0x05528` | 20 world records, `0x408` bytes each |
+| `0x05528–0x05550` | Five global-event flag words |
+| `0x05550–0x056D8` | Partially understood state; see native map |
+| `0x056D8–0x05734` | 23 arena win counters |
+| `0x05734–0x05754` | Eight reset-event category counters |
+| `0x05754–0x086F4` | Unlock arrays and partially understood state |
+| `0x086F4–0x08764` | Blueprint, bonus, skill and auxiliary state |
+| `0x08764–0x10144` | 200 gameplay log records, `0x9C` bytes each |
+| `0x10144–0x10148` | Saved gameplay log count |
+| `0x10148–0x10AF8` | 20 active mission lists |
+| `0x10AF8–0x114A8` | 20 completed mission lists |
+| `0x114A8–0x114D8` | Settings |
+| `0x114D8–0x906E4` | 21 compressed map-grid blocks, stride `0x60DC` |
+| `0x906E4–0x906E8` | Unknown word |
+| `0x906E8–0x906EC` | Saved load-level ID |
+| `0x906EC–0x906F0` | Engine replay/restart word |
 
-Each entry: `+0x00` chain index (8), `+0x08` filename (65), `+0x49` padding (7), `+0x50` opaque key (64), `+0x90` four hashes (80), `+0xE0` padding (40), `+0x108` file size (8).
+## Inventory and equipment
 
-Used entries are `PARAM.SFO` at `0x240`, size `0xAB0`, and `GAME.SAV` at `0x350`, size `0x906F0`. Both chain indices are 114, the out-of-range terminator. Artwork has no used entry here. Parsing these structures does not verify their hashes or prove PS3 acceptance.
+### Inventory records
 
-## PNG headers and chunks
+Record `i` starts at `i × 0x14`, for IDs 0–31.
 
-Both images have the standard eight-byte PNG signature, followed by an IHDR chunk at `0x08`. The IHDR data begins at `0x10`: BE width (4), BE height (4), bit depth (1), color type (1), compression (1), filter (1), interlace (1). Both samples use bit depth 8, color type 6 (RGBA), and zero for the final three bytes. The container layout is defined by the [W3C PNG specification](https://www.w3.org/TR/png-3/#11IHDR).
-
-Chunks proceed through IHDR, gAMA, cHRM, iCCP, pHYs, IDAT data and IEND. The survey lists every chunk offset, length and stored CRC; it does not validate CRCs or decode compressed pixel data. No trailing bytes follow IEND in either image.
-
-## Repeat the survey
-
-Requires PowerShell 7.2 or later. Reports are generated under ignored `artifacts/`; private source saves are not copied into the repository. The output file must not exist and must be outside the source save folder.
-
-```powershell
-./Tools/PS3/ToolsOfDestruction/Inspect-TodSave.ps1 `
-  -SourceFolder "C:\Users\primetime43\Downloads\Ratchet & Clank Save Editor\PS3\SAVEDATA\BCES00052_SAVE_1" `
-  -OutputFile artifacts/save-mapping/BCES00052_SAVE_1-survey.json
-```
-
-Omit `-OutputFile` to return JSON without writing anything. The report includes all SFO fields, PFD table bounds, every inventory/gameplay record, every four-byte word in the first `0x1000` game bytes, printable strings, zero spans, 4 KiB page occupancy and PNG chunks. It refuses unfamiliar/encrypted game prefixes instead of guessing or decrypting them. This initial survey is limited to the observed BCES00052/BCUS98127 ToD layout.
-
-Run the reference-specific checks with `./Tests/PS3/ToolsOfDestruction/TestTodSaveInspector.ps1 -SourceFolder <save-folder>`. They verify the observed tables, privacy redaction, output safeguards, malformed-input rejection and unchanged source hashes. These checks do not replace controlled in-game tests of candidate fields.
-
-## Compare plaintext snapshots
-
-[Compare-TodSaves.ps1](../../../Tools/PS3/ToolsOfDestruction/Compare-TodSaves.ps1) compares two `GAME.SAV` files without editing them. It requires the exact `0x906F0` size and plaintext sequential record IDs, emits JSON to stdout only, and reads no SFO/PFD or account-binding data. Unknown regions are reported as byte-range/count changes without dumping their contents.
-
-```powershell
-./Tools/PS3/ToolsOfDestruction/Compare-TodSaves.ps1 -BeforeFile "before/GAME.SAV" -AfterFile "after/GAME.SAV"
-```
-
-Reports include hashes, exact changed ranges, region totals, XP/ammo/level/ownership/modifier changes, added/cleared modifier-bit indices, currency deltas, unlock bytes for IDs 0–31 and acquisition-counter changes. Float changes retain raw bytes, including nonfinite values. `-MaxRanges 200` limits displayed ranges, not total changed-byte/range counts. Differing bytes show correlation, not the cause of a gameplay event; the script does not infer a valid XP/level combination or validate console acceptance.
-
-Run `./Tests/PS3/ToolsOfDestruction/TestTodSaveComparison.ps1 -SourceFile <reference-GAME.SAV>` for 11 checks against this exact sample. Tests generate and modify temporary copies to verify decoding, bounds, masks, unknown ranges and input preservation. **These are generated fixtures, not before/after game captures.** Only one supplied save is available; runtime paired-save and edited-load validation remain outstanding.
-
-## Confirmed world progress and quick-select storage
-
-The exact USA v02.00 ELF independently confirms these fields. [Inspect-TodWorldState.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWorldState.py) checks the reference hash, named Lua bindings, full native routines and TOC-changing thunks before decoding. Its 205 original-byte guards and 19-level catalog are bundled under `world_state` in the shared map. All inspector views are read-only; regional behavior and edited-load acceptance remain unverified.
-
-| Save offset | Storage | Code-backed meaning |
+| Member | Type | Meaning |
 | --- | --- | --- |
-| `0x284 + 4*s`, `s=0..31` | signed BE32 item ID | Quick-select stored slot; `-1` means empty |
-| `0x888 + 0x408*l`, `l=0..18` | byte, nonzero | Level unlocked |
-| `0x889 + 0x408*l` | byte, nonzero | Level visited; menu's “seen” reads the same byte |
-| `0x88A + 0x408*l` | byte | Nonzero excludes this level from native menu eligibility; actual gameplay name unknown |
-| `0x10B70 + 0x7C*l` | BE32 integer | Saved missions-completed counter for the native level |
+| `+0x00` | u32 | Native item ID |
+| `+0x04` | f32 | Weapon XP |
+| `+0x08` | f32 | Ammo |
+| `+0x0C` | u32 | Purchased modifier bitmask |
+| `+0x10` | byte | Ownership; any nonzero value passes the ownership query |
+| `+0x11` | byte | Stored zero-based level |
+| `+0x12` | 2 bytes | Unknown |
 
-Quick-select membership and removal search all 32 words. Insertion accepts slots 0–23, and automatic insertion searches only those first 24; it also checks item configuration flags `0x1040`. Slots 24–31 are retained and displayed, not discarded. These indices do **not** establish the physical wheel layout. Only the player0 block is decoded; the routine's `0x484` player stride is not proof that additional player blocks are valid here.
+Ownership is separate from availability at `0x5754 + ID`. Ammo and level getters also consult runtime definition flags. The eligible ammo getter floors ordinary finite values; the level getter returns stored level +1. Neither changes the save.
 
-The menu's visitable/visible predicate requires a nonzero level ID, an unlocked byte and a clear exclusion byte. Level3 is suppressed when level18 passes its recursive eligibility check; its displayed mission count then uses level18 storage. The inspector shows unremapped native rows and does not emulate runtime eligibility or claim a completion percentage. Twenty world records are initialized, but the native catalog has only 19 levels; the extra slot is not assigned a planet name.
+XP, level, ammo and modifiers are related. Native XP updates can recalculate level and refill ammo; modifier updates can change capacity. Editing one raw field does not reproduce those operations. The [definition catalogs](BCUS98127/v02.00/ElfMap.md#weapon-definitions) include all 32 IDs, 28 shipped configurations and 15 upgrade grids.
 
-Mission-counter records start at `0x10AF8`, stride `0x7C`; the getter reads member `+0x78`. The preceding 120 bytes are now mapped as ten entries in the mission-list section below. A counter alone does not resolve mission titles, and the other world-record members remain unmapped.
+Word `0x280` changes during acquisition/removal. It is **not the number of nonzero ownership bytes**. The USA sample has value 46 and 25 nonzero ownership records. A mapped removal leaf exists, but its gameplay caller is unresolved.
 
-Actual USA snapshot (`F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463`): all 32 quick-select words are `-1`; all 19 unlocked/exclusion bytes and mission counters are zero; only native level0 has visited byte1. These are exact observations, **not** a claim that the player has no game progress. They coexist with the mapped populated inventory and collectibles, so zero counters are not converted into “0% complete” or silently repaired. The original encrypted save is never changed.
+### Quick select and equipment
 
-```powershell
-python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWorldState.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodWorldState.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
-```
-
-The program exposes simple **World progress** and **Quick select** views. Technical retains exact offsets, IDs and exclusion bytes; row details explain the asymmetrical bounds, aliases and limitations. Unknown values, unusual nonzero bytes and out-of-catalog IDs are preserved.
-
-## Confirmed object counters and equipment
-
-The three previously opaque 23-word arrays are now independently linked to named object APIs and two matching native enum registrations. They are a separate catalog from the 32 weapon IDs. [Inspect-TodObjects.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodObjects.py) reproduces the shared map's `objects` section with 205 exact-byte guards; `TOD_SaveObjectCounters_verified` maps the three arrays without claiming valid edit ranges.
-
-| Save storage, object ID `i=0..22` | Code-backed role |
-| --- | --- |
-| `0x304 + 4*i` | Current object count; getter returns signed BE32; possession tests nonzero, including negative values |
-| `0x360 + 4*i` | High-water counter, updated using **unsigned** comparison |
-| `0x3BC + 4*i` | Accumulated positive additions; signed-positive add deltas only, modulo 32 bits |
-
-`hero_set_num_objects` sets current and raises the high-water value without touching positive additions. `hero_add_object` adds its signed delta to current modulo 32 bits; only a positive delta also increments the additions counter, then it raises the peak using an unsigned comparison. Thus these arrays need not be equal, a direct set is not a pickup, and a negative current value can yield a very large unsigned peak. No normalization is performed. The last additions word ends at `0x418`, immediately before hero XP.
-
-Native IDs in order: 0 Heli Pack; 1 Thruster Pack; 2 Hydro Pack; 3 Grind Boots; 4 Gravity Boots; 5 Charge Boots; 6 Treasure Mapper; 7 Box Basher; 8 Armor Magnetizer; 9 O2 Mask; 10 Qwark Info Bot; 11 Golden Groovitron; 12 Verdigris Upgrade; 13 Praxus Upgrade; 14 Hexagonal Washer; 15 Statues; 16 Souls; 17 Ship Parts; 18 Turrets; 19 Timer; 20 Timer Detonator; 21 Timer Clock; 22 Arena Count. `OBJ_TYPE_COUNT=23` is a bound, not another object. These readable labels format native identifiers; timer/arena names do not prove units or conversion rules.
-
-Actual USA snapshot: current and peak are both `[1,1,1,1,1,1,3,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0]`; positive additions are `[0,0,0,0,0,1,3,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0]`. In particular, initialized/equipped packs have current1 but additions0, reinforcing that additions must not be called “all items acquired.” The save alone does not prove how each value appears in live gameplay.
-
-The new **Objects & equipment** inspector shows only object and current count by default. Exact high-water/addition counters, offsets, raw current bits and limitations remain available in Technical and row details. Tests cover signed negatives, independent unsigned words, full catalog bounds, actual observations and unchanged input hashes.
-
-```powershell
-python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
-```
-
-## Confirmed active and completed mission lists
-
-[Inspect-TodMissions.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodMissions.py) independently reproduces the `mission_lists` section from exact named bindings, address arithmetic and complete native routines. Each group occupies twenty `0x7C` physical list slots; only native levels0..18 are named. Active lists begin at `0x10148`; completed lists begin at `0x10AF8`. Each list contains ten `0x0C` entries followed by a saved BE32 count at `+0x78`.
-
-| Entry member | Proven meaning |
-| --- | --- |
-| `+0x0`, BE32 | Title lookup ID, also the native duplicate/search key |
-| `+0x4`, BE32 | Description lookup ID |
-| `+0x8`, BE32 | Flags: bit0 optional, bit1 complete; all higher bits unknown |
-
-`is_mission_available` returns the inverse of completion bit1; there is **no separate available bit** established by this getter. Script indices are one-based. The combined accessor subtracts1, selects the active list first using its count, then the completed list. Title and description getters feed the stored IDs to native text lookup; numeric IDs are not recovered localized strings.
-
-`add_mission` searches both lists by title ID, skips duplicates and appends to active only when count<10. It stores title/description and the low eight incoming flag bits. `complete_mission` searches active by title ID, copies title/description into the completed destination, ORs completion bit2 into that destination's existing flag word, increments completed count, decrements active count and compacts active entries. The observed path does not visibly copy all original flags or independently check completed capacity; these are code observations, not a justification to reproduce the transaction in an editor or repair game state.
-
-The USA snapshot has zero counts in all19 active and completed lists. Unused entries are not assigned mission names or interpreted as current missions. World progress row details show saved counts and bounded entries when present; Technical/research retains the lookup IDs, unknown flag bits, precise native indices and limitations. If a count exceeds10, inspection reads only the ten physical entries and reports the unchanged original count. No cross-list reads or silent normalization occurs.
-
-```powershell
-python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodMissions.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
-```
-
-## Confirmed blueprint and bonus state
-
-The exact USA ELF's named blueprint and cheat APIs establish `0x86F4` as a BE32 blueprint bitmask and `0x86F8–0x8705` as fourteen native bonus-state bytes. `0x8706–0x8707` remains unknown; `0x8708` is the shared weighted skill-point score used for bonus availability, not a count of earned bits. Full call chains, definition/state catalogs and runtime-index caveats are in the [ELF research](BCUS98127/v02.00/ElfMap.md#blueprints-and-bonuscheat-states).
-
-The supplied USA plaintext has blueprint mask `0x0007DEE4`: all thirteen bits in the native grant-all mask and no additional bits. All fourteen bonus-state bytes are zero and score is 750. State zero does not prove locked. Menu indices can be remapped by the runtime language selector, whose current value is not inferred from the save; shipped definition thresholds are not a current-availability verdict. The native enable-all routine writes score840 and changes only zero states to1, without awarding earned skill bits. Unknown bytes and unexpected bit/state values must remain unchanged.
-
-Reproduce without modifying either input:
-
-```powershell
-python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodBonuses.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
-```
-
-The program exposes this as simple read-only Blueprints and Bonuses & cheats views. A separate native grant uses the saved level/destination selector `906E8` as the blueprint bit ID; thirteen qualified native level associations and a Stratus City script predicate are now mapped. They do not establish physical pickup coordinates, collection history, a universal producer for all worlds, or equality with the currently loaded planet. Localized bonus/state labels remain unresolved; no new editable fields or gameplay-compatibility claim is introduced. See [selector grants](BCUS98127/v02.00/ElfMap.md#blueprint-selector-grants-and-qualified-level-associations).
-
-Skill definition `+0C` is now confirmed as an equality menu-filter/group selector, not another save field or an award prerequisite. Group19 contains sixteen global definitions, not a twentieth playable world. Nine additional named native award requests depend on runtime pool/object fields rather than reconstructed saved history. See [skill grouping and producers](BCUS98127/v02.00/ElfMap.md#skill-definition-groups-and-additional-runtime-award-producers).
-
-Weapon-upgrade purchase order is also qualified: modifier word at record `+0C`, conditional absolute ammo refill at `+08`, then raritanium debit and runtime notification. Native signed32 wallet admission and script ownership are distinct from vendor adjacency and duplicate-node rejection; the transaction itself can charge again for an already-set bit. Viewing remains read-only and does not simulate those operations. See [purchase ordering](BCUS98127/v02.00/ElfMap.md#upgrade-purchase-publication-ammo-refill-and-payment-order).
-
-The separate weapon level-five purchase gate requires nonzero ownership, **exactly stored level4**, saved replay906EC nonzero, low definition flags clear and unsigned `num_levels > 5`. The bridge itself has a weaker `>4` definition test. Dispatch and later gate recheck are independent; a false first gate selects normal acquisition, whereas a failed second gate has no normal fallback. Level5/XP/additive ammo publication precedes bolt payment. Repeated normal acquisition can charge already-owned records without locally incrementing the acquisition counter. These facts do not establish current vendor eligibility, a localized mode name or new editable fields. See [weapon purchase routing](BCUS98127/v02.00/ElfMap.md#weapon-purchase-routing-and-saved-level-five-gate).
-
-## Confirmed equipment history and compressed blocks
-
-Saved BE32 words `0x42C`, `0x430`, `0x434` are last/previous/older recorded equipped item IDs. Native updater `1F5570` shifts the history and records the same getter used by named `hero_get_equipped`; they are not dual-wield slots. The USA save contains IDs15/25/0 (Ryno/SwingShot/Wrench). Current runtime state, callback timing, fallback/reset behavior and safe history edits remain unverified.
-
-The twenty-one blocks at `0x114D8`, stride `0x60DC`, contain native512×512 RLE grid storage. Per block: `+00..C7` copied volume definition, `+C8` encoder accumulator, `+CC` readiness byte, `+CD` compressed payload, `+60D0` declared encoded length, `+60D4..60DA` seven group flags and unknown last byte `+60DB`. Two equal bytes introduce a BE16 additional-repeat count; other bytes are literals. Output is capped at `0x40000` bytes; preserve original compressed tokens, including clipped final runs. The accumulator excludes the first two zero bytes of each zero run; it is neither exact zero count nor checksum.
-
-Nineteen blocks in the USA save are ready and all decode to262144 bytes with matching accumulators; slots3/4 are not ready. Each populated final run is clipped by four bytes. The [RLE evidence](BCUS98127/v02.00/ElfMap.md#saved-equipment-history-and-compressed-state-blocks) describes token proof and cross-decoder hashes. The [native grid/header evidence](BCUS98127/v02.00/ElfMap.md#persistent-grid-volume-headers-map-labels-and-group-flags) confirms all21 map-label associations,512×512 layout, state0/1/2 conversion and conditional group flags. These are not one-block-per-planet completion records. Stored state blocks and player summary show facts read-only; no bytes are rewritten or normalized.
-
-The copied header contains runtime geometry pointer bits (`+00`, never dereferenced), class535 (`+04`), enabled byte (`+0C`), physical slot (`+10`), baked layer index (`+14`), optional runtime-volume index (`+18`, `FFFFFFFF` sentinel), coordinate-sign byte (`+1C`) and seven24-byte groups (`+20`). Group fields are volume-list reference `+00`, map rectangle origins `+04/+08`, extents `+0C/+10` and image index `+14`. The formerly named activation word is first rectangle extent; its nonzero value gates containment/visibility. Native containment code sets each saved group flag; image visibility also considers the Treasure Mapper count at `31C`. The eighth tail byte remains unknown. All19 initialized USA headers match native class and physical slot; unready slots are not repaired or inferred from zero bytes. All33 ready groups with nonzero first extent in this snapshot fit512×512;28are flagged,5unflagged. These observations are not universal edit limits.
-
-Physical slots map to internal level IDs `[14,14,10,10,10,6,6,1,16,3,18,5,11,11,17,0,7,9,15,2,12]` via `24E6E8`, consumed by native map title/description lookup. This is a label association, not current planet. Baked nibble0 becomes persistent state0,1..7 state1,8..15 state2; native nearby-cell updates clear qualified cells to0. The [geometry refinement](BCUS98127/v02.00/ElfMap.md#copied-map-rectangles-world-projection-and-clearing-brush) establishes sign polarity/projection algebra and a14×14 class-matching brush. Runtime geometry is unavailable from the save; world-axis naming, pixel-specific terrain meaning and edited-save acceptance remain unverified.
-
-The [menu-routing evidence](BCUS98127/v02.00/ElfMap.md#map-menu-routing-and-native-accumulator-predicate) distinguishes physical saved slot from browse ordinal, native level and shared image ID. The inverse browse permutation skips ready byte0. Separate predicate `24E7E8` counts all21 unsigned accumulator words at`115A0+slot*60DC` greater than or equal to`36666`, returning1 iff count>15; it has no readiness gate or confirmed gameplay caller. The actual snapshot qualifies19words, but this is **not trophy/completion progress or exact cleared-cell count**.
-
-```powershell
-python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodStateStorage.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
-python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodPersistentGrid.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
-```
-
-## Saved options and load selections
-
-The exact USA code identifies the **48-byte options block at `0x114A8–0x114D8`**. Its fifteen named fields are listed with native getter/setter addresses in the [settings evidence table](BCUS98127/v02.00/ElfMap.md#saved-settings-and-load-destinations): camera/look inversion words, camera-speed float, control-scheme index, voice/effects/music floats, and help/subtitle/quick-select/Sixaxis/rumble/surround bytes. [Inspect-TodSettings.py](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSettings.py) derives their offsets from native load instructions and named bindings rather than searching the save for plausible values.
-
-USA observations: camera speed1.0; all inversions and scheme index0; all three volumes `3F666666` (approximately0.9, shown as90%); help text0; subtitles, quick-select pause, Sixaxis, rumble and surround1. Native initializer defaults differ for help text (1) and subtitles (0). Unnamed BE32 word `114C0` is1 and bytes `114D6/114D7` are`0000`, but their meanings remain unknown. The bytes are not normalized or treated as padding. Stub button-layout/rumble-connected APIs do not identify additional saved settings.
-
-[Shipped pause-menu evidence](BCUS98127/v02.00/ElfMap.md#shipped-pause-menu-settings-dispatch) independently connects axis descriptors to normal-camera inversion APIs for scheme0 and look/first-person APIs for scheme1; both display and adjustment select that API table. This is field/API selection, not polarity reversal. Disabled literal descriptors are filtered, percentage actions request±0.1 for±1input delta, and boolean/axis actions logically negate native getter results. Asset text-tag IDs are not proven English labels. No new semantic name is assigned to`114C0` or the unknown tail bytes.
-
-Saved load destination is **BE32 at `0x906E8`**; next-level selection is **BE32 at `0x8740`**, not tail word `906E4`. Nineteen native load-name strings form the catalog. The USA snapshot has saved-load ID0 (`metropolis`) and next-level ID`FFFFFFFF`, retained as unmapped without assigning a sentinel meaning. Neither field is necessarily the current runtime planet or the SFO subtitle. The app exposes both in read-only Player summary and options in read-only Game settings; Technical mode retains exact and unknown data.
-
-Runtime checkpoint object `10330610` lies outside the serialized block. Captured position/orientation and valid byte`+EF` are **not** assigned guessed save offsets. Named runtime health accessor resolves object float attribute`6C`; no dedicated saved health field is proven. See the [checkpoint and health findings](BCUS98127/v02.00/ElfMap.md#runtime-checkpoints-and-health-no-saved-offsets-inferred).
-
-```powershell
-python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodSettings.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin"
-python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodSettings.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-working-copy.bin" -v
-```
-
-## Runtime validation and remaining fields
-
-### Global event bitset
-
-Exact USA code establishes **five BE64 words at `0x5528–0x5550`**, end exclusive. Two separate registrations agree on292 named IDs0..291; `GLOBAL_FLAG_COUNT292` is a sentinel and bits292..319 remain unknown. Bit ID selects integer bit `id%64` in word `floor(id/64)`: file byte is `5528+8*floor(id/64)+7-floor((id%64)/8)`, mask `1<<(id%8)`. Native check/set/clear leaves share this saved region and do not enforce the enum-count bound. All five words are zero in the supplied USA snapshot.
-
-Names include story/tutorial/movie events and equipment-event bits. Acquisition specifically sets ID10 `HERO_HAS_TWO_ITEMS` when its qualifying owned-item class count exceeds1; this is an event bit, not a continuously maintained inventory predicate. Arena story flags74/75 are distinct from the numeric win counters at56D8. See [global flag evidence](BCUS98127/v02.00/ElfMap.md#global-event-flags-named-story-tutorial-movie-and-equipment-bits) for native addresses, source-script consumers and the complete catalog. The app's read-only **Global event flags** view preserves all320 physical bits in Technical mode. Clear does not universally mean unfinished; no new editing controls are enabled.
-
-### Arena challenge counters
-
-Exact USA ELF evidence establishes **23 BE32 words at `0x56D8–0x5734` (end exclusive)**, indexed by direct native ID. ID0 is INVALID; IDs1..22 are the named `IFF_` challenges. Getter sign-extension and wrapping increments are preserved; unusual negative values are not normalized. The following **eight words `0x5734–0x5754` are separate reset-event category counters**, not a24th challenge or per-challenge failure counts. All31 words are zero in the supplied USA snapshot.
-
-Initializer `35D9A0` clears exactly eight words; `2CE518` increments `5734+4*runtime_category` modulo32 except category0. This increment precedes the saved restart-counter gate, unlike the segment reset-event counter. Native selectors are recovered for IDs2–7; ID1 selection and all player-facing category names remain unknown. Runtime category/countdown at `101E8D70+48/+4C` are outside serialized GAME.SAV, and their expiration does not clear these saved counters. The read-only **Reset-event counters** view preserves all eight unsigned values. See [exact-build reset-category evidence](BCUS98127/v02.00/ElfMap.md#reset-event-category-counters-and-temporary-runtime-selection) for qualified selectors, strict countdown expiration and reproduction commands. Counts are not promoted to death totals or editable fields.
-
-The [arena executable mapping](BCUS98127/v02.00/ElfMap.md#arena-challenges-direct-ids-saved-wins-and-shipped-definitions) joins all22 IDs to shipped config descriptions, restrictions and base rewards; CSV order is not native ID order. Runtime ArenaConfig records are not save records, and the runtime menu table/index order remains unresolved. Success additionally changes currency and potentially inventory/quick-select state. No challenge editing controls or live payout guarantee are enabled; the app provides a read-only **Arena challenges** view.
-
-### Per-world object bitsets
-
-The two formerly opaque256-byte arrays within each408-byte world record are now mapped as **32 BE64 words /2,048 physical object-slot bits each**:
-
-- World member1E0, save base668: recorded object-specific lifecycle state; native set/clear/check and restore consumers are identified. This is not universally a dead/killed flag.
-- World member2E0, save base768: spawn suppression; a set bit rejects the corresponding object definition in native load mode1. Other load modes have different rules.
-
-For world `l`, add `l*408` to either save base. For physical slot `s`, word is `base+8*(s//64)` and file byte is `word+7-(s%64)//8`, mask `1<<(s%8)`. Slot indices come from aligned runtime object-pool entries, not saved UIDs, inventory IDs or a named collectible catalog. Twenty physical worlds are initialized; only nineteen have native level names. All40 bands are zero in the supplied USA plaintext. The read-only **World object flags** view preserves exact words and set-slot indices; zero is not an object-availability or completion verdict.
-
-See the [exact-build object-bitset evidence](BCUS98127/v02.00/ElfMap.md#per-world-object-state-and-spawn-suppression-bitsets) for native addresses, mode2 segment/checkpoint dependencies, tests and reproduction commands. The segment tick/reset/log gate is specifically saved restart-counter906EC **nonzero**, not an independently named replay flag. That counter is3 in the USA snapshot; native engine replay context is confirmed by `-replay`, but localized game-mode naming and behavioral edit validation remain unconfirmed.
-
-Executable research is recorded separately in the [Tools of Destruction ELF map](BCUS98127/v02.00/ElfMap.md), with a shared JSON address map and IDA/Ghidra importers. Inventory structure and snapshot linkage are code-backed; paired saves are still needed to test behavior and editing dependencies. Other fields below remain candidates.
-
-Packed-asset research supplies [weapon XP/ammo tables and upgrade-node catalogs](BCUS98127/v02.00/ElfMap.md#packed-weapon-configuration-and-native-field-bindings). The [native ID catalog](BCUS98127/v02.00/ElfMap.md#native-inventory-id-catalog) now independently links all 32 save records to enum/config names through exports, constructors and named getters; CSV order is **not** the ID map. The read-only asset report covers 28 internal configurations and 204 entries including start nodes. All 15 [vendor upgrade grids and their UI checks](BCUS98127/v02.00/ElfMap.md#vendor-upgrade-grids-and-purchasing) are mapped separately from the native purchasing transaction. The native ammo array has 20 slots and the modifier array 24; neither array capacity nor a 32-bit mask establishes playable levels or valid arbitrary upgrades. Asset values, node masks and calculated capacities remain research facts, not gameplay-validated edit limits.
-
-The [qualified equipment-history and bonus-effect pass](BCUS98127/v02.00/ElfMap.md#equipment-history-dispatch-and-qualified-bonus-effects) now distinguishes history callback timing from queued equip requests, and documents separate restore/menu fallbacks for `42C/430/434`. Six direct saved bonus-state consumers have confirmed local effects and score gates, with runtime-only dependencies kept separate. Their viewer explanations remain read-only: one snapshot does not reveal accepted equipment or current effect activation.
-
-The [compiled arena pass](BCUS98127/v02.00/ElfMap.md#compiled-arena-selector-inputs-and-independent-reward-predicates) additionally maps four shipped selector-input lists,14 signed-positive activation dependencies and independent story bits74/75/88/89. Named first-victory weapon rewards require a **raw-zero** completion counter, unlike signed-positive menu rules. The input-list alias to the live runtime menu table is still unresolved; no current arena availability is inferred.
-
-The [inventory reset footprint](BCUS98127/v02.00/ElfMap.md#inventory-reset-footprint-and-opaque-prefix-byte-ownership) confirms that standalone record reset leaves opaque `+12/+13` bytes untouched, unlike bulk initialization. Four prefix bytes `484..487` are outside the prefix initializer and its restart preservation copy; their meaning/default is not inferred. Technical inspection retains the exact bytes without repairing them.
-
-Collect paired saves with exactly one intentional change, using copies rather than the only original. Autosave time and unrelated engine state can still change, so repeated pairs are needed.
-
-| Controlled change | Candidate offsets or region | Question |
+| Offset | Type | Meaning |
 | --- | --- | --- |
-| Fire one Combuster shot | `0x01C` | Does the float decrease by exactly one? |
-| Earn XP with one weapon | `i * 0x14 + 4` | Verify XP delta and threshold behavior against gameplay |
-| Level up one weapon | `i * 0x14 + 0x11` | Verify level/XP/ammo changes together |
-| Buy one raritanium upgrade | `i * 0x14 + 0x0C` | Which bit corresponds to the purchased node? |
-| Change only bolt multiplier | `0x428` | Does this float track the displayed multiplier? |
-| Acquire or unlock one mapped item | `i*0x14+0x10`, `0x280`, `0x5754+i` and other inventory state | Verify acquisition versus availability and counter/list updates |
-| Buy or equip armor | `0x444–0x45C`, `0x5774–0x5779` | Verify ownership, equipped ID, currency and unlock changes together |
-| Earn one skill point | `0x8708`, `0x8710–0x8718` | Verify weighted score, bit order and automatic HARDCORE award |
-| Change health | Unmapped state; `0x418` is confirmed XP | Locate current/max health without conflating them with progression XP |
-| Complete one gameplay segment | `0x488+level*0x408+slot*0x30`, log `0x8764–0x10144`, count `0x10144` | Verify flag2C, timer/reset behavior and active versus retained log records separately from mission lists |
-| Change only one option | `0x114A8–0x114D8` | Verify persisted options and reset/restore timing; retain unknown word/tail |
-| Win one named arena challenge | `0x56D8+4*nativeId`, `0x41C`, inventory/quick-select state | Verify the direct counter and currency/weapon transaction together; runtime menu order is not native ID order |
-| Trigger one named tutorial/story/equipment event | Five BE64 words `0x5528–0x5550` | Verify the corresponding global flag and its script/reset dependencies independently of inventory, arena counters and per-level flags |
-| Move, save, reload | `0x906E8`, `0x8740` and unmapped persisted state | Verify load-selection updates; find any persisted checkpoint/position linkage separately from runtime object |
+| `0x284 + 4*s`, s=0–31 | s32 | Quick-select item ID; `-1` is empty |
+| `0x42C / 0x430 / 0x434` | u32 | Last, previous and older recorded equipped item IDs |
+| `0x438` | u32 | Pack dispatch selector; known consumers test exactly 1 |
+| `0x43C` | u32 | Pack type: Heli, Thruster, Hydro, Wing (IDs 0–3) |
+| `0x440` | u32 | Boot type: Normal, Grind, Gravity, Charge (IDs 0–3) |
 
-The USA build-specific [bonus language/content pass](BCUS98127/v02.00/ElfMap.md#bonus-content-queries-and-runtime-language-selection) confirms eight menu unlock-query operands without promoting them to direct saved-state effects or current availability. [Arena milestone writers](BCUS98127/v02.00/ElfMap.md#arena-operation-routing-and-separate-milestone-writers) establish separate flag/counter calls and their ordering; challenge filename numbers are not native IDs, and flags are not repaired from counters. [Grid synchronization](BCUS98127/v02.00/ElfMap.md#grid-browsing-synchronization-and-restore-trust-boundaries) distinguishes active/browsed logical buffers from temporary images, historical copied headers and native readiness/accumulator trust boundaries. These are guarded static relationships plus detached snapshot observations, not in-game edit acceptance.
+The direct quick-select API addresses all 32 slots. Hero insertion uses only the first 24 and removes duplicates through a separate path. Equipment history is not a set of simultaneous equipped slots. The native boot setter ignores its supplied type and writes zero.
 
-The further USA [segment consumer pass](BCUS98127/v02.00/ElfMap.md#saved-segment-slots-and-runtime-configuration-mapping) distinguishes requested saved slots from runtime configuration mapping; completion flags alone do not prove logging or reset eligibility. [Load-request deferral](BCUS98127/v02.00/ElfMap.md#saved-level-requests-and-runtime-deferral) keeps saved906E8/8740 separate from a pending runtime word and successful-load claims. [Reset admission](BCUS98127/v02.00/ElfMap.md#reset-request-admission-and-latch-service) establishes caller/latch gates and recording order without naming death/failure causes. [Arena API-boundary evidence](BCUS98127/v02.00/ElfMap.md#arena-queue-api-boundary-and-runtime-resource-ownership) separates a named native queue endpoint from diagnostic select text; the live challenge-table installation remains unresolved. All are static code-backed relationships, not new editable fields or in-game acceptance proof.
+### Object counters
 
-Do not expose speculative fields in the editor until their meaning, bounds, dependencies and in-game load behavior are verified. No internal game checksum algorithm has been established for this sample.
+Objects use a **different ID catalog** from weapons. For object ID `i=0–22`:
 
-## Interpretation refinement: USA BCUS98127 v02.00 event and object lifecycles
+| Offset | Type | Meaning |
+| --- | --- | --- |
+| `0x304 + 4*i` | s32 getter | Current count; possession tests nonzero |
+| `0x360 + 4*i` | u32 | Peak, raised using unsigned comparison |
+| `0x3BC + 4*i` | u32 | Positive additions |
 
-Further [option-exit evidence](BCUS98127/v02.00/ElfMap.md#entry-latched-option-exits-and-callback-qualified-camera-cleanup) shows runtime entry latches, not fresh saved-word reads, drive qualified multi-record camera cleanup. It does not name the option or establish hold/toggle behavior. [Reset producer contexts](BCUS98127/v02.00/ElfMap.md#reset-category-producer-contexts-and-separate-dispatch-bounds) separate runtime category selection from later state dispatch and actual saved-counter recording; no death labels are assigned. The [opaque-field ownership audit](BCUS98127/v02.00/ElfMap.md#opaque-segment-and-world-fields-bounded-ownership-audit) rejects offset-only matches while leaving segment28 and tail bytes unresolved, not proven unused or editable.
+A direct set changes current and may raise peak, but does not change additions. Add wraps current to 32 bits; a signed-positive delta also increases additions, then may raise peak. Reset/restore paths can replace these banks. They are not unique or lifetime pickup totals.
 
-Selected global events3,7,12,13,15,16,17 have code/asset-backed reset or consume paths. Their clear state is not proof an action never happened. Runtime Lua counters and separate mission side effects are not additional confirmed save fields. Other named events and unknown physical tail bits retain their existing interpretation limits.
+IDs in order: 0 Heli Pack, 1 Thruster Pack, 2 Hydro Pack, 3 Grind Boots, 4 Gravity Boots, 5 Charge Boots, 6 Treasure Mapper, 7 Box Basher, 8 Armor Magnetizer, 9 O2 Mask, 10 Qwark Info Bot, 11 Golden Groovitron, 12 Verdigris Upgrade, 13 Praxus Upgrade, 14 Hexagonal Washer, 15 Statues, 16 Souls, 17 Ship Parts, 18 Turrets, 19 Timer, 20 Timer Detonator, 21 Timer Clock, 22 Arena Count. Timer names do not establish units.
 
-Normal object-pool setup marks padding occupied, but object release is deferred and physical slots can be reused. Fresh setup-before-load is confirmed at a static call boundary; definition ordinal still does not unconditionally identify a saved bit. The newly described32-byte pool header is runtime-only, not more bytes in GAME.SAV. See the [exact-build evidence](BCUS98127/v02.00/ElfMap.md#runtime-pool-setup-deferred-release-and-reusable-physical-slots). Viewing never executes allocators, callbacks or flag consumers.
+Fixed +1 producers are confirmed for Charge Boots, Statues and Souls. Souls updates its counters **before** later linked-handle checks. A configured producer sets a global flag before adding its selected object, without locally rejecting an already-set flag. See [object grants](BCUS98127/v02.00/ElfMap.md#object-grants).
+
+## Player state
+
+| Offset | Type | Meaning |
+| --- | --- | --- |
+| `0x418` | u32 | Hero XP, not current health or a stored level |
+| `0x41C` | u32 | Bolts |
+| `0x420` | u32 | Raritanium |
+| `0x424` | u32 | Special bolts spent |
+| `0x428` | f32 | Bolt multiplier |
+| `0x444 + 4*i`, i=0–4 | u32 | Armor ownership; nonzero predicate |
+| `0x458` | u32 | Selected armor ID |
+| `0x45C + 4*i`, i=0–8 | u32 | Skin ownership; nonzero predicate |
+| `0x480` | u32 | Selected skin ID |
+| `0x484–0x488` | 4 bytes | Unknown |
+| `0x5774 + i`, i=0–4 | byte | Separate armor availability |
+| `0x86F4` | u32 | Blueprint mask |
+| `0x86F8–0x8706` | 14 bytes | Bonus/cheat states; zero is not necessarily locked |
+| `0x8706–0x8708` | 2 bytes | Unknown |
+| `0x8708` | u32 | Weighted skill-point total |
+| `0x870C–0x8710` | 4 bytes | Uninterpreted |
+| `0x8710–0x8718` | u64 | Earned skill bits, IDs 0–59; high four bits unknown |
+
+Armor IDs: 0 None, 1 Durafiber, 2 Hyperplate, 3 Tetramesh, 4 Quantonium. Ownership, availability and selection are independent.
+
+Skin IDs and shipped special-bolt costs: 0 None (0), 1 Dan (6), 2 Snowman (3), 3 Cragmite (6), 4 Pete (6), 5 Cronk (4), 6 Zephyr (4), 7 Jailbird (0), 8 Furioso (3). Jailbird availability requires ownership. A zero price is not an unlock rule.
+
+Special-bolt balance is collected count minus `0x424`, using signed-32 subtraction. The 19 shipped level totals sum to 32. Extra bits and negative balances are retained, not repaired.
+
+The 60 skill definitions total 750 points. Awards add each definition's value, not one point per bit. Completing IDs 0–58 triggers ID 59, HARDCORE. Blueprint grants, weighted score, earned skill bits and bonus states are separate fields.
+
+Hero XP passes through runtime float32 conversion and a fractional accumulator. Reload can lose precision for large integers; the native routine does not simply assign a saved level. Current health and checkpoint position are runtime state with **no confirmed dedicated save offset**.
+
+## Worlds and gameplay segments
+
+World `l` starts at `W = 0x488 + l × 0x408`. There are 20 physical records, but only 19 named native levels. Slot 19 remains unnamed. Internal names are in `settings.level_selection.catalog` in the [native map](BCUS98127/v02.00/maps/NativeMap.json).
+
+### World record
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `+0x000–0x1E0` | 10 × `0x30` | Gameplay segments |
+| `+0x1E0–0x2E0` | 32 × u64 | Recorded object lifecycle bits |
+| `+0x2E0–0x3E0` | 32 × u64 | Spawn-suppression bits |
+| `+0x3E0 / +0x3E4 / +0x3E8` | f32 | Cached experience, bolts and raritanium rewards |
+| `+0x3EC` | u32 | Collected special-bolt mask |
+| `+0x3F0 / +0x3F4` | u32 | Bolts/raritanium diminishing-reward ladder indices |
+| `+0x3F8 / +0x3FC` | f32 | Corresponding remainders |
+| `+0x400` | byte | Level unlocked |
+| `+0x401` | byte | Level visited |
+| `+0x402` | byte | Nonzero excludes the level from native menu eligibility; exact name unknown |
+| `+0x403` | byte | Reuse cached reward totals |
+| `+0x404–0x408` | 4 bytes | Unknown |
+
+Each object band has 2,048 physical slot bits. They are runtime pool indices, not named pickups or inventory IDs. Recorded state is not universally a killed flag; spawn suppression is confirmed for load mode 1, not every mode.
+
+### Gameplay segment
+
+Segment `s` starts at `W + s × 0x30`, for s=0–9.
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `+0x00` | f32 | Adjusted elapsed accumulator |
+| `+0x04` | f32 | Unmodified elapsed accumulator |
+| `+0x08` | u32 | Reset-event count |
+| `+0x0C` | f32 | Finalized timing scalar |
+| `+0x10 / +0x14 / +0x18` | f32 | Experience, bolts and raritanium accumulators |
+| `+0x1C / +0x20 / +0x24` | f32 | Cached reward totals |
+| `+0x28` | u32 | Initializer writes zero; meaning unknown |
+| `+0x2C` | byte | Completion flag; nonzero predicate |
+| `+0x2D–0x30` | 3 bytes | Unknown; untouched by the world initializer |
+
+The experience reward channel has a confirmed **weapon-XP** consumer. These are not wallet balances or current payouts. Timing units remain unknown. Completion does not guarantee logging or every reward/reset path.
+
+The USA assets provide 56 reference segment-name associations across 19 worlds. Physical slot 0 is reserved in the name catalog; a retained gameplay-log string is not a substitute for this mapping.
+
+## Flags and counters
+
+| Offset | Type | Meaning |
+| --- | --- | --- |
+| `0x5528–0x5550` | 5 × u64 | Global event flags: 292 named IDs, 320 physical bits |
+| `0x56D8 + 4*i`, i=0–22 | s32 getter | Arena wins; ID 0 INVALID, IDs 1–22 named challenges |
+| `0x5734 + 4*i`, i=0–7 | u32 | Reset-event category counts; not arena failure counters |
+| `0x8720` | u64 | Dance producer progress, separate from earned skill bit 48 |
+| `0x8728` | u32 | Bonus-target progress mask |
+| `0x872C / 0x8730` | u32 | Wrapping event counts; gameplay names unresolved |
+| `0x8734` | u32 | Quick-select warning counter; updated before rejection branches |
+| `0x8738` | byte | Full-list message-request latch |
+| `0x8739–0x8740` | 7 bytes | Unknown; explicitly zeroed by initializer |
+| `0x8740` | u32 | Next-level selection |
+| `0x8744 / 0x8748` | f32 | Accumulated adjusted/reference timing scalars |
+| `0x874C / 0x8750` | f32 | Countdown gates; units unknown |
+| `0x8754` | f32 | First-restart median of positive finalized segment scalars |
+| `0x8758` | u32 | Decryptor win-path count |
+| `0x875C` | u32 | Sixaxis-enabled Decryptor losses since success |
+| `0x8760` | f32 | Decryptor spark-speed multiplier |
+| `0x906E8` | u32 | Saved load-level ID, not necessarily current planet |
+| `0x906EC` | u32 | Engine replay/restart state |
+
+For a u64 bit bank, ID `i` selects word `i // 64`, integer bit `i % 64`. Since words are big-endian, logical bit 0 is in the last byte of its word. Global bits 292–319 are unnamed; native operations have no local enum-count bound.
+
+Flags can be set, cleared or consumed. A clear bit does not universally mean unfinished. Arena native IDs, Lua source indices and displayed rows are different index spaces; the installed runtime arena table remains unresolved.
+
+Dance compares all 64 progress bits to `0x000000000FFFFFFF`; high bits prevent that award request. Bonus-target progress does not contain the runtime pending set or identify the remaining targets.
+
+CLI `-replay` writes 1 to `0x906EC`. Selective restart writes `min(wrapping_u32(old + 1), 1000)`. This proves engine replay context, not a completed-playthrough count. Saved load ID, next-level selection and the SFO subtitle need not agree.
+
+## Gameplay log and missions
+
+### Gameplay log
+
+There are 200 physical records at `0x8764 + j × 0x9C`. Count is stored at `0x10144`.
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `+0x00 / +0x40` | 64-byte strings | Location and segment names |
+| `+0x80 / +0x84` | f32 | Runtime baseline and post-reset timing modifier |
+| `+0x88 / +0x8C` | f32 | Adjusted elapsed and configured reference |
+| `+0x90 / +0x94` | f32 | Accumulated scalars from saved `0x8744 / 0x8748` |
+| `+0x98` | u32 | Reset-event count, not a float |
+
+Initialization clears the count without erasing old records. The USA sample contains 27 named records but count 0: those names are **retained history**, not active entries.
+
+### Mission lists
+
+Active lists start at `0x10148`; completed lists at `0x10AF8`. Each bank has 20 lists of `0x7C` bytes. A list holds ten `0x0C` entries followed by a u32 count at `+0x78`.
+
+Entry members: title lookup ID at `+0`, description lookup ID at `+4`, flags at `+8`. Flag bit 0 is optional; bit 1 is complete. Higher bits are unknown. There is no separate available bit established by the getter. Script indices are one-based.
+
+Completion copies the lookup IDs, ORs `0x2` into the destination's existing flags and compacts the active list. It does not simply copy the source flags. Native searches trust counts; the viewer bounds reads to ten entries. Completed-list count also supplies the missions-completed getter.
+
+The native map contains 81 title/description lookup pairs. These are keys, not recovered localized mission text.
+
+## Settings
+
+The settings block is `0x114A8–0x114D8`. Boolean fields use nonzero predicates; the viewer keeps their original values.
+
+| Offset | Type | Setting |
+| --- | --- | --- |
+| `0x114A8 / 0x114AC` | u32 | Camera X/Y inversion |
+| `0x114B0` | f32 | Camera speed |
+| `0x114B4 / 0x114B8` | u32 | Look X/Y inversion |
+| `0x114BC` | u32 | Control-scheme index |
+| `0x114C0` | u32 | Unnamed camera-mode-related option |
+| `0x114C4 / 0x114C8 / 0x114CC` | f32 | Voice, effects and music volumes |
+| `0x114D0` | byte | Help text |
+| `0x114D1` | byte | Subtitles |
+| `0x114D2` | byte | Quick select pauses |
+| `0x114D3` | byte | Sixaxis |
+| `0x114D4` | byte | Rumble |
+| `0x114D5` | byte | Surround |
+| `0x114D6–0x114D8` | 2 bytes | Unknown |
+
+Float setters clamp ordinary finite inputs to 0–1; raw getters can still expose unusual values. Scheme 0 uses camera inversion APIs, while scheme 1 uses look inversion APIs in the shipped menu. `0x114C0` has camera-mode consumers, but its original option name and hold/toggle behavior are unknown.
+
+Settings stores precede runtime application. A stored surround or rumble value does not prove hardware activation; changing one volume requests application of all three audio buses.
+
+## Compressed map grids
+
+There are 21 blocks at `0x114D8 + slot × 0x60DC`. Each represents a native 512 × 512 grid, not a planet completion percentage.
+
+| Member | Contents |
+| --- | --- |
+| `+0x00–0xC8` | Copied 200-byte volume definition |
+| `+0xC8` | u32 encoder accumulator |
+| `+0xCC` | Readiness byte |
+| `+0xCD` | Compressed payload start |
+| `+0x60D0` | Declared encoded length |
+| `+0x60D4–0x60DB` | Seven group flags |
+| `+0x60DB` | Unknown final byte |
+
+Two equal bytes introduce a BE16 additional-repeat count; otherwise bytes are literals. Decoded output is capped at `0x40000` bytes. The accumulator is **not** a checksum or exact zero-pixel count. Preserve compressed tokens, including final runs clipped by the output cap.
+
+The copied definition includes pointer bits, class 535, a generation/slot handle, indices and seven rectangle/image groups. Pointer and handle values are historical runtime data; the inspector never follows them. Physical slot, browse position, level label and image ID are distinct.
+
+Native baked values map 0→state 0, 1–7→state 1, 8–15→state 2. Geometry and a qualified 14 × 14 clearing brush are mapped, but complete pixel meanings and world-axis names are not. The USA sample has 19 ready blocks; slots 3 and 4 are unready.
+
+## PS3 container files
+
+### PARAM SFO
+
+`PARAM.SFO` uses little-endian integers. Magic is `00 50 53 46`; the header contains format version (`+0x04`), key-table offset (`+0x08`), value-table offset (`+0x0C`) and entry count (`+0x10`). The entry table begins at `0x14`.
+
+Each 16-byte entry contains u16 key-relative offset, u16 type, u32 used length, u32 capacity and u32 value-relative offset. Used length and capacity are different. Types include binary `0x0004`, text `0x0204` and integer `0x0404`.
+
+Useful keys: `TITLE`, `SUB_TITLE`, `SAVEDATA_DIRECTORY`, `ATTRIBUTE` and `ACCOUNT_ID`. `PARAMS`/`PARAMS2` contain binary metadata; account bindings are redacted in research reports. Subtitle text is not a reliable current-planet field.
+
+### PARAM PFD
+
+`PARAM.PFD` is a separate big-endian integrity database. The European sample is version 3 and `0x8000` bytes.
+
+| Offset | Contents |
+| --- | --- |
+| `0x00` | u64 magic `0x50464442` |
+| `0x08` | u64 version |
+| `0x10–0x20` | IV/header key |
+| `0x20–0x60` | Encrypted signature block |
+| `0x60 / 0x68 / 0x70` | u64 bucket capacity, reserved entry count, used entry count |
+| `0x78` onward | Bucket indices, file entries and bucket signatures |
+
+The sample has 57 buckets, 114 entry slots of `0x110` bytes and two used entries: `PARAM.SFO` and `GAME.SAV`. File-entry layout and signature fields are retained in the container inspector. Parsing a PFD does not verify its signatures or prove console acceptance. Its presence alone does not prove game data is encrypted.
+
+### Artwork
+
+`ICON0.PNG` and `PIC1.PNG` are ordinary PNG files. The European sample uses 320 × 176 and 1000 × 560 RGBA images. They are not game-state records.
+
+## Reference files
+
+| Sample | Game data | Evidence |
+| --- | --- | --- |
+| Europe `BCES00052_SAVE_1` | Plaintext, `0x906F0` bytes | Save observations only; executable version unknown |
+| USA `BCUS98127_SAVE_1` | Encrypted, `0x906F0` bytes | Inspected through a detached plaintext copy; exact v02.00 ELF available |
+
+SHA-256 identities:
+
+| Input | SHA-256 |
+| --- | --- |
+| European plaintext | `BEB457F9F5C750C46F2AD27E9DEFB15090785311696EAE7D5178904205DD949C` |
+| USA encrypted GAME.SAV | `FA16668A09319AF0193F53674C7ED0DE7434189EA488E3FAB5AF4782D2D10D48` |
+| USA detached plaintext | `F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463` |
+
+The European sample has a PFD but readable game data; use **Open Decrypted Folder** for that sample. Source saves, artwork and account bindings are not bundled. Inspection/tests use copies and check that original files remain unchanged.
+
+## Known gaps
+
+- Unknown inventory tails, prefix gap, segment/world tails, grid-header bytes, `0x906E4` and unnamed settings fields.
+- Exact timer units, event-counter names and every reset/restore dependency.
+- Per-world object-slot identities, remaining bonus-target identities and live arena-table installation.
+- Persisted health/checkpoint dependencies, if any; the known runtime structures are not saved fields.
+- Controlled before/after captures, in-game acceptance of new edits and other executable builds.
+
+Full addresses, byte guards, catalogs and per-path qualifications remain in [NativeMap.json](BCUS98127/v02.00/maps/NativeMap.json). The [tools guide](../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md) explains how to inspect and compare copies.

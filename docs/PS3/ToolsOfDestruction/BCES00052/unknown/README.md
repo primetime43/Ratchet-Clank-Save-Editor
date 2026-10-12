@@ -1,8 +1,8 @@
-# Tools of Destruction — PS3 / Europe / BCES00052 / unknown version
+# Tools of Destruction — Europe
 
-The available evidence is the `BCES00052_SAVE_1` plaintext save sample. No matching European ELF/build has been established, so this folder deliberately uses `unknown` instead of assigning the USA executable version.
+PS3 · `BCES00052` · executable version unknown. The available input is a plaintext `BCES00052_SAVE_1` sample; no matching European ELF has been analyzed.
 
-- [Sample sizes, hashes and observed fields](../../SaveFormat.md#reference-files)
-- [Game-data overview and evidence levels](../../SaveFormat.md#game-data-overview)
+- [Reference sample](../../SaveFormat.md#reference-files)
+- [Save layout](../../SaveFormat.md#game-data-overview)
 
-No European executable address map or asset definitions are claimed. The [USA v02.00 map](../../BCUS98127/v02.00/README.md) is separate code evidence, not confirmation of every European field or address.
+The [USA v02.00 map](../../BCUS98127/v02.00/README.md) is separate evidence. Its native addresses and behavior have not been verified against a European build.

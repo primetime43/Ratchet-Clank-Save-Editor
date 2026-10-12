@@ -1,93 +1,106 @@
-# Tools of Destruction research tools — PS3 / USA / v02.00
+# Tools of Destruction research tools
 
-[Inspect-TodObjectGrantProducers.py](Inspect-TodObjectGrantProducers.py) validates88 native guard ranges and fourteen tests for three fixed+1 grants (Charge Boots5, Souls16 and Statues15), current/additions/unsigned-peak ordering and a configured global-flag-before-counter producer. Souls updates before later linked-handle rejection; an existing flag does not locally prevent another configured add. Detached explicit-input plans preserve wrapping/high-bit behavior and all320 physical flag bits without executing helpers or editing files. Optional `--save` reports independent raw banks only; runtime contexts, configuration, uniqueness, callback outcomes and award history remain qualified.
+[Wiki](../../../../../docs/PS3/ToolsOfDestruction/README.md) · [Save offsets](../../../../../docs/PS3/ToolsOfDestruction/SaveFormat.md) · [USA v02.00 findings](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/ElfMap.md)
 
-[Inspect-TodInventoryQueries.py](Inspect-TodInventoryQueries.py) validates89 guard ranges and fourteen tests for four named APIs: independent nonzero ownership, definition-gated finite ammo FLOOR, one-based script level and handle diagnostic/continuation boundaries. Removal466AE8 requests XP/ammo setters before ownership0 and a reread wrapping counter decrement; no static caller is established. Explicit projections do not replace raw saved values or execute removal. Optional `--save` preserves records/counter; pointer, definition, FPSCR, reachability and gameplay outcomes stay qualified.
+Run commands from the repository root. Native inspectors require the exact `BCUS98127 v02.00 EBOOT.ELF`; save arguments refer to a **decrypted copy**, not the encrypted original. Reports are read-only unless an output or database import is explicitly requested. Keep generated reports under ignored `artifacts/`.
 
-[Inspect-TodAmmoCrate.py](Inspect-TodAmmoCrate.py) validates88 native ranges and fourteen tests for separate ordered-below-capacity admission, named CrateAmmo[0] inputs, factor/missing-capacity request arithmetic and ceiling AFTER clamped add except ID3 Ravager. Flag2 acquisition and later UI rejection stay distinct from the earlier ammo operation. Optional `--assets` verifies original weapon.csv and32 constructor-linked declared amounts; missing entries stay unknown. Optional `--save` preserves raw records only. Finite reference plans select requests, not exact delta, active capacity, pickup history or safe edits.
+## Inspect or compare a save
 
-[Inspect-TodSettingsApply.py](Inspect-TodSettingsApply.py) validates258 ranges and seven named setting setters. Fifteen tests cover saved-index preservation versus three eleven-halfword runtime copy routes, rumble full64 versus byte boundaries/eight-port disable requests, surround low32/probe/engine gates and three separately sampled audio buses. Optional `--save` reads raw scheme/flags/volumes/tail only. Explicit plans select local requests, not hardware success; no setters, SDK calls, Lua, repair or new edits execute.
+The game-level PowerShell tools require PowerShell 7.2 or later.
 
-[Inspect-TodWeaponAmmoDebit.py](Inspect-TodWeaponAmmoDebit.py) validates87 ranges for canonical inventory-owner pointer installation, borrowed runtime weapon record/definition binding, separate local admission and negated-request clamped-add debit. Fourteen tests cover equality, fractional ammo, zero/negative/unordered requests, bypass flags, nonfinite-preview refusal, tampering and immutable raw saves. Optional `--save` reports32 raw records, not active binding/eligibility. Reference plans take explicit binary32-representable runtime samples; no exact delta, FPSCR model, universal firing cost or new editing permission.
+```powershell
+./Tools/PS3/ToolsOfDestruction/Inspect-TodSave.ps1 -SourceFolder "path/to/plaintext-save-folder"
+./Tools/PS3/ToolsOfDestruction/Compare-TodSaves.ps1 -BeforeFile "before/GAME.SAV" -AfterFile "after/GAME.SAV"
+```
 
-[Inspect-TodGelanatorTransition.py](Inspect-TodGelanatorTransition.py) validates85 ranges for initialized item27, the borrowed canonical save pointer, paired1.0 debit/refund requests, ordered phase gates and runtime latch stores. Thirteen tests cover branch equality/unordered cases, distinct runtime samples, tampering and immutable raw observations. Optional `--save` cannot infer active mode, current phase, actual delta, reservation count or firing cost; plans accept explicit detached runtime samples only.
+[Inspect-TodSave.ps1](../../Inspect-TodSave.ps1) reports game records, metadata headers, artwork headers and unknown ranges. It refuses unfamiliar/encrypted game prefixes; it does not decrypt them. Optional `-OutputFile` must name a new file outside the source folder.
 
-[Inspect-TodAmmoCapacity.py](Inspect-TodAmmoCapacity.py) validates35 guard ranges for raw saved-level indexing and the exact modifier arithmetic chain. Twelve tests cover address boundaries, mask/attribute selection, additive percentage factors, per-operation binary32 rounding, nonfinite/overflow refusal, tampering and a qualified fingerprinted asset/save comparison. Optional `--save` reports only immutable raw inputs/address plans; explicit finite previews never claim current runtime maxima or edit safety.
+[Compare-TodSaves.ps1](../../Compare-TodSaves.ps1) writes JSON to stdout. It reports field/range changes without editing either input or reading account metadata. Both saves must have the verified plaintext layout. Differences establish correlation, not the cause of a gameplay event.
 
-[Inspect-TodLoadResetDependencies.py](Inspect-TodLoadResetDependencies.py) validates49 native guard ranges for the Gelanator record/ammo pointer, +0 request with definition-dependent clamp, and deferred runtime latch consumption gated by saved906EC. Nine tests cover exact reproduction, tampering, finite signed-zero/negative maxima, branch extremes and raw immutable snapshots. Optional `--save` never runs resets or infers live configuration/latch state.
+## Inspect native evidence
 
-[Inspect-TodDanceTargets.py](Inspect-TodDanceTargets.py) validates283 guard ranges for28 selected runtime actor index/configuration-name associations behind saved8720,30 literal actor+28 publications and the distinct Shingle Pirate shared-vtable link. Its14 tests cover exact catalog/guards, ownership and variant limits, evidence tampering, immutable single/high-bit observations, independent earned skill48, malformed layouts and actual-save hashes. Optional `--save <plaintext>` supplies Recorded/Not recorded observations, not live actors, lifetime history or eligibility. No native code or edits execute.
+Most Python inspectors accept `--elf` and optional `--save`. WeaponBindings takes a positional ELF path; WeaponConfigs takes an extracted asset-directory path. Use `--help` for each tool's asset/archive requirements.
 
-[Inspect-TodSpaceStatBoundary.py](Inspect-TodSpaceStatBoundary.py) validates89 guard ranges, named `get_space_stat`/`space_combat_reset`, eight numeric runtime-stat routes and the separate persistent8728/872C/8730 domains. Its14 tests cover signed public returns, relative dispatch, pending popcount/empty queries, float32 ratio boundaries, explicit reset stores, actual-save unknown runtime data and immutable raw observations. Optional `--save <plaintext>` never synthesizes live stats or executes a reset. Numeric stat labels/units and exact persistent counter event names remain unresolved.
+```powershell
+python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-GAME.SAV"
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodObjects.py --elf "path/to/EBOOT.ELF" --save "path/to/plaintext-GAME.SAV" -v
+```
 
-[Inspect-TodDanceProgress.py](Inspect-TodDanceProgress.py) validates134 guard ranges and five native progress producers for saved BE64 bank8720. Its15 tests cover exact all64 equality, signed-negative skip-but-test, PPC shift aliases, independent earned SKILLPOINT_DANCE48 and immutable raw snapshots. Optional `--save <plaintext>` preserves high bits. This producer-only report does not identify targets; the separate DanceTargets inspector now supplies qualified actor/config associations. Earlier callbacks and current runtime eligibility remain unresolved. No award or edit executes.
+Each inspector checks binary identity and native evidence. Neighboring `TestTod*.py` files cover report reproduction, bounds and raw-value preservation. Detached arithmetic previews do not execute native code, Lua or callbacks.
 
-The read-only [Inspect-TodObjectDefinitions.py](Inspect-TodObjectDefinitions.py) validates69 native guard ranges and optional `--archive <global_cached.psarc>` reference catalogs:18,214 definitions across19 named worlds, class IDs, segment-name indices and load modes. Its72-byte asset layout is distinct from saved bits and runtime pool entries. Optional `--save <plaintext>` reports raw stored bit counts without assigning object names. No native callbacks, allocations or scripts execute.
+### Where to start
 
-These tools correspond to the exact `BCUS98127` executable and assets documented in the [build index](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md). Native inspectors check the executable identity/byte evidence and inspect optional plaintext working copies read-only.
+| Subject | Inspectors |
+| --- | --- |
+| Inventory/definitions | [WeaponBindings](Inspect-TodWeaponBindings.py), [WeaponConfigs](Inspect-TodWeaponConfigs.py), [InventoryQueries](Inspect-TodInventoryQueries.py) |
+| Ammo/XP/upgrades | [WeaponProgression](Inspect-TodWeaponProgression.py), [AmmoCapacity](Inspect-TodAmmoCapacity.py), [AmmoCrate](Inspect-TodAmmoCrate.py), [UpgradePurchase](Inspect-TodUpgradePurchase.py) |
+| Equipment and objects | [Objects](Inspect-TodObjects.py), [ObjectGrantProducers](Inspect-TodObjectGrantProducers.py), [InventoryAux](Inspect-TodInventoryAux.py), [EquipmentLifecycle](Inspect-TodEquipmentLifecycle.py) |
+| Player progression | [Progression](Inspect-TodProgression.py), [HeroXpFlow](Inspect-TodHeroXpFlow.py), [HeroConfig](Inspect-TodHeroConfig.py), [HealthPersistence](Inspect-TodHealthPersistence.py) |
+| Collectibles/bonuses | [Collectibles](Inspect-TodCollectibles.py), [CollectibleProducers](Inspect-TodCollectibleProducers.py), [Bonuses](Inspect-TodBonuses.py) |
+| Worlds/missions | [WorldState](Inspect-TodWorldState.py), [GameplaySegments](Inspect-TodGameplaySegments.py), [Missions](Inspect-TodMissions.py), [SegmentConfig](Inspect-TodSegmentConfig.py) |
+| Events/arena | [GlobalFlags](Inspect-TodGlobalFlags.py), [ResetCategories](Inspect-TodResetCategories.py), [ArenaChallenges](Inspect-TodArenaChallenges.py), [ArenaTable](Inspect-TodArenaTable.py) |
+| Maps | [StateStorage](Inspect-TodStateStorage.py), [PersistentGrid](Inspect-TodPersistentGrid.py), [GridGeometry](Inspect-TodGridGeometry.py) |
+| Settings | [Settings](Inspect-TodSettings.py), [SettingsApply](Inspect-TodSettingsApply.py), [SettingsMenu](Inspect-TodSettingsMenu.py) |
+| Save/reset/unknowns | [SnapshotLifecycle](Inspect-TodSnapshotLifecycle.py), [SaveTail](Inspect-TodSaveTail.py), [WorldAux](Inspect-TodWorldAux.py), [FinalTail](Inspect-TodFinalTail.py) |
 
-- [Inspect-TodQuickSelectWarning.py](Inspect-TodQuickSelectWarning.py):87 guards/16 tests for named direct32-slot assignment,8734 counter-before-rejection, one-byte8738 warning gate and opaque8739..873F initialization. Optional `--save` preserves snapshots, not success/history. Raw high counters need not cap5; no native lookup/request, reset or edit executes.
-- [Inspect-TodSavedEventCounters.py](Inspect-TodSavedEventCounters.py):166 native guards/26 tests for wrapping872C/8730 counters, runtime handle admission, bounded parameter scaling, saved8728 registration suppression/initialization, closed runtime-only reinitialization and load/resource saved publication. Name lookup publishes906E8 and ONE visited byte889+408*id before progress/counter clears; unmatched names fall back to0 without proving a level0 match. Bounded saved-store plans are detached reference projections, not file writes or complete native/helper effects. Optional `--save` reports raw words, destination and visited bytes, not event history/current runtime state. No deaths/kills/difficulty names or edit permission inferred.
-- [Inspect-TodWeaponPurchase.py](Inspect-TodWeaponPurchase.py):115 guards/14 tests for exact stored level4 admission, nonzero replay, definition count/flags, normal versus level-five routing and signed payment order. Optional `--save` reports stored necessary conditions only. Synthetic previews do not resolve runtime prices, execute purchases or certify index safety.
-- [Inspect-TodBlueprintProducers.py](Inspect-TodBlueprintProducers.py):193 native guards/15 tests for saved-destination indexed grant and paired initialization, thirteen qualified level/bit associations and a bounded524-script survey. Optional `--archive` validates39 direct blueprint API operands across six fingerprints; a Stratus City predicate is not a pickup-placement map. Optional `--save` reads retained bits without reconstructing history.
-- [Inspect-TodUpgradePurchase.py](Inspect-TodUpgradePurchase.py):117 native guards/15 tests for signed32 cost admission, mask-before-ammo-before-wallet order, duplicate charging and Lua result-count boundaries. Optional `--vendor-asset <weapon-vendor-built.dat>` verifies eleven asset guards/five method fingerprints and separates vendor rules from transaction admission. Optional `--save` never spends or refills.
-- [Inspect-TodSkillProducers.py](Inspect-TodSkillProducers.py):155 guards/14 tests for definition+0C equality groups, one-based matching ordinal, nine additional named producer requests and callback-qualified runtime reloads. Float32 ratio previews assume nearest-even; saved906E8 selectors are not guaranteed loaded worlds. Optional `--save` reads bit history only.
-- [Inspect-TodOptionProducers.py](Inspect-TodOptionProducers.py):123 guards/13 tests for entry-latched first-person exit gates, pending mode clearing, selector0 wildcard, all16 matching-record scan and exact callback/member68 order. Previews select immutable supplied records, not final runtime state or option names.
-- [Inspect-TodResetProducers.py](Inspect-TodResetProducers.py):79 guards/14 tests for runtime flag20 preselector, distinct selection/dispatch samples, three relative tables and five numeric virtual contexts. Raw CR7 branch tests cover unordered comparisons. No actor/death names, counter increments or full state-switch simulation.
-- [Inspect-TodSegmentOpaque.py](Inspect-TodSegmentOpaque.py):30 selected guards/seven tests eliminate three offset-only ownership leads. Optional `--save` preserves200 raw segment words/tails and20 world tails. No new semantic mapping, unused-storage proof or editable fields.
-- [Inspect-TodPoolLifecycle.py](Inspect-TodPoolLifecycle.py):71 guards/12 tests for normal padding occupancy, setup-before-load, deferred callbacks/release, reusable slots and the eight-field runtime header. Optional `--save` reads detached world bands, never reconstructs runtime pointers or identities.
-- [Inspect-TodGlobalFlagMutation.py](Inspect-TodGlobalFlagMutation.py):510 native guards/15 tests; optional `--archive` surveys880 literal calls and confirms selected reset/consume paths with six asset guards. Unresolved enum operands remain unnamed; optional `--save` reads snapshots, not action history. No Lua/native execution.
-- [Inspect-TodObjectClasses.py](Inspect-TodObjectClasses.py):64 guards/13 tests for inline class table aliases, D100 source-record ordinals, conditional primary versus secondary actor lookup and opaque packet provenance. Optional `--archive` validates2,974 main.dat source records across19 worlds, relocation links and definition-class bounds. Class ordinals are not saved slots; raw source bytes are not object names.
-- `Inspect-TodWeaponBindings.py` and `Inspect-TodWeaponConfigs.py`: native bindings and packed configuration definitions.
-- [Inspect-TodObjectFlagMutation.py](Inspect-TodObjectFlagMutation.py): callback-before-bit/current-world lookup, one-shot pending consumption, first UID match, early runtime record clearing and independent suppression/helper gates.83 guards,14 tests; latches/UIDs are runtime-only, no callback execution or atomicity assumed.
-- [Inspect-TodEquipmentMutation.py](Inspect-TodEquipmentMutation.py): setter publication/notification, zero-extended Lua payload, independent quick-select/history filters and wing clearing without selector/boot repair.52 guards,12 tests; detached suffix only, not a full restart/equip simulator.
-- [Inspect-TodCurrencyMutation.py](Inspect-TodCurrencyMutation.py): wallet mutation routes, wrapped-difference-sign selection, runtime-counter-first reward addition, low32 converted-reward gates and full requested cache debit.72 guards,12 tests; detached arithmetic previews are not current payout, valid edit ranges or native execution.
-- [Inspect-TodSkillAward.py](Inspect-TodSkillAward.py): skill bit/score/notification order, duplicate mismatch retention, all-world scan without a new collectible and original-request Cheapskate producer.58 guards,12 tests; callback-free synthetic previews, no purchase prediction or edit permission.
-- [Inspect-TodArmorConsumer.py](Inspect-TodArmorConsumer.py): armor ownership/currency before queued/direct equip, latch-before-payload, unordered deadline gate and signed skin leaf charging.68 guards,11 tests; runtime definitions/effects are not reconstructed from saved selections.
-- [Inspect-TodRestartExecution.py](Inspect-TodRestartExecution.py): separate private arena bank, phase1 capture-on-entry, phase4 exact selector/action order and nested mission zero-fills versus retained private log bytes.88 guards,12 tests; bounded detached previews do not execute allocation/restart or infer current runtime state.
-- [Inspect-TodSnapshotLifecycle.py](Inspect-TodSnapshotLifecycle.py): snapshot-before-thread/staging provenance, first-name exact64-bit size admission, list/auto-load publication and deferred poll/apply order versus existence probe.76 native guard ranges,10 tests; no atomicity, durability or successful in-game load verdict.
-- [Inspect-TodWeaponProgression.py](Inspect-TodWeaponProgression.py): pre-update level boundaries, inclusive XP thresholds, additive ammo/clipping and unclamped raw-level progress lookup.84 native guard ranges,10 tests; finite synthetic previews never infer effective runtime caps or safe edits.
-- [Inspect-TodMissionMutation.py](Inspect-TodMissionMutation.py): constructor-loop flag retention only (later nested initializer clears both whole mission groups), completed destination flags, stable compaction/residual storage and count-word overwrite boundary.42 native guard ranges,13 tests; immutable previews refuse unsafe counts and do not emulate memory corruption.
-- [Inspect-TodArenaBinding.py](Inspect-TodArenaBinding.py): named queue_arena_challenge_screen registration versus diagnostic select identifier, argument-validation boundary and loader/runtime word ownership.29 native guards,8 tests; no recovered table-taking wrapper, saved queue field or current Lua-table installation claimed.
-- [Inspect-TodResetContext.py](Inspect-TodResetContext.py): low-byte blocking predicate, exact runtime request-latch admission/service, callback-before-publication order and independent category/segment gates.77 native guards,10 tests; bounded arithmetic/float-bit previews never execute callbacks or infer category1/cause names.
-- [Inspect-TodWorldConsumers.py](Inspect-TodWorldConsumers.py): requested saved slot versus mapped runtime configuration index; completion/finalization/tick/reset gate distinctions.61 native guards,11 tests; explicit runtime validity previews do not reconstruct active mappings, predict log/reward writes or name opaque tails.
-- [Inspect-TodLoadSelection.py](Inspect-TodLoadSelection.py): saved destination equality/force gates, separate runtime deferred queue, later gated saved write and unchecked native name lookup.63 native guards; normal-domain fixture previews do not infer current runtime state, saved FFFFFFFF sentinel semantics or load success.
-- [Inspect-TodBonusRemaining.py](Inspect-TodBonusRemaining.py): eight shipped art/movie unlock-query operands and runtime language parser/menu remapping.183 native guards; optional `--archive` verifies five compiled function digests. No direct saved-byte effect, current availability or invented language1 label.
-- [Inspect-TodArenaDispatch.py](Inspect-TodArenaDispatch.py): eight-way operation switch, operation5 UI-loader route and four compiled milestone/counter writer sequences.110 native guards; optional `--archive` verifies eight fingerprints/14 compiled ranges. Alias/table installation remains unresolved; no atomicity or engine wait-duration inference.
-- [Inspect-TodGridLifecycle.py](Inspect-TodGridLifecycle.py): first-context owner identity, map buffer flush/browse/restore order, display-only transforms and exact initialization/restore trust boundaries.101 native guards; detached synthetic previews preserve opaque bytes and never simulate native overreads or modify saves.
-- [Inspect-TodInventoryReset.py](Inspect-TodInventoryReset.py): exact18-of20-byte record reset footprint, contrasting full bulk zero-fill, restart tail preservation and four opaque prefix gap bytes.22 native guards; fixture-only previews, no original mutations or padding assumptions.
-- [Inspect-TodEquipmentLifecycle.py](Inspect-TodEquipmentLifecycle.py): qualified history callback dispatch, runtime queued requests, restore selection and independent menu fallbacks.67 native guards; previews use detached normal-domain fixtures only and do not establish equip success.
-- [Inspect-TodBonusEffects.py](Inspect-TodBonusEffects.py): six physical bonus-byte consumers, unsigned weighted-score gates, native head-basis factors and qualified runtime effects.98 native guards; no current activation or arbitrary-state edit safety inferred.
-- [Inspect-TodArenaTable.py](Inspect-TodArenaTable.py):20 compiled master descriptors, four reached selector-input lists,14 signed-positive activation gates, independent story bits and raw-zero weapon reward predicate.223 native guards; optional original `--archive` verifies six fingerprints/20asset ranges. Live menu-table alias remains unresolved; no Lua execution.
-- [Inspect-TodInventoryAux.py](Inspect-TodInventoryAux.py): object-counter restart/restore and signed Souls award consumer; exact quick-select duplicate removal, replacement and first24 insertion.211 native guards; detached synthetic helpers never edit saves or simulate awards.
-- [Inspect-TodFinalTail.py](Inspect-TodFinalTail.py): opaque906E4 initialization/copy boundaries and decoded46-of48-byte settings footprint.37 native guards; no gameplay name, padding/default assumption or no-dynamic-consumer claim.
-- [Inspect-TodArenaMenu.py](Inspect-TodArenaMenu.py): three arena index spaces, runtime `.num` getter, inverse default-ID lookup and shipped display partition/`chalNum` routing.31 native guards; optional `--archive` verifies four function digests/20asset guards without executing Lua. Current table contents/menu cannot be reconstructed from save counters alone.
-- [Inspect-TodGameplaySegments.py](Inspect-TodGameplaySegments.py): ten saved gameplay segments per world, named completion flag, timers, integer reset-event count, reward accumulators and the200-slot retained statistics log. Distinguishes saved count from stale buffer contents; never edits sources.
-- [Inspect-TodRewardChannels.py](Inspect-TodRewardChannels.py): confirmed weapon experience/bolts/raritanium caches, separate per-world reward ladder indices/remainders and qualified diminishing-return rules;43 byte guards, no payout simulation or edits.
-- [Inspect-TodSaveTail.py](Inspect-TodSaveTail.py): native `-replay` context, selective restart arithmetic/copy/reset paths and first-restart finalized segment scalar median;40 guards, explicit native empty-input caveat and no time-unit guess.
-- [Inspect-TodSegmentBindings.py](Inspect-TodSegmentBindings.py):81 mission title/description ID pairs exported independently twice,15 compact guards and optional literal compiled-script call relationships. This narrower export pass does not recover physical segment names; the loader/asset pass below does. No scripts execute.
-- [Inspect-TodHeroAux.py](Inspect-TodHeroAux.py): named saved pack/boot words, exact pack-dispatch selector, eight native equipment enum values and the zero-only boot setter;66 byte guards, no edits.
-- [Inspect-TodSegmentConfig.py](Inspect-TodSegmentConfig.py): native ordered-name loader, reserved slot0 and hash-collision behavior;42 guards. Optional `--archive <global_cached.psarc>` reads sibling level archives in place and reproduces56 reference segment names across19 worlds with per-asset fingerprints.
-- [Inspect-TodWorldAux.py](Inspect-TodWorldAux.py): exact world initializer write mask,680 opaque bytes left untouched and qualified full-snapshot/restore copy coverage;34 guards. Does not assign gameplay meanings to unknown words/tails or assume padding.
-- [Inspect-TodHealthPersistence.py](Inspect-TodHealthPersistence.py): runtime health identity/upper bound, conditional saved-XP refresh and32-slot checkpoint ammo capture/merge/clamped restore;61 native guards. Does not invent saved-health offsets, current health or an active checkpoint.
-- [Inspect-TodHeroXpFlow.py](Inspect-TodHeroXpFlow.py):100 exact-build guard ranges for saved XP publication, strict single carry, original-input threshold checks and script/reload float32 conversion. Twenty tests; bounded synthetic previews assume nearest-even and never execute native code or modify XP. Use `--elf <reference ELF> --save <detached plaintext>` for read-only snapshot comparison.
-- [Inspect-TodHeroConfig.py](Inspect-TodHeroConfig.py):74 native guard ranges for named100-entry Hero XP/u32 and HP/f32 banks, indexed setters/getters and unclamped progress arithmetic. Optional `--archive <global_cached.psarc>` verifies three original Hero asset fingerprints and98 shipped rows; `--save <detached plaintext>` compares raw XP without claiming current runtime level/health. Fifteen tests; no Lua/native execution, extraction or writes.
-- [Inspect-TodBoltMultiplierFlow.py](Inspect-TodBoltMultiplierFlow.py):90 native guards and18 tests for sampled health-drop reset, separately read replay gates, runtime accumulator initialization/subtraction, strict float32 threshold and qualified additive6A/6B hero-XP pairing. Optional `--save <detached plaintext>` preserves raw multiplier/replay/XP without guessing health cache or accumulator. Finite synthetic previews assume nearest-even; no timer, per-kill cadence, native execution, writes or safe edit range claimed.
-- [Inspect-TodCollectibleProducers.py](Inspect-TodCollectibleProducers.py):107 native guards and17 tests for saved8728 bonus-target progress, pre-lookup mask stores versus reread pending, named flag278 message latch, saved-destination localID0 reward precheck, the distinct direct-local-ID collector and explicit saved reset zeroing. Optional `--save <detached plaintext>` reports raw bits without a target total or current-scene/eligibility inference. Immutable previews do not execute collectors, lookups or virtual requests.
-- [Inspect-TodSaveAux.py](Inspect-TodSaveAux.py): three typed Decryptor saved words, event/Sixaxis-gated wrapping counters and finite modifier bounds;20 guards. Stronger naming is separately verified below; extreme/nonfinite snapshots are not repaired.
-- [Inspect-TodAdaptationContext.py](Inspect-TodAdaptationContext.py): named Decryptor WIN/LOSE exports, seven bounded switch targets and `dc_set_spark_speed` binding/product;53 guards. Wins, Sixaxis losses since success and spark-speed multiplier are not generic lifetime stats/global difficulty.
-- [Inspect-TodTailAux.py](Inspect-TodTailAux.py): four saved float aggregates/countdown gates at8744..8754, corrected log+90/+94 saved provenance, threshold fallback and strict-positive tick gates;40 guards. Observed10/300 values are not defaults/seconds.
-- [Inspect-TodGridAux.py](Inspect-TodGridAux.py): copied generation/slot handles,512-slot native allocation/resolution/release and preserved opaque bytes;33 guards. Optional `--archive <global_cached.psarc>` reads sibling original resources in-memory, reproducing19 non-private fingerprints and optional actual-save body comparisons; never follows saved pointers/handles.
-- [Inspect-TodFirstPersonOption.py](Inspect-TodFirstPersonOption.py): entry-latched zero/nonzero option behavior, paired camera update methods and conditional angular/basis adjustment;51 guards. Unknown tail bytes and hold/toggle naming remain unresolved.
-- [Inspect-TodWorldObjectFlags.py](Inspect-TodWorldObjectFlags.py): two2048-bit per-world object bitsets, exact BE64 slot ordering, object-state restore paths and mode-qualified spawn suppression. Runtime object names/UID mapping remain unresolved; snapshots are read-only.
-- [Inspect-TodResetCategories.py](Inspect-TodResetCategories.py): eight reset-event category counters, native selectors2–7 and temporary runtime countdown/strict expiration. Player-facing names and time units remain unknown; no inferred death total or save writes.
-- [Inspect-TodPersistentGrid.py](Inspect-TodPersistentGrid.py): copied200-byte volume headers, seven saved group flags, native512×512 state conversion and all21 physical slot-to-level map-label associations. Checks86 exact byte guards and optional save headers without following runtime pointer bits, normalizing flags or writing sources.
-- [Inspect-TodGridRouting.py](Inspect-TodGridRouting.py): inverse browse permutations, shared map image indices, ready-byte menu skips and all21 unsigned accumulator threshold words.102 native guards; no trophy/completion caller inferred.
-- [Inspect-TodGridGeometry.py](Inspect-TodGridGeometry.py): copied map rectangle origins/extents, qualified native world projection and14×14 class-matching clearing brush.28 native guards and bounded actual-save group inspection.
-- [Inspect-TodSettingsMenu.py](Inspect-TodSettingsMenu.py): exact shipped pause asset,12 literal descriptors, control-scheme-dependent inversion APIs, action math and local text-tag IDs. Uses four bytecode digests/17asset guards; never executes Lua or names unknown save words by inference.
-- `Inspect-TodProgression.py`, `Inspect-TodCollectibles.py`, `Inspect-TodWorldState.py`, `Inspect-TodObjects.py`, `Inspect-TodMissions.py`, `Inspect-TodBonuses.py`, `Inspect-TodStateStorage.py`, `Inspect-TodSettings.py`: mapped state and sample checks.
-- [Ghidra importer](Ghidra/ImportTodMap.java) and [IDA importer](IDA/import_tod_map.py): annotations for an analysis database, not binary edits.
-- [Inspect-TodArenaChallenges.py](Inspect-TodArenaChallenges.py): direct native challenge IDs, saved win counters, shipped descriptions/restrictions/rewards and guarded runtime ArenaConfig properties. Requires the exact ELF and extracted `arena.csv`, `arena.lua`, `arena.lc`; scripts are never executed.
-- [Inspect-TodGlobalFlags.py](Inspect-TodGlobalFlags.py):292 global event IDs independently exported twice, five saved BE64 words,28 unnamed physical tail bits and the HERO_HAS_TWO_ITEMS acquisition dependency. Reports are read-only; Set/Clear is not a story-completion verdict.
+The [full directory](.) contains the more specialized inspectors. [The evidence index](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/ElfMap.md#evidence-index) lists their map sections. Generic [PSARC inspection](../../../../../Tools/Inspect-Psarc.py) and [Lua inspection](../../../../../Tools/Inspect-Lua50.py) tools stay at the Tools root.
 
-See the [executable notes](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/ElfMap.md) for commands. Shared save inspection/comparison scripts live [at the game level](../../); generic PSARC and Lua readers remain at the `Tools/` root.
+## Ghidra
+
+Use `PowerPC:BE:64:64-32addr`, compiler `default`, and original ELF addresses. Add this directory's `Ghidra/` folder to Script Manager.
+
+For a **new project**, [PrepareTod.java](Ghidra/PrepareTod.java) must run before analysis: it seeds descriptor functions and their three TOCs. Then run [ImportTodMap.java](Ghidra/ImportTodMap.java) with [NativeMap.json](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json).
+
+```powershell
+# Set these variables to your local paths; create the project directory first.
+& "$GhidraRoot/support/analyzeHeadless.bat" $ProjectDirectory TodResearch `
+  -import $ElfPath -processor PowerPC:BE:64:64-32addr -cspec default `
+  -scriptPath "$RepoRoot/Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra" `
+  -preScript PrepareTod.java `
+  -postScript ImportTodMap.java "$RepoRoot/docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json"
+```
+
+Imports add `TOD_` labels, comments and types to the analysis database. They validate hashes/signatures, preserve custom work and do not patch executable bytes. Types are added under `/RatchetClank/ToolsOfDestruction`, not automatically applied to every global. The unmapped third TOC base is retained in JSON but skipped as a label.
+
+### Trace or validate an existing project
+
+Use `-readOnly -noanalysis` for checks that should not save database changes. Never run two headless jobs against the same project at once.
+
+```powershell
+& "$GhidraRoot/support/analyzeHeadless.bat" $ProjectDirectory TodResearch `
+  -process EBOOT.ELF -readOnly -noanalysis `
+  -scriptPath "$RepoRoot/Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Ghidra" `
+  -postScript TraceTodSave.java "$RepoRoot/artifacts/tod-trace-new" f:0x35E710 r:0x35E710
+```
+
+[TraceTodSave.java](Ghidra/TraceTodSave.java) requires a fresh output directory and supports:
+
+| Query | Result |
+| --- | --- |
+| `f:<VA>` | Function assembly/decompilation |
+| `r:<VA>` | References and TOC leads |
+| `d:<VA>:<hex-size>` | Data bytes |
+| `n:<VA>:<decimal-count>` | Nearby functions; count is functions, not instructions |
+| `i:<hex-immediate>` | Instruction-immediate scan |
+
+[SurveyTod.java](Ghidra/SurveyTod.java) exports broader string/descriptor leads. Confirm TOC-changing thunks in assembly before treating a lead as resolved.
+
+To validate imports, replace the postScript with `TestTodMap.java "<path/to/NativeMap.json>"`. [TestTodMap.java](Ghidra/TestTodMap.java) checks mapped annotations, structures, repeat-import behavior and custom-name/comment preservation.
+
+## IDA
+
+Load the matching ELF as big-endian PowerPC at its original addresses. Choose **File → Script file**, run [import_tod_map.py](IDA/import_tod_map.py), then select NativeMap.json.
+
+The importer adds names, repeatable comments and local types without changing binary bytes. It targets IDA 9, does not configure PS3 TOCs automatically and has **not been tested in live IDA**; current checks cover mocked database safety and map validation.
+
+## Verification
+
+```powershell
+python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodElfMap.py --elf "path/to/EBOOT.ELF" -v
+python -B Tests/TestResearchOrganization.py
+dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release
+```
+
+Optional actual-save checks: append `-- --tod-save "path/to/save-folder"` to the .NET command. They load the source read-only and use disposable copies for edit/encrypt/reopen tests.
+
+Asset-specific checks require the original archive or extracted matching assets. Pass those only where the tool's help requests them. No game binaries, private saves or raw assets are tracked. Software tests are not a substitute for controlled in-game before/after captures.

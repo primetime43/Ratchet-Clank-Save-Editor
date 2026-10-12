@@ -11,6 +11,27 @@ BUILD = ROOT / "docs/PS3/ToolsOfDestruction/BCUS98127/v02.00"
 
 
 class ResearchOrganizationTests(unittest.TestCase):
+    def test_local_document_anchors_resolve(self):
+        documents = [ROOT / "README.md", *ROOT.glob("docs/**/*.md"),
+                     *ROOT.glob("Tools/**/README.md")]
+        for document in documents:
+            for target in re.findall(r"\[[^\]]*\]\(([^)\s]+)\)", document.read_text(encoding="utf-8")):
+                if re.match(r"^[a-zA-Z]+:", target) or "#" not in target:
+                    continue
+                filename, anchor = target.split("#", 1)
+                destination = document.parent / filename if filename else document
+                with self.subTest(document=document.relative_to(ROOT), target=target):
+                    self.assertTrue(destination.is_file())
+                    headings = set()
+                    in_fence = False
+                    for line in destination.read_text(encoding="utf-8").splitlines():
+                        if line.lstrip().startswith(("```", "~~~")):
+                            in_fence = not in_fence
+                        if not in_fence and re.match(r"^#{1,6} ", line):
+                            title = re.sub(r"^#{1,6} ", "", line).strip().lower()
+                            headings.add(re.sub(r"[^\w -]", "", title).replace(" ", "-"))
+                    self.assertIn(anchor, headings)
+
     def test_local_document_links_resolve(self):
         documents = [ROOT / "README.md", *ROOT.glob("docs/**/*.md"),
                      *ROOT.glob("Tools/**/README.md")]

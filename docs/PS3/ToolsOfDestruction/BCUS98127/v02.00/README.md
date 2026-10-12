@@ -1,80 +1,23 @@
-# Tools of Destruction — PS3 / USA / BCUS98127 / v02.00
+# Tools of Destruction — USA v02.00
 
-## Findings and definitions
+PS3 · USA · `BCUS98127` · supplied executable v02.00.
 
-- [Fixed object grants and flag publication order](ElfMap.md#object-grant-producers-and-global-flag-publication-order): Charge Boots, Souls and Statues+1 producers, Souls counters before linked-handle checks and configured flag-before-counter publication without local repeat rejection; not unique pickup totals or collection history.
-- [Inventory query and removal boundaries](ElfMap.md#inventory-ownership-queries-attribute-visibility-and-qualified-removal-leaf): independent ownership versus definition-gated ammo/level, finite floor and one-based script results; post-helper wrapping counter decrement exists in a removal leaf whose gameplay caller remains unresolved.
-- [CrateAmmo refill requests and later rounding](ElfMap.md#crateammo-refill-requests-versus-admission-and-later-rounding): separate below-capacity method, named CrateAmmo[0] factor/request arithmetic, post-add ceiling except Ravager and later acquisition/UI gates; public declared amounts are not actual gained ammo or pickup history.
-- [Settings publication versus runtime application](ElfMap.md#settings-saved-publication-versus-runtime-application): unchanged saved indices versus three runtime copy routes, eight-port rumble-off requests, surround capability gates and three separately sampled audio buses; stored preferences do not prove successful hardware apply.
-- [Weapon borrowed-record binding and ammo branches](ElfMap.md#weapon-borrowed-inventory-record-local-ammo-admission-and-debit): canonical owner pointer, same-record runtime binding, independent admission/debit helpers and a request0 check before qualified request1 debit; no current eligibility or per-shot cost inferred.
-- [Gelanator paired ammo transition](ElfMap.md#gelanator-paired-ammo-debit-and-refund-behind-runtime-gates): initialized native item27, qualified saved224 selection, separate entry/phase gates and debit/refund requests before runtime latch writes; no per-shot cost or active-mode inference.
-- [Ammo-capacity calculation](ElfMap.md#ammo-capacity-raw-saved-level-indexing-and-modifier-arithmetic): unclamped saved-level addressing, masked exact-attribute selection, absolute additions followed by one summed percentage factor, and qualified original-save comparison; no live maximum inferred.
-- [Load reset helper dependencies](ElfMap.md#load-reset-dependencies-gelanator-ammo-and-deferred-timing-gates): Gelanator-specific clamped ammo reset and runtime latch consumed by replay-zero setup to refresh two saved gates; no inferred runtime state or new edits.
-- [Load/resource reset publication](ElfMap.md#load-resource-entry-publishes-destination-and-visited-state-before-counter-reset): name-resolved saved destination, ONE visited byte, three subsequent progress/counter clears and level0 no-match fallback; closed runtime-only reinitialization stays separate.
-- [Bonus-target initialization and admission](ElfMap.md#bonus-target-registration-initialization-and-reinitialization-admission): conditional zero-based runtime indices, pending-mask initialization and distinct pointer bases resolving the same admission byte; no fixed target names/count or new saved fields.
-- [Quick-select assignment and warning state](ElfMap.md#quick-select-direct-assignment-warning-counter-and-byte-latch): named direct32-slot setter, counter before native rejection branches, one-byte repeat-warning gate and distinct initialization/preservation; not successful assignments or playback history.
-- [Saved event counters and target restoration](ElfMap.md#saved-event-counters-bounded-consumers-and-bonus-target-restoration): wrapping872C/8730 counters, qualified runtime handle gate, bounded config-parameter factors and recorded-target registration suppression; gameplay event names remain unknown.
-- [Weapon purchase routing and level-five gate](ElfMap.md#weapon-purchase-routing-and-saved-level-five-gate): exact stored level4/replay/definition prerequisites, independent dispatch/recheck samples, level/XP/ammo before payment and qualified duplicate normal acquisition.
-- [Blueprint selector grants](ElfMap.md#blueprint-selector-grants-and-qualified-level-associations): saved-destination indexed native grant, thirteen qualified level associations and a shipped Stratus City predicate; not pickup locations or history.
-- [Upgrade purchase ordering](ElfMap.md#upgrade-purchase-publication-ammo-refill-and-payment-order): signed32 wallet admission, modifier publication, conditional absolute ammo refill, later payment and separate vendor constraints.
-- [Skill groups and additional producers](ElfMap.md#skill-definition-groups-and-additional-runtime-award-producers): definition+0C equality filtering, one-based matching selection and nine additional named runtime-dependent award requests.
-- [Entry-latched option exits](ElfMap.md#entry-latched-option-exits-and-callback-qualified-camera-cleanup): mode cleanup across16 records, wildcard selectors and callback ordering without a hold/toggle claim.
-- [Reset-category producer boundaries](ElfMap.md#reset-category-producer-contexts-and-separate-dispatch-bounds): selection versus signed/unsigned dispatch ranges, runtime window refresh and separate saved-counter recording.
-- [Opaque-field ownership audit](ElfMap.md#opaque-segment-and-world-fields-bounded-ownership-audit): eliminated offset-only matches, preserved raw fields and explicit unresolved meanings.
-- [Pool setup and reusable slots](ElfMap.md#runtime-pool-setup-deferred-release-and-reusable-physical-slots): initialized padding, immediate loader dispatch, deferred callbacks/release and a runtime-only32-byte header.
-- [Event latches and script consumers](ElfMap.md#global-event-latches-and-confirmed-script-consumers):880 literal flag calls, seven confirmed reset/consume events and unresolved enum preservation.
-- [Class-table source and actor lookup](ElfMap.md#class-table-source-records-and-actor-factory-lookup): per-resourceD100 ordinals, relocated source packets and conditional primary/fallback actor identifiers; not named saved-bit identities.
-- [Executable map and evidence](ElfMap.md): save and non-save findings, import instructions and repeatable commands.
-- [Shipped object definitions and identity limits](ElfMap.md#shipped-object-definitions-and-conditional-pool-slot-identity):18,214 reference definitions across19 worlds; class/segment/load-mode fields, allocation handles and conditional ordinal-to-slot linkage.
-- [Object callback and restore gates](ElfMap.md#object-callback-publication-and-one-shot-restore-gates): callback-before-bit, pending consumption, first UID match and saved-write versus runtime-helper gates.
-- [Equipment publication and restart filters](ElfMap.md#equipment-publication-and-independent-restart-filters): wrapper payload boundary, in-place history filtering and independent wing/selector/boot words.
-- [Currency mutation routes](ElfMap.md#currency-mutation-routes-and-runtime-cache-debit): hero cap selection versus wrapping reward additions, low32 conversion gates and independent runtime cache debit.
-- [Skill award producer gates](ElfMap.md#skill-award-producers-and-publication-ordering): precise publication/deduplication order, unchanged collectible scans and original-request Cheapskate comparison.
-- [Armor purchase versus deferred equip](ElfMap.md#armor-purchase-and-deferred-equip-versus-skin-leaf-charging): commit-before-effect, runtime queue boundaries and native skin leaf charging/caller distinctions.
-- [Private restart capture and initializer ownership](ElfMap.md#private-restart-bank-capture-and-nested-initializer-ownership): capture-on-entry, exact action selectors, whole mission-group clearing and retained private log bytes.
-- [Save staging and deferred load application](ElfMap.md#save-staging-and-deferred-load-application): snapshot-before-thread ordering, first-match size admission, worker/poll gates and the separate existence probe.
-- [Weapon XP boundaries and additive ammo](ElfMap.md#weapon-xp-boundaries-and-additive-ammo-updates): pre-update stored-level caps, inclusive thresholds and additive rather than absolute ammo refill.
-- [Mission mutation and retained flags](ElfMap.md#mission-mutation-and-retained-entry-flags): initializer byte ownership, destination flags, residual compaction bytes and unsafe native count boundaries.
-- [Arena queue API and resource boundary](ElfMap.md#arena-queue-api-boundary-and-runtime-resource-ownership): distinguishes the registered native queue endpoint from diagnostic text and the unresolved table-taking Lua selector.
-- [Reset request admission and latch service](ElfMap.md#reset-request-admission-and-latch-service): qualifies the counter writer's caller path, exact latch0/1 tests and independent saved counter gates; runtime causes remain unnamed.
-- [Segment consumer mapping and lifecycle gates](ElfMap.md#saved-segment-slots-and-runtime-configuration-mapping): requested save slots stay distinct from runtime config indices; completion can outlive finalization gates, while reset lacks the completion test.
-- [Saved level requests and runtime deferral](ElfMap.md#saved-level-requests-and-runtime-deferral): distinguishes saved906E8/8740 from the pending runtime word; exact force/equality gates and native lookup trust boundaries.
-- [Bonus content queries and runtime language](ElfMap.md#bonus-content-queries-and-runtime-language-selection): eight remaining query operands, language-dependent menu indexing and movie-history/replay distinctions—not direct saved-byte effects.
-- [Arena operation routing and milestone writers](ElfMap.md#arena-operation-routing-and-separate-milestone-writers): concrete UI-loader route plus separately serialized flag/counter action order; live table alias remains unresolved.
-- [Grid browsing and restore trust](ElfMap.md#grid-browsing-synchronization-and-restore-trust-boundaries): first-context owner proof, active/browsed buffer synchronization, retained headers and readiness/accumulator limitations.
-- [Inventory reset and opaque-prefix ownership](ElfMap.md#inventory-reset-footprint-and-opaque-prefix-byte-ownership):18-of20-byte record resets versus bulk zero-fill; copied opaque tails and the separately unwritten four-byte prefix gap.
-- [Equipment-history dispatch and bonus consumers](ElfMap.md#equipment-history-dispatch-and-qualified-bonus-effects): qualified state-entry callback, distinct restore/menu fallbacks and six physical bonus-state effects; runtime dependencies remain explicit.
-- [Compiled arena selector inputs and reward predicates](ElfMap.md#compiled-arena-selector-inputs-and-independent-reward-predicates):20 compiled descriptors, four flag-qualified input lists,14 activation dependencies and raw-zero first-victory weapon rewards; live table installation remains unresolved.
-- [Object/reset/restore and opaque-tail ownership](ElfMap.md#object-counter-lifecycles-quick-select-mutation-and-opaque-tail-ownership): selected three-bank resets, six restore assignments, signed Souls skill-point consumer, quick-select mutation and final-word/settings copy boundaries.
-- [Arena indexing and shipped display order](ElfMap.md#arena-native-ids-source-indices-and-display-rows): native count/inverse lookups and completion-dependent source-index routing; runtime table contents remain unresolved.
-- [Pack/boot state, reference segment names and opaque-byte ownership](ElfMap.md#saved-packboot-state-ordered-segment-names-and-initializer-ownership): three newly named words,56 asset-backed segment associations across19 worlds and exact initialization/copy boundaries.
-- [Dance skill progress bank](ElfMap.md#dance-skill-progress-bank-and-independent-earned-award): five native saved8720 update paths, exact64-bit completion test, signed/shift boundaries and independent earned bit48.
-- [Dance actor index/name catalog](ElfMap.md#dance-progress-actor-indices-and-named-configuration-associations): all28 selected runtime index assignments and named configuration associations, including the qualified Shingle Pirate shared-vtable link; not localized names, live actors or exhaustive variants.
-- [Space statistics versus saved progress](ElfMap.md#named-space-statistics-and-persistent-counter-boundaries): eight native numeric stat routes, named reset, runtime pending versus saved8728 and reset-before-persistent-counter ordering; no synthesized live statistics.
-- [Native address/structure map](maps/NativeMap.json): 1486 annotations, 118 imports and 45 structure definitions.
-- [Bonus-target progress and collection paths](ElfMap.md#bonus-target-progress-and-qualified-special-bolt-producers): saved8728 publication versus reread runtime pending, flag278 message latch, localID0 reward precheck and direct runtime-local-ID grant. Individual targets and total count remain unknown.
-- [Bolt multiplier mutation and paired XP messages](ElfMap.md#bolt-multiplier-health-sampling-accumulator-and-paired-xp-messages): replay-gated sampled health reset, runtime-only half-step accumulator, strict float32 threshold and additive6A/6B XP paths; no timer or per-kill cadence inferred.
-- [Hero XP/HP reference arrays](ElfMap.md#named-hero-xphp-arrays-and-shipped-progression-reference): named100-entry native banks and98 fingerprinted shipped rows, separate from live level/health; includes unclamped progress arithmetic.
-- [Hero XP carry and reload precision](ElfMap.md#hero-xp-publication-fractional-carry-and-reload-precision): strict single carry, original-input threshold checks, one-way runtime levels and distinct script/reload conversions. Numerical previews are qualified, not in-game validation.
-- [Decryptor, timing and copied-handle findings](ElfMap.md#decryptor-state-saved-timing-aggregates-and-copied-runtime-handles): named wins/Sixaxis losses/spark-speed multiplier, four saved timing floats and runtime generation/slot handles;19 original shipped grid bodies match the actual save.
-- [Health and checkpoint ammo lifecycle](ElfMap.md#runtime-health-and-checkpoint-ammo-qualifying-restoration-paths): runtime health identity/upper bound, conditional XP-driven refresh,32-slot ammo capture, qualified vendor merge and clamped restoration.
-- [Saved auxiliary words](ElfMap.md#three-saved-auxiliary-words-event-branch-sixaxis-gate-and-bounded-modifier): three typed Decryptor words at8758/875C/8760, wrapping counters, Sixaxis gate and native finite spark-speed modifier bounds; retained native state, not universal lifetime statistics.
-- [First-person camera coupling](ElfMap.md#first-person-option-entry-latch-and-qualified-camera-coupling): entry-latched option behavior, paired update methods and qualified orientation adjustment; original option name/hold-toggle meaning unresolved.
-- [Parallel save research](ElfMap.md#parallel-save-research-rewards-replay-lifecycle-and-mission-keys): weapon experience rewards, per-world diminishing-return indices/remainders, replay lifecycle, historical segment median and81 native mission lookup pairs.
-- [Persistent grids and copied headers](ElfMap.md#persistent-grid-volume-headers-map-labels-and-group-flags): 512×512 native grid, all21 physical slot-to-level label associations, copied200-byte volume definitions and seven saved group flags.
-- [Menu routing and aggregate predicate](ElfMap.md#map-menu-routing-and-native-accumulator-predicate): inverse browse permutations, shared image IDs, readiness skips and qualified accumulator threshold.
-- [Map rectangles and clearing brush](ElfMap.md#copied-map-rectangles-world-projection-and-clearing-brush): all six group-word roles, projection/sign formula and native14×14 class-matching brush.
-- [Shipped pause-menu settings](ElfMap.md#shipped-pause-menu-settings-dispatch): asset-backed descriptor filtering, scheme-dependent inversion APIs and adjustment actions; unknown settings remain unnamed.
-- [Reset-event category counters](ElfMap.md#reset-event-category-counters-and-temporary-runtime-selection): eight saved counters, six native category selections and temporary runtime expiration; category names unresolved.
-- [Per-world object bitsets](ElfMap.md#per-world-object-state-and-spawn-suppression-bitsets): saved object state, mode-qualified spawn suppression and runtime-index limits.
-- [Gameplay segment and retained-log evidence](ElfMap.md#gameplay-segments-timers-reward-accumulators-and-retained-log): named completion bindings, integer counters and stale-entry distinction.
-- [Weapon/gadget configuration definitions](maps/WeaponConfigs.json)
-- [Global event flag evidence](ElfMap.md#global-event-flags-named-story-tutorial-movie-and-equipment-bits): all292 named IDs, BE64 storage and acquisition/story dependencies.
-- [Shared save-format notes](../../SaveFormat.md): includes the supplied encrypted USA save and European plaintext sample, with evidence distinguished.
+## Pages
 
-## Matching tools and tests
+| Page | Use |
+| --- | --- |
+| [Save format](../../SaveFormat.md) | File layout, offsets, field types and unknowns |
+| [Executable findings](ElfMap.md) | Native behavior, transaction ordering and non-save anchors |
+| [Tools guide](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md) | Inspect saves, compare captures and import into Ghidra/IDA |
 
-- [Research tools](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md): native inspectors and IDA/Ghidra importers.
-- [Native map regression tests](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodElfMap.py); neighboring tests cover progression, collectibles, world/object/mission state, bonuses, state storage, arena challenges, settings/load destinations and configurations.
+## Data and evidence
 
-The executable SHA-256 is `0EE9A8414C8FC182BC19FA2A523E6D050D0BE76138B3733AE515798D77D2468C`. Address maps and byte guards apply to that input only. These findings are partial and do not establish in-game edit safety or compatibility with another region/build.
+- [NativeMap.json](maps/NativeMap.json): addresses, byte guards, catalogs and structures.
+- [WeaponConfigs.json](maps/WeaponConfigs.json): shipped weapon/gadget definitions and modifiers.
+- [Tests](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00): independent native/report and input-preservation checks.
+
+The map contains 1,486 annotations, 45 structure definitions and 118 imports. These are inventory counts, not a completion percentage.
+
+ELF SHA-256: `0EE9A8414C8FC182BC19FA2A523E6D050D0BE76138B3733AE515798D77D2468C`.
+
+Addresses and byte guards apply to that binary only. Save behavior has been traced and tested in software; new edits have not been validated in-game. The [European sample](../../BCES00052/unknown/README.md) is separate evidence.
