@@ -101,6 +101,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
 
             TodWeaponLevelEditing.AddFields(data, fields);
+            TodGadgetAmmoEditing.AddFields(data, fields);
 
             void Appearance(string key, string label, int ownedBase, int selectedOffset, string[] names)
             {

@@ -50,14 +50,17 @@ class BonusSelectionChecks(unittest.TestCase):
         report = TOOL["inspect"](ELF)
         self.assertEqual(report, MAP["bonus_selection"])
         self.assertEqual([(r["id"], r["state_offset"], r["score_requirement"], r["state_count_including_off"]) for r in report["catalog"]],
-                         [(1, "0x86f9", 50, 4), (3, "0x86fb", 100, 3), (11, "0x8703", 500, 2)])
+                         [(1, "0x86f9", 50, 4), (3, "0x86fb", 100, 3), (9, "0x8701", 400, 2), (11, "0x8703", 500, 2)])
         for row in report["catalog"]:
             self.assertEqual([o["value"] for o in row["options"]], list(range(row["state_count_including_off"])))
             effect = next(e for e in MAP["bonus_effects"]["effects"] if e["id"] == row["id"])
             self.assertEqual(row["consumer_vas"], effect["consumer_vas"])
-            self.assertEqual(row["score_requirement"], effect["weighted_score_requirement"])
+            if row["id"] == 9:
+                self.assertIsNone(effect["weighted_score_requirement"])
+            else:
+                self.assertEqual(row["score_requirement"], effect["weighted_score_requirement"])
         elf = TOOL["EFFECTS"]["BINDINGS"].Elf(ELF)
-        self.assertEqual(len(report["instruction_guards"]), 19)
+        self.assertEqual(len(report["instruction_guards"]), 36)
         for guard in report["instruction_guards"]:
             raw = bytes.fromhex(guard["bytes"])
             self.assertEqual(elf.read(int(guard["va"], 0), len(raw)), raw)
@@ -71,15 +74,29 @@ class BonusSelectionChecks(unittest.TestCase):
         self.assertIn("geometry/input axis", report["warning"])
         self.assertIn("in-game acceptance", report["warning"])
 
+    def test_zurkon_request_keeps_runtime_override_and_arguments_distinct(self):
+        report = MAP["bonus_selection"]["zurkon_factory_choice"]
+        self.assertEqual(report["state_offset"], "0x8701")
+        self.assertEqual(report["definition_score_requirement"], 400)
+        self.assertEqual(report["state_count_including_off"], 2)
+        self.assertFalse(report["local_consumer_score_gate"])
+        self.assertEqual(report["runtime_override_va"], "0x101efb10")
+        self.assertEqual(report["alternate"]["factory_arguments"], [0xC3, 0x657])
+        self.assertEqual(report["default"]["factory_arguments"], [0x4B, 0x311])
+        self.assertEqual(report["alternate"]["float_argument"], 0.75)
+        self.assertEqual(report["default"]["float_argument"], 1.5)
+        self.assertIn("meaning", report["scope"])
+        self.assertIn("cannot override", report["scope"])
+
     def test_score_boundaries_and_unknown_states_are_observed_without_changes(self):
         if ELF is None:
             self.skipTest("Pass --elf for exact-build evidence")
         with tempfile.TemporaryDirectory(prefix="tod-bonus-selection-") as directory:
             path = Path(directory) / "snapshot.bin"
-            for score in (0, 49, 50, 99, 100, 499, 500, 750, 0xFFFFFFFF):
+            for score in (0, 49, 50, 99, 100, 399, 400, 499, 500, 750, 0xFFFFFFFF):
                 data = fixture(score)
-                for states in ((0, 0, 0), (3, 2, 1), (4, 3, 2), (255, 255, 255)):
-                    for offset, state in zip((0x86F9, 0x86FB, 0x8703), states):
+                for states in ((0, 0, 0, 0), (3, 2, 1, 1), (4, 3, 2, 2), (255, 255, 255, 255)):
+                    for offset, state in zip((0x86F9, 0x86FB, 0x8701, 0x8703), states):
                         data[offset] = state
                     data[0x8706:0x8708] = b"\xBE\xEF"
                     path.write_bytes(data)
@@ -87,7 +104,7 @@ class BonusSelectionChecks(unittest.TestCase):
                     self.assertEqual(report["weighted_score"], score)
                     self.assertEqual([r["raw_state"] for r in report["selections"]], list(states))
                     self.assertEqual([r["editor_eligible"] for r in report["selections"]],
-                                     [score >= threshold and state < count for state, threshold, count in zip(states, (50, 100, 500), (4, 3, 2))])
+                                     [score >= threshold and state < count for state, threshold, count in zip(states, (50, 100, 400, 500), (4, 3, 2, 2))])
                     self.assertEqual(path.read_bytes(), data)
 
     def test_shipped_menu_reproduces_asset_map_and_cycling_guards(self):

@@ -118,7 +118,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             notice.Text = category.SelectedItem?.ToString() switch
             {
-                "Bonus effects" => "Bonus effects require existing skill points: hero head 50, enemy head 100, mirror 500. No points or unlocks are granted. Unknown saved states stay read-only. Not yet tested in-game.",
+                "Bonus effects" => "Required skill scores: hero head 50, enemy head 100, James Zurkon 400, mirror 500. Zurkon Off clears only the saved request; a runtime override can still select the alternate. No points or unlocks are granted. Not yet tested in-game.",
+                "Gadget ammo" => "Ammo for already-owned consumables only. Groovitron and traversal gadgets stay read-only because of linked state. Values use the native float storage and reference capacities, not a promised use count. Not yet tested in-game.",
                 "Weapon levels" => "Levels stay within the weapon's existing 1–5 or 6–10 tier. A change sets matching XP; increases refill ammo, decreases keep ammo. Weapon ammo shows the planned refill and allows an override. No ownership, upgrades or purchases are granted. Not yet tested in-game.",
                 _ => defaultNotice
             };

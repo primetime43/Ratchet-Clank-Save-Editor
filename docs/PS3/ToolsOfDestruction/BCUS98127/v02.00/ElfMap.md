@@ -108,9 +108,13 @@ The removal leaf requests XP/ammo setters **before** clearing ownership and rere
 
 Runtime weapons borrow the canonical inventory record. Local ammo admission and debit are different routines; some runtime flags bypass admission. A checked request of zero before a later debit of one is not proof of universal per-shot cost. Gelanator has qualified paired debit/refund requests around a runtime latch, not a saved reservation ledger.
 
+Seven consumable records now have a bounded ammo policy: IDs 16/17/18/20/21/22/23, reference capacities 4/2/3/2/1/3/3. Require ownership, stored level 0, finite zero XP, no modifiers and finite ammo within capacity. Only ammo at record `+8` changes. Fractional values are native float storage, not a proved use count. Groovitron (19) remains excluded because Golden Groovitron object 11 and event flag 286 are separate linked state; IDs 24–31 remain excluded.
+
 ### Purchases and ordering
 
 Upgrade purchase publishes the modifier, conditionally refills ammo, then debits raritanium and notifies runtime systems. Signed wallet admission differs from vendor adjacency/duplicate checks; the transaction itself can charge for an already-set bit.
+
+The add-only topology audit covers 204 nodes: 15 starts, 175 ordinary and 14 special. Of the 189 positive nodes, 182 have complete numeric definitions; seven special nodes have unspecified values and are excluded. Candidate additions require an owned record and an attainable existing mask. Ordinary nodes need an installed neighbor; special nodes use all positive neighbors as a conservative gate. This is a research frontier, not an implemented upgrade editor or a purchase verdict. The supplied save already has every positive node, so it cannot confirm an addition transition.
 
 The level-five weapon purchase path requires ownership, exactly stored level 4, replay state and definition prerequisites. Dispatch and later recheck sample those conditions separately. Level/XP/ammo publication precedes bolt payment. Repeated normal acquisition can charge an already-owned record.
 
@@ -160,7 +164,7 @@ Skill score, earned bits and bonus states are independent. Awards use weighted d
 
 The shipped `cheatHandler.changeCheatState` checks availability, then cycles zero-based states with left/right. **Definition state count includes Off**: hero head states 0–3, enemy head 0–2, mirror 0–1. Hero states 1/2/3 multiply the head basis by 2/4/0.5; enemy states 1/2 use 2.5/0.5. These are native factors, not recovered localized labels. The generic setter accepts a wider 1–8 range and does not enforce each definition's count.
 
-The editor changes only physical bytes `0x86F9`, `0x86FB` and `0x8703`, and only with recognized existing states and scores of at least 50/100/500. Menu APIs remap IDs above 4 by runtime language; those indices must not be used as physical save offsets. Off does not explicitly restore a head transform in the traced consumers. Mirror's axis and live applicability remain unknown; in-game acceptance is untested.
+The editor changes physical bytes `0x86F9`, `0x86FB`, `0x8701` and `0x8703`, with recognized states and existing scores of at least 50/100/400/500. James Zurkon is a binary saved request at `0x8701`; its consumer also tests runtime override `0x101EFB10` and has no local score gate. Off cannot force the default when that override is set. The alternate/default factory branches pass `0xC3/0x657` with float 0.75 and `0x4B/0x311` with float 1.5; the float's meaning is unknown. Menu APIs remap IDs by runtime language and must not be used as save offsets. Head Off does not explicitly restore the traced transform; mirror's axis remains unknown. In-game acceptance remains untested.
 
 Special-bolt collection uses per-world masks; balance subtracts spent bolts. Skin purchase changes ownership, selection and spent count. Armor availability, ownership and selected armor are likewise separate.
 
@@ -211,8 +215,8 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Topic | Map sections |
 | --- | --- |
 | Save/load/restart | `serialization`, `snapshot_lifecycle`, `restart_execution`, `save_tail`, `load_selection` |
-| Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_level_editing`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
-| Purchases | `weapon_purchase`, `upgrade_purchase`, `armor_consumer`, `currency_mutation` |
+| Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_level_editing`, `gadget_ammo_editing`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
+| Purchases | `weapon_purchase`, `upgrade_purchase`, `upgrade_edit_candidates`, `armor_consumer`, `currency_mutation` |
 | Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
 | XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow` |
 | Collectibles and bonuses | `collectibles`, `collectible_producers`, `blueprint_producers`, `bonuses`, `bonus_effects`, `bonus_remaining`, `bonus_selection`, `bonus_selection_assets` |

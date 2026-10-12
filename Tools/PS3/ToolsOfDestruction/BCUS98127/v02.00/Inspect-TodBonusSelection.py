@@ -24,6 +24,7 @@ FUNCTIONS = {
 LABELS = {
     1: ("bonus_hero_head", "Hero head size", ["Off", "Large (2x)", "Extra large (4x)", "Small (0.5x)"]),
     3: ("bonus_enemy_head", "Enemy head size", ["Off", "Large (2.5x)", "Small (0.5x)"]),
+    9: ("bonus_james_zurkon", "James Zurkon bonus", ["Off", "On"]),
     11: ("bonus_mirror", "Mirror mode", ["Off", "On"]),
 }
 
@@ -96,20 +97,37 @@ def inspect(elf_path, save_path=None, archive_path=None):
         0x24F78: 0x3BFF0001, 0x2702C: 0x57BD063E, 0x2703C: 0x28800007,
         0x27048: 0x281F000D, 0x2706C: 0x99630008,
         0x27A650: 0x2B800007, 0x27A670: 0x98090008,
+        0x35BD1C: 0x80090008, 0x35BD24: 0x2F800000, 0x35BDE8: 0x409E0018,
+        0x35BDF4: 0x88648701, 0x35BDF8: 0x2C030000, 0x35BDFC: 0x4182007C,
+        0x35BE00: 0x386000C3, 0x35BE08: 0x38800657, 0x35BE14: 0x4BEF4DE5,
+        0x35BE78: 0x38800311, 0x35BE88: 0x3860004B, 0x35BE8C: 0x4BEF4D6D,
     }.items():
         if elf.u32(va) != expected:
             raise ValueError(f"Bonus selection native evidence changed at {va:#x}")
         guards[va] = elf.read(va, 4)
     for start in (0x24F18, 0x27008, 0x27A648, 0x35CA40):
         guards[start] = elf.read(start, elf.functions[elf.functions.index(start) + 1] - start)
+    toc = elf.descriptors[0x35BC40]
+    factory_values = {}
+    for displacement, expected in ((0x19AC, 0x101EFB08), (0x19B8, 0x101EFB20),
+                                   (0x19BC, 0x3F400000), (0x19C0, 0x3FC00000)):
+        address = toc + displacement
+        if elf.u32(address) != expected:
+            raise ValueError("Zurkon factory pointer/argument evidence changed")
+        guards[address] = elf.read(address, 4)
+        factory_values[displacement] = address
     catalog = []
     for item in native["cheats"]["catalog"]:
         if item["id"] not in LABELS:
             continue
         key, label, labels = LABELS[item["id"]]
         effect = next(e for e in effects["effects"] if e["id"] == item["id"])
-        if item["state_count"] != len(labels) or item["score_requirement"] != effect["weighted_score_requirement"]:
+        consumer_requirement = effect["weighted_score_requirement"]
+        if item["state_count"] != len(labels) or (consumer_requirement is not None and
+                item["score_requirement"] != consumer_requirement):
             raise ValueError("Bonus definition and consumer bounds disagree")
+        if item["id"] == 9 and (item["score_requirement"] != 400 or item["state_offset"] != "0x8701"):
+            raise ValueError("Zurkon physical definition changed")
         address = int(item["definition_va"], 0)
         guards[address] = elf.read(address, 0x30)
         catalog.append({"id": item["id"], "key": key, "label": label, "enum": item["enum"],
@@ -120,9 +138,20 @@ def inspect(elf_path, save_path=None, archive_path=None):
         "confidence": "code-backed-physical-bonus-selection-policy",
         "report_tool": "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonusSelection.py",
         "score_offset": "0x8708", "catalog": catalog,
+        "zurkon_factory_choice": {
+            "consumer_va": "0x35bc40", "state_offset": "0x8701", "definition_va": "0x10026534",
+            "definition_score_requirement": 400, "state_count_including_off": 2,
+            "local_consumer_score_gate": False, "runtime_override_va": "0x101efb10",
+            "rule": "Nonzero runtime override101EFB10 OR nonzero saved byte8701 selects the alternate factory branch. Both zero select the default branch. The definition/editor requires score>=400, but this consumer has no local score comparison.",
+            "alternate": {"factory_arguments": [195, 1623], "float_argument": 0.75,
+                          "float_slot_va": hex(factory_values[0x19BC])},
+            "default": {"factory_arguments": [75, 785], "float_argument": 1.5,
+                        "float_slot_va": hex(factory_values[0x19C0])},
+            "factory_call_va": "0x250bf8",
+            "scope": "Factory IDs and floating argument meaning are not recovered localized assets or a proved scale. Off clears only the saved request; it cannot override runtime101EFB10. No ammo, ownership, actor or override writes."},
         "setter_scope": "27008 menu setter remaps IDs>4 when language!=1, bounds physical ID<=13 and truncates supplied state to low8; accepts1..8 or stores0. Raw physical leaf27A648 accepts1..8 or0 without a local ID bound. Neither validates per-definition state_count or score. Editor never invokes either setter.",
-        "edit_policy": "Offer only physical IDs1,3,11 when existing unsigned score8708 meets their direct consumer requirement and raw byte is in0..state_count-1. Write exactly one selected byte; preserve all other bonus states, score, earned skill bits and unknown neighbors. Unrecognized states or insufficient score remain read-only. Never grant points/unlocks or use language-remapped menu IDs as save offsets.",
-        "warning": "Exact USA v02.00 reference. Off means no requested bonus, not an explicit head-transform restoration. Mirror geometry/input axis and current runtime applicability are unconfirmed. Labels describe native basis factors, not recovered localized menu text. File-edit policy and software round trips do not prove in-game acceptance.",
+        "edit_policy": "Offer only physical IDs1,3,9,11 when existing unsigned score8708 meets their definition requirement and raw byte is in0..state_count-1. IDs1/3/11 also have direct consumer score gates; ID9 does not locally test score. Write exactly one selected byte; preserve all other bonus states, score, earned skill bits and unknown neighbors. Unrecognized states or insufficient score remain read-only. Never grant points/unlocks or use language-remapped menu IDs as save offsets.",
+        "warning": "Exact USA v02.00 reference. Off means no requested bonus, not an explicit head-transform restoration. Zurkon Off clears the saved request but cannot override runtime101EFB10. Mirror geometry/input axis and current runtime applicability are unconfirmed. Labels describe native basis factors or exported bonus identifiers, not recovered localized menu text. File-edit policy and software round trips do not prove in-game acceptance.",
         "instruction_guards": [{"va": hex(va), "bytes": raw.hex().upper()} for va, raw in sorted(guards.items())],
     }
     if archive_path is not None:

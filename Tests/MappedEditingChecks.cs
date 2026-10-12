@@ -29,6 +29,7 @@ internal static partial class Program
     {
         BonusEditingChecks(root);
         WeaponLevelEditingChecks(root);
+        NewEditSmokeChecks();
         Check("Quick-select choices use native initial flags and ownership, not all inventory IDs", () =>
         {
             byte[] data = EditableFixture();

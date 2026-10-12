@@ -21,8 +21,8 @@ internal static partial class Program
         {
             byte[] data = BonusFixture(), before = data.ToArray();
             var fields = TodSaveEditing.Fields(data, "BCUS98127").Where(field => field.Category == "Bonus effects").ToArray();
-            Equal(3, fields.Length);
-            foreach (var expected in new[] { ("bonus_hero_head", 0x86F9, 4), ("bonus_enemy_head", 0x86FB, 3), ("bonus_mirror", 0x8703, 2) })
+            Equal(4, fields.Length);
+            foreach (var expected in new[] { ("bonus_hero_head", 0x86F9, 4), ("bonus_enemy_head", 0x86FB, 3), ("bonus_james_zurkon", 0x8701, 2), ("bonus_mirror", 0x8703, 2) })
             {
                 var field = fields.Single(field => field.Key == expected.Item1);
                 Equal(expected.Item2, field.Offset);
@@ -55,12 +55,12 @@ internal static partial class Program
         });
         Check("Cosmetic bonus editing respects existing unsigned score requirements without granting points", () =>
         {
-            foreach (uint score in new uint[] { 0, 49, 50, 99, 100, 499, 500, 750, uint.MaxValue })
+            foreach (uint score in new uint[] { 0, 49, 50, 99, 100, 399, 400, 499, 500, 750, uint.MaxValue })
             {
                 byte[] data = BonusFixture(score);
                 var fields = TodSaveEditing.Fields(data, "BCUS98127").Where(field => field.Category == "Bonus effects").ToArray();
-                Equal(score < 50 ? 0 : score < 100 ? 1 : score < 500 ? 2 : 3, fields.Length);
-                foreach (var (key, minimum) in new[] { ("bonus_hero_head", 50u), ("bonus_enemy_head", 100u), ("bonus_mirror", 500u) })
+                Equal(score < 50 ? 0 : score < 100 ? 1 : score < 400 ? 2 : score < 500 ? 3 : 4, fields.Length);
+                foreach (var (key, minimum) in new[] { ("bonus_hero_head", 50u), ("bonus_enemy_head", 100u), ("bonus_james_zurkon", 400u), ("bonus_mirror", 500u) })
                 {
                     if (score < minimum) Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits((key, 1))));
                     else
@@ -75,7 +75,7 @@ internal static partial class Program
         Check("Unknown cosmetic bonus states and other slots stay read-only; invalid batches fail preflight", () =>
         {
             byte[] data = BonusFixture();
-            foreach (var (key, offset, count) in new[] { ("bonus_hero_head", 0x86F9, 4), ("bonus_enemy_head", 0x86FB, 3), ("bonus_mirror", 0x8703, 2) })
+            foreach (var (key, offset, count) in new[] { ("bonus_hero_head", 0x86F9, 4), ("bonus_enemy_head", 0x86FB, 3), ("bonus_james_zurkon", 0x8701, 2), ("bonus_mirror", 0x8703, 2) })
             {
                 foreach (int unknown in new[] { count, 8, 255 })
                 {

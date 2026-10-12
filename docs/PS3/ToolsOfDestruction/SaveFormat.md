@@ -130,7 +130,7 @@ Special-bolt balance is collected count minus `0x424`, using signed-32 subtracti
 
 The 60 skill definitions total 750 points. Awards add each definition's value, not one point per bit. Completing IDs 0–58 triggers ID 59, HARDCORE. Blueprint grants, weighted score, earned skill bits and bonus states are separate fields.
 
-Cosmetic selections: `0x86F9` hero head (0 Off, 1 2x, 2 4x, 3 0.5x), `0x86FB` enemy head (0 Off, 1 2.5x, 2 0.5x), `0x8703` mirror (0 Off, 1 On). The menu's definition count includes state 0. Direct consumers require unsigned score `0x8708` of at least 50/100/500 respectively. The editor preserves unknown states and changes no score or earned bits; native transform factors do not prove current visual effects. Other bonus slots remain read-only.
+Cosmetic selections: `0x86F9` hero head (0 Off, 1 2x, 2 4x, 3 0.5x), `0x86FB` enemy head (0 Off, 1 2.5x, 2 0.5x), `0x8701` James Zurkon (0 Off, 1 On), `0x8703` mirror (0 Off, 1 On). Definition counts include state 0. The editor requires existing unsigned score `0x8708` of at least 50/100/400/500 respectively. Zurkon has no local consumer score check and a separate runtime override can still select its alternate when Off. Unknown states, score and earned bits are preserved; stored requests do not prove active effects. Other bonus slots remain read-only.
 
 Hero XP passes through runtime float32 conversion and a fractional accumulator. Reload can lose precision for large integers; the native routine does not simply assign a saved level. Current health and checkpoint position are runtime state with **no confirmed dedicated save offset**.
 

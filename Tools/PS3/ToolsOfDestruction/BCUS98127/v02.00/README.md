@@ -33,7 +33,7 @@ Each inspector checks binary identity and native evidence. Neighboring `TestTod*
 | Subject | Inspectors |
 | --- | --- |
 | Inventory/definitions | [WeaponBindings](Inspect-TodWeaponBindings.py), [WeaponConfigs](Inspect-TodWeaponConfigs.py), [InventoryQueries](Inspect-TodInventoryQueries.py) |
-| Ammo/XP/upgrades | [WeaponProgression](Inspect-TodWeaponProgression.py), [WeaponLevels](Inspect-TodWeaponLevels.py) (`--assets` requires the six extracted reference files), [AmmoCapacity](Inspect-TodAmmoCapacity.py), [AmmoCrate](Inspect-TodAmmoCrate.py), [UpgradePurchase](Inspect-TodUpgradePurchase.py) |
+| Ammo/XP/upgrades | [WeaponProgression](Inspect-TodWeaponProgression.py), [WeaponLevels](Inspect-TodWeaponLevels.py), [GadgetAmmo](Inspect-TodGadgetAmmo.py), [AmmoCapacity](Inspect-TodAmmoCapacity.py), [AmmoCrate](Inspect-TodAmmoCrate.py), [UpgradeCandidates](Inspect-TodUpgradeCandidates.py), [UpgradePurchase](Inspect-TodUpgradePurchase.py). `--assets` uses the six extracted reference files; UpgradeCandidates also needs `--vendor-asset`. |
 | Equipment and objects | [Objects](Inspect-TodObjects.py), [ObjectGrantProducers](Inspect-TodObjectGrantProducers.py), [InventoryAux](Inspect-TodInventoryAux.py), [EquipmentLifecycle](Inspect-TodEquipmentLifecycle.py) |
 | Quick-select eligibility | [QuickSelectEligibility](Inspect-TodQuickSelectEligibility.py): all32 initializer flags, registry linkage and detached first24 edit plans |
 | Player progression | [Progression](Inspect-TodProgression.py), [HeroXpFlow](Inspect-TodHeroXpFlow.py), [HeroConfig](Inspect-TodHeroConfig.py), [HealthPersistence](Inspect-TodHealthPersistence.py) |
@@ -95,6 +95,8 @@ Load the matching ELF as big-endian PowerPC at its original addresses. Choose **
 The importer adds names, repeatable comments and local types without changing binary bytes. It targets IDA 9, does not configure PS3 TOCs automatically and has **not been tested in live IDA**; current checks cover mocked database safety and map validation.
 
 ## Verification
+
+The [manual regression workflow](../../../../../.github/workflows/regression.yml) runs the Windows app fixtures and portable research checks on GitHub. Use **Actions → Regression checks (manual) → Run workflow** after pushing it. Original ELF, asset and private-save checks are not included; they need the local research corpus. Nothing runs automatically on pushes.
 
 ```powershell
 python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodElfMap.py --elf "path/to/EBOOT.ELF" -v

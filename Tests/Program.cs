@@ -22,6 +22,12 @@ internal static partial class Program
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--new-edits" }))
+            {
+                NewEditSmokeChecks();
+                Console.WriteLine($"All {passed} lightweight edit checks passed.");
+                return 0;
+            }
             if (args.SequenceEqual(new[] { "--mapped-edits" }))
             {
                 NumericInputChecks(root);

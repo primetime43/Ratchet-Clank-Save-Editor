@@ -223,7 +223,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 string label = bonus.GetProperty("options")[state].GetProperty("label").GetString();
                 return $"\r\nRequested cosmetic selection: {label}. Definition count includes Off; choices are0..{count - 1}. " +
                     $"Editor requires existing score>={minimum}: {(score >= minimum ? "met" : "not met; editing disabled")}. " +
-                    "This changes only the physical state byte, not points or earned skill bits, and does not prove an active runtime effect.";
+                    "This changes only the physical state byte, not points or earned skill bits, and does not prove an active runtime effect." +
+                    (id == 9 ? " Zurkon Off clears only the saved request; runtime override101EFB10 can still select the alternate factory branch. The400-point requirement is a definition/editor gate, not a local consumer score check." : string.Empty);
             }
             return string.Empty;
         }
