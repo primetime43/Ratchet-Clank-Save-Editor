@@ -65,6 +65,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             Boolean("rumble", "Rumble", 0x114D4);
             Boolean("surround", "Surround sound", 0x114D5);
 
+            // The multiplier's runtime cache/countdown are seeded on load, not
+            // serialized fields. Do not enable replay mode or repair bad inputs.
+            float multiplier = BinaryPrimitives.ReadSingleBigEndian(data.AsSpan(0x428, 4));
+            if (Word(0x906EC) != 0 && float.IsFinite(multiplier) && multiplier >= 1 && multiplier <= 20)
+                fields.Add(new("bolt_multiplier", "Bolt multiplier (1–20×)", "Rewards", 0x428,
+                    TodEditStorage.Float, (decimal)multiplier, 20, Minimum: 1));
+
             // Only normal owned combat records with complete reference inputs.
             for (int id = 1; id <= 15; id++)
             {

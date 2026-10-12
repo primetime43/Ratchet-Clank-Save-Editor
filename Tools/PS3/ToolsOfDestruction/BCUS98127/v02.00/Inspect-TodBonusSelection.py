@@ -24,6 +24,7 @@ FUNCTIONS = {
 LABELS = {
     1: ("bonus_hero_head", "Hero head size", ["Off", "Large (2x)", "Extra large (4x)", "Small (0.5x)"]),
     3: ("bonus_enemy_head", "Enemy head size", ["Off", "Large (2.5x)", "Small (0.5x)"]),
+    5: ("bonus_commentary", "Developer commentary request", ["Off", "On (supported language only)"]),
     9: ("bonus_james_zurkon", "James Zurkon bonus", ["Off", "On"]),
     11: ("bonus_mirror", "Mirror mode", ["Off", "On"]),
 }
@@ -126,6 +127,8 @@ def inspect(elf_path, save_path=None, archive_path=None):
         if item["state_count"] != len(labels) or (consumer_requirement is not None and
                 item["score_requirement"] != consumer_requirement):
             raise ValueError("Bonus definition and consumer bounds disagree")
+        if item["id"] == 5 and (item["score_requirement"] != 200 or item["state_offset"] != "0x86fd"):
+            raise ValueError("Commentary physical definition changed")
         if item["id"] == 9 and (item["score_requirement"] != 400 or item["state_offset"] != "0x8701"):
             raise ValueError("Zurkon physical definition changed")
         address = int(item["definition_va"], 0)
@@ -138,6 +141,13 @@ def inspect(elf_path, save_path=None, archive_path=None):
         "confidence": "code-backed-physical-bonus-selection-policy",
         "report_tool": "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonusSelection.py",
         "score_offset": "0x8708", "catalog": catalog,
+        "commentary_request": {
+            "consumer_va": "0x3baa38", "state_offset": "0x86fd", "score_requirement": 200,
+            "state_count_including_off": 2, "required_runtime_language_id": 1,
+            "language_getter_chain": ["0x251e08", "0x5bfe08"],
+            "native_guard_section": "bonus_effects",
+            "rule": "Canonical saved Off/On request only, with existing score>=200. Native dispatch additionally requires runtime language ID1; the language getter and dispatch blocks are guarded by bonus_effects. No language field is stored or changed by this edit.",
+            "scope": "Runtime language is an applicability gate, not the validity of the physical saved0/1 request. On does not guarantee supported language, active commentary, clip identity or audio playback. ID1 is not assigned a guessed localized language name."},
         "zurkon_factory_choice": {
             "consumer_va": "0x35bc40", "state_offset": "0x8701", "definition_va": "0x10026534",
             "definition_score_requirement": 400, "state_count_including_off": 2,
@@ -150,7 +160,7 @@ def inspect(elf_path, save_path=None, archive_path=None):
             "factory_call_va": "0x250bf8",
             "scope": "Factory IDs and floating argument meaning are not recovered localized assets or a proved scale. Off clears only the saved request; it cannot override runtime101EFB10. No ammo, ownership, actor or override writes."},
         "setter_scope": "27008 menu setter remaps IDs>4 when language!=1, bounds physical ID<=13 and truncates supplied state to low8; accepts1..8 or stores0. Raw physical leaf27A648 accepts1..8 or0 without a local ID bound. Neither validates per-definition state_count or score. Editor never invokes either setter.",
-        "edit_policy": "Offer only physical IDs1,3,9,11 when existing unsigned score8708 meets their definition requirement and raw byte is in0..state_count-1. IDs1/3/11 also have direct consumer score gates; ID9 does not locally test score. Write exactly one selected byte; preserve all other bonus states, score, earned skill bits and unknown neighbors. Unrecognized states or insufficient score remain read-only. Never grant points/unlocks or use language-remapped menu IDs as save offsets.",
+        "edit_policy": "Offer only physical IDs1,3,5,9,11 when existing unsigned score8708 meets their definition requirement and raw byte is in0..state_count-1. IDs1/3/5/11 also have direct consumer score gates; ID9 does not locally test score. ID5 edits only a saved request; runtime language ID1 is additionally required for dispatch, not inferred or changed here. Write exactly one selected byte; preserve all other bonus states, score, earned skill bits and unknown neighbors. Unrecognized states or insufficient score remain read-only. Never grant points/unlocks or use language-remapped menu IDs as save offsets.",
         "warning": "Exact USA v02.00 reference. Off means no requested bonus, not an explicit head-transform restoration. Zurkon Off clears the saved request but cannot override runtime101EFB10. Mirror geometry/input axis and current runtime applicability are unconfirmed. Labels describe native basis factors or exported bonus identifiers, not recovered localized menu text. File-edit policy and software round trips do not prove in-game acceptance.",
         "instruction_guards": [{"va": hex(va), "bytes": raw.hex().upper()} for va, raw in sorted(guards.items())],
     }

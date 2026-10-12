@@ -30591,6 +30591,28 @@
         ]
       },
       {
+        "id": 5,
+        "key": "bonus_commentary",
+        "label": "Developer commentary request",
+        "enum": "CHEAT_DEV_COMMENTS",
+        "state_offset": "0x86fd",
+        "score_requirement": 200,
+        "state_count_including_off": 2,
+        "consumer_vas": [
+          "0x3baa38"
+        ],
+        "options": [
+          {
+            "value": 0,
+            "label": "Off"
+          },
+          {
+            "value": 1,
+            "label": "On (supported language only)"
+          }
+        ]
+      },
+      {
         "id": 9,
         "key": "bonus_james_zurkon",
         "label": "James Zurkon bonus",
@@ -30635,6 +30657,20 @@
         ]
       }
     ],
+    "commentary_request": {
+      "consumer_va": "0x3baa38",
+      "state_offset": "0x86fd",
+      "score_requirement": 200,
+      "state_count_including_off": 2,
+      "required_runtime_language_id": 1,
+      "language_getter_chain": [
+        "0x251e08",
+        "0x5bfe08"
+      ],
+      "native_guard_section": "bonus_effects",
+      "rule": "Canonical saved Off/On request only, with existing score>=200. Native dispatch additionally requires runtime language ID1; the language getter and dispatch blocks are guarded by bonus_effects. No language field is stored or changed by this edit.",
+      "scope": "Runtime language is an applicability gate, not the validity of the physical saved0/1 request. On does not guarantee supported language, active commentary, clip identity or audio playback. ID1 is not assigned a guessed localized language name."
+    },
     "zurkon_factory_choice": {
       "consumer_va": "0x35bc40",
       "state_offset": "0x8701",
@@ -30664,7 +30700,7 @@
       "scope": "Factory IDs and floating argument meaning are not recovered localized assets or a proved scale. Off clears only the saved request; it cannot override runtime101EFB10. No ammo, ownership, actor or override writes."
     },
     "setter_scope": "27008 menu setter remaps IDs>4 when language!=1, bounds physical ID<=13 and truncates supplied state to low8; accepts1..8 or stores0. Raw physical leaf27A648 accepts1..8 or0 without a local ID bound. Neither validates per-definition state_count or score. Editor never invokes either setter.",
-    "edit_policy": "Offer only physical IDs1,3,9,11 when existing unsigned score8708 meets their definition requirement and raw byte is in0..state_count-1. IDs1/3/11 also have direct consumer score gates; ID9 does not locally test score. Write exactly one selected byte; preserve all other bonus states, score, earned skill bits and unknown neighbors. Unrecognized states or insufficient score remain read-only. Never grant points/unlocks or use language-remapped menu IDs as save offsets.",
+    "edit_policy": "Offer only physical IDs1,3,5,9,11 when existing unsigned score8708 meets their definition requirement and raw byte is in0..state_count-1. IDs1/3/5/11 also have direct consumer score gates; ID9 does not locally test score. ID5 edits only a saved request; runtime language ID1 is additionally required for dispatch, not inferred or changed here. Write exactly one selected byte; preserve all other bonus states, score, earned skill bits and unknown neighbors. Unrecognized states or insufficient score remain read-only. Never grant points/unlocks or use language-remapped menu IDs as save offsets.",
     "warning": "Exact USA v02.00 reference. Off means no requested bonus, not an explicit head-transform restoration. Zurkon Off clears the saved request but cannot override runtime101EFB10. Mirror geometry/input axis and current runtime applicability are unconfirmed. Labels describe native basis factors or exported bonus identifiers, not recovered localized menu text. File-edit policy and software round trips do not prove in-game acceptance.",
     "instruction_guards": [
       {
@@ -30802,6 +30838,10 @@
       {
         "va": "0x10026414",
         "bytes": "000003CC000003D90000006400000003000000EB000005DF000005DD0000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x10026474",
+        "bytes": "000003D5000003E2000000C800000002000000EB000000E9000000000000000000000000000000000000000000000000"
       },
       {
         "va": "0x10026534",
@@ -108629,6 +108669,20 @@
       ],
       "warning": "A snapshot confirms stored bit values, not a before/after activation or native acceptance test."
     }
+  },
+  "reward_multiplier_editing": {
+    "scope": "BCUS98127 supplied v02.00; bounded saved float edit, not a replay-mode grant or in-game validation",
+    "key": "bolt_multiplier",
+    "saved_offset": "0x428",
+    "type": "f32 BE",
+    "minimum": 1,
+    "maximum": 20,
+    "replay_gate_offset": "0x906EC",
+    "native_guard_section": "bolt_multiplier_flow",
+    "baseline": "Offer only with an existing nonzero raw replay/restart word and a finite saved multiplier in1..20. Preserve unusual/nonfinite values rather than repair them. Fractional finite values are allowed within this native finite range.",
+    "write_policy": "Write only saved multiplier428. Preserve replay word, balances, hero/weapon XP, health and all other bytes. Do not write runtime21C4/21C8 into same-numbered save offsets or run a native setter.",
+    "runtime_limits": "Hero initialization seeds the runtime accumulator from the saved multiplier. A sampled health decrease under the native replay gate can reset it to1. Neither the current accumulator nor cached/current health is available in the save. This is not a permanent multiplier lock.",
+    "observation_limit": "Reference save multiplier1.0/replay word3 is eligible; detached synthetic checks verify file writes, not actual reward amounts or in-game acceptance."
   },
   "ordinary_upgrade_editing": {
     "scope": "BCUS98127 supplied v02.00; direct add-only ordinary node edits, not purchases or tested live stats",

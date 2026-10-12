@@ -96,6 +96,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Upgrade topology & definition-qualified addition candidates", TodResearch.Map.GetProperty("upgrade_edit_candidates"), 0));
             topics.Add(JsonTopic("Ammo upgrade edits: add-only nodes & coupled refill", TodResearch.Map.GetProperty("ammo_upgrade_editing"), 0));
             topics.Add(JsonTopic("Ordinary weapon upgrades: editable effects & preservation rules", TodResearch.Map.GetProperty("ordinary_upgrade_editing"), 0));
+            topics.Add(JsonTopic("Bolt multiplier edits: replay gate & runtime reset", TodResearch.Map.GetProperty("reward_multiplier_editing"), 0));
             topics.Add(JsonTopic("Golden Groovitron: object, event & activation boundaries", TodResearch.Map.GetProperty("groovitron_linked_state"), 0));
             topics.Add(JsonTopic("Special upgrades: saved-mask query & Predator repeat targets", TodResearch.Map.GetProperty("special_modifier_effects"), 0));
             topics.Add(JsonTopic("Shipped bonus selection cycling & zero-based states", TodResearch.Map.GetProperty("bonus_selection_assets"), 0));

@@ -174,11 +174,13 @@ Skill score, earned bits and bonus states are independent. Awards use weighted d
 
 The shipped `cheatHandler.changeCheatState` checks availability, then cycles zero-based states with left/right. **Definition state count includes Off**: hero head states 0–3, enemy head 0–2, mirror 0–1. Hero states 1/2/3 multiply the head basis by 2/4/0.5; enemy states 1/2 use 2.5/0.5. These are native factors, not recovered localized labels. The generic setter accepts a wider 1–8 range and does not enforce each definition's count.
 
-The editor changes physical bytes `0x86F9`, `0x86FB`, `0x8701` and `0x8703`, with recognized states and existing scores of at least 50/100/400/500. James Zurkon is a binary saved request at `0x8701`; its consumer also tests runtime override `0x101EFB10` and has no local score gate. Off cannot force the default when that override is set. The alternate/default factory branches pass `0xC3/0x657` with float 0.75 and `0x4B/0x311` with float 1.5; the float's meaning is unknown. Menu APIs remap IDs by runtime language and must not be used as save offsets. Head Off does not explicitly restore the traced transform; mirror's axis remains unknown. In-game acceptance remains untested.
+The editor changes physical bytes `0x86F9`, `0x86FB`, `0x86FD`, `0x8701` and `0x8703`, with recognized states and existing scores of at least 50/100/200/400/500. Commentary at `0x86FD` is a saved request only: dispatch additionally requires runtime language ID1, not known from the save. No localized language name or playback is asserted. James Zurkon at `0x8701` also tests runtime override `0x101EFB10` and has no local score gate. Off cannot force the default when that override is set. Its alternate/default factory branches pass `0xC3/0x657` with float 0.75 and `0x4B/0x311` with float 1.5; the float's meaning is unknown. Menu APIs remap IDs by runtime language and must not be used as save offsets. Head Off does not explicitly restore the traced transform; mirror's axis remains unknown. In-game acceptance remains untested.
 
 Special-bolt collection uses per-world masks; balance subtracts spent bolts. Skin purchase changes ownership, selection and spent count. Armor availability, ownership and selected armor are likewise separate.
 
 Equipment history records qualified state-entry callbacks, not merely queued requests. Restart filters, restore selection and menu fallbacks can produce different values. Multiplier reset depends on replay and a sampled health decrease; its update accumulator is runtime-only, not a saved timer.
+
+Multiplier edits are limited to saved `0x428`, finite 1–20, with an existing nonzero replay word. This uses the finite native increment range, not a universal native clamp: malformed baselines stay read-only. Loading seeds the accumulator; health loss can reset the selected value. The editor does not grant replay mode, freeze the multiplier or change XP/balances.
 
 ## Worlds, missions and events
 
@@ -228,7 +230,7 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_level_editing`, `gadget_ammo_editing`, `groovitron_linked_state`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
 | Purchases | `weapon_purchase`, `upgrade_purchase`, `upgrade_edit_candidates`, `ammo_upgrade_editing`, `ordinary_upgrade_editing`, `special_modifier_effects`, `armor_consumer`, `currency_mutation` |
 | Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
-| XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow` |
+| XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow`, `reward_multiplier_editing` |
 | Collectibles and bonuses | `collectibles`, `collectible_producers`, `blueprint_producers`, `bonuses`, `bonus_effects`, `bonus_remaining`, `bonus_selection`, `bonus_selection_assets` |
 | Worlds and missions | `world_state`, `gameplay_segments`, `world_consumers`, `reward_channels`, `mission_lists`, `mission_mutation`, `segment_bindings`, `segment_configuration_assets` |
 | Object identity/lifecycle | `world_object_flags`, `object_flag_mutation`, `object_definitions_assets`, `object_classes`, `pool_lifecycle` |

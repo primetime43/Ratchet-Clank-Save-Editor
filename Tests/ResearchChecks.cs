@@ -1979,7 +1979,7 @@ internal static partial class Program
                     var levels = fields.Where(field => field.Storage == TodEditStorage.WeaponLevel).ToArray();
                     if (Convert.ToHexString(SHA256.HashData(expected)) == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463")
                     {
-                        Equal(4, bonuses.Length);
+                        Equal(5, bonuses.Length);
                         Equal(15, levels.Length);
                     }
                     foreach (var bonus in bonuses)
