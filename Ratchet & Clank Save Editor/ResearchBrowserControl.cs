@@ -90,6 +90,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Blueprint level-selector grants & qualified script checks", TodResearch.Map.GetProperty("blueprint_producers"), 0));
             topics.Add(JsonTopic("Shipped blueprint predicate survey fingerprints", TodResearch.Map.GetProperty("blueprint_producers_assets"), 0));
             topics.Add(JsonTopic("Six bonus-state consumers & qualified runtime effects", TodResearch.Map.GetProperty("bonus_effects"), 0));
+            topics.Add(JsonTopic("Cosmetic bonus choices & conservative edit limits", TodResearch.Map.GetProperty("bonus_selection"), 0));
+            topics.Add(JsonTopic("Shipped bonus selection cycling & zero-based states", TodResearch.Map.GetProperty("bonus_selection_assets"), 0));
             topics.Add(JsonTopic("Bonus art/movie queries & runtime language selection", TodResearch.Map.GetProperty("bonus_remaining"), 0));
             topics.Add(JsonTopic("Shipped bonus content-query fingerprints", TodResearch.Map.GetProperty("bonus_remaining_assets"), 0));
             topics.Add(JsonTopic("Equipment history & stored state", TodResearch.Map.GetProperty("state_storage"), 0));

@@ -27,6 +27,7 @@ internal static partial class Program
 
     private static void MappedEditingChecks(string root)
     {
+        BonusEditingChecks(root);
         Check("Quick-select choices use native initial flags and ownership, not all inventory IDs", () =>
         {
             byte[] data = EditableFixture();

@@ -1975,6 +1975,11 @@ internal static partial class Program
                     mappedEdits[subtitles.Key] = subtitles.Current == 0 ? 1 : 0;
                     var ammo = fields.FirstOrDefault(field => field.Category == "Weapon ammo");
                     if (ammo != null) mappedEdits[ammo.Key] = ammo.Current == 0 ? 1 : 0;
+                    var bonuses = fields.Where(field => field.Category == "Bonus effects").ToArray();
+                    if (Convert.ToHexString(SHA256.HashData(expected)) == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463")
+                        Equal(3, bonuses.Length);
+                    foreach (var bonus in bonuses)
+                        mappedEdits[bonus.Key] = bonus.Current == 0 ? 1 : 0;
                     var slot = fields.Single(field => field.Key == "qs_0");
                     var choice = slot.Options.FirstOrDefault(option => option.Value >= 0 && option.Value != slot.Current &&
                         Enumerable.Range(1, 31).All(index => BinaryPrimitives.ReadInt32BigEndian(expected.AsSpan(0x284 + 4 * index, 4)) != option.Value));

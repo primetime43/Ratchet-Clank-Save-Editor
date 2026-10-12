@@ -16,6 +16,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly Dictionary<string, string> numericText = new(StringComparer.Ordinal);
         private readonly Dictionary<string, string> invalidNumbers = new(StringComparer.Ordinal);
         private bool rendering;
+        private string defaultNotice = string.Empty;
         public bool HasChanges => pending.Count > 0 || HasInvalidInputs;
         public bool HasInvalidInputs => invalidNumbers.Count > 0;
         public string ValidationMessage => invalidNumbers.Values.FirstOrDefault() ?? string.Empty;
@@ -65,9 +66,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             fields = TodSaveEditing.Fields(data, region);
             category.Items.Clear();
             bool available = fields.Count > 0;
-            notice.Text = available
+            defaultNotice = available
                 ? "Tools of Destruction USA mapped edits · Not yet tested in-game. Ammo/quick-select choices use reference definitions and ownership. Slots are stored indices, not wheel positions; new duplicates are rejected."
                 : "Additional mapped edits are available only for the verified Tools of Destruction USA (BCUS98127) layout. Other games keep their currency controls.";
+            notice.Text = defaultNotice;
             category.Visible = available;
             foreach (string group in fields.Select(field => field.Category).Distinct()) category.Items.Add(group);
             if (available) category.SelectedIndex = 0;
@@ -95,6 +97,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private void ShowFields()
         {
+            notice.Text = category.SelectedItem?.ToString() == "Bonus effects"
+                ? "Bonus effects require existing skill points: hero head 50, enemy head 100, mirror 500. No points or unlocks are granted. Unknown saved states stay read-only. Not yet tested in-game."
+                : defaultNotice;
             rendering = true;
             fieldsPanel.SuspendLayout();
             try

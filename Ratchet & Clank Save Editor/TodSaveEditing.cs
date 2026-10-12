@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice }
     public sealed record TodEditOption(decimal Value, string Label)
     {
         public override string ToString() => Label;
@@ -116,6 +116,21 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 new[] { "None", "Durafiber", "Hyperplate", "Tetramesh", "Quantonium" });
             Appearance("skin", "Selected skin", 0x45C, 0x480,
                 new[] { "None", "Dan", "Snowman", "Cragmite", "Pete", "Cronk", "Zephyr", "Jailbird", "Furioso" });
+
+            // Physical bonus IDs, not language-remapped menu indices. The shipped
+            // menu cycles 0..count-1; the generic native setter's 1..8 bound is wider.
+            var bonusMap = TodResearch.Map.GetProperty("bonus_selection");
+            uint score = Word(TodResearch.Offset(bonusMap.GetProperty("score_offset")));
+            foreach (var bonus in bonusMap.GetProperty("catalog").EnumerateArray())
+            {
+                int offset = TodResearch.Offset(bonus.GetProperty("state_offset"));
+                int count = bonus.GetProperty("state_count_including_off").GetInt32();
+                if (score < bonus.GetProperty("score_requirement").GetUInt32() || data[offset] >= count) continue;
+                var options = bonus.GetProperty("options").EnumerateArray().Select(option =>
+                    new TodEditOption(option.GetProperty("value").GetDecimal(), option.GetProperty("label").GetString())).ToArray();
+                fields.Add(new(bonus.GetProperty("key").GetString(), bonus.GetProperty("label").GetString(),
+                    "Bonus effects", offset, TodEditStorage.ByteChoice, data[offset], count - 1, Options: options));
+            }
             var quickChoices = new List<TodEditOption> { new(-1, "Empty") };
             foreach (var item in TodResearch.Map.GetProperty("quick_select_eligibility").GetProperty("catalog").EnumerateArray())
             {
@@ -166,7 +181,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 var field = fields[edit.Key];
                 if (edit.Value == field.Current) continue; // Preserve noncanonical flags/raw float bits.
-                if (field.Storage == TodEditStorage.BooleanByte) result[field.Offset] = (byte)edit.Value;
+                if (field.Storage is TodEditStorage.BooleanByte or TodEditStorage.ByteChoice) result[field.Offset] = (byte)edit.Value;
                 else if (field.Storage == TodEditStorage.Float)
                     BinaryPrimitives.WriteSingleBigEndian(result.AsSpan(field.Offset, 4), (float)(edit.Value / field.Scale));
                 else if (field.Category == "Quick select")

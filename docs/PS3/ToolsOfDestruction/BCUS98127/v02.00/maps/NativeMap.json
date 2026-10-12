@@ -30529,6 +30529,319 @@
       }
     ]
   },
+  "bonus_selection": {
+    "confidence": "code-backed-physical-bonus-selection-policy",
+    "report_tool": "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodBonusSelection.py",
+    "score_offset": "0x8708",
+    "catalog": [
+      {
+        "id": 1,
+        "key": "bonus_hero_head",
+        "label": "Hero head size",
+        "enum": "CHEAT_HERO_BIGHEAD",
+        "state_offset": "0x86f9",
+        "score_requirement": 50,
+        "state_count_including_off": 4,
+        "consumer_vas": [
+          "0x23ee40"
+        ],
+        "options": [
+          {
+            "value": 0,
+            "label": "Off"
+          },
+          {
+            "value": 1,
+            "label": "Large (2x)"
+          },
+          {
+            "value": 2,
+            "label": "Extra large (4x)"
+          },
+          {
+            "value": 3,
+            "label": "Small (0.5x)"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "key": "bonus_enemy_head",
+        "label": "Enemy head size",
+        "enum": "CHEAT_ENEMY_BIGHEAD",
+        "state_offset": "0x86fb",
+        "score_requirement": 100,
+        "state_count_including_off": 3,
+        "consumer_vas": [
+          "0xbe530"
+        ],
+        "options": [
+          {
+            "value": 0,
+            "label": "Off"
+          },
+          {
+            "value": 1,
+            "label": "Large (2.5x)"
+          },
+          {
+            "value": 2,
+            "label": "Small (0.5x)"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "key": "bonus_mirror",
+        "label": "Mirror mode",
+        "enum": "CHEAT_MIRROR_LEVEL",
+        "state_offset": "0x8703",
+        "score_requirement": 500,
+        "state_count_including_off": 2,
+        "consumer_vas": [
+          "0x48c768"
+        ],
+        "options": [
+          {
+            "value": 0,
+            "label": "Off"
+          },
+          {
+            "value": 1,
+            "label": "On"
+          }
+        ]
+      }
+    ],
+    "setter_scope": "27008 menu setter remaps IDs>4 when language!=1, bounds physical ID<=13 and truncates supplied state to low8; accepts1..8 or stores0. Raw physical leaf27A648 accepts1..8 or0 without a local ID bound. Neither validates per-definition state_count or score. Editor never invokes either setter.",
+    "edit_policy": "Offer only physical IDs1,3,11 when existing unsigned score8708 meets their direct consumer requirement and raw byte is in0..state_count-1. Write exactly one selected byte; preserve all other bonus states, score, earned skill bits and unknown neighbors. Unrecognized states or insufficient score remain read-only. Never grant points/unlocks or use language-remapped menu IDs as save offsets.",
+    "warning": "Exact USA v02.00 reference. Off means no requested bonus, not an explicit head-transform restoration. Mirror geometry/input axis and current runtime applicability are unconfirmed. Labels describe native basis factors, not recovered localized menu text. File-edit policy and software round trips do not prove in-game acceptance.",
+    "instruction_guards": [
+      {
+        "va": "0x24f18",
+        "bytes": "F821FF817C0802A6FBE10078F80100907C7F1B784BFEBEE5E84100282F8300012F1F000438000000419E000841990034281F000D7BE30020418100104BFEEECDE84100287C601B78E88100907C0307B4EBE10078382100807C8803A64E8000203BFF00014BFFFFCC"
+      },
+      {
+        "va": "0x24f34",
+        "bytes": "2F830001"
+      },
+      {
+        "va": "0x24f38",
+        "bytes": "2F1F0004"
+      },
+      {
+        "va": "0x24f48",
+        "bytes": "281F000D"
+      },
+      {
+        "va": "0x24f78",
+        "bytes": "3BFF0001"
+      },
+      {
+        "va": "0x27008",
+        "bytes": "F821FF717CA802A6FBA100787C9D2378FBE10088F8A100A07C7F1B784BFE9DEDE841002857BD063E2F830001381DFFFF2F1F000428800007419E000841990044281F000D3D3F000139600000392986F0418100187D2007B440850030808286EC7C60221499630008E8C100A0EBA10078EBE100887CC803A6382100904E8000203BFF00014BFFFFBC7FABEB784BFFFFD0"
+      },
+      {
+        "va": "0x2702c",
+        "bytes": "57BD063E"
+      },
+      {
+        "va": "0x2703c",
+        "bytes": "28800007"
+      },
+      {
+        "va": "0x27048",
+        "bytes": "281F000D"
+      },
+      {
+        "va": "0x2706c",
+        "bytes": "99630008"
+      },
+      {
+        "va": "0x27a648",
+        "bytes": "3804FFFF3CA300012B800007386586F0380000007C6307B4419D00087C802378808290307D232214980900084E800020"
+      },
+      {
+        "va": "0x27a650",
+        "bytes": "2B800007"
+      },
+      {
+        "va": "0x27a670",
+        "bytes": "98090008"
+      },
+      {
+        "va": "0x35ca40",
+        "bytes": "54653032800219EC546620367C8628507C8307B47D2302148069000C4E800020"
+      },
+      {
+        "va": "0x35ca48",
+        "bytes": "54662036"
+      },
+      {
+        "va": "0x35ca58",
+        "bytes": "8069000C"
+      },
+      {
+        "va": "0x100263b4",
+        "bytes": "000003CB000003D80000003200000004000000EB000005DF000005E0000005DD00000000000000000000000000000000"
+      },
+      {
+        "va": "0x10026414",
+        "bytes": "000003CC000003D90000006400000003000000EB000005DF000005DD0000000000000000000000000000000000000000"
+      },
+      {
+        "va": "0x10026594",
+        "bytes": "000003CD000003DA000001F400000002000000EB000000E9000000000000000000000000000000000000000000000000"
+      }
+    ]
+  },
+  "bonus_selection_assets": {
+    "confidence": "asset-backed",
+    "asset": {
+      "archive_entry": "/built/anark/pause/built.dat",
+      "size": 1152780,
+      "sha256": "26FC24DD3564FDF94F0F6278FC0F0BC5578FE73C6813D3F39CD113FD22CF761B",
+      "source": "cheatHandler",
+      "chunk_offset": "0x110642",
+      "chunk_end_exclusive": "0x111d15"
+    },
+    "selection": "Lua row is one-based; every bonus API receives currentlySelected-1. changeCheatState first calls is_cheat_unlocked; failure bypasses all state writes and list-value refresh.",
+    "cycling": "Select/right request +1; left requests -1. The candidate is raw getter state+delta. Candidate>=get_num_cheat_states writes0; candidate<0 writes count-1; otherwise it writes the candidate. Thus definition state_count INCLUDES off/index0; it is not the maximum valid state index. This is ordered branching, not modulo arithmetic for malformed states.",
+    "display": "setListItemValue passes get_cheat_state(row-1) directly as the zero-based state argument to get_cheat_state_name(row-1,state). Labels remain localization lookup IDs; editor descriptions summarize guarded native effects.",
+    "scope": "Menu APIs apply runtime-language remapping. No language value or menu row for physical ID11 is inferred from a save. No Lua execution or in-game effect/acceptance test.",
+    "bytecode_digests": [
+      {
+        "function": "changeCheatState",
+        "offset": "0x110f26",
+        "instruction_count": 45,
+        "sha256": "CADF254680A71EB91B49818ABFE055A85A8E0C5A6F550949CB96DF4F418ACD64"
+      },
+      {
+        "function": "handleSelect",
+        "offset": "0x11103a",
+        "instruction_count": 4,
+        "sha256": "C0597D1B1201560E10F1622AF6AC18589B64E709E2235B7AB85D38EFA66904CD"
+      },
+      {
+        "function": "handleRight",
+        "offset": "0x1110aa",
+        "instruction_count": 4,
+        "sha256": "C0597D1B1201560E10F1622AF6AC18589B64E709E2235B7AB85D38EFA66904CD"
+      },
+      {
+        "function": "handleLeft",
+        "offset": "0x11111f",
+        "instruction_count": 4,
+        "sha256": "6B5D4044E51D5CCE7C3D63C8CCC4B7A1BEA7F2F4FAAA1175046672DC56CDDBB6"
+      },
+      {
+        "function": "setListItemValue",
+        "offset": "0x111350",
+        "instruction_count": 31,
+        "sha256": "5FA7794D4E3DA667F3CC119F2E4B31DB079A6967152529E10E0F239AD24D58B6"
+      }
+    ],
+    "asset_byte_guards": [
+      {
+        "function": "changeCheatState",
+        "pc": 0,
+        "offset": "0x110f26",
+        "word": "02000005",
+        "bytes": "05000002"
+      },
+      {
+        "function": "changeCheatState",
+        "pc": 2,
+        "offset": "0x110f2e",
+        "word": "0301BF0D",
+        "bytes": "0DBF0103"
+      },
+      {
+        "function": "changeCheatState",
+        "pc": 5,
+        "offset": "0x110f3a",
+        "word": "00800954",
+        "bytes": "54098000"
+      },
+      {
+        "function": "changeCheatState",
+        "pc": 10,
+        "offset": "0x110f4e",
+        "word": "0201004C",
+        "bytes": "4C000102"
+      },
+      {
+        "function": "changeCheatState",
+        "pc": 15,
+        "offset": "0x110f62",
+        "word": "00018097",
+        "bytes": "97800100"
+      },
+      {
+        "function": "changeCheatState",
+        "pc": 20,
+        "offset": "0x110f76",
+        "word": "05000181",
+        "bytes": "81010005"
+      },
+      {
+        "function": "changeCheatState",
+        "pc": 23,
+        "offset": "0x110f82",
+        "word": "00014016",
+        "bytes": "16400100"
+      },
+      {
+        "function": "changeCheatState",
+        "pc": 32,
+        "offset": "0x110fa6",
+        "word": "0502BF0D",
+        "bytes": "0DBF0205"
+      },
+      {
+        "function": "changeCheatState",
+        "pc": 39,
+        "offset": "0x110fc2",
+        "word": "03018059",
+        "bytes": "59800103"
+      },
+      {
+        "function": "handleSelect",
+        "pc": 1,
+        "offset": "0x11103e",
+        "word": "03000041",
+        "bytes": "41000003"
+      },
+      {
+        "function": "handleRight",
+        "pc": 1,
+        "offset": "0x1110ae",
+        "word": "03000041",
+        "bytes": "41000003"
+      },
+      {
+        "function": "handleLeft",
+        "pc": 1,
+        "offset": "0x111123",
+        "word": "03000081",
+        "bytes": "81000003"
+      },
+      {
+        "function": "setListItemValue",
+        "pc": 15,
+        "offset": "0x11138c",
+        "word": "040001C5",
+        "bytes": "C5010004"
+      },
+      {
+        "function": "setListItemValue",
+        "pc": 19,
+        "offset": "0x11139c",
+        "word": "06010019",
+        "bytes": "19000106"
+      }
+    ]
+  },
   "bonus_effects": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static consumer effects only. Names are native exports, not localized labels. Saved comparisons are not current runtime availability or gameplay-tested edits; no native/Lua execution or original-save mutation.",
@@ -126812,14 +127125,14 @@
     {"va":"0x0027AFB0","name":"TOD_blueprint_grant_all","kind":"function","confidence":"confirmed","bytes":"80A290303D250001","comment":"ORs0007DEE4 into86F4; preserves bits outside mask.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0035D450","name":"TOD_blueprint_popcount","kind":"function","confidence":"confirmed","bytes":"812331CC38600000","comment":"Counts all32 bits in object+31CC;101F5048+31CC is state+86F4.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x00027098","name":"TOD_bonus_state_get_menu","kind":"function","confidence":"confirmed","bytes":"F821FF817C0802A6","comment":"Returns86F8+adjustedID; runtime condition remaps IDs>4.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
-    {"va":"0x00027008","name":"TOD_bonus_state_set_menu","kind":"function","confidence":"confirmed","bytes":"F821FF717CA802A6","comment":"Mode-adjusted slot; low8 input stored if1..8 else0; not per-definition bound.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
+    {"va":"0x00027008","name":"TOD_bonus_state_set_menu","kind":"function","confidence":"confirmed","bytes":"F821FF717CA802A6","comment":"Runtime-language-adjusted slot; low8 input stored if1..8 else0. No per-definition state-count or score gate here. Shipped cheatHandler separately checks availability and cycles0..definition_count-1, including Off; its bound is stricter than this setter.","evidence":"bonuses.named_bindings and instruction_guards; bonus_selection and bonus_selection_assets from Inspect-TodBonusSelection.py."},
     {"va":"0x00027108","name":"TOD_bonus_unlocked_menu","kind":"function","confidence":"confirmed","bytes":"F821FF717C0802A6","comment":"Unsigned score8708 versus runtime-language-adjusted definition threshold; not state-byte predicate. Language meaning and named enum operand caveat are confirmed separately in bonus_remaining.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py; bonus_remaining parser/system-init evidence."},
     {"va":"0x0027A638","name":"TOD_bonus_score_set_native","kind":"function","confidence":"confirmed","bytes":"808290303D240001","comment":"Named set_cheat_points writes8708 without earned-bit mask updates.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0027A648","name":"TOD_bonus_state_set_raw","kind":"function","confidence":"confirmed","bytes":"3804FFFF3CA30001","comment":"Named set_cheat_state writes86F8+ID with0 or1..8; no explicit slot bounds observed.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0027A678","name":"TOD_bonus_enable_all_native","kind":"function","confidence":"confirmed","bytes":"F821FF917C6802A6","comment":"Named enable_all_cheats calls35D480 on101F5048.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0035D480","name":"TOD_bonus_enable_all_storage","kind":"function","confidence":"confirmed","bytes":"3880000E38000348","comment":"Writes840 at8708, changes zero states86F8..8705 to1, preserves nonzero states.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0035CA20","name":"TOD_bonus_definition_score_requirement","kind":"function","confidence":"confirmed","bytes":"54653032800219EC","comment":"Stride30 definition reads uint32+8.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
-    {"va":"0x0035CA40","name":"TOD_bonus_definition_state_count","kind":"function","confidence":"confirmed","bytes":"54653032800219EC","comment":"Stride30 definition reads uint32+C.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
+    {"va":"0x0035CA40","name":"TOD_bonus_definition_state_count","kind":"function","confidence":"confirmed","bytes":"54653032800219EC","comment":"Stride30 definition reads uint32+C. Count INCLUDES index0/Off: shipped cheatHandler wraps candidate>=count to0 and candidate<0 tocount-1. Physical hero-head ID1 count4, enemy-head ID3 count3, mirror ID11 count2. Menu wrapper24F18 remaps IDs by runtime language; do not substitute menu indices for save slots.","evidence":"bonuses.named_bindings and instruction_guards; bonus_selection and bonus_selection_assets from Inspect-TodBonusSelection.py."},
     {"va":"0x0035CA88","name":"TOD_bonus_definition_title","kind":"function","confidence":"confirmed","bytes":"F821FF717CC802A6","comment":"Definition word0 uses runtime text lookup; localized strings not recovered.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0035CD68","name":"TOD_bonus_definition_description","kind":"function","confidence":"confirmed","bytes":"F821FF717CE802A6","comment":"Definition word4 uses runtime text lookup.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},
     {"va":"0x0035CBF0","name":"TOD_bonus_definition_state_name","kind":"function","confidence":"confirmed","bytes":"546820367D8802A6","comment":"Definition+10+4*state lookup; physical8 slots, wrapper bounds.","evidence":"bonuses.named_bindings and instruction_guards; reproduced by Inspect-TodBonuses.py."},

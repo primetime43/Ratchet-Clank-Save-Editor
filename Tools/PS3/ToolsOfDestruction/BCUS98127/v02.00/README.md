@@ -37,7 +37,7 @@ Each inspector checks binary identity and native evidence. Neighboring `TestTod*
 | Equipment and objects | [Objects](Inspect-TodObjects.py), [ObjectGrantProducers](Inspect-TodObjectGrantProducers.py), [InventoryAux](Inspect-TodInventoryAux.py), [EquipmentLifecycle](Inspect-TodEquipmentLifecycle.py) |
 | Quick-select eligibility | [QuickSelectEligibility](Inspect-TodQuickSelectEligibility.py): all32 initializer flags, registry linkage and detached first24 edit plans |
 | Player progression | [Progression](Inspect-TodProgression.py), [HeroXpFlow](Inspect-TodHeroXpFlow.py), [HeroConfig](Inspect-TodHeroConfig.py), [HealthPersistence](Inspect-TodHealthPersistence.py) |
-| Collectibles/bonuses | [Collectibles](Inspect-TodCollectibles.py), [CollectibleProducers](Inspect-TodCollectibleProducers.py), [Bonuses](Inspect-TodBonuses.py) |
+| Collectibles/bonuses | [Collectibles](Inspect-TodCollectibles.py), [CollectibleProducers](Inspect-TodCollectibleProducers.py), [Bonuses](Inspect-TodBonuses.py), [BonusSelection](Inspect-TodBonusSelection.py): physical choices; `--archive` verifies shipped menu cycling |
 | Worlds/missions | [WorldState](Inspect-TodWorldState.py), [GameplaySegments](Inspect-TodGameplaySegments.py), [Missions](Inspect-TodMissions.py), [SegmentConfig](Inspect-TodSegmentConfig.py) |
 | Events/arena | [GlobalFlags](Inspect-TodGlobalFlags.py), [ResetCategories](Inspect-TodResetCategories.py), [ArenaChallenges](Inspect-TodArenaChallenges.py), [ArenaTable](Inspect-TodArenaTable.py) |
 | Maps | [StateStorage](Inspect-TodStateStorage.py), [PersistentGrid](Inspect-TodPersistentGrid.py), [GridGeometry](Inspect-TodGridGeometry.py) |

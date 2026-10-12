@@ -212,6 +212,22 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return "\r\nNo confirmed consumer is displayed for this physical slot; no behavior is guessed from its name.";
         }
 
+        private static string BonusSelectionDetails(int id, byte state, uint score)
+        {
+            foreach (var bonus in TodResearch.Map.GetProperty("bonus_selection").GetProperty("catalog").EnumerateArray())
+            {
+                if (bonus.GetProperty("id").GetInt32() != id) continue;
+                uint minimum = bonus.GetProperty("score_requirement").GetUInt32();
+                int count = bonus.GetProperty("state_count_including_off").GetInt32();
+                if (state >= count) return "\r\nCosmetic state is unrecognized; editing is disabled and the byte is preserved.";
+                string label = bonus.GetProperty("options")[state].GetProperty("label").GetString();
+                return $"\r\nRequested cosmetic selection: {label}. Definition count includes Off; choices are0..{count - 1}. " +
+                    $"Editor requires existing score>={minimum}: {(score >= minimum ? "met" : "not met; editing disabled")}. " +
+                    "This changes only the physical state byte, not points or earned skill bits, and does not prove an active runtime effect.";
+            }
+            return string.Empty;
+        }
+
         private string EquipmentHistoryDetails()
         {
             string[] words = new[] { 0x42C, 0x430, 0x434 }.Select(offset =>
@@ -655,7 +671,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         $"Title lookup ID {item.GetProperty("title_lookup_id")}; description lookup ID {item.GetProperty("description_lookup_id")}. " +
                         $"Shipped state-name lookup IDs: {item.GetProperty("state_name_lookup_ids")}.\r\n" +
                         "Menu indices and unlock thresholds can be remapped by a runtime language selector not captured in the save; this table does not assert current menu availability. Language ID1 is the native default/fallback, not a recovered English literal. " +
-                        "Enable-all writes score840 and replaces zero states with1, preserving nonzero states and earned skill bits. " + note + BonusEffectDetails(id)));
+                        "Enable-all writes score840 and replaces zero states with1, preserving nonzero states and earned skill bits. " + note + BonusSelectionDetails(id, state, score) + BonusEffectDetails(id)));
                 }
                 return new(new[] { "ID", "Bonus", "Stored state", "Shipped score", "State-name count", "State offset", "Definition VA", "Notes" }, rows.AsReadOnly());
             }

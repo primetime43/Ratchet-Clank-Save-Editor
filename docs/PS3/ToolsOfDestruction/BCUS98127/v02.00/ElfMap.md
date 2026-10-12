@@ -150,6 +150,10 @@ The shipped Hero asset has 98 XP/HP rows; native configuration banks have 100 en
 
 Skill score, earned bits and bonus states are independent. Awards use weighted definition values. All 60 shipped values sum to 750; completing IDs 0–58 requests HARDCORE (59). Menu group selectors are not award prerequisites.
 
+The shipped `cheatHandler.changeCheatState` checks availability, then cycles zero-based states with left/right. **Definition state count includes Off**: hero head states 0–3, enemy head 0–2, mirror 0–1. Hero states 1/2/3 multiply the head basis by 2/4/0.5; enemy states 1/2 use 2.5/0.5. These are native factors, not recovered localized labels. The generic setter accepts a wider 1–8 range and does not enforce each definition's count.
+
+The editor changes only physical bytes `0x86F9`, `0x86FB` and `0x8703`, and only with recognized existing states and scores of at least 50/100/500. Menu APIs remap IDs above 4 by runtime language; those indices must not be used as physical save offsets. Off does not explicitly restore a head transform in the traced consumers. Mirror's axis and live applicability remain unknown; in-game acceptance is untested.
+
 Special-bolt collection uses per-world masks; balance subtracts spent bolts. Skin purchase changes ownership, selection and spent count. Armor availability, ownership and selected armor are likewise separate.
 
 Equipment history records qualified state-entry callbacks, not merely queued requests. Restart filters, restore selection and menu fallbacks can produce different values. Multiplier reset depends on replay and a sampled health decrease; its update accumulator is runtime-only, not a saved timer.
@@ -203,7 +207,7 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Purchases | `weapon_purchase`, `upgrade_purchase`, `armor_consumer`, `currency_mutation` |
 | Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
 | XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow` |
-| Collectibles and bonuses | `collectibles`, `collectible_producers`, `blueprint_producers`, `bonuses`, `bonus_effects`, `bonus_remaining` |
+| Collectibles and bonuses | `collectibles`, `collectible_producers`, `blueprint_producers`, `bonuses`, `bonus_effects`, `bonus_remaining`, `bonus_selection`, `bonus_selection_assets` |
 | Worlds and missions | `world_state`, `gameplay_segments`, `world_consumers`, `reward_channels`, `mission_lists`, `mission_mutation`, `segment_bindings`, `segment_configuration_assets` |
 | Object identity/lifecycle | `world_object_flags`, `object_flag_mutation`, `object_definitions_assets`, `object_classes`, `pool_lifecycle` |
 | Events and arena | `global_flags`, `global_flag_mutation`, `saved_event_counters`, `reset_categories`, `reset_context`, `arena_challenges`, `arena_table`, `arena_menu`, `arena_dispatch` |
