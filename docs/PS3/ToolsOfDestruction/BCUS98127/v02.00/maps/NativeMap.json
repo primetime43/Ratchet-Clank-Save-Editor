@@ -119598,6 +119598,447 @@
       }
     ]
   },
+  "object_grant_producers": {
+    "confidence": "exact-build-native-object-grants-and-flag-before-counter",
+    "warning": "USA BCUS98127 v02.00 only. Static producer paths, not pickup placement/uniqueness, accepted gameplay transitions, timer units, callback outcomes or new editing permission.",
+    "dispatch_links": [
+      {
+        "slot_va": "0x84e39c",
+        "descriptor_va": "0x86de60",
+        "function_va": "0x302a10"
+      },
+      {
+        "slot_va": "0x84e4ec",
+        "descriptor_va": "0x86df90",
+        "function_va": "0x3046e8"
+      },
+      {
+        "slot_va": "0x84e78c",
+        "descriptor_va": "0x86e198",
+        "function_va": "0x3075b8"
+      },
+      {
+        "slot_va": "0x84e86c",
+        "descriptor_va": "0x86e218",
+        "function_va": "0x308070"
+      }
+    ],
+    "fixed_grants": [
+      {
+        "id": 5,
+        "enum": "OBJ_CHARGE_BOOTS",
+        "function_va": "0x3046e8",
+        "current_offset": "0x318",
+        "peak_offset": "0x374",
+        "additions_offset": "0x3d0",
+        "rule": "3046E8 samples24FB88: nonnull replaces supplied context with returned+14, null keeps supplied context. Reached context+40/type211 admission requests object5,+1 through252F78. No local current-count/already-present rejection; global lookup/valid receiver and larger runtime dispatch remain qualified."
+      },
+      {
+        "id": 16,
+        "enum": "OBJ_SOULS",
+        "function_va": "0x3075b8",
+        "current_offset": "0x344",
+        "peak_offset": "0x3a0",
+        "additions_offset": "0x3fc",
+        "rule": "3075B8 requires supplied context+40/type211 admission, then requests object16,+1 through252F78 BEFORE inspecting actor+9C linked runtime handle. Invalid index/generation, null linked actor or failed later type tests return only AFTER the saved counter operation. Qualified linked type307 requests24FB78; alternative type2D4 requests2503C8. No verified handler outcomes, target identity or counter rollback; no local duplicate/current-count rejection."
+      },
+      {
+        "id": 15,
+        "enum": "OBJ_STATUES",
+        "function_va": "0x308070",
+        "current_offset": "0x340",
+        "peak_offset": "0x39c",
+        "additions_offset": "0x3f8",
+        "rule": "308070 first calls253048 on actor+9C runtime scratch, then requires supplied context+40/type211 admission and requests object15,+1 through252F78. That scratch member is NOT saved current340. No local duplicate/current-count rejection; earlier helper and larger dispatch effects remain qualified."
+      }
+    ],
+    "counter_order": "252F78 adjusts TOC89FF20 to88FF38 and tail-branches23D870. Valid canonical receiver+1A68 resolves save101EFB20. For these signed+1 requests, the call-free leaf stores wrapping current at304+4*ID FIRST, then wrapping positive additions at3BC+4*ID, then raises peak360+4*ID only by unsigned comparison. The peak sample and saved-pointer reloads occur later, not an atomic three-word publication. Repeated reached calls add again. CurrentFFFFFFFF wraps to0 and still increments additions; high-bit peaks can remain unchanged. Counts are not unique or lifetime pickup totals, attached actors, or an accepted edit range.",
+    "flag_then_object": {
+      "function_va": "0x302a10",
+      "rule": "302A10 first calls253048 on actor+B0. If the then-sampled actor+B4 is17 OBJ_SHIP_PARTS it explicitly clears runtime actor+B8 before receiver admission.24FB88 nonnull chooses returned+14; null retains supplied context. Reached context+40/type416 admission selects actor+AC global flag ID, ORs its bit into canonical saved5528+(ID>>6)*8, THEN rereads actor+B4 and requests that object ID,+1 through252F78. Flag publication precedes current/additions/peak work, not an atomic flag/counter pair.",
+      "repeat_limit": "The complete body does not reject an already-set flag or already-present object before the add. Repeated reached calls can keep the same bit set while increasing the object counters. No local flag0..319/object0..22 bounds are established; plans enforce physical limits only for safe detached reference arithmetic. Actor-selected IDs are separate samples around helpers; stable configuration, matching canonical receiver and valid pointers are required, not inferred from the save.",
+      "runtime_limit": "Actor+B0/+B4/+B8/+AC, context, lookup result and linked handles are runtime members, not new save fields. The17 branch's scratch clear is not saved object removal. No flag-name/object association catalog, every timer producer, spawn suppression, unique collection or complete callback effects are recovered."
+    },
+    "snapshot_limit": "Saved object counts and global bits do not reconstruct admitted contexts, number of producer invocations, linked actors, unique pickups or award history. The separately mapped Souls award reads signed additions>25/current0 under other gates; a grant alone is not that award. Viewing never dispatches a grant, changes flags/counters, deduplicates counts or repairs invariants.",
+    "recommended_annotations": [
+      {
+        "va": "0x3046e8",
+        "name": "TOD_charge_boots_object_grant_after_receiver_admission",
+        "comment": "24FB88 lookup can replace supplied context; type211 path requests OBJ_CHARGE_BOOTS5,+1 via252F78->23D870. Saved318/374/3D0 wrap current/additions and unsigned peak; no local duplicate check or unique pickup proof."
+      },
+      {
+        "va": "0x307624",
+        "kind": "comment",
+        "name": "TOD_souls_saved_object_add_before_linked_handle_checks",
+        "comment": "Qualified supplied receiver requests OBJ_SOULS16,+1 before actor9C linked-handle validation/type307 or2D4 follow-up helpers. Invalid linked handle does not locally undo prior saved344/3A0/3FC update. Not handler outcomes or unique targets."
+      },
+      {
+        "va": "0x308070",
+        "name": "TOD_statues_object_grant_after_runtime_scratch_and_receiver_gate",
+        "comment": "253048 actor9C scratch first, then supplied receiver type211 requests OBJ_STATUES15,+1. Saved340/39C/3F8 counters; scratch is runtime, no local duplicate gate or unique statue placement proof."
+      },
+      {
+        "va": "0x302ad4",
+        "kind": "comment",
+        "name": "TOD_configured_object_flag_publish_before_saved_counter_add",
+        "comment": "Type416 receiver path ORs actorAC flag into canonical5528 bank BEFORE reread actorB4/+1 via252F78. No existing-flag rejection or local ID bounds. Repeat can add counters with unchanged flag; not atomic or fixed flag/object identity."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x28c54",
+        "bytes": "4BFE9D3D"
+      },
+      {
+        "va": "0x28d1c",
+        "bytes": "4BFE9C75"
+      },
+      {
+        "va": "0x28d30",
+        "bytes": "4BFE9C61"
+      },
+      {
+        "va": "0x28d44",
+        "bytes": "4BFE9C4D"
+      },
+      {
+        "va": "0x23d870",
+        "bytes": "548A103A80E31A682F850000390A0300396A03B0388A03607D0A07B47D6B07B47D2752147C8407B480C900047C062A1490090004409D001881231A687D895A1480CC000C7C053214900C000C80631A687CE352147CA3202E812700047C0548404C8000207D23212E4E80002060000000"
+      },
+      {
+        "va": "0x23d874",
+        "bytes": "80E31A68"
+      },
+      {
+        "va": "0x23d878",
+        "bytes": "2F850000"
+      },
+      {
+        "va": "0x23d8a0",
+        "bytes": "90090004"
+      },
+      {
+        "va": "0x23d8a4",
+        "bytes": "409D0018"
+      },
+      {
+        "va": "0x23d8b8",
+        "bytes": "900C000C"
+      },
+      {
+        "va": "0x23d8cc",
+        "bytes": "7C054840"
+      },
+      {
+        "va": "0x23d8d0",
+        "bytes": "4C800020"
+      },
+      {
+        "va": "0x23d8d4",
+        "bytes": "7D23212E"
+      },
+      {
+        "va": "0x23e650",
+        "bytes": "F821FED17C0802A6FB0100F03B0311B8FB2100F87B190020FAA100D8FBE101283AA311C07C7F1B78FBA101183BA00000FA8100D07AA300203A9F11C8F8010140FAC100E0FAE100E8FB410100FB610108FB810110FBC1012093B9000493B900004BDD4841E84100283AFF12D07A8300203ADF12DC4BDD482DE84100287AE300204BDD4821E84100287AC300204BDD35F5E8410028399F1320798300207BF500204BDD4801E8410028395F14A0794300203B0000004BDD249DE8410028811F00147EA3AB783B4000003B20000080A800543B6000003A9F112080E5001060E6000290C500104BFA26DD6000000081227C0038600000913F1A68907F1B689BBF1B619BBF001C808904187EA3AB78F88100C0C82100C0FC000E9CFC2000184BFFF92582DF00147AD700207EE3BB784BDD51E5E841002883827C04881C00EF2F800000419E02743BBC00207C00E0CE387C001039370010397700207DA0E8CE3BA000007C2018CE7C00B9CE7C2049CE7DA059CEEBDC0038E89C0030FBD70038F897003083DF1A6860000000807F002057AC103A57A02036546928347D0C02147C89EA147CDE4214548A103A78C3002038EA00503BBD00017CE507B47C3C2C2E4BDD55C5E84100282C3D00204082FFC08BDC00EE2C9E0000408601E07EA3AB783BC000004BFFF7D938BF184838DF18608097006478A3002078C5002038C0000A3BA000404BDD1F11E8410028395F14B0381F14C479430020780500207EE4BB784BDD2685E8410028399F154C83627C0C799C0020C0827C1038FF1B1C3900FFFF90FC0000911C000893BC00049BDF1B60EB5B0000FB5F1A58807700C8C0D700602F830000C0770110FCA62028FD232028FD6521AEFC2920EED1770060D0370110419E001C81627C147863002038A00000808B00004BDD4F91E84100287A9600207EE4BB787EC3B3783BBF1A704BDD4699E841002838BF1AB08156006438DF1AC0C1427BC4399700303917001038F7002078B8002078D900203B9F1A803B7F1A903B5F1AA06140000B3A800000901600647C00B8CE7EA3AB787D8060CE3AA000047C2040CE7DA038CE7C00E9CE7C20E1CE7DA0D9CE7D80D1CE929800009298000492980008D158000C929900009299000492990008D159000C82DF00008096006481240000F84100287D2903A6804400044E800421E8410028387F18407877002092BF10D0929700009BD700069BD700049BD700059BDF1B62EBE10140EA8100D07FE803A6EAA100D8EAC100E0EAE100E8EB0100F0EB2100F8EB410100EB610108EB810110EBA10118EBC10120EBE10128382101304E80002039360010C0227BF838960030792C0020788300203961009038800006797E0020C04C000CC003000CEDA2002AC10C0008D1A100C8C1830008ECE8602AC0CC000480A100C878BB002C38A00001D0E100C8C1430004ECA6502AC08C000080C100C878DB000E38C00001D0A100C8C16300007FC3F378EC64582A814100C8FB610078795A002CC101007CC0C10078D06100C8800100C8781A000EFB410070C12C000CC04C0008ED890072C1AC0004ED420072ED6D0072C00C0000ED200072C0810074C0410070ECE86028ECA65028EC645828EDA24828D0E100C8810100C8D0A100C880E100C87919002CD06100C883A100C878F9000ED1A100C87BB8002C838100C8FB2100887B98000EFB0100804BDD1901E84100288377009038810080C0227C08386100707FC6F37892C100A0936100A44BDD27BDE8410028547A063E2F1A0000409A00147FC3F3784BDD2E15E84100284BFFFCD4830100907FC3F378EB380000EAD80008FB370030FAD700384BDD2DF1E84100284BFFFCB060000000"
+      },
+      {
+        "va": "0x23e744",
+        "bytes": "913F1A68"
+      },
+      {
+        "va": "0x252f78",
+        "bytes": "F8410028"
+      },
+      {
+        "va": "0x252f7c",
+        "bytes": "3C42FFFF"
+      },
+      {
+        "va": "0x252f80",
+        "bytes": "38420018"
+      },
+      {
+        "va": "0x252f84",
+        "bytes": "4BFEA8EC"
+      },
+      {
+        "va": "0x302a10",
+        "bytes": "F821FF817CA802A6FBE100787C7F1B78386300B0FBC10070786300207C9E237838800000F8A100904BF50611E8410028801F00B42F800011419E00B84BF4D13DE8410028388004162C0300004182000883C300147BDE002080DE00402C86000078C300204186001C4BF4C791E841002838A000015467063E2F070000409A001CEBC10090EBE100787FC803A6EBC10070382100804E800020813F00AC38000001814200D45527E8F8552606BE388755207C0C30367C8307B47D235214E96900087D885B78F9090008807E0040809F00B44BF50499E8410028EBC10090EBE100787FC803A6EBC10070382100804E80002038800000909F00B84BFFFF4460000000"
+      },
+      {
+        "va": "0x302a38",
+        "bytes": "4BF50611"
+      },
+      {
+        "va": "0x302a40",
+        "bytes": "801F00B4"
+      },
+      {
+        "va": "0x302a44",
+        "bytes": "2F800011"
+      },
+      {
+        "va": "0x302a48",
+        "bytes": "419E00B8"
+      },
+      {
+        "va": "0x302a4c",
+        "bytes": "4BF4D13D"
+      },
+      {
+        "va": "0x302a54",
+        "bytes": "38800416"
+      },
+      {
+        "va": "0x302a80",
+        "bytes": "38A00001"
+      },
+      {
+        "va": "0x302aa8",
+        "bytes": "813F00AC"
+      },
+      {
+        "va": "0x302ab0",
+        "bytes": "814200D4"
+      },
+      {
+        "va": "0x302ab4",
+        "bytes": "5527E8F8"
+      },
+      {
+        "va": "0x302ab8",
+        "bytes": "552606BE"
+      },
+      {
+        "va": "0x302abc",
+        "bytes": "38875520"
+      },
+      {
+        "va": "0x302ac0",
+        "bytes": "7C0C3036"
+      },
+      {
+        "va": "0x302acc",
+        "bytes": "E9690008"
+      },
+      {
+        "va": "0x302ad0",
+        "bytes": "7D885B78"
+      },
+      {
+        "va": "0x302ad4",
+        "bytes": "F9090008"
+      },
+      {
+        "va": "0x302adc",
+        "bytes": "809F00B4"
+      },
+      {
+        "va": "0x302ae0",
+        "bytes": "4BF50499"
+      },
+      {
+        "va": "0x302b04",
+        "bytes": "909F00B8"
+      },
+      {
+        "va": "0x3046e8",
+        "bytes": "F821FF817C0802A6FBE10078F80100907C9F23784BF4B48DE84100282F83000038800211419E000883E300147BFF002080BF00402C05000078A30020418200204BF4AAE1E8410028388000055463063E38A000012C83000040860018E8810090EBE10078382100807C8803A64E800020807F00404BF4E81DE8410028E8810090EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x3046fc",
+        "bytes": "4BF4B48D"
+      },
+      {
+        "va": "0x304708",
+        "bytes": "38800211"
+      },
+      {
+        "va": "0x304730",
+        "bytes": "38800005"
+      },
+      {
+        "va": "0x304738",
+        "bytes": "38A00001"
+      },
+      {
+        "va": "0x30475c",
+        "bytes": "4BF4E81D"
+      },
+      {
+        "va": "0x3075b8",
+        "bytes": "F821FF817C0802A6FBC10070FBE10078F80100907C7E1B78806400407C9F23782F830000419E002078630020388002114BF47C21E84100285463063E2C03000040820020E8A10090EBC10070EBE100787CA803A6382100804E80002060000000807F00403880001038A000014BF4B955E841002881420358807E009C5469043E808A00107C8448404184FFBC5520383083CA0000553F482C7D80F8507D6CF21479690020810900647D4818507CE340507CE653787CC5FE707D6028782F000000419AFF84781F0020807F00402F830000419EFF7478630020388003074BF47B75E84100285463063E2C03000040820048807F00402F03000041DAFF4C388002D4786300204BF47B4DE84100285464063E2F840000419EFF30801F00402C0000004182FF24780300204BF48CE9E84100284BFFFF14801F00402C8000004186FF08780300204BF4847DE84100284BFFFEF8"
+      },
+      {
+        "va": "0x3075e4",
+        "bytes": "38800211"
+      },
+      {
+        "va": "0x30761c",
+        "bytes": "38800010"
+      },
+      {
+        "va": "0x307620",
+        "bytes": "38A00001"
+      },
+      {
+        "va": "0x307624",
+        "bytes": "4BF4B955"
+      },
+      {
+        "va": "0x307630",
+        "bytes": "807E009C"
+      },
+      {
+        "va": "0x307640",
+        "bytes": "4184FFBC"
+      },
+      {
+        "va": "0x30765c",
+        "bytes": "81090064"
+      },
+      {
+        "va": "0x307678",
+        "bytes": "419AFF84"
+      },
+      {
+        "va": "0x307688",
+        "bytes": "419EFF74"
+      },
+      {
+        "va": "0x307690",
+        "bytes": "38800307"
+      },
+      {
+        "va": "0x3076b4",
+        "bytes": "388002D4"
+      },
+      {
+        "va": "0x3076e0",
+        "bytes": "4BF48CE9"
+      },
+      {
+        "va": "0x3076fc",
+        "bytes": "4BF4847D"
+      },
+      {
+        "va": "0x308070",
+        "bytes": "F821FF817CA802A6FBE100787C9F23783863009C3880000078630020F8A100904BF4AFB9E8410028801F00402F8000003880021178030020419E00204BF4715DE84100283880000F5466063E38A000012C0600004082001CE8810090EBE10078382100807C8803A64E80002060000000807F00404BF4AE95E8410028E8810090EBE100787C8803A6382100804E800020"
+      },
+      {
+        "va": "0x308090",
+        "bytes": "4BF4AFB9"
+      },
+      {
+        "va": "0x3080a0",
+        "bytes": "38800211"
+      },
+      {
+        "va": "0x3080b4",
+        "bytes": "3880000F"
+      },
+      {
+        "va": "0x3080bc",
+        "bytes": "38A00001"
+      },
+      {
+        "va": "0x3080e4",
+        "bytes": "4BF4AE95"
+      },
+      {
+        "va": "0x84e39c",
+        "bytes": "0086DE60"
+      },
+      {
+        "va": "0x84e4ec",
+        "bytes": "0086DF90"
+      },
+      {
+        "va": "0x84e78c",
+        "bytes": "0086E198"
+      },
+      {
+        "va": "0x84e86c",
+        "bytes": "0086E218"
+      },
+      {
+        "va": "0x86de60",
+        "bytes": "00302A100089FF20"
+      },
+      {
+        "va": "0x86df90",
+        "bytes": "003046E80089FF20"
+      },
+      {
+        "va": "0x86e198",
+        "bytes": "003075B80089FF20"
+      },
+      {
+        "va": "0x86e218",
+        "bytes": "003080700089FF20"
+      },
+      {
+        "va": "0x8886c8",
+        "bytes": "40A00000"
+      },
+      {
+        "va": "0x888718",
+        "bytes": "41700000"
+      },
+      {
+        "va": "0x888720",
+        "bytes": "41800000"
+      },
+      {
+        "va": "0x888728",
+        "bytes": "41880000"
+      },
+      {
+        "va": "0x888888",
+        "bytes": "100007A0"
+      },
+      {
+        "va": "0x8888b0",
+        "bytes": "10000880"
+      },
+      {
+        "va": "0x8888b4",
+        "bytes": "10000890"
+      },
+      {
+        "va": "0x8888b8",
+        "bytes": "100008A0"
+      },
+      {
+        "va": "0x897b38",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x89fff4",
+        "bytes": "101EFB20"
+      },
+      {
+        "va": "0x8a0278",
+        "bytes": "1064FC80"
+      },
+      {
+        "va": "0x100007a0",
+        "bytes": "4F424A5F4348415247455F424F4F545300"
+      },
+      {
+        "va": "0x10000880",
+        "bytes": "4F424A5F5354415455455300"
+      },
+      {
+        "va": "0x10000890",
+        "bytes": "4F424A5F534F554C5300"
+      },
+      {
+        "va": "0x100008a0",
+        "bytes": "4F424A5F534849505F504152545300"
+      }
+    ]
+  },
   "reset_categories": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static evidence. Category labels, death/failure terminology, runtime time units and safe edits are unverified. These are not arena challenge success or per-challenge failure counters.",
@@ -120091,6 +120532,10 @@
     ]
   },
   "annotations": [
+{"va":"0x003046E8","name":"TOD_charge_boots_object_grant_after_receiver_admission","kind":"function","confidence":"confirmed","bytes":"F821FF817C0802A6","comment":"24FB88 lookup can replace supplied context; type211 path requests OBJ_CHARGE_BOOTS5,+1 via252F78->23D870. Saved318/374/3D0 wrap current/additions and unsigned peak; no local duplicate check or unique pickup proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; object_grant_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00307624","name":"TOD_souls_saved_object_add_before_linked_handle_checks","kind":"comment","confidence":"confirmed","bytes":"4BF4B955","comment":"Qualified supplied receiver requests OBJ_SOULS16,+1 before actor9C linked-handle validation/type307 or2D4 follow-up helpers. Invalid linked handle does not locally undo prior saved344/3A0/3FC update. Not handler outcomes or unique targets.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; object_grant_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00308070","name":"TOD_statues_object_grant_after_runtime_scratch_and_receiver_gate","kind":"function","confidence":"confirmed","bytes":"F821FF817CA802A6","comment":"253048 actor9C scratch first, then supplied receiver type211 requests OBJ_STATUES15,+1. Saved340/39C/3F8 counters; scratch is runtime, no local duplicate gate or unique statue placement proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; object_grant_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
+{"va":"0x00302AD4","name":"TOD_configured_object_flag_publish_before_saved_counter_add","kind":"comment","confidence":"confirmed","bytes":"F9090008","comment":"Type416 receiver path ORs actorAC flag into canonical5528 bank BEFORE reread actorB4/+1 via252F78. No existing-flag rejection or local ID bounds. Repeat can add counters with unchanged flag; not atomic or fixed flag/object identity.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; object_grant_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00025978","name":"TOD_weapon_ammo_visible_finite_floor_not_saved_mutation","kind":"comment","confidence":"confirmed","bytes":"FC205E5E","comment":"Visible attribute gate (ownership!=0 OR flags2) AND !flags1. FCTIDZ/FCFID/FSEL select FLOOR for bounded finite saved ammo, not ceiling, lower/max clamp or raw ammo store. Nonfinite/FPSCR unmodeled.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; inventory_queries native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00027690","name":"TOD_weapon_level_script_one_based_after_visibility_gate","kind":"comment","confidence":"confirmed","bytes":"386B0001","comment":"Returns saved unsigned byte+1 only after (ownership!=0 OR flags2) AND !flags1; raw255 arithmetic256, not level validity or save normalization. Hidden branch0.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; inventory_queries native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x002FF5F0","name":"TOD_ammo_crate_ordered_below_capacity_predicate","kind":"function","confidence":"confirmed","bytes":"F821FF717CA802A6","comment":"Qualified hero/type context selects saved20*actor9C+8 and extracts ordered LT against463DE0 max. Equal/unordered false, no ownership read or local refill call; not full pickup eligibility.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; ammo_crate native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

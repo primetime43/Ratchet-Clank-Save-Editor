@@ -2,6 +2,7 @@
 
 ## Findings and definitions
 
+- [Fixed object grants and flag publication order](ElfMap.md#object-grant-producers-and-global-flag-publication-order): Charge Boots, Souls and Statues+1 producers, Souls counters before linked-handle checks and configured flag-before-counter publication without local repeat rejection; not unique pickup totals or collection history.
 - [Inventory query and removal boundaries](ElfMap.md#inventory-ownership-queries-attribute-visibility-and-qualified-removal-leaf): independent ownership versus definition-gated ammo/level, finite floor and one-based script results; post-helper wrapping counter decrement exists in a removal leaf whose gameplay caller remains unresolved.
 - [CrateAmmo refill requests and later rounding](ElfMap.md#crateammo-refill-requests-versus-admission-and-later-rounding): separate below-capacity method, named CrateAmmo[0] factor/request arithmetic, post-add ceiling except Ravager and later acquisition/UI gates; public declared amounts are not actual gained ammo or pickup history.
 - [Settings publication versus runtime application](ElfMap.md#settings-saved-publication-versus-runtime-application): unchanged saved indices versus three runtime copy routes, eight-port rumble-off requests, surround capability gates and three separately sampled audio buses; stored preferences do not prove successful hardware apply.
@@ -50,7 +51,7 @@
 - [Dance skill progress bank](ElfMap.md#dance-skill-progress-bank-and-independent-earned-award): five native saved8720 update paths, exact64-bit completion test, signed/shift boundaries and independent earned bit48.
 - [Dance actor index/name catalog](ElfMap.md#dance-progress-actor-indices-and-named-configuration-associations): all28 selected runtime index assignments and named configuration associations, including the qualified Shingle Pirate shared-vtable link; not localized names, live actors or exhaustive variants.
 - [Space statistics versus saved progress](ElfMap.md#named-space-statistics-and-persistent-counter-boundaries): eight native numeric stat routes, named reset, runtime pending versus saved8728 and reset-before-persistent-counter ordering; no synthesized live statistics.
-- [Native address/structure map](maps/NativeMap.json): 1482 annotations, 118 imports and 45 structure definitions.
+- [Native address/structure map](maps/NativeMap.json): 1486 annotations, 118 imports and 45 structure definitions.
 - [Bonus-target progress and collection paths](ElfMap.md#bonus-target-progress-and-qualified-special-bolt-producers): saved8728 publication versus reread runtime pending, flag278 message latch, localID0 reward precheck and direct runtime-local-ID grant. Individual targets and total count remain unknown.
 - [Bolt multiplier mutation and paired XP messages](ElfMap.md#bolt-multiplier-health-sampling-accumulator-and-paired-xp-messages): replay-gated sampled health reset, runtime-only half-step accumulator, strict float32 threshold and additive6A/6B XP paths; no timer or per-kill cadence inferred.
 - [Hero XP/HP reference arrays](ElfMap.md#named-hero-xphp-arrays-and-shipped-progression-reference): named100-entry native banks and98 fingerprinted shipped rows, separate from live level/health; includes unclamped progress arithmetic.

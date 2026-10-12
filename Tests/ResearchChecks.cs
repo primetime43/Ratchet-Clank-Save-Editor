@@ -754,6 +754,23 @@ internal static partial class Program
             Equal("255", table.Rows[27].Cells[3]); Equal("0xFFFFFFFF", table.Rows[27].Cells[6]);
             True(bytes.SequenceEqual(before), "Viewing must not execute or balance a Gelanator transition.");
         });
+        Check("Object grant details preserve independent counter banks and qualify flag and linked-handle ordering", () =>
+        {
+            byte[] bytes = ResearchFixture();
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x344, 4), uint.MaxValue);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x3A0, 4), 0x80000000);
+            BinaryPrimitives.WriteUInt32BigEndian(bytes.AsSpan(0x3FC, 4), uint.MaxValue);
+            byte[] before = bytes.ToArray();
+            var table = TodSaveInspection.Read(bytes, "BCUS98127").Table("Objects & equipment");
+            True(table.Rows[5].Details.Contains("Confirmed fixed-object grant producer") && table.Rows[5].Details.Contains("object5,+1"), "Charge Boots grant must use its native object ID, not a weapon ID.");
+            True(table.Rows[15].Details.Contains("NOT saved current340") && table.Rows[16].Details.Contains("BEFORE inspecting actor+9C"), "Runtime scratch and post-grant linked-handle work must not become saved preconditions.");
+            True(table.Rows[16].Details.Contains("AFTER the saved counter operation") && table.Rows[16].Details.Contains("No verified handler outcomes"), "Later handle rejection must not imply an automatic counter rollback.");
+            True(!table.Rows[19].Details.Contains("Confirmed fixed-object grant producer"), "An unconfirmed timer producer must not inherit a fixed-object identity.");
+            True(table.Rows[17].Details.Contains("THEN rereads actor+B4") && table.Rows[17].Details.Contains("does not reject an already-set flag"), "Flag publication, runtime selected IDs and counter adds must stay separate.");
+            Equal("-1", table.Rows[16].Cells[2]); Equal("2147483648", table.Rows[16].Cells[3]); Equal("4294967295", table.Rows[16].Cells[4]);
+            Equal(9, table.Columns.Length); Equal(23, table.Rows.Count);
+            True(bytes.SequenceEqual(before), "Viewing must not grant objects, consume targets, set flags or repair count relationships.");
+        });
         Check("Inventory queries and removal boundaries retain raw ammo, levels, ownership and counter samples", () =>
         {
             byte[] bytes = ResearchFixture();
@@ -1299,7 +1316,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1482, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1486, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());

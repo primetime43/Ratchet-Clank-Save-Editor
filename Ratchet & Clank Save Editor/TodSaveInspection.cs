@@ -694,6 +694,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "Set writes current and raises the peak by unsigned comparison; it does not change positive additions. Add wraps32 bits, increments additions only for positive signed deltas, then raises peak.\r\n" +
                         "Labels are native object enums, not weapon IDs or localized titles. Timer/arena units and gameplay usability are not established. Positive additions are not unique lifetime pickups; no repair or safe edit range inferred.\r\n" + TodResearch.Pretty(obj);
                     var lifecycle = TodResearch.Map.GetProperty("inventory_aux");
+                    var grants = TodResearch.Map.GetProperty("object_grant_producers");
+                    foreach (var producer in grants.GetProperty("fixed_grants").EnumerateArray())
+                        if (producer.GetProperty("id").GetInt32() == id)
+                            detail += "\r\nConfirmed fixed-object grant producer: " + producer.GetProperty("rule").GetString();
+                    detail += "\r\nSaved grant counter order: " + grants.GetProperty("counter_order").GetString() +
+                        "\r\nConfigured-object grant (when this ID is selected): " + grants.GetProperty("flag_then_object").GetProperty("rule").GetString() +
+                        "\r\n" + grants.GetProperty("flag_then_object").GetProperty("repeat_limit").GetString() +
+                        "\r\n" + grants.GetProperty("snapshot_limit").GetString();
                     bool reset = lifecycle.GetProperty("restart_lifecycle").GetProperty("object_arrays").GetProperty("cleared_ids").EnumerateArray().Any(value => value.GetInt32() == id);
                     detail += reset
                         ? "\r\nSelective restart 3CED40 clears this object's current, high-water and positive-additions words after copying the old banks. This path does not retain lifetime totals."
