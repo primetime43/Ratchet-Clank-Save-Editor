@@ -82,6 +82,8 @@ The full ID list is `weapon_configuration.inventory_catalog`; definitions and XP
 Important definition limits:
 
 - Native ammo arrays have 20 slots and modifier arrays 24; capacity is not proof of playable levels.
+- The WeaponConfig XP array is 20 floats at `+0x230`, with indexed getter/setter `0xB8A68 / 0xB8950`. The same “XP” string also names an unrelated scalar at `+0x14` and HeroConfig's u32 array. Resolve the class and registration, not the name alone.
+- `NumLevels` at `+0x460` is the highest populated zero-based index, not a row count. Getter `0xB4940` exposes the unsigned word through float conversion; setter `0xA7478` truncates and stores low 32 bits without a playable-level clamp.
 - Maximum ammo uses the **raw stored level** and modifier mask, with no local level-array bound established on this path.
 - Matching absolute modifiers are added first, then one summed percentage factor is applied.
 - `CrateAmmo[0]` is a separate property from `MaxAmmo[level]`. Combuster's shipped crate amount is 15; actual gained ammo also depends on runtime factors and remaining capacity.
@@ -111,6 +113,12 @@ Runtime weapons borrow the canonical inventory record. Local ammo admission and 
 Upgrade purchase publishes the modifier, conditionally refills ammo, then debits raritanium and notifies runtime systems. Signed wallet admission differs from vendor adjacency/duplicate checks; the transaction itself can charge for an already-set bit.
 
 The level-five weapon purchase path requires ownership, exactly stored level 4, replay state and definition prerequisites. Dispatch and later recheck sample those conditions separately. Level/XP/ammo publication precedes bolt payment. Repeated normal acquisition can charge an already-owned record.
+
+### Within-tier level edits
+
+The editor now offers the 15 combat weapons' levels only within their existing stored 0–4 or 5–9 tier (shown as levels 1–5 or 6–10). It requires ownership, consistent finite XP, valid ammo and known modifier bits. The reference base capacity is constant within each tier; Ryno's two tiers differ, so that boundary is not crossed.
+
+A changed level also writes its reference float XP threshold. Increases refill the exact reference maximum; decreases preserve ammo. An explicit ammo edit overrides a refill regardless of edit order. Same-level requests preserve the original XP and ammo bits. Ownership, modifiers, unlock bytes, counters and payment fields are untouched. This is a coupled file-edit policy, not a purchase or execution of native callbacks; live definitions and in-game acceptance remain unverified.
 
 Armor purchase, deferred equip, skin purchase and history publication also have separate steps. A direct field edit does not reproduce their callbacks or payment rules.
 
@@ -203,7 +211,7 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Topic | Map sections |
 | --- | --- |
 | Save/load/restart | `serialization`, `snapshot_lifecycle`, `restart_execution`, `save_tail`, `load_selection` |
-| Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
+| Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_level_editing`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
 | Purchases | `weapon_purchase`, `upgrade_purchase`, `armor_consumer`, `currency_mutation` |
 | Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
 | XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow` |

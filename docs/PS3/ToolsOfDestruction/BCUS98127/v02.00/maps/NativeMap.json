@@ -38439,6 +38439,776 @@
       }
     ]
   },
+  "weapon_level_editing": {
+    "confidence": "scoped-native-XP-bindings-and-reference-within-tier-edit-policy",
+    "report_tool": "Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponLevels.py",
+    "xp_property": {
+      "getter_va": "0xb8a68",
+      "setter_va": "0xb8950",
+      "data_offset": "0x230",
+      "physical_count": 20,
+      "registration_call_va": "0x893b0",
+      "num_levels_offset": "0x460",
+      "scope": "WeaponConfig float XP array. Same-name scalar+14 and HeroConfig u32 array are different registrations. Public out-of-range diagnostics do not cap raw native saved-level indexing."
+    },
+    "assets": {
+      "weapon.csv": {
+        "bytes": 14298,
+        "sha256": "2E9D75D6509F35E75B27626D1D777F4D5414FCBAA1AC553D36AE9D9F4A728F7A",
+        "reference_matches": true
+      },
+      "weapon.lua": {
+        "bytes": 1751,
+        "sha256": "DECDC62DF183E47640E8B05D137E2A3C1F3C6929C55A81CB9C60BDB7694F0F85",
+        "reference_matches": true
+      },
+      "mods.csv": {
+        "bytes": 18551,
+        "sha256": "0A01163D76189C7AB532345C22B5355290E3D1170E76672F0309F888EC5A68EE",
+        "reference_matches": true
+      },
+      "mods.lua": {
+        "bytes": 2683,
+        "sha256": "5007B0FDDD3F8D46BFE22DCBE9ABB06E679CA6993149F26D9EA75BCE81C464FF",
+        "reference_matches": true
+      },
+      "vendor.csv": {
+        "bytes": 2268,
+        "sha256": "E5163C6E8195EBAF761B2B9FD4F96BCFE227A902454AC1323EDE720ED1DB639D",
+        "reference_matches": true
+      },
+      "vendor.lua": {
+        "bytes": 2925,
+        "sha256": "E9C1E5500FA6B690EA8FA4C82B373A2C69AE5C192D5381C3BF9EA92679786B20",
+        "reference_matches": true
+      }
+    },
+    "catalog": [
+      {
+        "id": 1,
+        "config_name": "Combuster",
+        "initial_flags_bits": 4,
+        "xp_offset": "0x18",
+        "level_offset": "0x25",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          1000,
+          2200,
+          3640,
+          5368,
+          5500,
+          20000,
+          37400,
+          58280,
+          83336
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 100
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 100
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "config_name": "Grenade",
+        "initial_flags_bits": 2052,
+        "xp_offset": "0x2c",
+        "level_offset": "0x39",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          1000,
+          2200,
+          3640,
+          5368,
+          5500,
+          20000,
+          37400,
+          58280,
+          83336
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 8
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 8
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "config_name": "Ravager",
+        "initial_flags_bits": 0,
+        "xp_offset": "0x40",
+        "level_offset": "0x4d",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          800,
+          1760,
+          2912,
+          4294,
+          8500,
+          16000,
+          25000,
+          35800,
+          48760
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 30
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 30
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "config_name": "Tornado",
+        "initial_flags_bits": 0,
+        "xp_offset": "0x54",
+        "level_offset": "0x61",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          1000,
+          2200,
+          3640,
+          5368,
+          6500,
+          14000,
+          23000,
+          33800,
+          46760
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 5
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 5
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "config_name": "BuzzBlade",
+        "initial_flags_bits": 1024,
+        "xp_offset": "0x68",
+        "level_offset": "0x75",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          2500,
+          5500,
+          9100,
+          13420,
+          16500,
+          39000,
+          66000,
+          98400,
+          137280
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 200
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 200
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "config_name": "Predator",
+        "initial_flags_bits": 2304,
+        "xp_offset": "0x7c",
+        "level_offset": "0x89",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          1500,
+          3300,
+          5460,
+          8052,
+          8100,
+          23000,
+          40880,
+          62336,
+          88083
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 25
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 25
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "config_name": "AlphaNova",
+        "initial_flags_bits": 0,
+        "xp_offset": "0x90",
+        "level_offset": "0x9d",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          3500,
+          7700,
+          12740,
+          18788,
+          22500,
+          30000,
+          39000,
+          49800,
+          62760
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 4
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 4
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "config_name": "FlameThrower",
+        "initial_flags_bits": 0,
+        "xp_offset": "0xa4",
+        "level_offset": "0xb1",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          4000,
+          8800,
+          14560,
+          21472,
+          33000,
+          48000,
+          66000,
+          87600,
+          113520
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 30
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 30
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "config_name": "GoopMine",
+        "initial_flags_bits": 2048,
+        "xp_offset": "0xb8",
+        "level_offset": "0xc5",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          600,
+          1320,
+          2184,
+          3221,
+          6500,
+          14000,
+          23000,
+          33800,
+          46760
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 8
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 8
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "config_name": "Reaper",
+        "initial_flags_bits": 0,
+        "xp_offset": "0xcc",
+        "level_offset": "0xd9",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          2000,
+          4400,
+          7280,
+          10736,
+          11000,
+          33500,
+          60500,
+          92900,
+          131780
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 30
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 30
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "config_name": "Rocket",
+        "initial_flags_bits": 0,
+        "xp_offset": "0xe0",
+        "level_offset": "0xed",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          6000,
+          13200,
+          21840,
+          32208,
+          40500,
+          63000,
+          90000,
+          122400,
+          161280
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 12
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 12
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "config_name": "RoboHive",
+        "initial_flags_bits": 2048,
+        "xp_offset": "0xf4",
+        "level_offset": "0x101",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          1500,
+          3300,
+          5460,
+          8052,
+          11000,
+          26000,
+          44000,
+          65600,
+          91520
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 4
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 4
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "config_name": "MagNet",
+        "initial_flags_bits": 0,
+        "xp_offset": "0x108",
+        "level_offset": "0x115",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          3000,
+          6600,
+          10920,
+          16104,
+          32500,
+          40000,
+          49000,
+          59800,
+          72760
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 12
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 12
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "config_name": "EnergyClaws",
+        "initial_flags_bits": 0,
+        "xp_offset": "0x11c",
+        "level_offset": "0x129",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          5000,
+          11000,
+          18200,
+          26840,
+          40000,
+          55000,
+          73000,
+          94600,
+          120520
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 30
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 30
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "config_name": "Ryno",
+        "initial_flags_bits": 1024,
+        "xp_offset": "0x130",
+        "level_offset": "0x13d",
+        "num_levels_highest_index": 9,
+        "xp_thresholds": [
+          0,
+          15000,
+          33000,
+          54600,
+          80520,
+          81000,
+          111000,
+          147000,
+          190200,
+          242040
+        ],
+        "tiers": [
+          {
+            "first_stored_level": 0,
+            "last_stored_level": 4,
+            "base_max_ammo": 300
+          },
+          {
+            "first_stored_level": 5,
+            "last_stored_level": 9,
+            "base_max_ammo": 750
+          }
+        ]
+      }
+    ],
+    "edit_policy": "Only owned combat IDs1..15 with flags&3==0, finite nonnegative XP/ammo, XP consistent with current level under pre-update cap, known modifier bits, valid reference ammo and complete ten-row tables. Restrict choices to the EXISTING stored0..4 or5..9 tier and require equal reference base capacity throughout that tier. Changed level sets saved XP to that float32 threshold; increase refills reference capacity, decrease retains ammo. Explicit ammo edits override a refill regardless of dictionary order. Same-level requests preserve all bytes. No tier bridge, ownership/modifier/payment/hero-XP/story changes or callback simulation.",
+    "native_dependency": "4660A8 samples old level and derives cap through465F08 BEFORE storing XP or resetting level. Equal thresholds promote inclusively; cap uses4 or9 selected by old level>4, with definition flags/NumLevels. Only a strictly increased level calls maximum463DE0 then adds that maximum through465E18. With finite nonnegative old ammo this reaches maximum. Within-tier constant base and unchanged modifiers preserve capacity on decreases; this condition is an editor policy, not a native rejection gate.",
+    "warning": "Exact USA v02.00 reference only; live definition overrides, FPSCR, callbacks and in-game acceptance remain unverified. This is a coupled file edit, not native execution or a weapon purchase. Raw XP remains inspection-only; no arbitrary XP or1..10 ownership/tier grant is offered.",
+    "recommended_annotations": [
+      {
+        "va": "0xb8a68",
+        "kind": "function",
+        "name": "TOD_weapon_config_XP_indexed_get",
+        "confidence": "code-backed",
+        "bytes": "F821FF517C8802A6",
+        "comment": "WeaponConfig indexed XP getter uses lfsx data+230+4*index; unsigned index>19 calls error helper, then can continue if it returns. This is not the scalar same-name XP property at+14 or HeroConfig's100-entry u32 XP bank."
+      },
+      {
+        "va": "0xb8950",
+        "kind": "function",
+        "name": "TOD_weapon_config_XP_indexed_set",
+        "confidence": "code-backed",
+        "bytes": "F821FF517C8802A6",
+        "comment": "WeaponConfig indexed XP setter uses stfsx data+230+4*index after numeric conversion.20 physical float slots; out-of-range diagnostic is not a proven terminal bound. Threshold arrays are runtime definitions, not saved XP+4."
+      },
+      {
+        "va": "0xb4940",
+        "kind": "function",
+        "name": "TOD_weapon_config_NumLevels_get",
+        "confidence": "code-backed",
+        "bytes": "38A000007C0802A6",
+        "comment": "Reads unsigned definition-data+460 then converts to float for Lua. Shipped weapon.lua publishes highest populated zero-based index, not a count; combat references return9 for ten rows."
+      },
+      {
+        "va": "0xa7478",
+        "kind": "function",
+        "name": "TOD_weapon_config_NumLevels_set",
+        "confidence": "code-backed",
+        "bytes": "38A000007C0802A6",
+        "comment": "Numeric input goes through fctidz then low32 stw to definition-data+460. No local playable-level clamp or array-population validation; this is a runtime definition, not saved level+11."
+      },
+      {
+        "va": "0x893b0",
+        "kind": "comment",
+        "name": "TOD_weapon_config_scoped_XP_indexed_registration",
+        "confidence": "code-backed",
+        "bytes": "4BF898D1",
+        "comment": "WeaponConfig scope uses shared XP name in nonvolatile r30, loaded8903C from88E6F4; indexed registration callbacks are88E844->B8A68 /88E848->B8950. Shared scalar XP name earlier registered with unrelated+14 callbacks; resolve class and array registration, not the string alone."
+      }
+    ],
+    "instruction_guards": [
+      {
+        "va": "0x8903c",
+        "bytes": "83C2E7BC"
+      },
+      {
+        "va": "0x892c8",
+        "bytes": "83A2B3A8"
+      },
+      {
+        "va": "0x892d0",
+        "bytes": "7FA5EB78"
+      },
+      {
+        "va": "0x892dc",
+        "bytes": "7FA4EB78"
+      },
+      {
+        "va": "0x892e0",
+        "bytes": "4BF89721"
+      },
+      {
+        "va": "0x892e8",
+        "bytes": "7FA4EB78"
+      },
+      {
+        "va": "0x892f0",
+        "bytes": "4BF87CD1"
+      },
+      {
+        "va": "0x893a4",
+        "bytes": "80A2E90C"
+      },
+      {
+        "va": "0x893a8",
+        "bytes": "7FC4F378"
+      },
+      {
+        "va": "0x893ac",
+        "bytes": "80C2E910"
+      },
+      {
+        "va": "0x893b0",
+        "bytes": "4BF898D1"
+      },
+      {
+        "va": "0xa7478",
+        "bytes": "38A000007C0802A638800001F821FF51FBC100A0FBE100A8FBA100987C7F1B78F80100C04BF6AA85E84100282F8300007C7E1B7838A000007FE3FB78419E008838C1007038A0000078DD0020388000027FE3FB787FA6EB784BF6BB21E84100287FA5EB782C0300007FE3FB78408200108082FBC04BF69D95E84100287FE3FB78C022FBBC388000024BF6BB81E84100287BC90020FC200E5E38600000D8210080E8A1008090A90460E88100C0EBA10098EBC100A07C8803A6EBE100A8382100B04E800020808200EC4BF69D41E84100284BFFFF7060000000"
+      },
+      {
+        "va": "0xa751c",
+        "bytes": "90A90460"
+      },
+      {
+        "va": "0xb4940",
+        "bytes": "38A000007C0802A638800001F821FF71FBC10080FBE10088F80100A07C7F1B784BF5D5C1E84100282F8300007C7E1B7838A000007FE3FB78419E00487BC900207FE3FB7880A90460F8A10070C8210070FC000E9CFC2000184BF5F819E8410028E88100A0EBC1008038600001EBE100887C8803A6382100904E80002060000000808200EC4BF5C8BDE84100287BC900207FE3FB7880A90460F8A10070C8210070FC000E9CFC2000184BF5F7C9E8410028E88100A0EBC1008038600001EBE100887C8803A6382100904E80002060000000"
+      },
+      {
+        "va": "0xb8950",
+        "bytes": "F821FF517C8802A6FBE100A87C7F1B78F88100C080820150FBA10098FBC100A04BF593D1E84100287FE3FB78388000014BF581F1E84100283880FFFF7FE3FB784BF5A521E841002838010070781D002038A000007C7E1B78388000027FA6EB787FE3FB784BF5A63DE84100287FA5EB782F8300007FE3FB78419E00907FE3FB78C022FBBC388000024BF5A6A9E841002839210080FC20081E7FE3FB7838A000007C204FAE83A10080281D001340810010808201584BF5887DE84100287FE3FB78C022FBBC388000034BF5A669E841002857A3103A38E302307BCB00207CE607B4386000007C2B352EE8A100C0EBA10098EBC100A07CA803A6EBE100A8382100B04E80002060000000808201544BF58825E84100284BFFFF68"
+      },
+      {
+        "va": "0xb89f8",
+        "bytes": "281D0013"
+      },
+      {
+        "va": "0xb8a24",
+        "bytes": "38E30230"
+      },
+      {
+        "va": "0xb8a34",
+        "bytes": "7C2B352E"
+      },
+      {
+        "va": "0xb8a68",
+        "bytes": "F821FF517C8802A6FBE100A87C7F1B78F88100C080820150FBA10098FBC100A04BF592B9E84100287FE3FB78388000014BF580D9E84100283880FFFF7FE3FB784BF5A409E841002838010070781D002038A000007C7E1B78388000027FA6EB787FE3FB784BF5A525E84100287FA5EB782F8300007FE3FB78419E00887FE3FB78C022FBBC388000024BF5A591E841002839210080FC20081E7FE3FB7838A000007C204FAE83A10080281D001340810010808201584BF58765E841002857A8103A7BCB002038E802307FE3FB787CE607B47C2B342E4BF5B675E8410028E8A100C0EBA1009838600001EBC100A0EBE100A87CA803A6382100B04E80002060000000808201544BF58715E84100284BFFFF70"
+      },
+      {
+        "va": "0xb8b10",
+        "bytes": "281D0013"
+      },
+      {
+        "va": "0xb8b2c",
+        "bytes": "38E80230"
+      },
+      {
+        "va": "0xb8b38",
+        "bytes": "7C2B342E"
+      },
+      {
+        "va": "0x465f08",
+        "bytes": "F821FF817CA802A6FBC10070FBE10078F8A10090808300007C7F1B787C8307B44BFFD2696000000039600000787E0020807E0018546907BC546007FE2F8900002F000000409E000C7BE30020419A0024E94100907D6307B4EBC10070EBE100787D4803A6382100804E800020600000004BFFFD69380000092C230000394000094182004083FE0048819F04607D6060507D68FE767D0758387CCA3A1454CB063EE94100907D6307B4EBC10070EBE100787D4803A6382100804E8000206000000083FE00483800000439400004819F04607D6060507D68FE767D0758387CCA3A1454CB063E4BFFFFBC"
+      },
+      {
+        "va": "0x465f7c",
+        "bytes": "38000009"
+      },
+      {
+        "va": "0x465fcc",
+        "bytes": "38000004"
+      },
+      {
+        "va": "0x4660a8",
+        "bytes": "F821FF617C0802A6DBE10098FFE00890FB810078FBA10080FBC10088FBE10090F80100B07C7F1B78787D0020806300007C6307B44BFFD1D5600000008B9F00117C7E1B787FA3EB784BFFFE192F9E0000D3FF0004419E006C5468063E388000002C080000989F0011418200A87BC30020C0030234FC9F00004CC533824086009439400000480000187DA34C2EC03F0004FF8168004FDDF382409E002838CA000154CB063E7CCA33785565103A7F0858003925023498DF00117D2907B4409AFFCC579E063E88FF00117C07F040408100447FA3EB784BFFDC65600000007FA3EB784BFFFC9181425FD8810A00D02888003C40850020819F00007BC4062088BF00117D8307B4C0225FDC480224D960000000EB8100B0EBA100807F8803A6EBC10088EB810078EBE10090CBE10098382100A04E80002060000000"
+      },
+      {
+        "va": "0x4660e4",
+        "bytes": "8B9F0011"
+      },
+      {
+        "va": "0x4660f0",
+        "bytes": "4BFFFE19"
+      },
+      {
+        "va": "0x4660f8",
+        "bytes": "D3FF0004"
+      },
+      {
+        "va": "0x46610c",
+        "bytes": "989F0011"
+      },
+      {
+        "va": "0x46616c",
+        "bytes": "88FF0011"
+      },
+      {
+        "va": "0x466170",
+        "bytes": "7C07F040"
+      },
+      {
+        "va": "0x466174",
+        "bytes": "40810044"
+      },
+      {
+        "va": "0x46617c",
+        "bytes": "4BFFDC65"
+      },
+      {
+        "va": "0x466188",
+        "bytes": "4BFFFC91"
+      },
+      {
+        "va": "0x85ddd0",
+        "bytes": "000A74780088FF38"
+      },
+      {
+        "va": "0x85e708",
+        "bytes": "000B49400088FF38"
+      },
+      {
+        "va": "0x85e998",
+        "bytes": "000B89500088FF38"
+      },
+      {
+        "va": "0x85e9a0",
+        "bytes": "000B8A680088FF38"
+      },
+      {
+        "va": "0x88b2e0",
+        "bytes": "100067E0"
+      },
+      {
+        "va": "0x88e6f4",
+        "bytes": "10012BA0"
+      },
+      {
+        "va": "0x88e844",
+        "bytes": "0085E9A0"
+      },
+      {
+        "va": "0x88e848",
+        "bytes": "0085E998"
+      },
+      {
+        "va": "0x88e894",
+        "bytes": "10012D50"
+      },
+      {
+        "va": "0x88e898",
+        "bytes": "0085E708"
+      },
+      {
+        "va": "0x88e89c",
+        "bytes": "0085DDD0"
+      },
+      {
+        "va": "0x100067e0",
+        "bytes": "576561706F6E436F6E66696700"
+      },
+      {
+        "va": "0x10012ba0",
+        "bytes": "585000"
+      },
+      {
+        "va": "0x10012d50",
+        "bytes": "4E756D4C6576656C7300"
+      }
+    ]
+  },
   "weapon_progression": {
     "confidence": "code-backed",
     "warning": "Exact USA v02.00 static native evidence. No native execution, gameplay validation, current runtime definition reconstruction or new edit-safety claim. Saved float bits remain raw, including nonfinite/extreme values.",
@@ -121527,6 +122297,11 @@
     ]
   },
   "annotations": [
+    {"va":"0x000B8A68","kind":"function","name":"TOD_weapon_config_XP_indexed_get","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"WeaponConfig indexed XP getter uses lfsx data+230+4*index; unsigned index>19 calls error helper, then can continue if it returns. This is not the scalar same-name XP property at+14 or HeroConfig's100-entry u32 XP bank.","evidence":"weapon_level_editing instruction guards, scoped registration and exact reference assets; reproduced by Inspect-TodWeaponLevels.py."},
+    {"va":"0x000B8950","kind":"function","name":"TOD_weapon_config_XP_indexed_set","confidence":"confirmed","bytes":"F821FF517C8802A6","comment":"WeaponConfig indexed XP setter uses stfsx data+230+4*index after numeric conversion.20 physical float slots; out-of-range diagnostic is not a proven terminal bound. Threshold arrays are runtime definitions, not saved XP+4.","evidence":"weapon_level_editing instruction guards, scoped registration and exact reference assets; reproduced by Inspect-TodWeaponLevels.py."},
+    {"va":"0x000B4940","kind":"function","name":"TOD_weapon_config_NumLevels_get","confidence":"confirmed","bytes":"38A000007C0802A6","comment":"Reads unsigned definition-data+460 then converts to float for Lua. Shipped weapon.lua publishes highest populated zero-based index, not a count; combat references return9 for ten rows.","evidence":"weapon_level_editing instruction guards, scoped registration and exact reference assets; reproduced by Inspect-TodWeaponLevels.py."},
+    {"va":"0x000A7478","kind":"function","name":"TOD_weapon_config_NumLevels_set","confidence":"confirmed","bytes":"38A000007C0802A6","comment":"Numeric input goes through fctidz then low32 stw to definition-data+460. No local playable-level clamp or array-population validation; this is a runtime definition, not saved level+11.","evidence":"weapon_level_editing instruction guards, scoped registration and exact reference assets; reproduced by Inspect-TodWeaponLevels.py."},
+    {"va":"0x000893B0","kind":"comment","name":"TOD_weapon_config_scoped_XP_indexed_registration","confidence":"confirmed","bytes":"4BF898D1","comment":"WeaponConfig scope uses shared XP name in nonvolatile r30, loaded8903C from88E6F4; indexed registration callbacks are88E844->B8A68 /88E848->B8950. Shared scalar XP name earlier registered with unrelated+14 callbacks; resolve class and array registration, not the string alone.","evidence":"weapon_level_editing instruction guards, scoped registration and exact reference assets; reproduced by Inspect-TodWeaponLevels.py."},
 {"va":"0x00466804","name":"TOD_definition_initial_flags_from_caller_stack_argument","kind":"comment","confidence":"confirmed","bytes":"908B0018","comment":"Callee frameA0 +114 reads caller STD+70 low32 flags; store definition+18 before registry publication.32 initializer literals cataloged; not live eligibility or a saved field.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; quick_select_eligibility native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x00467B0C","name":"TOD_definition_publish_indexed_pointer_no_local_id_bound","kind":"comment","confidence":"confirmed","bytes":"7C83012E","comment":"Call-free leaf reads definition+0 ID then stores its pointer at supplied registry+4*ID.4632D8 passes103697B8+20. Publication leaf has no local bounds; later467B18 lookup checks unsigned<=31.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; quick_select_eligibility native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},
 {"va":"0x003046E8","name":"TOD_charge_boots_object_grant_after_receiver_admission","kind":"function","confidence":"confirmed","bytes":"F821FF817C0802A6","comment":"24FB88 lookup can replace supplied context; type211 path requests OBJ_CHARGE_BOOTS5,+1 via252F78->23D870. Saved318/374/3D0 wrap current/additions and unsigned peak; no local duplicate check or unique pickup proof.","evidence":"Exact hash-verified USA BCUS98127 v02.00 ELF; object_grant_producers native byte guards and saved/runtime provenance. Static behavior is not in-game edit validation."},

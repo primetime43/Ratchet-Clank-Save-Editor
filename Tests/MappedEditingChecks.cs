@@ -28,6 +28,7 @@ internal static partial class Program
     private static void MappedEditingChecks(string root)
     {
         BonusEditingChecks(root);
+        WeaponLevelEditingChecks(root);
         Check("Quick-select choices use native initial flags and ownership, not all inventory IDs", () =>
         {
             byte[] data = EditableFixture();
@@ -246,14 +247,14 @@ internal static partial class Program
             using var form = new MainForm();
             form.Show();
             var editor = form.Controls.Find("MappedSaveEditor", true).Cast<TodSaveEditingControl>().Single();
-            editor.LoadSnapshot(EditableFixture(), "BCUS98127");
+            editor.LoadSnapshot(WeaponLevelFixture(9), "BCUS98127");
             Field<TabControl>(form, "TabControl").SelectedTab = Field<TabPage>(form, "GameSaveEditingTabPage");
             Field<TabPage>(form, "GameSaveEditingTabPage").Enabled = true;
             var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single();
             foreach (var size in new[] { new Size(900, 640), new Size(1120, 740) })
             {
                 form.Size = size;
-                foreach (string group in new[] { "Game settings", "Weapon ammo", "Quick select", "Appearance" })
+                foreach (string group in new[] { "Game settings", "Weapon ammo", "Weapon levels", "Quick select", "Appearance" })
                 {
                     category.SelectedItem = group;
                     Application.DoEvents();
@@ -262,7 +263,7 @@ internal static partial class Program
                 }
             }
             form.Font = new Font("Segoe UI", 13);
-            foreach (string group in new[] { "Game settings", "Weapon ammo", "Quick select", "Appearance" })
+            foreach (string group in new[] { "Game settings", "Weapon ammo", "Weapon levels", "Quick select", "Appearance" })
             {
                 category.SelectedItem = group;
                 Application.DoEvents();

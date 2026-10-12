@@ -1316,7 +1316,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1488, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1493, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -1976,10 +1976,16 @@ internal static partial class Program
                     var ammo = fields.FirstOrDefault(field => field.Category == "Weapon ammo");
                     if (ammo != null) mappedEdits[ammo.Key] = ammo.Current == 0 ? 1 : 0;
                     var bonuses = fields.Where(field => field.Category == "Bonus effects").ToArray();
+                    var levels = fields.Where(field => field.Storage == TodEditStorage.WeaponLevel).ToArray();
                     if (Convert.ToHexString(SHA256.HashData(expected)) == "F0EB338565943906E3C652C6BF89F1D868DC309DE34B46153D0E57E61BE30463")
+                    {
                         Equal(3, bonuses.Length);
+                        Equal(15, levels.Length);
+                    }
                     foreach (var bonus in bonuses)
                         mappedEdits[bonus.Key] = bonus.Current == 0 ? 1 : 0;
+                    foreach (var level in levels)
+                        mappedEdits[level.Key] = level.Current > level.Minimum ? level.Current - 1 : level.Current + 1;
                     var slot = fields.Single(field => field.Key == "qs_0");
                     var choice = slot.Options.FirstOrDefault(option => option.Value >= 0 && option.Value != slot.Current &&
                         Enumerable.Range(1, 31).All(index => BinaryPrimitives.ReadInt32BigEndian(expected.AsSpan(0x284 + 4 * index, 4)) != option.Value));
@@ -1992,6 +1998,16 @@ internal static partial class Program
             }
             using var reopened = SaveSession.Open(copyFolder, tools, decrypted: plaintext, backupRoot: Path.Combine(root, "reference-roundtrip-backups"));
             True(expected.SequenceEqual(reopened.ReadInspectionData()), "Reopened plaintext must match every expected byte, including unrelated inventory/world state.");
+            var increase = TodSaveEditing.Fields(expected, reopened.Metadata.Region).FirstOrDefault(field =>
+                field.Storage == TodEditStorage.WeaponLevel && field.Current < field.Maximum);
+            if (increase != null)
+            {
+                var edits = Edits((increase.Key, increase.Current + 1));
+                expected = TodSaveEditing.Apply(expected, reopened.Metadata.Region, edits);
+                reopened.Save(reopened.Bolts, reopened.Raritanium, Path.Combine(root, "reference-roundtrip-backups"), edits);
+                using var afterIncrease = SaveSession.Open(copyFolder, tools, decrypted: plaintext, backupRoot: Path.Combine(root, "reference-roundtrip-backups"));
+                True(expected.SequenceEqual(afterIncrease.ReadInspectionData()), "A subsequent encrypted increase must publish matching XP/refill while retaining previous bonus, ammo and settings edits.");
+            }
             True(original["PARAM.SFO"].SequenceEqual(File.ReadAllBytes(Path.Combine(copyFolder, "PARAM.SFO"))), "Original metadata must be preserved.");
             if (encrypted)
                 True(PfdBinding.SfoHashes(original["PARAM.PFD"]).SequenceEqual(PfdBinding.SfoHashes(File.ReadAllBytes(Path.Combine(copyFolder, "PARAM.PFD")))),

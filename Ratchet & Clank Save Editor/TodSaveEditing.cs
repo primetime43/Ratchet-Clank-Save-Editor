@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel }
     public sealed record TodEditOption(decimal Value, string Label)
     {
         public override string ToString() => Label;
     }
     public sealed record TodEditField(string Key, string Label, string Category, int Offset,
         TodEditStorage Storage, decimal Current, decimal Maximum, decimal Scale = 1,
-        IReadOnlyList<TodEditOption> Options = null, decimal Minimum = 0);
+        IReadOnlyList<TodEditOption> Options = null, decimal Minimum = 0, float? ReferenceMaximum = null);
 
     // Explicit allowlist, never a generic offset writer or native transaction emulator.
     public static class TodSaveEditing
@@ -97,8 +97,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!complete || !float.IsFinite(maximum) || maximum <= 0 || maximum > 1_000_000 ||
                     !float.IsFinite(current) || current < 0 || current > maximum) continue;
                 fields.Add(new("ammo_" + id, name + " ammo", "Weapon ammo", offset + 8,
-                    TodEditStorage.Float, (decimal)current, (decimal)maximum));
+                    TodEditStorage.Float, (decimal)current, (decimal)maximum, ReferenceMaximum: maximum));
             }
+
+            TodWeaponLevelEditing.AddFields(data, fields);
 
             void Appearance(string key, string label, int ownedBase, int selectedOffset, string[] names)
             {
@@ -177,10 +179,23 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
             }
             byte[] result = (byte[])original.Clone();
+            var levelChanges = requested.Where(edit => fields[edit.Key].Storage == TodEditStorage.WeaponLevel &&
+                edit.Value != fields[edit.Key].Current).ToArray();
+            foreach (var edit in levelChanges)
+                TodWeaponLevelEditing.Apply(original, result, fields[edit.Key], edit.Value, fields);
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (edit.Value == field.Current) continue; // Preserve noncanonical flags/raw float bits.
+                if (field.Storage == TodEditStorage.WeaponLevel) continue; // Coupled plan already applied.
+                if (edit.Value == field.Current)
+                {
+                    // An explicitly supplied ammo value overrides the level-up
+                    // refill, even when it requests the original amount/bits.
+                    if (field.Category == "Weapon ammo" && levelChanges.Any(level =>
+                        fields[level.Key].Offset / 20 == field.Offset / 20))
+                        original.AsSpan(field.Offset, 4).CopyTo(result.AsSpan(field.Offset, 4));
+                    continue; // Preserve noncanonical flags/raw float bits.
+                }
                 if (field.Storage is TodEditStorage.BooleanByte or TodEditStorage.ByteChoice) result[field.Offset] = (byte)edit.Value;
                 else if (field.Storage == TodEditStorage.Float)
                     BinaryPrimitives.WriteSingleBigEndian(result.AsSpan(field.Offset, 4), (float)(edit.Value / field.Scale));

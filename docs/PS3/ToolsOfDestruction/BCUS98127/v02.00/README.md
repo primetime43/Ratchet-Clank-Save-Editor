@@ -16,7 +16,7 @@ PS3 · USA · `BCUS98127` · supplied executable v02.00.
 - [WeaponConfigs.json](maps/WeaponConfigs.json): shipped weapon/gadget definitions and modifiers.
 - [Tests](../../../../../Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00): independent native/report and input-preservation checks.
 
-The map contains 1,488 annotations, 45 structure definitions and 118 imports. These are inventory counts, not a completion percentage.
+The map contains 1,493 annotations, 45 structure definitions and 118 imports. These are inventory counts, not a completion percentage.
 
 ELF SHA-256: `0EE9A8414C8FC182BC19FA2A523E6D050D0BE76138B3733AE515798D77D2468C`.
 

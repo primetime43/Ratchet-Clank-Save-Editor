@@ -79,9 +79,28 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private void Stage(TodEditField field, decimal value)
         {
             if (rendering) return;
-            if (value == field.Current) pending.Remove(field.Key);
+            if (value == EffectiveDefault(field)) pending.Remove(field.Key);
             else pending[field.Key] = value;
+            if (field.Storage == TodEditStorage.WeaponLevel)
+            {
+                string key = "ammo_" + field.Key["weapon_level_".Length..];
+                var ammo = fields.Single(item => item.Key == key);
+                if (pending.TryGetValue(key, out decimal amount) && amount == EffectiveDefault(ammo)) pending.Remove(key);
+                if (!pending.ContainsKey(key) && !invalidNumbers.ContainsKey(key)) numericText.Remove(key);
+            }
             EditsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private decimal EffectiveDefault(TodEditField field)
+        {
+            if (field.Category == "Weapon ammo")
+            {
+                string key = "weapon_level_" + field.Key["ammo_".Length..];
+                var level = fields.FirstOrDefault(item => item.Key == key);
+                if (level != null && pending.TryGetValue(key, out decimal selected) && selected > level.Current)
+                    return field.Maximum;
+            }
+            return field.Current;
         }
 
         public bool ValidateInputs()
@@ -97,9 +116,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private void ShowFields()
         {
-            notice.Text = category.SelectedItem?.ToString() == "Bonus effects"
-                ? "Bonus effects require existing skill points: hero head 50, enemy head 100, mirror 500. No points or unlocks are granted. Unknown saved states stay read-only. Not yet tested in-game."
-                : defaultNotice;
+            notice.Text = category.SelectedItem?.ToString() switch
+            {
+                "Bonus effects" => "Bonus effects require existing skill points: hero head 50, enemy head 100, mirror 500. No points or unlocks are granted. Unknown saved states stay read-only. Not yet tested in-game.",
+                "Weapon levels" => "Levels stay within the weapon's existing 1–5 or 6–10 tier. A change sets matching XP; increases refill ammo, decreases keep ammo. Weapon ammo shows the planned refill and allows an override. No ownership, upgrades or purchases are granted. Not yet tested in-game.",
+                _ => defaultNotice
+            };
             rendering = true;
             fieldsPanel.SuspendLayout();
             try
@@ -112,7 +134,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 for (int row = 0; row < selected.Length; row++)
                 {
                     var field = selected[row];
-                    decimal value = pending.TryGetValue(field.Key, out var edited) ? edited : field.Current;
+                    decimal value = pending.TryGetValue(field.Key, out var edited) ? edited : EffectiveDefault(field);
                     Control input;
                     if (field.Options != null)
                     {
