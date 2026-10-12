@@ -33,6 +33,7 @@ Changing encrypted metadata needs original signing keys that the editor does not
 - Fifteen named settings, including volumes, inversion, subtitles, rumble and Sixaxis. Control scheme choices are 0 and 1.
 - Ammo for already-owned combat weapons, bounded by shipped level/modifier definitions.
 - Selection of already-owned armor and skins; no ownership is granted.
+- Quick-select slots 0–23: Empty or owned items passing the native initial-flags filter. Slots 24–31 and unknown current values are retained; stored indices are not wheel positions. New duplicates are rejected, including duplicates in the last eight slots. Clear the old slot and assign the new one before saving to move an item.
 
 Fields with nonfinite, out-of-range or unrecognized inputs stay read-only. XP/level, upgrade masks, ownership, story flags, counters and progress remain inspection-only because their dependencies are not fully reproduced.
 

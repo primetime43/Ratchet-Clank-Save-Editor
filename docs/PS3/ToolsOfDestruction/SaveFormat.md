@@ -82,7 +82,7 @@ Word `0x280` changes during acquisition/removal. It is **not the number of nonze
 | `0x43C` | u32 | Pack type: Heli, Thruster, Hydro, Wing (IDs 0–3) |
 | `0x440` | u32 | Boot type: Normal, Grind, Gravity, Charge (IDs 0–3) |
 
-The direct quick-select API addresses all 32 slots. Hero insertion uses only the first 24 and removes duplicates through a separate path. Equipment history is not a set of simultaneous equipped slots. The native boot setter ignores its supplied type and writes zero.
+The direct quick-select API addresses all 32 slots. Hero insertion uses only the first 24 and removes duplicates through a separate path. [Initial definition flags](BCUS98127/v02.00/ElfMap.md#quick-select) now supply the editor's owned-item eligibility filter for slots 0–23; the last eight remain read-only. Stored indices are not wheel positions. Equipment history is not a set of simultaneous equipped slots. The native boot setter ignores its supplied type and writes zero.
 
 ### Object counters
 

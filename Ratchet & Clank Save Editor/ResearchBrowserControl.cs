@@ -36,6 +36,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Bonus-target progress & special-bolt collection paths", TodResearch.Map.GetProperty("collectible_producers"), 0));
             topics.Add(JsonTopic("Saved event counters & target restoration", TodResearch.Map.GetProperty("saved_event_counters"), 0));
             topics.Add(JsonTopic("Object grants: Charge Boots, Souls, Statues and flag publication", TodResearch.Map.GetProperty("object_grant_producers"), 0));
+            topics.Add(JsonTopic("Quick-select eligibility: initial item flags and editing limits", TodResearch.Map.GetProperty("quick_select_eligibility"), 0));
             topics.Add(JsonTopic("Load reset: Gelanator ammo & deferred timing gates", TodResearch.Map.GetProperty("load_reset_dependencies"), 0));
             topics.Add(JsonTopic("Ammo capacity: saved level & upgrade arithmetic", TodResearch.Map.GetProperty("ammo_capacity"), 0));
             topics.Add(JsonTopic("Inventory queries: ownership, visible ammo/level and removal boundaries", TodResearch.Map.GetProperty("inventory_queries"), 0));

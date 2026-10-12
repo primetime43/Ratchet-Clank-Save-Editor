@@ -12,6 +12,7 @@ Code-backed means the behavior was traced in this binary. It does not mean a pro
 - [Save lifecycle](#save-lifecycle)
 - [Weapon definitions](#weapon-definitions)
 - [Inventory and purchases](#inventory-and-purchases)
+- [Quick select](#quick-select)
 - [Object grants](#object-grants)
 - [Progression and equipment](#progression-and-equipment)
 - [Worlds, missions and events](#worlds-missions-and-events)
@@ -113,6 +114,16 @@ The level-five weapon purchase path requires ownership, exactly stored level 4, 
 
 Armor purchase, deferred equip, skin purchase and history publication also have separate steps. A direct field edit does not reproduce their callbacks or payment rules.
 
+## Quick select
+
+All 32 item initializers now have a decoded definition-flags argument. Caller stack `+0x70` supplies the low32 word loaded at callee `+0x114` and stored to definition `+0x18` by `0x466804`. Registry publication uses `0x103697B8 + 0x20 + 4*ID`; the bounded resolver reads that same table. These flags are runtime definition fields, **not saved ownership or unlock bytes**.
+
+Native assignment rejects `flags & 0x1040`. Initial flags exclude Wrench (0), CuttingLaser (26), RoboWings (28), MagCycle (29) and Decryptor (31). The [full catalog](maps/NativeMap.json) is under `quick_select_eligibility`; [the inspector](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodQuickSelectEligibility.py) reproduces it with 76 guards.
+
+The named setter admits all 32 slots and updates warning count before validation. Hero insertion uses only the first 24 and removes duplicates across all 32. Neither establishes physical wheel order. Initial flag literals follow verified early-return branches and compiled nonvolatile-register preservation across known initializer helpers; dynamic definition changes remain unverified.
+
+The editor offers slots 0–23, Empty, and owned items passing the initial flag filter. It rejects new duplicates across the whole bank; explicit batch moves/swaps are allowed. Existing unknown values, slots 24–31, ownership and warning state are preserved. This is a conservative file-edit policy, not execution of either native assignment API. In-game acceptance remains untested.
+
 ## Object grants
 
 Object IDs are separate from weapon IDs. All three fixed producers request +1 through `0x252F78 → 0x23D870` after receiver/type admission.
@@ -190,7 +201,7 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Save/load/restart | `serialization`, `snapshot_lifecycle`, `restart_execution`, `save_tail`, `load_selection` |
 | Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
 | Purchases | `weapon_purchase`, `upgrade_purchase`, `armor_consumer`, `currency_mutation` |
-| Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning` |
+| Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
 | XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow` |
 | Collectibles and bonuses | `collectibles`, `collectible_producers`, `blueprint_producers`, `bonuses`, `bonus_effects`, `bonus_remaining` |
 | Worlds and missions | `world_state`, `gameplay_segments`, `world_consumers`, `reward_channels`, `mission_lists`, `mission_mutation`, `segment_bindings`, `segment_configuration_assets` |

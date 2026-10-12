@@ -59,7 +59,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             category.Items.Clear();
             bool available = fields.Count > 0;
             notice.Text = available
-                ? "Tools of Destruction USA mapped edits · Not yet tested in-game. Ammo limits use shipped definitions; appearance choices require ownership. Unusual values and dependent fields stay read-only."
+                ? "Tools of Destruction USA mapped edits · Not yet tested in-game. Ammo/quick-select choices use reference definitions and ownership. Slots are stored indices, not wheel positions; new duplicates are rejected."
                 : "Additional mapped edits are available only for the verified Tools of Destruction USA (BCUS98127) layout. Other games keep their currency controls.";
             category.Visible = available;
             foreach (string group in fields.Select(field => field.Category).Distinct()) category.Items.Add(group);
@@ -112,7 +112,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     {
                         var numeric = new NumericUpDown
                         {
-                            Minimum = 0, Maximum = field.Maximum, Value = value,
+                            Minimum = field.Minimum, Maximum = field.Maximum, Value = value,
                             DecimalPlaces = field.Scale == 100 ? 1 : 6,
                             Increment = 1, ThousandsSeparator = true
                         };

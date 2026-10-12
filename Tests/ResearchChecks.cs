@@ -1316,7 +1316,7 @@ internal static partial class Program
             Equal(32, TodResearch.Inventory.Count);
             Equal(28, TodResearch.Configs.GetProperty("weapons").EnumerateObject().Count());
             Equal(204, TodResearch.Configs.GetProperty("modifier_count").GetInt32());
-            Equal(1486, TodResearch.Map.GetProperty("annotations").GetArrayLength());
+            Equal(1488, TodResearch.Map.GetProperty("annotations").GetArrayLength());
             Equal(292, TodResearch.Map.GetProperty("global_flags").GetProperty("catalog").GetArrayLength());
             Equal(15, TodResearch.Map.GetProperty("settings").GetProperty("block").GetProperty("fields").GetArrayLength());
             Equal(21, TodResearch.Map.GetProperty("state_storage").GetProperty("rle_blocks").GetProperty("count").GetInt32());
@@ -1975,6 +1975,11 @@ internal static partial class Program
                     mappedEdits[subtitles.Key] = subtitles.Current == 0 ? 1 : 0;
                     var ammo = fields.FirstOrDefault(field => field.Category == "Weapon ammo");
                     if (ammo != null) mappedEdits[ammo.Key] = ammo.Current == 0 ? 1 : 0;
+                    var slot = fields.Single(field => field.Key == "qs_0");
+                    var choice = slot.Options.FirstOrDefault(option => option.Value >= 0 && option.Value != slot.Current &&
+                        Enumerable.Range(1, 31).All(index => BinaryPrimitives.ReadInt32BigEndian(expected.AsSpan(0x284 + 4 * index, 4)) != option.Value));
+                    if (choice != null) mappedEdits[slot.Key] = choice.Value;
+                    else if (slot.Current != -1) mappedEdits[slot.Key] = -1;
                     expected = TodSaveEditing.Apply(expected, session.Metadata.Region, mappedEdits);
                 }
                 SaveData.Write(expected, session.Profile, new[] { bolts }, raritanium);

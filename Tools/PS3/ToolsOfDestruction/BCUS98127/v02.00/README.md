@@ -35,6 +35,7 @@ Each inspector checks binary identity and native evidence. Neighboring `TestTod*
 | Inventory/definitions | [WeaponBindings](Inspect-TodWeaponBindings.py), [WeaponConfigs](Inspect-TodWeaponConfigs.py), [InventoryQueries](Inspect-TodInventoryQueries.py) |
 | Ammo/XP/upgrades | [WeaponProgression](Inspect-TodWeaponProgression.py), [AmmoCapacity](Inspect-TodAmmoCapacity.py), [AmmoCrate](Inspect-TodAmmoCrate.py), [UpgradePurchase](Inspect-TodUpgradePurchase.py) |
 | Equipment and objects | [Objects](Inspect-TodObjects.py), [ObjectGrantProducers](Inspect-TodObjectGrantProducers.py), [InventoryAux](Inspect-TodInventoryAux.py), [EquipmentLifecycle](Inspect-TodEquipmentLifecycle.py) |
+| Quick-select eligibility | [QuickSelectEligibility](Inspect-TodQuickSelectEligibility.py): all32 initializer flags, registry linkage and detached first24 edit plans |
 | Player progression | [Progression](Inspect-TodProgression.py), [HeroXpFlow](Inspect-TodHeroXpFlow.py), [HeroConfig](Inspect-TodHeroConfig.py), [HealthPersistence](Inspect-TodHealthPersistence.py) |
 | Collectibles/bonuses | [Collectibles](Inspect-TodCollectibles.py), [CollectibleProducers](Inspect-TodCollectibleProducers.py), [Bonuses](Inspect-TodBonuses.py) |
 | Worlds/missions | [WorldState](Inspect-TodWorldState.py), [GameplaySegments](Inspect-TodGameplaySegments.py), [Missions](Inspect-TodMissions.py), [SegmentConfig](Inspect-TodSegmentConfig.py) |

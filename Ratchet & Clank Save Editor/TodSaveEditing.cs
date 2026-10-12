@@ -13,7 +13,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
     }
     public sealed record TodEditField(string Key, string Label, string Category, int Offset,
         TodEditStorage Storage, decimal Current, decimal Maximum, decimal Scale = 1,
-        IReadOnlyList<TodEditOption> Options = null);
+        IReadOnlyList<TodEditOption> Options = null, decimal Minimum = 0);
 
     // Explicit allowlist, never a generic offset writer or native transaction emulator.
     public static class TodSaveEditing
@@ -116,6 +116,24 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 new[] { "None", "Durafiber", "Hyperplate", "Tetramesh", "Quantonium" });
             Appearance("skin", "Selected skin", 0x45C, 0x480,
                 new[] { "None", "Dan", "Snowman", "Cragmite", "Pete", "Cronk", "Zephyr", "Jailbird", "Furioso" });
+            var quickChoices = new List<TodEditOption> { new(-1, "Empty") };
+            foreach (var item in TodResearch.Map.GetProperty("quick_select_eligibility").GetProperty("catalog").EnumerateArray())
+            {
+                int id = item.GetProperty("id").GetInt32();
+                if (item.GetProperty("quick_select_initially_allowed").GetBoolean() && data[id * 20 + 16] != 0)
+                    quickChoices.Add(new(id, item.GetProperty("config_name").GetString()));
+            }
+            for (int slot = 0; slot < 24; slot++)
+            {
+                int offset = 0x284 + 4 * slot;
+                int current = BinaryPrimitives.ReadInt32BigEndian(data.AsSpan(offset, 4));
+                var options = quickChoices.ToList();
+                if (!options.Any(option => option.Value == current))
+                    options.Add(new(current, "Current: " + current + " (unverified)"));
+                fields.Add(new("qs_" + slot, "Stored slot " + slot, "Quick select", offset,
+                    TodEditStorage.Choice, current, Math.Max(31, current), Options: options.AsReadOnly(),
+                    Minimum: Math.Min(-1, current)));
+            }
             return fields.AsReadOnly();
         }
 
@@ -132,7 +150,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 if (!fields.TryGetValue(edit.Key, out var field))
                     throw new InvalidDataException("This field is not editable in the current save: " + edit.Key);
-                if (edit.Value < 0 || edit.Value > field.Maximum ||
+                if (edit.Value < field.Minimum || edit.Value > field.Maximum ||
                     (field.Storage != TodEditStorage.Float && edit.Value != decimal.Truncate(edit.Value)) ||
                     (field.Options != null && !field.Options.Any(option => option.Value == edit.Value)))
                     throw new InvalidDataException("Invalid value for " + field.Label + ".");
@@ -151,7 +169,21 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (field.Storage == TodEditStorage.BooleanByte) result[field.Offset] = (byte)edit.Value;
                 else if (field.Storage == TodEditStorage.Float)
                     BinaryPrimitives.WriteSingleBigEndian(result.AsSpan(field.Offset, 4), (float)(edit.Value / field.Scale));
+                else if (field.Category == "Quick select")
+                    BinaryPrimitives.WriteInt32BigEndian(result.AsSpan(field.Offset, 4), (int)edit.Value);
                 else BinaryPrimitives.WriteUInt32BigEndian(result.AsSpan(field.Offset, 4), (uint)edit.Value);
+            }
+            // Reject only newly assigned duplicates. Existing unusual banks and
+            // semantic no-ops stay untouched; batch moves can clear the old slot.
+            foreach (var edit in requested)
+            {
+                var field = fields[edit.Key];
+                if (field.Category != "Quick select" || edit.Value == field.Current || edit.Value < 0) continue;
+                int matches = 0;
+                for (int slot = 0; slot < 32; slot++)
+                    if (BinaryPrimitives.ReadInt32BigEndian(result.AsSpan(0x284 + 4 * slot, 4)) == edit.Value) matches++;
+                if (matches > 1)
+                    throw new InvalidDataException(field.Label + " would duplicate an item. Clear its other slot first, or include that move in the same save.");
             }
             return result;
         }

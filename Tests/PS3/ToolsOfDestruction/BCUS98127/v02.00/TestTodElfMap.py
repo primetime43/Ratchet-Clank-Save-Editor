@@ -244,6 +244,7 @@ class MapChecks(unittest.TestCase):
                 + MAPPING["ammo_crate"]["instruction_guards"]
                 + MAPPING["inventory_queries"]["instruction_guards"]
                 + MAPPING["object_grant_producers"]["instruction_guards"]
+                + MAPPING["quick_select_eligibility"]["instruction_guards"]
                 + MAPPING["gelanator_transition"]["instruction_guards"]
                 + MAPPING["weapon_ammo_debit"]["instruction_guards"]
                 + MAPPING["adaptation_context"]["instruction_guards"]

@@ -27,6 +27,52 @@ internal static partial class Program
 
     private static void MappedEditingChecks(string root)
     {
+        Check("Quick-select choices use native initial flags and ownership, not all inventory IDs", () =>
+        {
+            byte[] data = EditableFixture();
+            data[25 * 20 + 16] = 1;
+            data[31 * 20 + 16] = 1;
+            var fields = TodSaveEditing.Fields(data, "BCUS98127").Where(field => field.Category == "Quick select").ToArray();
+            Equal(24, fields.Length);
+            True(fields.All(field => field.Options.Any(option => option.Value == -1)), "Every slot can be explicitly cleared.");
+            True(fields[1].Options.Any(option => option.Value == 25), "Owned initially eligible SwingShot should be offered.");
+            True(!fields[1].Options.Any(option => option.Value == 31), "Owned Decryptor remains definition-filtered.");
+            Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits(("qs_1", 31))));
+            Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits(("qs_24", -1))));
+        });
+        Check("Quick-select moves and swaps are atomic and reject newly created duplicates across32 slots", () =>
+        {
+            byte[] data = EditableFixture();
+            for (int slot = 0; slot < 32; slot++) BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(0x284 + slot * 4, 4), -1);
+            data[2 * 20 + 16] = 1;
+            BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(0x284, 4), 1);
+            BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(0x288, 4), 2);
+            byte[] before = data.ToArray();
+            Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits(("qs_2", 1))));
+            byte[] swapped = TodSaveEditing.Apply(data, "BCUS98127", Edits(("qs_0", 2), ("qs_1", 1)));
+            Equal(2, BinaryPrimitives.ReadInt32BigEndian(swapped.AsSpan(0x284, 4)));
+            Equal(1, BinaryPrimitives.ReadInt32BigEndian(swapped.AsSpan(0x288, 4)));
+            byte[] moved = TodSaveEditing.Apply(data, "BCUS98127", Edits(("qs_0", -1), ("qs_2", 1)));
+            Equal(-1, BinaryPrimitives.ReadInt32BigEndian(moved.AsSpan(0x284, 4)));
+            Equal(1, BinaryPrimitives.ReadInt32BigEndian(moved.AsSpan(0x28C, 4)));
+            True(data.SequenceEqual(before), "Slot planning must not mutate the source.");
+            BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(0x284 + 31 * 4, 4), 1);
+            Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits(("qs_0", -1), ("qs_2", 1))));
+        });
+        Check("Quick-select edits preserve last8 words, warning state, ownership and unknown current IDs", () =>
+        {
+            byte[] data = EditableFixture();
+            for (int slot = 0; slot < 32; slot++) BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(0x284 + slot * 4, 4), -1);
+            BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(0x284, 4), int.MinValue);
+            BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(0x288, 4), int.MaxValue);
+            BinaryPrimitives.WriteInt32BigEndian(data.AsSpan(0x284 + 31 * 4, 4), -123);
+            BinaryPrimitives.WriteUInt32BigEndian(data.AsSpan(0x8734, 4), uint.MaxValue);
+            data[0x8738] = 7;
+            True(TodSaveEditing.Apply(data, "BCUS98127", Edits(("qs_0", int.MinValue), ("qs_1", int.MaxValue))).SequenceEqual(data), "Unknown slot IDs must survive no-ops.");
+            byte[] changed = TodSaveEditing.Apply(data, "BCUS98127", Edits(("qs_0", 1), ("qs_1", -1)));
+            for (int offset = 0; offset < data.Length; offset++)
+                if (offset < 0x284 || offset >= 0x28C) Equal(data[offset], changed[offset]);
+        });
         Check("Mapped editing is restricted to matching USA plaintext layout", () =>
         {
             byte[] data = EditableFixture();
@@ -135,7 +181,7 @@ internal static partial class Program
             File.WriteAllBytes(Path.Combine(folder, "GAME.SAV"), EditableFixture());
             var tools = new FakeTools { FailDecrypt = true };
             using var session = SaveSession.Open(folder, tools, decrypted: true, backupRoot: backups);
-            session.Save(124, 46, backups, Edits(("voice_volume", 25), ("ammo_1", 10)));
+            session.Save(124, 46, backups, Edits(("voice_volume", 25), ("ammo_1", 10), ("qs_0", 1)));
             Equal(0.25f, BinaryPrimitives.ReadSingleBigEndian(session.ReadInspectionData().AsSpan(0x114C4, 4)));
             session.Save(125, 47, backups);
             session.Save(126, 48, backups, Edits(("subtitles", 1)));
@@ -143,6 +189,7 @@ internal static partial class Program
             Equal(0.25f, BinaryPrimitives.ReadSingleBigEndian(reopened.ReadInspectionData().AsSpan(0x114C4, 4)));
             Equal(10f, BinaryPrimitives.ReadSingleBigEndian(reopened.ReadInspectionData().AsSpan(0x1C, 4)));
             Equal((byte)1, reopened.ReadInspectionData()[0x114D1]);
+            Equal(1, BinaryPrimitives.ReadInt32BigEndian(reopened.ReadInspectionData().AsSpan(0x284, 4)));
             Equal(0, tools.CryptoCalls);
         });
         Check("Failed encrypted mapped edits preserve source and session baseline", () =>
@@ -153,14 +200,15 @@ internal static partial class Program
             var tools = new FakeTools { FailEncrypt = true };
             using var session = SaveSession.Open(folder, tools, backupRoot: backups);
             byte[] before = session.ReadInspectionData();
-            Throws<InvalidOperationException>(() => session.Save(124, 46, backups, Edits(("voice_volume", 25))));
+            Throws<InvalidOperationException>(() => session.Save(124, 46, backups, Edits(("voice_volume", 25), ("qs_0", 1))));
             Same(source, Snapshot(folder));
             True(before.SequenceEqual(session.ReadInspectionData()), "Failed writes must not commit mapped inspection state.");
             tools.FailEncrypt = false;
-            session.Save(124, 46, backups, Edits(("voice_volume", 25)));
+            session.Save(124, 46, backups, Edits(("voice_volume", 25), ("qs_0", 1)));
             session.Save(125, 47, backups);
             using var reopened = SaveSession.Open(folder, tools, backupRoot: backups);
             Equal(0.25f, BinaryPrimitives.ReadSingleBigEndian(reopened.ReadInspectionData().AsSpan(0x114C4, 4)));
+            Equal(1, BinaryPrimitives.ReadInt32BigEndian(reopened.ReadInspectionData().AsSpan(0x284, 4)));
         });
         Check("Mapped editor stages changes, survives category switches and clears across games", () =>
         {
@@ -177,10 +225,17 @@ internal static partial class Program
             voice.Value = 25;
             True(Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Mapped-only edits must enable Save All.");
             category.SelectedItem = "Weapon ammo";
+            category.SelectedItem = "Quick select";
+            var slot = editor.Controls.Find("MappedEdit_qs_0", true).Cast<ComboBox>().Single();
+            slot.SelectedItem = slot.Items.Cast<TodEditOption>().Single(option => option.Value == 1);
+            Equal(1m, editor.PendingEdits["qs_0"]);
             category.SelectedItem = "Game settings";
             Equal(25m, editor.Controls.Find("MappedEdit_voice_volume", true).Cast<NumericUpDown>().Single().Value);
             Equal(0.5f, BinaryPrimitives.ReadSingleBigEndian(session.ReadInspectionData().AsSpan(0x114C4, 4)));
             editor.Controls.Find("MappedEdit_voice_volume", true).Cast<NumericUpDown>().Single().Value = 50;
+            category.SelectedItem = "Quick select";
+            slot = editor.Controls.Find("MappedEdit_qs_0", true).Cast<ComboBox>().Single();
+            slot.SelectedItem = slot.Items.Cast<TodEditOption>().Single(option => option.Value == 0);
             True(!editor.HasChanges, "Reverting must remove the staged field edit.");
             editor.LoadSnapshot(EditableFixture(), "BCUS98124");
             True(!editor.HasChanges && !category.Visible, "Other games must not retain mapped edits.");
@@ -197,7 +252,7 @@ internal static partial class Program
             foreach (var size in new[] { new Size(900, 640), new Size(1120, 740) })
             {
                 form.Size = size;
-                foreach (string group in new[] { "Game settings", "Weapon ammo", "Appearance" })
+                foreach (string group in new[] { "Game settings", "Weapon ammo", "Quick select", "Appearance" })
                 {
                     category.SelectedItem = group;
                     Application.DoEvents();
@@ -206,7 +261,7 @@ internal static partial class Program
                 }
             }
             form.Font = new Font("Segoe UI", 13);
-            foreach (string group in new[] { "Game settings", "Weapon ammo", "Appearance" })
+            foreach (string group in new[] { "Game settings", "Weapon ammo", "Quick select", "Appearance" })
             {
                 category.SelectedItem = group;
                 Application.DoEvents();
@@ -215,6 +270,13 @@ internal static partial class Program
                     Point bottom = input.PointToScreen(new Point(0, input.Height));
                     True(bottom.Y <= editor.PointToScreen(new Point(0, editor.ClientSize.Height)).Y,
                         "Larger fonts must not clip the final mapped field.");
+                }
+                if (group == "Quick select")
+                {
+                    using var preview = new Bitmap(form.Width, form.Height);
+                    form.DrawToBitmap(preview, new Rectangle(Point.Empty, preview.Size));
+                    Directory.CreateDirectory("artifacts");
+                    preview.Save("artifacts/quick-select-editor-preview.png");
                 }
             }
             using var bitmap = new Bitmap(form.Width, form.Height);
