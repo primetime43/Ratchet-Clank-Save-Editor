@@ -1,0 +1,159 @@
+using System;
+using System.Buffers.Binary;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace primetime43_Ratchet_Clank_Save_Editor
+{
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice }
+    public sealed record TodEditOption(decimal Value, string Label)
+    {
+        public override string ToString() => Label;
+    }
+    public sealed record TodEditField(string Key, string Label, string Category, int Offset,
+        TodEditStorage Storage, decimal Current, decimal Maximum, decimal Scale = 1,
+        IReadOnlyList<TodEditOption> Options = null);
+
+    // Explicit allowlist, never a generic offset writer or native transaction emulator.
+    public static class TodSaveEditing
+    {
+        public static bool Supports(byte[] data, string region)
+        {
+            if (!string.Equals(region, "BCUS98127", StringComparison.OrdinalIgnoreCase) ||
+                data == null || data.Length != TodSaveInspection.ExpectedSize) return false;
+            for (int id = 0; id < 32; id++)
+                if (BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(id * 20, 4)) != id) return false;
+            return true;
+        }
+
+        public static IReadOnlyList<TodEditField> Fields(byte[] data, string region)
+        {
+            var fields = new List<TodEditField>();
+            if (!Supports(data, region)) return fields.AsReadOnly();
+            uint Word(int offset) => BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(offset, 4));
+            void Boolean(string key, string label, int offset, bool word = false)
+            {
+                fields.Add(new(key, label, "Game settings", offset,
+                    word ? TodEditStorage.BooleanWord : TodEditStorage.BooleanByte,
+                    (word ? Word(offset) : data[offset]) == 0 ? 0 : 1, 1));
+            }
+            void Percent(string key, string label, int offset)
+            {
+                float value = BinaryPrimitives.ReadSingleBigEndian(data.AsSpan(offset, 4));
+                if (float.IsFinite(value) && value >= 0 && value <= 1)
+                    fields.Add(new(key, label, "Game settings", offset, TodEditStorage.Float,
+                        (decimal)value * 100, 100, 100));
+            }
+            Boolean("camera_x", "Invert camera X", 0x114A8, true);
+            Boolean("camera_y", "Invert camera Y", 0x114AC, true);
+            Percent("camera_speed", "Camera speed (%)", 0x114B0);
+            Boolean("look_x", "Invert look X", 0x114B4, true);
+            Boolean("look_y", "Invert look Y", 0x114B8, true);
+            uint scheme = Word(0x114BC);
+            if (scheme <= 1)
+                fields.Add(new("control_scheme", "Control scheme", "Game settings", 0x114BC,
+                    TodEditStorage.Choice, scheme, 1, Options: new[]
+                    { new TodEditOption(0, "Scheme 0"), new TodEditOption(1, "Scheme 1") }));
+            Percent("voice_volume", "Voice volume (%)", 0x114C4);
+            Percent("effects_volume", "Effects volume (%)", 0x114C8);
+            Percent("music_volume", "Music volume (%)", 0x114CC);
+            Boolean("help_text", "Help text", 0x114D0);
+            Boolean("subtitles", "Subtitles", 0x114D1);
+            Boolean("quick_select_pause", "Pause during quick select", 0x114D2);
+            Boolean("sixaxis", "Sixaxis controls", 0x114D3);
+            Boolean("rumble", "Rumble", 0x114D4);
+            Boolean("surround", "Surround sound", 0x114D5);
+
+            // Only normal owned combat records with complete reference inputs.
+            for (int id = 1; id <= 15; id++)
+            {
+                int offset = id * 20;
+                string name = TodResearch.Inventory[id].GetProperty("config_name").GetString();
+                if (data[offset + 16] == 0 || !TodResearch.TryConfig(name, out var config)) continue;
+                var variables = config.GetProperty("variables");
+                if (!variables.TryGetProperty("MaxAmmo", out var amounts)) continue;
+                int level = data[offset + 17];
+                if (level >= 20 || level >= amounts.GetArrayLength() ||
+                    amounts[level].ValueKind != System.Text.Json.JsonValueKind.Number) continue;
+                float maximum = amounts[level].GetSingle(), factor = 1;
+                uint mask = Word(offset + 12);
+                var nodes = config.GetProperty("modifiers");
+                int count = nodes.GetArrayLength();
+                if (count > 24 || (mask & ~((1u << count) - 1)) != 0) continue;
+                bool complete = true;
+                foreach (var node in nodes.EnumerateArray())
+                {
+                    int index = node.GetProperty("index").GetInt32();
+                    if (index < 0 || index >= count) { complete = false; break; }
+                    if ((mask & (1u << index)) == 0 || node.GetProperty("type").GetString() != "MOD_AMMO") continue;
+                    var value = node.GetProperty("runtime_value");
+                    if (value.ValueKind != System.Text.Json.JsonValueKind.Number) { complete = false; break; }
+                    if (node.GetProperty("is_percent").GetBoolean()) factor += value.GetSingle();
+                    else maximum += value.GetSingle();
+                }
+                maximum *= factor;
+                float current = BinaryPrimitives.ReadSingleBigEndian(data.AsSpan(offset + 8, 4));
+                if (!complete || !float.IsFinite(maximum) || maximum <= 0 || maximum > 1_000_000 ||
+                    !float.IsFinite(current) || current < 0 || current > maximum) continue;
+                fields.Add(new("ammo_" + id, name + " ammo", "Weapon ammo", offset + 8,
+                    TodEditStorage.Float, (decimal)current, (decimal)maximum));
+            }
+
+            void Appearance(string key, string label, int ownedBase, int selectedOffset, string[] names)
+            {
+                uint selected = Word(selectedOffset);
+                var options = new List<TodEditOption>();
+                for (int id = 0; id < names.Length; id++)
+                    if (Word(ownedBase + 4 * id) != 0)
+                        options.Add(new(id, names[id]));
+                if (!options.Any(option => option.Value == selected))
+                    options.Add(new(selected, "Current: " + selected + " (unverified)"));
+                fields.Add(new(key, label, "Appearance", selectedOffset, TodEditStorage.Choice,
+                    selected, uint.MaxValue, Options: options.AsReadOnly()));
+            }
+            Appearance("armor", "Selected armor", 0x444, 0x458,
+                new[] { "None", "Durafiber", "Hyperplate", "Tetramesh", "Quantonium" });
+            Appearance("skin", "Selected skin", 0x45C, 0x480,
+                new[] { "None", "Dan", "Snowman", "Cragmite", "Pete", "Cronk", "Zephyr", "Jailbird", "Furioso" });
+            return fields.AsReadOnly();
+        }
+
+        public static byte[] Apply(byte[] original, string region, IReadOnlyDictionary<string, decimal> edits)
+        {
+            ArgumentNullException.ThrowIfNull(original);
+            ArgumentNullException.ThrowIfNull(edits);
+            var requested = edits.ToArray();
+            if (requested.Length == 0) return (byte[])original.Clone();
+            if (!Supports(original, region))
+                throw new InvalidDataException("Mapped edits require the verified BCUS98127 Tools of Destruction layout.");
+            var fields = Fields(original, region).ToDictionary(field => field.Key, StringComparer.Ordinal);
+            foreach (var edit in requested)
+            {
+                if (!fields.TryGetValue(edit.Key, out var field))
+                    throw new InvalidDataException("This field is not editable in the current save: " + edit.Key);
+                if (edit.Value < 0 || edit.Value > field.Maximum ||
+                    (field.Storage != TodEditStorage.Float && edit.Value != decimal.Truncate(edit.Value)) ||
+                    (field.Options != null && !field.Options.Any(option => option.Value == edit.Value)))
+                    throw new InvalidDataException("Invalid value for " + field.Label + ".");
+                if (field.Storage == TodEditStorage.Float)
+                {
+                    float value = (float)(edit.Value / field.Scale);
+                    if (!float.IsFinite(value) || value > (float)(field.Maximum / field.Scale))
+                        throw new InvalidDataException("Value exceeds the reference limit for " + field.Label + ".");
+                }
+            }
+            byte[] result = (byte[])original.Clone();
+            foreach (var edit in requested)
+            {
+                var field = fields[edit.Key];
+                if (edit.Value == field.Current) continue; // Preserve noncanonical flags/raw float bits.
+                if (field.Storage == TodEditStorage.BooleanByte) result[field.Offset] = (byte)edit.Value;
+                else if (field.Storage == TodEditStorage.Float)
+                    BinaryPrimitives.WriteSingleBigEndian(result.AsSpan(field.Offset, 4), (float)(edit.Value / field.Scale));
+                else BinaryPrimitives.WriteUInt32BigEndian(result.AsSpan(field.Offset, 4), (uint)edit.Value);
+            }
+            return result;
+        }
+    }
+}

@@ -1,12 +1,12 @@
 # Ratchet & Clank Save Editor
 
-Windows editor for PS3 Ratchet & Clank saves. Edit currency, back up saves, export artwork and inspect save data. Tools of Destruction also has read-only research views.
+Windows editor for PS3 Ratchet & Clank saves. Edit currency, back up saves, export artwork and inspect save data. Tools of Destruction USA also supports selected mapped-field edits.
 
 ## Use
 
 1. Copy the complete save folder to your PC.
 2. Choose **File → Open Folder** for encrypted saves, or **Open Decrypted Folder (RPCS3)** for plaintext saves.
-3. Edit currency in **Game Save Editing**.
+3. Edit currency or supported mapped fields in **Game Save Editing**.
 4. Choose **File → Save All**, then transfer the complete folder back.
 
 Backups are created on opening and before saving, under `Backups` beside the executable. Keep the editor in a writable folder. Decrypted console saves must be re-encrypted before transfer; account resigning is not supported.

@@ -22,6 +22,12 @@ internal static partial class Program
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--mapped-edits" }))
+            {
+                MappedEditingChecks(root);
+                Console.WriteLine($"All {passed} mapped-editing checks passed.");
+                return 0;
+            }
             Check("Big endian values round trip, including int.MaxValue", () =>
             {
                 using var stream = new MemoryStream();
@@ -222,6 +228,7 @@ internal static partial class Program
                 Same(original, Snapshot(folder));
             });
             ResearchChecks(root);
+            MappedEditingChecks(root);
             Check("Readable UI loads, resizes, switches games and renders at higher scale", () => UiChecks(root));
             if (args.Length == 2 && args[0] == "--samples") SampleChecks(root, Path.GetFullPath(args[1]));
             if (args.Length == 2 && args[0] == "--tod-save") ReferenceResearchChecks(root, Path.GetFullPath(args[1]));

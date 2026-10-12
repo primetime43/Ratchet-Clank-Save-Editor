@@ -118,7 +118,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             for (int id = 0; id < 32; id++)
                 if (BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(id * 0x14, 4)) != id)
                     return new("Inventory IDs do not match the observed plaintext layout. No research fields were decoded.");
-            return new("Read-only plaintext session snapshot; pending currency edits are excluded. USA reference definitions are not proof of regional/runtime compatibility.", (byte[])bytes.Clone());
+            return new("Read-only plaintext session snapshot; pending edits are excluded. USA reference definitions are not proof of regional/runtime compatibility.", (byte[])bytes.Clone());
         }
 
         private static string MissionLookup(uint id, bool description)

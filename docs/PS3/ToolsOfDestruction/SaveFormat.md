@@ -6,7 +6,7 @@ This reference covers the supplied PS3 saves: USA `BCUS98127` and Europe `BCES00
 
 `GAME.SAV` is `0x906F0` bytes (591,600). Its integers and floats are big-endian. It starts with inventory records, not a known magic/version header. Offsets below refer to **decrypted** game data; range ends are exclusive. IDs and counts are decimal unless prefixed with `0x`.
 
-The editor exposes this research read-only. Currency editing is documented in the [main README](../../../README.md). Unknown bytes must be preserved; matching a layout does not establish that a new edit is safe to load in-game.
+Research and Save inspector remain read-only. The editing tab supports selected USA settings, owned-weapon ammo and owned armor/skin selections; see [mapped-field edits](../../Usage.md#mapped-field-edits). Unknown bytes must be preserved; matching a layout does not establish that a new edit is safe to load in-game.
 
 ## Contents
 

@@ -19,7 +19,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private bool loadingValues;
         private int selectedCharacter;
         private int[] pendingBolts;
+        private TodSaveEditingControl mappedEditor;
         private bool Dirty => session != null && (session.MetadataChanged ||
+            mappedEditor.HasChanges ||
             (pendingBolts != null && !pendingBolts.SequenceEqual(session.CharacterBolts)) ||
             (session.Profile.RaritaniumOffset.HasValue && CasinoChipsNumericUpDown.Value != session.Raritanium));
 
@@ -77,6 +79,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 GameSaveKeyTextBox.Text = session.Profile.Key;
                 PlanetTextBox.Text = session.Metadata.Planet;
                 saveInspector.LoadSession(session);
+                mappedEditor.LoadSnapshot(session.ReadInspectionData(), session.Metadata.Region);
                 MoneyNumericUpDown.Maximum = session.Profile.MaximumBolts;
                 MoneyNumericUpDown.Value = session.Bolts;
                 CasinoChipsNumericUpDown.Value = session.Raritanium;
@@ -110,11 +113,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             pendingBolts[selectedCharacter] = decimal.ToInt32(MoneyNumericUpDown.Value);
             int[] bolts = pendingBolts.ToArray();
             int raritanium = decimal.ToInt32(CasinoChipsNumericUpDown.Value);
+            var mappedEdits = mappedEditor.PendingEdits;
             return await RunOperation("Verifying and saving changes…", async () =>
             {
-                string backup = await Task.Run(() => session.Save(bolts, raritanium));
+                string backup = await Task.Run(() => session.Save(bolts, raritanium, mappedEdits: mappedEdits));
                 pendingBolts = session.CharacterBolts.ToArray();
                 saveInspector.LoadSession(session);
+                mappedEditor.LoadSnapshot(session.ReadInspectionData(), session.Metadata.Region);
                 UpdateTitle();
                 StatusLabel.Text = "Saved successfully · Original backed up";
                 string format = session.IsEncrypted ? "encrypted PS3" : "decrypted/RPCS3";

@@ -1967,8 +1967,18 @@ internal static partial class Program
                 expected = session.ReadInspectionData();
                 int bolts = session.Bolts == int.MaxValue ? session.Bolts - 1 : session.Bolts + 1;
                 int raritanium = session.Raritanium == int.MaxValue ? session.Raritanium - 1 : session.Raritanium + 1;
+                var mappedEdits = new Dictionary<string, decimal>();
+                if (TodSaveEditing.Supports(expected, session.Metadata.Region))
+                {
+                    var fields = TodSaveEditing.Fields(expected, session.Metadata.Region);
+                    var subtitles = fields.Single(field => field.Key == "subtitles");
+                    mappedEdits[subtitles.Key] = subtitles.Current == 0 ? 1 : 0;
+                    var ammo = fields.FirstOrDefault(field => field.Category == "Weapon ammo");
+                    if (ammo != null) mappedEdits[ammo.Key] = ammo.Current == 0 ? 1 : 0;
+                    expected = TodSaveEditing.Apply(expected, session.Metadata.Region, mappedEdits);
+                }
                 SaveData.Write(expected, session.Profile, new[] { bolts }, raritanium);
-                session.Save(bolts, raritanium, Path.Combine(root, "reference-roundtrip-backups"));
+                session.Save(bolts, raritanium, Path.Combine(root, "reference-roundtrip-backups"), mappedEdits);
             }
             using var reopened = SaveSession.Open(copyFolder, tools, decrypted: plaintext, backupRoot: Path.Combine(root, "reference-roundtrip-backups"));
             True(expected.SequenceEqual(reopened.ReadInspectionData()), "Reopened plaintext must match every expected byte, including unrelated inventory/world state.");

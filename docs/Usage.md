@@ -26,8 +26,20 @@ If another application changes the source folder while it is open, reopen it bef
 
 Changing encrypted metadata needs original signing keys that the editor does not have. Account resigning is not supported.
 
+## Mapped-field edits
+
+**Game Save Editing → Mapped fields** supports the matching Tools of Destruction USA (`BCUS98127`) plaintext layout:
+
+- Fifteen named settings, including volumes, inversion, subtitles, rumble and Sixaxis. Control scheme choices are 0 and 1.
+- Ammo for already-owned combat weapons, bounded by shipped level/modifier definitions.
+- Selection of already-owned armor and skins; no ownership is granted.
+
+Fields with nonfinite, out-of-range or unrecognized inputs stay read-only. XP/level, upgrade masks, ownership, story flags, counters and progress remain inspection-only because their dependencies are not fully reproduced.
+
+Changes are staged until **Save All** and use the existing backup/encryption checks. These edits are based on USA v02.00 research; the save layout check cannot identify every executable revision. In-game acceptance and live ammo capacities are not yet validated. Other games and regions keep currency editing only.
+
 ## Inspection
 
-Tools of Destruction research and save views are read-only. They keep raw values and unknown bytes; pending currency edits are excluded from the inspection snapshot. Header inspection redacts private bindings and keys, but does not verify signatures or PNG CRCs.
+Tools of Destruction Research and Save inspector views remain read-only. They keep raw values and unknown bytes; all pending edits are excluded from the inspection snapshot. Header inspection redacts private bindings and keys, but does not verify signatures or PNG CRCs.
 
 See the [research wiki](README.md) for field definitions and known gaps.

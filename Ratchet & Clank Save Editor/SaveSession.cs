@@ -75,21 +75,26 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             plaintextData = data;
         }
 
-        public string Save(int bolts, int raritanium, string backupRoot = null)
+        public string Save(int bolts, int raritanium, string backupRoot = null,
+            IReadOnlyDictionary<string, decimal> mappedEdits = null)
         {
             int[] values = (int[])boltsValues.Clone();
             values[0] = bolts;
-            return Save(values, raritanium, backupRoot);
+            return Save(values, raritanium, backupRoot, mappedEdits);
         }
 
-        public string Save(IReadOnlyList<int> bolts, int raritanium, string backupRoot = null)
+        public string Save(IReadOnlyList<int> bolts, int raritanium, string backupRoot = null,
+            IReadOnlyDictionary<string, decimal> mappedEdits = null)
         {
             int[] values = bolts.ToArray();
             EnsureUnchanged();
             using var candidate = new TemporaryDirectory();
             CopyFiles(WorkingFolder, candidate.Path);
             string candidateData = Path.Combine(candidate.Path, Profile.FileName);
-            byte[] expected = File.ReadAllBytes(candidateData);
+            // Use the latest committed plaintext, not the original opening copy:
+            // a later currency-only save must retain earlier mapped-field edits.
+            byte[] expected = mappedEdits == null ? (byte[])plaintextData.Clone() :
+                TodSaveEditing.Apply(plaintextData, Metadata.Region, mappedEdits);
             SaveData.Write(expected, Profile, values, raritanium);
             File.WriteAllBytes(candidateData, expected);
             // Encrypt and update integrity in isolation. Failed tools never touch the source.

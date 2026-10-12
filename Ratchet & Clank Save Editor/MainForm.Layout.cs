@@ -83,7 +83,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             fields.SetColumnSpan(actions, 2);
             AccountInfoGroupBox.Controls.Add(fields);
 
-            var editing = LayoutTable("SaveEditingLayout", 1, 2);
+            var editing = LayoutTable("SaveEditingLayout", 1, 3);
             editing.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             GameSaveEditingTabPage.Controls.Clear();
             PrepareGroup(groupBox3);
@@ -97,12 +97,19 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             MoneyNumericUpDown.ThousandsSeparator = CasinoChipsNumericUpDown.ThousandsSeparator = true;
             groupBox3.Controls.Add(player);
             editing.Controls.Add(groupBox3, 0, 0);
+            var mappedGroup = new GroupBox { Name = "MappedEditsGroup", Text = "Mapped fields" };
+            PrepareGroup(mappedGroup);
+            mappedGroup.Margin = new Padding(0, 16, 0, 0);
+            mappedEditor = new TodSaveEditingControl();
+            mappedEditor.EditsChanged += ValuesChanged;
+            mappedGroup.Controls.Add(mappedEditor);
+            editing.Controls.Add(mappedGroup, 0, 1);
             editing.Controls.Add(new Label
             {
                 Name = "SaveEditingHint", AutoSize = true, Dock = DockStyle.Fill,
                 Margin = new Padding(4, 16, 4, 0),
                 Text = "Use File → Save All (Ctrl+S) to apply edits. A full original backup is created automatically."
-            }, 0, 1);
+            }, 0, 2);
             GameSaveEditingTabPage.Controls.Add(editing);
             ResumeLayout(true);
         }
