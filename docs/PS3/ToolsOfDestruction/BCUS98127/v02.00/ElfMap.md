@@ -208,6 +208,16 @@ Saved destination `0x906E8`, next-level `0x8740` and pending runtime load reques
 
 ## Non-save findings
 
+### Developer helpers and Lua debug
+
+`debug.debug` is registered in the native debug-library table at `0x8415C0`; its loop is `0x8106C8`. It prints `lua_debug> `, reads up to 250 bytes, executes through `0x66C520` and clears the Lua stack. Input end or `cont` followed by a newline exits. Native stream access from RPCS3 remains unverified; opening it may block.
+
+Library initializer `0x743AC8` and reinitializer `0x743C5C` require flag `0x20` to call opener `0x810650`. The observed game initializer supplies `0x1F` at `0x72EB24`, omitting that bit. The experimental patch changes only that instruction to `0x3F`. It registers the library at this initial call; it does not open the console, inject Lua, connect streams or prevent later sandboxing/reinitialization from removing it. No game installation has been patched or boot-tested.
+
+`hero_give_all_ammo` wrapper `0x2BAFE8` takes an in-game moby handle. Its `0x28AB00` leaf walks 32 owned records whose definition flags pass `&0x13 == 0`, invoking refill `0x465D88`. It is not equivalent to the editor's gadget-ammo allowlist. `ally_debug` wrapper `0x2A82C0` reaches `0x28F378`, which emits diagnostic lines after runtime component checks—not a confirmed ally-AI cheat. Do not fabricate handles; native diagnostic paths can continue after errors.
+
+The editor's Developer helpers reproduce grant-all blueprint OR `0x0007DEE4` and enable-all score 840/zero-state-to-1 behavior. Earned skill bits are untouched. These are saved-write equivalents, not runtime execution. See the [tools guide](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md#experimental-developer-tools) for the isolated patch and non-autorun Lua module.
+
 | Area | Useful anchors | What is established |
 | --- | --- | --- |
 | Lua | `0x6687E0`, version string `0x1002AC50` | Embedded Lua 5.0.2 marker and getter |
@@ -240,6 +250,7 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Settings and Decryptor | `settings`, `settings_menu`, `settings_apply`, `first_person_option`, `adaptation_context`, `tail_aux_fields` |
 | Unknown-byte ownership | `world_aux_fields`, `segment_opaque`, `final_tail_fields` |
 | Address/types/imports | `annotations`, `structures`, `save_regions`, `library_imports` |
+| Developer controls | `developer_helpers`, plus the native save grants in `bonuses` |
 
 ## Open questions
 

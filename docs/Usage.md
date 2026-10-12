@@ -43,6 +43,13 @@ Changing encrypted metadata needs original signing keys that the editor does not
 - Hero head size, enemy head size, developer-commentary request, James Zurkon and mirror mode, requiring existing skill scores of 50, 100, 200, 400 and 500 respectively. Commentary also requires the game's supported runtime language, which is not stored here; On does not guarantee playback. Unknown saved states stay read-only; points and earned bits are unchanged. Zurkon Off cannot override its separate runtime flag.
 - Quick-select slots 0–23: Empty or owned items passing the native initial-flags filter. Slots 24–31 and unknown current values are retained; stored indices are not wheel positions. New duplicates are rejected, including duplicates in the last eight slots. Clear the old slot and assign the new one before saving to move an item.
 
+**Developer helpers** adds two optional one-shot actions, staged until Save All:
+
+- **Grant all native blueprints** ORs the native 13-bit mask, retaining other bits. It does not grant weapons or assign blueprint bits to guessed planets.
+- **Unlock bonuses (native helper)** sets the weighted bonus score to **840**, even if it was higher, and replaces each zero bonus state with 1. Nonzero states and earned skill bits are untouched. This can request multiple effects; it is not all skill awards. Run it separately from bonus selections, then revisit their page after saving.
+
+These reproduce confirmed saved writes, not live calls into the game. Runtime applicability and in-game acceptance remain untested. The separate [developer tools](../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/README.md#experimental-developer-tools) cover the opt-in ELF copy and Lua module; the save editor does not install them.
+
 Fields with nonfinite, out-of-range or unrecognized inputs stay read-only. Arbitrary XP or masks, special/unnamed upgrades, ownership, story flags, counters and other progress remain inspection-only because their dependencies are not fully reproduced.
 
 Changes are staged until **Save All** and use the existing backup/encryption checks. These edits are based on USA v02.00 research; the save layout check cannot identify every executable revision. In-game acceptance and live ammo capacities are not yet validated. Other games and regions keep currency editing only.

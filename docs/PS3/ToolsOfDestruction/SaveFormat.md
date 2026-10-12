@@ -136,6 +136,8 @@ Bonus requests: `0x86F9` hero head (0 Off, 1 2x, 2 4x, 3 0.5x), `0x86FB` enemy h
 
 Multiplier editing writes only `0x428`, bounded to finite 1–20, with an existing nonzero replay/restart word at `0x906EC`. Loading seeds its runtime accumulator; a sampled health decrease can reset the multiplier to 1. Runtime cache/countdown fields are not serialized and must not be written to same-numbered file offsets.
 
+Developer actions reproduce two native writes: grant-all ORs `0x0007DEE4` into blueprint mask `0x86F4`; enable-all sets score `0x8708` to 840 and changes only zero bytes in `0x86F8–0x8705` to 1. Nonzero states, earned bits and unknown blueprint bits are retained. This does not award all skills or prove every bonus is active.
+
 Hero XP passes through runtime float32 conversion and a fractional accumulator. Reload can lose precision for large integers; the native routine does not simply assign a saved level. Current health and checkpoint position are runtime state with **no confirmed dedicated save offset**.
 
 ## Worlds and gameplay segments

@@ -28,6 +28,7 @@ internal static partial class Program
                 AmmoUpgradeEditingChecks();
                 WeaponUpgradeEditingChecks();
                 RewardRequestEditingChecks();
+                DeveloperEditingChecks();
                 Console.WriteLine($"All {passed} lightweight edit checks passed.");
                 return 0;
             }

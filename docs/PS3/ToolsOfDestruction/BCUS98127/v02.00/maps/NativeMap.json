@@ -108670,6 +108670,185 @@
       "warning": "A snapshot confirms stored bit values, not a before/after activation or native acceptance test."
     }
   },
+  "developer_helpers": {
+    "scope": "BCUS98127 supplied v02.00; static native evidence, not live emulator validation",
+    "function_guards": [
+      {
+        "va": "0x810650",
+        "size": "0x78",
+        "sha256": "5B58BCEA1150C7E1E4114BD588F9538F732D24BF05217094ACF257D46DB568CD"
+      },
+      {
+        "va": "0x8106c8",
+        "size": "0xd8",
+        "sha256": "B7D74E9EDF021B7EA6703ADAA48EF7320CE699D5CE4EA38B05C3CF8F490F6B19"
+      },
+      {
+        "va": "0x743ac8",
+        "size": "0x194",
+        "sha256": "BEA2BE645018A22D68BBD54616FF101FFABA9301493E2D089380BA7CD83C1E59"
+      },
+      {
+        "va": "0x743c5c",
+        "size": "0x194",
+        "sha256": "CDCA78296D6D8BEBCD6D17D04A0CB07F51CC2A2A2DE6EC51B3181B2FFDEB3A8B"
+      },
+      {
+        "va": "0x72e9b0",
+        "size": "0x374",
+        "sha256": "3D724DB34A84CA2BFE93D0B713C91CEB5B4DF6328A12B18B6BD9D62BBF9D40A2"
+      },
+      {
+        "va": "0x2bafe8",
+        "size": "0xe0",
+        "sha256": "1F48BDA1A461E309BDB21004A1FF9597C85189BE4C3B5CB7B284F4D9F5391263"
+      },
+      {
+        "va": "0x28ab00",
+        "size": "0x180",
+        "sha256": "7EFF1D28A4A203435B27753E2BDF782CEFAA2B75C7AC79FAFDB07F581DAD9584"
+      },
+      {
+        "va": "0x2a82c0",
+        "size": "0xe0",
+        "sha256": "01DA743E54BCDFEFCA397829FE8D110B0A5834D7AF08168401141F7EA70B8A0D"
+      },
+      {
+        "va": "0x28f378",
+        "size": "0x100",
+        "sha256": "56F0C2577066ECA74901DBDB53999EC22F376FCE60DB0583BD9D7169D9373338"
+      },
+      {
+        "va": "0x66c520",
+        "size": "0xa0",
+        "sha256": "C9FBB02565F60B7AF4954DC83FB34D90C15165C60F13B544049D5895C5EB2CB9"
+      }
+    ],
+    "debug_library": {
+      "open_va": "0x810650",
+      "methods": [
+        {
+          "name": "getlocal",
+          "descriptor_va": "0x886f88",
+          "function_va": "0x810e48"
+        },
+        {
+          "name": "getinfo",
+          "descriptor_va": "0x886f98",
+          "function_va": "0x811260"
+        },
+        {
+          "name": "gethook",
+          "descriptor_va": "0x886f80",
+          "function_va": "0x810cd8"
+        },
+        {
+          "name": "getupvalue",
+          "descriptor_va": "0x886f60",
+          "function_va": "0x810910"
+        },
+        {
+          "name": "sethook",
+          "descriptor_va": "0x886f70",
+          "function_va": "0x810a18"
+        },
+        {
+          "name": "setlocal",
+          "descriptor_va": "0x886f68",
+          "function_va": "0x810918"
+        },
+        {
+          "name": "setupvalue",
+          "descriptor_va": "0x886f58",
+          "function_va": "0x8108d0"
+        },
+        {
+          "name": "debug",
+          "descriptor_va": "0x886f48",
+          "function_va": "0x8106c8"
+        },
+        {
+          "name": "traceback",
+          "descriptor_va": "0x886f90",
+          "function_va": "0x810f68"
+        }
+      ],
+      "registration_va": "0x8415c0",
+      "constructor_va": "0x743ac8",
+      "reinitializer_va": "0x743c5c",
+      "required_flag": "0x20",
+      "observed_caller_va": "0x72e9b0",
+      "mask_instruction_va": "0x72eb24",
+      "original_mask": "0x1f",
+      "experimental_mask": "0x3f",
+      "warning": "Adds debug registration at this initial call only. Later sandboxing, globals removal and reinitialization may still remove it. Does not inject Lua or connect console input."
+    },
+    "console": {
+      "function_va": "0x8106c8",
+      "registered_name": "debug.debug",
+      "prompt": "lua_debug> ",
+      "input_limit": 250,
+      "exit_token": "cont\n",
+      "execute_va": "0x66c520",
+      "rule": "Command-reading loop with compile/protected-call helper and subsequent stack clear; no local save flag or controller activation found.",
+      "warning": "Input/output are native runtime streams at10143DC8/10143E98. They are not confirmed usable from RPCS3; do not auto-invoke the console, which may block."
+    },
+    "runtime_helpers": [
+      {
+        "name": "hero_give_all_ammo",
+        "registration_va": "0x89ded8",
+        "wrapper_va": "0x2bafe8"
+      },
+      {
+        "name": "ally_debug",
+        "registration_va": "0x89e658",
+        "wrapper_va": "0x2a82c0"
+      }
+    ],
+    "ammo_helper": {
+      "leaf_va": "0x28ab00",
+      "rule": "Valid hero-component path loops32 inventory records, requiring ownership and definition flags&13==0, then invokes465D88. Not equivalent to the editor's seven gadget-ammo fields. Handle/class diagnostics may continue, so never call with a fabricated handle."
+    },
+    "ally_debug": {
+      "leaf_va": "0x28f378",
+      "rule": "Resolved moby/component path checks runtime class461 and emits formatted diagnostic lines for a runtime count. Not a confirmed ally AI cheat or invulnerability toggle."
+    },
+    "save_helpers": {
+      "native_guard_section": "bonuses",
+      "native_guard_count": 231,
+      "blueprints": "ORs0007DEE4 at86F4, preserving other bits; no planet-to-bit names guessed.",
+      "bonuses": "Sets score8708 to840 and replaces zero state bytes86F8..8705 with1. Preserves nonzero states and earned bits8710; not all skill awards or proof every effect is active."
+    },
+    "recommended_annotations": [
+      {
+        "va": "0x00810650",
+        "name": "TOD_lua_debug_library_open",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "F821FF71",
+        "comment": "Registers debug table at8415C0. Initialization743AC8/743C5C requires flag20; observed caller72E9B0 supplies1F, excluding it.",
+        "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+      },
+      {
+        "va": "0x008106C8",
+        "name": "TOD_lua_debug_interactive_loop",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "F821FE61",
+        "comment": "Registered debug.debug callback: writes lua_debug> prompt, reads up to250 bytes through814E00, exits on input end or cont newline, invokes66C520 to compile/call Lua then clears stack. Host streams and live usability untested.",
+        "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+      },
+      {
+        "va": "0x0072EB24",
+        "name": "TOD_game_lua_library_mask_excludes_debug",
+        "kind": "comment",
+        "confidence": "confirmed",
+        "bytes": "38A0001F",
+        "comment": "li r5,1F before743AC8. Experimental3F adds bit20 for debug-library registration without automatically opening the blocking console.",
+        "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+      }
+    ]
+  },
   "reward_multiplier_editing": {
     "scope": "BCUS98127 supplied v02.00; bounded saved float edit, not a replay-mode grant or in-game validation",
     "key": "bolt_multiplier",
@@ -126650,6 +126829,33 @@
     ]
   },
   "annotations": [
+    {
+      "va": "0x00810650",
+      "name": "TOD_lua_debug_library_open",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF71",
+      "comment": "Registers debug table at8415C0. Initialization743AC8/743C5C requires flag20; observed caller72E9B0 supplies1F, excluding it.",
+      "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+    },
+    {
+      "va": "0x008106C8",
+      "name": "TOD_lua_debug_interactive_loop",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FE61",
+      "comment": "Registered debug.debug callback: writes lua_debug> prompt, reads up to250 bytes through814E00, exits on input end or cont newline, invokes66C520 to compile/call Lua then clears stack. Host streams and live usability untested.",
+      "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+    },
+    {
+      "va": "0x0072EB24",
+      "name": "TOD_game_lua_library_mask_excludes_debug",
+      "kind": "comment",
+      "confidence": "confirmed",
+      "bytes": "38A0001F",
+      "comment": "li r5,1F before743AC8. Experimental3F adds bit20 for debug-library registration without automatically opening the blocking console.",
+      "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+    },
     {
       "va": "0x00475710",
       "name": "TOD_golden_object11_components_and_ammo_attempt_verified",
