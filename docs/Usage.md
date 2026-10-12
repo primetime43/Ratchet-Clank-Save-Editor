@@ -8,6 +8,8 @@ Encrypted saves need the complete folder, including `PARAM.SFO`, `PARAM.PFD` and
 
 Use **Open Folder** (`Ctrl+O`) for encrypted saves and **Open Decrypted Folder** (`Ctrl+Shift+O`) for plaintext. Opening does not alter source files. **Save All** (`Ctrl+S`) commits pending changes in the original input format.
 
+Numeric fields use text boxes: currency requires whole numbers; ammo and percentages accept a decimal point. Existing field limits still apply. Invalid entries are highlighted and block saving, including invalid pasted text.
+
 Manually decrypted console saves must be re-encrypted through their original save-management workflow before console transfer. Do not mix plaintext game data with encrypted metadata.
 
 ## Backups and recovery

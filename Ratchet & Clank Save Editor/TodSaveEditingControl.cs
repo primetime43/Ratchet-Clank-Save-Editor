@@ -13,9 +13,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly Label notice = new() { Name = "MappedEditNotice", AutoSize = true, Dock = DockStyle.Fill };
         private IReadOnlyList<TodEditField> fields = Array.Empty<TodEditField>();
         private readonly Dictionary<string, decimal> pending = new(StringComparer.Ordinal);
+        private readonly Dictionary<string, string> numericText = new(StringComparer.Ordinal);
+        private readonly Dictionary<string, string> invalidNumbers = new(StringComparer.Ordinal);
         private bool rendering;
-        public bool HasChanges => pending.Count > 0;
-        public IReadOnlyDictionary<string, decimal> PendingEdits => new Dictionary<string, decimal>(pending);
+        public bool HasChanges => pending.Count > 0 || HasInvalidInputs;
+        public bool HasInvalidInputs => invalidNumbers.Count > 0;
+        public string ValidationMessage => invalidNumbers.Values.FirstOrDefault() ?? string.Empty;
+        public IReadOnlyDictionary<string, decimal> PendingEdits => !HasInvalidInputs
+            ? new Dictionary<string, decimal>(pending) : throw new InvalidOperationException(ValidationMessage);
         public event EventHandler EditsChanged;
 
         public TodSaveEditingControl()
@@ -55,6 +60,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public void LoadSnapshot(byte[] data, string region)
         {
             pending.Clear();
+            numericText.Clear();
+            invalidNumbers.Clear();
             fields = TodSaveEditing.Fields(data, region);
             category.Items.Clear();
             bool available = fields.Count > 0;
@@ -73,6 +80,17 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (value == field.Current) pending.Remove(field.Key);
             else pending[field.Key] = value;
             EditsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public bool ValidateInputs()
+        {
+            if (!HasInvalidInputs) return true;
+            string key = invalidNumbers.Keys.First();
+            category.SelectedItem = fields.Single(field => field.Key == key).Category;
+            var input = Controls.Find("MappedEdit_" + key, true).OfType<NumericTextBox>().FirstOrDefault();
+            input?.Focus();
+            input?.SelectAll();
+            return false;
         }
 
         private void ShowFields()
@@ -110,13 +128,29 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     }
                     else
                     {
-                        var numeric = new NumericUpDown
+                        var numeric = new NumericTextBox
                         {
-                            Minimum = field.Minimum, Maximum = field.Maximum, Value = value,
-                            DecimalPlaces = field.Scale == 100 ? 1 : 6,
-                            Increment = 1, ThousandsSeparator = true
+                            Minimum = field.Minimum, Maximum = field.Maximum,
+                            AllowDecimal = true, FieldName = field.Label, Value = value
                         };
-                        numeric.ValueChanged += (_, _) => Stage(field, numeric.Value);
+                        // Text survives category changes, including incomplete/invalid input.
+                        if (numericText.TryGetValue(field.Key, out string typed)) numeric.Text = typed;
+                        numeric.ValueChanged += (_, _) =>
+                        {
+                            if (rendering) return;
+                            numericText[field.Key] = numeric.Text;
+                            if (numeric.TryGetValue(out decimal number))
+                            {
+                                invalidNumbers.Remove(field.Key);
+                                Stage(field, number);
+                            }
+                            else
+                            {
+                                pending.Remove(field.Key);
+                                invalidNumbers[field.Key] = numeric.ValidationMessage;
+                                EditsChanged?.Invoke(this, EventArgs.Empty);
+                            }
+                        };
                         input = numeric;
                     }
                     input.Name = "MappedEdit_" + field.Key;

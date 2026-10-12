@@ -220,7 +220,7 @@ internal static partial class Program
             typeof(MainForm).GetMethod("ShowSession", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(form, null);
             var editor = form.Controls.Find("MappedSaveEditor", true).Cast<TodSaveEditingControl>().Single();
             var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single();
-            var voice = editor.Controls.Find("MappedEdit_voice_volume", true).Cast<NumericUpDown>().Single();
+            var voice = editor.Controls.Find("MappedEdit_voice_volume", true).Cast<NumericTextBox>().Single();
             True(!editor.HasChanges, "Loading fields must not dirty the editor.");
             voice.Value = 25;
             True(Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Mapped-only edits must enable Save All.");
@@ -230,9 +230,9 @@ internal static partial class Program
             slot.SelectedItem = slot.Items.Cast<TodEditOption>().Single(option => option.Value == 1);
             Equal(1m, editor.PendingEdits["qs_0"]);
             category.SelectedItem = "Game settings";
-            Equal(25m, editor.Controls.Find("MappedEdit_voice_volume", true).Cast<NumericUpDown>().Single().Value);
+            Equal(25m, editor.Controls.Find("MappedEdit_voice_volume", true).Cast<NumericTextBox>().Single().Value);
             Equal(0.5f, BinaryPrimitives.ReadSingleBigEndian(session.ReadInspectionData().AsSpan(0x114C4, 4)));
-            editor.Controls.Find("MappedEdit_voice_volume", true).Cast<NumericUpDown>().Single().Value = 50;
+            editor.Controls.Find("MappedEdit_voice_volume", true).Cast<NumericTextBox>().Single().Value = 50;
             category.SelectedItem = "Quick select";
             slot = editor.Controls.Find("MappedEdit_qs_0", true).Cast<ComboBox>().Single();
             slot.SelectedItem = slot.Items.Cast<TodEditOption>().Single(option => option.Value == 0);

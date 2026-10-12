@@ -24,6 +24,7 @@ internal static partial class Program
         {
             if (args.SequenceEqual(new[] { "--mapped-edits" }))
             {
+                NumericInputChecks(root);
                 MappedEditingChecks(root);
                 Console.WriteLine($"All {passed} mapped-editing checks passed.");
                 return 0;
@@ -228,6 +229,7 @@ internal static partial class Program
                 Same(original, Snapshot(folder));
             });
             ResearchChecks(root);
+            NumericInputChecks(root);
             MappedEditingChecks(root);
             Check("Readable UI loads, resizes, switches games and renders at higher scale", () => UiChecks(root));
             if (args.Length == 2 && args[0] == "--samples") SampleChecks(root, Path.GetFullPath(args[1]));
@@ -525,16 +527,16 @@ internal static partial class Program
             Equal(session.Profile.Name.Replace("&", "&&"), Field<GroupBox>(form, "AccountInfoGroupBox").Text);
             True(Field<Button>(form, "OpenBackupButton").Enabled, "Open Backups should be available immediately after opening.");
             tabs.SelectedIndex = 1;
-            True(Field<NumericUpDown>(form, "CasinoChipsNumericUpDown").Visible == session.Profile.RaritaniumOffset.HasValue,
+            True(Field<NumericTextBox>(form, "RaritaniumTextBox").Visible == session.Profile.RaritaniumOffset.HasValue,
                 "Raritanium visibility did not reset on game switch.");
             True(Field<Button>(form, "SaveImageButton").Enabled == hasArtwork, "Artwork should enable export only when present.");
             var characters = Field<ComboBox>(form, "CharacterComboBox");
             bool characterGame = session.Profile.Layout == CurrencyLayout.Characters;
             True(characters.Visible == characterGame, "Character selector visibility did not reset.");
-            Equal((decimal)session.Profile.MaximumBolts, Field<NumericUpDown>(form, "MoneyNumericUpDown").Maximum);
+            Equal((decimal)session.Profile.MaximumBolts, Field<NumericTextBox>(form, "BoltsTextBox").Maximum);
             if (characterGame)
             {
-                var money = Field<NumericUpDown>(form, "MoneyNumericUpDown");
+                var money = Field<NumericTextBox>(form, "BoltsTextBox");
                 money.Value = 111;
                 characters.SelectedIndex = 1;
                 Equal(123m, money.Value);
@@ -555,7 +557,7 @@ internal static partial class Program
             }
             tabs.SelectedIndex = 0;
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Save should be disabled without pending edits.");
-            var bolts = Field<NumericUpDown>(form, "MoneyNumericUpDown");
+            var bolts = Field<NumericTextBox>(form, "BoltsTextBox");
             bolts.Value++;
             True(Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Editing currency should enable save.");
             Equal(loadedTitle + " • Unsaved changes", form.Text);
@@ -584,8 +586,8 @@ internal static partial class Program
         }
         tabs.SelectedIndex = 1;
         form.ClientSize = new Size(1120, 740);
-        Field<NumericUpDown>(form, "MoneyNumericUpDown").Value = int.MaxValue;
-        Field<NumericUpDown>(form, "CasinoChipsNumericUpDown").Value = int.MaxValue;
+        Field<NumericTextBox>(form, "BoltsTextBox").Value = int.MaxValue;
+        Field<NumericTextBox>(form, "RaritaniumTextBox").Value = int.MaxValue;
         Capture(form, Path.Combine(artifacts, "ui-readable-edited.png"));
         form.Scale(new SizeF(1.5f, 1.5f));
         Capture(form, Path.Combine(artifacts, "ui-readable-scaled.png"));

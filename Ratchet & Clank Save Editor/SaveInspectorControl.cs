@@ -12,7 +12,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly ComboBox upgradeWeapon = new() { Name = "UpgradeWeaponFilter", DropDownStyle = ComboBoxStyle.DropDownList, Width = 200, Visible = false };
         private bool updatingWeaponFilter;
         private readonly CheckBox technical = new() { Name = "InspectionTechnical", Text = "Technical", AutoSize = true };
-        private readonly NumericUpDown hexOffset = new() { Name = "HexOffset", Hexadecimal = true, Width = 100, Visible = false };
+        private readonly NumericTextBox hexOffset = new() { Name = "HexOffset", Hexadecimal = true,
+            FieldName = "File offset", Width = 100, Visible = false };
         private readonly DataGridView grid = new()
         {
             Name = "InspectionGrid", Dock = DockStyle.Fill, ReadOnly = true, AllowUserToAddRows = false,
@@ -92,7 +93,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             views.SelectedIndexChanged += (_, _) => RefreshView();
             technical.CheckedChanged += (_, _) => RefreshView();
             upgradeWeapon.SelectedIndexChanged += (_, _) => { if (!updatingWeaponFilter) RefreshView(); };
-            hexOffset.ValueChanged += (_, _) => { if (HasSnapshot) hex.Text = snapshot.HexBytes((int)hexOffset.Value); };
+            hexOffset.ValueChanged += (_, _) => UpdateHexView();
             views.SelectedIndex = 0;
         }
 
@@ -128,7 +129,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             hex.Visible = showHex;
             hexOffset.Visible = showHex && HasSnapshot;
             details.Text = snapshot?.Message ?? "Open a save folder to inspect it. Bundled references are on the Research tab.";
-            if (showHex) { hex.Text = snapshot?.HexBytes((int)hexOffset.Value) ?? details.Text; return; }
+            if (showHex) { UpdateHexView(); return; }
             grid.Rows.Clear();
             grid.Columns.Clear();
             InspectionTable table = view == "Files & headers" ? containers : snapshot?.Table(view);
@@ -149,6 +150,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 grid.CurrentCell = grid.Rows[0].Cells[0];
                 details.Text = grid.Rows[0].Tag as string;
             }
+        }
+
+        private void UpdateHexView()
+        {
+            hex.Text = !HasSnapshot ? details.Text : hexOffset.TryGetValue(out decimal offset)
+                ? snapshot.HexBytes((int)offset) : hexOffset.ValidationMessage;
         }
 
         private void FitColumns()

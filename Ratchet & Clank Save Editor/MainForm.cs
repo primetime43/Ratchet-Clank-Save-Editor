@@ -20,10 +20,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private int selectedCharacter;
         private int[] pendingBolts;
         private TodSaveEditingControl mappedEditor;
+        private bool HasInvalidNumericInput => !BoltsTextBox.IsValid ||
+            (session?.Profile.RaritaniumOffset.HasValue == true && !RaritaniumTextBox.IsValid) ||
+            mappedEditor?.HasInvalidInputs == true;
         private bool Dirty => session != null && (session.MetadataChanged ||
+            HasInvalidNumericInput ||
             mappedEditor.HasChanges ||
             (pendingBolts != null && !pendingBolts.SequenceEqual(session.CharacterBolts)) ||
-            (session.Profile.RaritaniumOffset.HasValue && CasinoChipsNumericUpDown.Value != session.Raritanium));
+            (session.Profile.RaritaniumOffset.HasValue && RaritaniumTextBox.Value != session.Raritanium));
 
         public MainForm()
         {
@@ -80,10 +84,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 PlanetTextBox.Text = session.Metadata.Planet;
                 saveInspector.LoadSession(session);
                 mappedEditor.LoadSnapshot(session.ReadInspectionData(), session.Metadata.Region);
-                MoneyNumericUpDown.Maximum = session.Profile.MaximumBolts;
-                MoneyNumericUpDown.Value = session.Bolts;
-                CasinoChipsNumericUpDown.Value = session.Raritanium;
-                CasinoChipsLabel.Visible = CasinoChipsNumericUpDown.Visible = session.Profile.RaritaniumOffset.HasValue;
+                BoltsTextBox.Maximum = session.Profile.MaximumBolts;
+                BoltsTextBox.Value = session.Bolts;
+                RaritaniumTextBox.Value = session.Raritanium;
+                CasinoChipsLabel.Visible = RaritaniumTextBox.Visible = session.Profile.RaritaniumOffset.HasValue;
                 SaveGameImagePictureBox.Image?.Dispose();
                 SaveGameImagePictureBox.Image = null;
                 string icon = Path.Combine(session.WorkingFolder, "ICON0.PNG");
@@ -109,10 +113,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private async Task<bool> SaveChanges()
         {
             if (session == null || busy) return false;
-            ValidateChildren();
-            pendingBolts[selectedCharacter] = decimal.ToInt32(MoneyNumericUpDown.Value);
+            if (!ValidateNumericInputs()) return false;
+            pendingBolts[selectedCharacter] = decimal.ToInt32(BoltsTextBox.Value);
             int[] bolts = pendingBolts.ToArray();
-            int raritanium = decimal.ToInt32(CasinoChipsNumericUpDown.Value);
+            int raritanium = session.Profile.RaritaniumOffset.HasValue ? decimal.ToInt32(RaritaniumTextBox.Value) : 0;
             var mappedEdits = mappedEditor.PendingEdits;
             return await RunOperation("Verifying and saving changes…", async () =>
             {
@@ -163,26 +167,51 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private void ValuesChanged(object sender, EventArgs e)
         {
             if (busy || loadingValues) return;
-            if (pendingBolts != null) pendingBolts[selectedCharacter] = decimal.ToInt32(MoneyNumericUpDown.Value);
+            if (pendingBolts != null && BoltsTextBox.TryGetValue(out decimal bolts))
+                pendingBolts[selectedCharacter] = decimal.ToInt32(bolts);
             UpdateTitle();
-            if (Dirty) StatusLabel.Text = "Unsaved changes · Save to apply your edits";
+            if (HasInvalidNumericInput) StatusLabel.Text = "Invalid number · " + NumericValidationMessage;
+            else if (Dirty) StatusLabel.Text = "Unsaved changes · Save to apply your edits";
             else if (session != null) StatusLabel.Text = "No pending changes";
         }
 
         private void CharacterChanged(object sender, EventArgs e)
         {
             if (loadingValues || busy || session == null || CharacterComboBox.SelectedIndex < 0) return;
-            pendingBolts[selectedCharacter] = decimal.ToInt32(MoneyNumericUpDown.Value);
+            if (!BoltsTextBox.IsValid)
+            {
+                loadingValues = true;
+                try { CharacterComboBox.SelectedIndex = selectedCharacter; }
+                finally { loadingValues = false; }
+                ValidateNumericInputs();
+                return;
+            }
+            pendingBolts[selectedCharacter] = decimal.ToInt32(BoltsTextBox.Value);
             selectedCharacter = CharacterComboBox.SelectedIndex;
             loadingValues = true;
-            try { MoneyNumericUpDown.Value = pendingBolts[selectedCharacter]; }
+            try { BoltsTextBox.Value = pendingBolts[selectedCharacter]; }
             finally { loadingValues = false; }
             UpdateTitle();
         }
 
         private void RefreshSaveActions()
         {
-            saveAllToolStripMenuItem.Enabled = session != null && Dirty && !busy;
+            saveAllToolStripMenuItem.Enabled = session != null && Dirty && !busy && !HasInvalidNumericInput;
+        }
+
+        private string NumericValidationMessage => !BoltsTextBox.IsValid ? BoltsTextBox.ValidationMessage :
+            session?.Profile.RaritaniumOffset.HasValue == true && !RaritaniumTextBox.IsValid
+                ? RaritaniumTextBox.ValidationMessage : mappedEditor.ValidationMessage;
+
+        private bool ValidateNumericInputs()
+        {
+            if (!HasInvalidNumericInput) return true;
+            StatusLabel.Text = "Invalid number · " + NumericValidationMessage;
+            if (!BoltsTextBox.IsValid) { BoltsTextBox.Focus(); BoltsTextBox.SelectAll(); }
+            else if (session.Profile.RaritaniumOffset.HasValue && !RaritaniumTextBox.IsValid)
+            { RaritaniumTextBox.Focus(); RaritaniumTextBox.SelectAll(); }
+            else mappedEditor.ValidateInputs();
+            return false;
         }
 
         private void UpdateTitle()

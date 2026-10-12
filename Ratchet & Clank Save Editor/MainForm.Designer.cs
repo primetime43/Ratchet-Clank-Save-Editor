@@ -59,8 +59,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.PlanetTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.CasinoChipsLabel = new System.Windows.Forms.Label();
-            this.CasinoChipsNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.MoneyNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.RaritaniumTextBox = new NumericTextBox();
+            this.BoltsTextBox = new NumericTextBox();
             this.MoneyLabel = new System.Windows.Forms.Label();
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,8 +93,6 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.CharacterComboBox.SelectedIndexChanged += new System.EventHandler(this.CharacterChanged);
             this.groupBox3.Controls.Add(this.CharacterLabel);
             this.groupBox3.Controls.Add(this.CharacterComboBox);
-            ((System.ComponentModel.ISupportInitialize)(this.CasinoChipsNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MoneyNumericUpDown)).BeginInit();
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -300,8 +298,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.groupBox3.Controls.Add(this.PlanetTextBox);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.CasinoChipsLabel);
-            this.groupBox3.Controls.Add(this.CasinoChipsNumericUpDown);
-            this.groupBox3.Controls.Add(this.MoneyNumericUpDown);
+            this.groupBox3.Controls.Add(this.RaritaniumTextBox);
+            this.groupBox3.Controls.Add(this.BoltsTextBox);
             this.groupBox3.Controls.Add(this.MoneyLabel);
             this.groupBox3.Location = new System.Drawing.Point(6, 6);
             this.groupBox3.Name = "groupBox3";
@@ -336,29 +334,29 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.CasinoChipsLabel.TabIndex = 13;
             this.CasinoChipsLabel.Text = "Raritanium:";
             // 
-            // CasinoChipsNumericUpDown
+            // RaritaniumTextBox
             // 
-            this.CasinoChipsNumericUpDown.Location = new System.Drawing.Point(131, 73);
-            this.CasinoChipsNumericUpDown.Maximum = new decimal(new int[] {
+            this.RaritaniumTextBox.Location = new System.Drawing.Point(131, 73);
+            this.RaritaniumTextBox.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.CasinoChipsNumericUpDown.Name = "CasinoChipsNumericUpDown";
-            this.CasinoChipsNumericUpDown.Size = new System.Drawing.Size(110, 20);
-            this.CasinoChipsNumericUpDown.TabIndex = 12;
+            this.RaritaniumTextBox.Name = "RaritaniumTextBox";
+            this.RaritaniumTextBox.Size = new System.Drawing.Size(110, 20);
+            this.RaritaniumTextBox.TabIndex = 12;
             // 
-            // MoneyNumericUpDown
+            // BoltsTextBox
             // 
-            this.MoneyNumericUpDown.Location = new System.Drawing.Point(131, 45);
-            this.MoneyNumericUpDown.Maximum = new decimal(new int[] {
+            this.BoltsTextBox.Location = new System.Drawing.Point(131, 45);
+            this.BoltsTextBox.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.MoneyNumericUpDown.Name = "MoneyNumericUpDown";
-            this.MoneyNumericUpDown.Size = new System.Drawing.Size(110, 20);
-            this.MoneyNumericUpDown.TabIndex = 11;
+            this.BoltsTextBox.Name = "BoltsTextBox";
+            this.BoltsTextBox.Size = new System.Drawing.Size(110, 20);
+            this.BoltsTextBox.TabIndex = 11;
             // 
             // MoneyLabel
             // 
@@ -457,8 +455,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ratchet & Clank Save Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.MoneyNumericUpDown.ValueChanged += new System.EventHandler(this.ValuesChanged);
-            this.CasinoChipsNumericUpDown.ValueChanged += new System.EventHandler(this.ValuesChanged);
+            this.BoltsTextBox.ValueChanged += new System.EventHandler(this.ValuesChanged);
+            this.RaritaniumTextBox.ValueChanged += new System.EventHandler(this.ValuesChanged);
             this.TabControl.ResumeLayout(false);
             this.GameSaveInformationTabPage.ResumeLayout(false);
             this.AccountInfoGroupBox.ResumeLayout(false);
@@ -468,8 +466,6 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.GameSaveEditingTabPage.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CasinoChipsNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MoneyNumericUpDown)).EndInit();
             this.MenuStrip.ResumeLayout(false);
             this.MenuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -509,8 +505,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label CasinoChipsLabel;
-        private System.Windows.Forms.NumericUpDown CasinoChipsNumericUpDown;
-        private System.Windows.Forms.NumericUpDown MoneyNumericUpDown;
+        private NumericTextBox RaritaniumTextBox;
+        private NumericTextBox BoltsTextBox;
         private System.Windows.Forms.Label MoneyLabel;
         private System.Windows.Forms.ToolStripMenuItem creditsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;

@@ -91,10 +91,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             player.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
             player.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             AddField(player, 0, label1, PlanetTextBox);
-            AddField(player, 1, MoneyLabel, MoneyNumericUpDown);
-            AddField(player, 2, CasinoChipsLabel, CasinoChipsNumericUpDown);
+            AddField(player, 1, MoneyLabel, BoltsTextBox);
+            AddField(player, 2, CasinoChipsLabel, RaritaniumTextBox);
             AddField(player, 3, CharacterLabel, CharacterComboBox);
-            MoneyNumericUpDown.ThousandsSeparator = CasinoChipsNumericUpDown.ThousandsSeparator = true;
+            BoltsTextBox.FieldName = "Bolts";
+            RaritaniumTextBox.FieldName = "Raritanium";
             groupBox3.Controls.Add(player);
             editing.Controls.Add(groupBox3, 0, 0);
             var mappedGroup = new GroupBox { Name = "MappedEditsGroup", Text = "Mapped fields" };
