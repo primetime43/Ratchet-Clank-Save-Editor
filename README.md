@@ -2,17 +2,6 @@
 
 Windows editor for PS3 Ratchet & Clank saves. Edit currency, back up saves, export artwork and inspect save data. Tools of Destruction also has read-only research views.
 
-## Build and run
-
-Requires Windows and the .NET 10 SDK. Framework-dependent builds need the .NET 10 Desktop Runtime.
-
-```powershell
-dotnet build "Ratchet And Clank Save Editor.sln" -c Release
-dotnet run --project "Ratchet & Clank Save Editor/Ratchet & Clank Save Editor.csproj"
-```
-
-Release output: `Ratchet & Clank Save Editor/bin/Release/net10.0-windows/`.
-
 ## Use
 
 1. Copy the complete save folder to your PC.
