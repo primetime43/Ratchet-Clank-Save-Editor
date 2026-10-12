@@ -1,4 +1,10 @@
-# Research wiki
+# Documentation
+
+- [Save handling and recovery](Usage.md)
+- [Build and test](Development.md)
+- [Supported PS3 regions](PS3/Compatibility.md)
+
+## Research wiki
 
 Browse by platform → game → region/title ID → executable version.
 

@@ -2,4 +2,4 @@
 
 - [Ratchet & Clank: Tools of Destruction](ToolsOfDestruction/README.md)
 
-Only games with research documents are listed here. The editor's broader PS3 support is described in the [main README](../../README.md); support does not imply a fully reverse-engineered save format.
+Only games with research documents are listed here. See [compatibility](Compatibility.md) for the editor's supported title IDs; currency editing does not imply a fully reverse-engineered save format.
