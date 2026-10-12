@@ -108630,6 +108630,19 @@
       "warning": "A snapshot confirms stored bit values, not a before/after activation or native acceptance test."
     }
   },
+  "ordinary_upgrade_editing": {
+    "scope": "BCUS98127 supplied v02.00; direct add-only ordinary node edits, not purchases or tested live stats",
+    "catalog_section": "upgrade_edit_candidates",
+    "additional_non_ammo_node_count": 132,
+    "allowed_non_ammo_types": ["MOD_DAMAGE", "MOD_RANGE", "MOD_AOE", "MOD_SPEED", "MOD_DURATION", "MOD_BOLTS", "MOD_MINERALS", "MOD_SPAWNCOUNT"],
+    "native_guard_sections": ["upgrade_purchase", "ammo_capacity", "weapon_level_editing"],
+    "baseline": "Same strict ownership, consistent XP/level, bounded ammo, defined-mask and attainable-grid gates as ammo_upgrade_editing. Only absent nodes adjacent to the ORIGINAL installed graph are offered; reopen after saving to advance the frontier.",
+    "definition_gate": "Ordinary positive index, not the designated special; complete finite nonzero signed value and positive integral cost. Percentage value must exceed -1. MOD_MISC and every designated special are excluded.",
+    "write_policy": "OR selected modifier bits only. 465D00 refills when old/new maximum ammo differs; non-MOD_AMMO nodes do not contribute to attribute9 calculation through466258, so these additions preserve raw ammo bits. No wallet, ownership, unlock, counter or callback mutation; no removals.",
+    "combined_edits": "Shares the ammo-upgrade mask plan: level/XP, then all selected node bits and any capacity refill, then explicit ammo. Capacity-node edits keep their existing keys and limits.",
+    "display": "Show internal weapon name, effect label and signed shipped value. Percentage definitions display value*100. These are reference modifiers, not measured final weapon stats; negative speed/duration values are retained rather than described as guessed positive boosts.",
+    "observation_limit": "The supplied save already contains every positive node. Synthetic reachable-prefix checks qualify writes, not purchase history or in-game acceptance."
+  },
   "ammo_upgrade_editing": {
     "scope": "BCUS98127 supplied v02.00; direct add-only file edits, not purchases or in-game validation",
     "catalog_section": "upgrade_edit_candidates",

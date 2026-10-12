@@ -118,7 +118,9 @@ Upgrade purchase publishes the modifier, conditionally refills ammo, then debits
 
 The topology audit covers 204 nodes: 15 starts, 175 ordinary and 14 special. Of the 189 positive nodes, 182 have complete numeric definitions. Seven specials have unspecified numeric values; that is not proof of a zero effect.
 
-The editor offers only the 38 ordinary ammo-capacity nodes: positive integer additions of 1/2/4/5/20/30, none percentages or specials. Require a consistent owned weapon, valid XP/level/ammo, an attainable existing mask and an installed adjacent node (start0 implicit). Bits are add-only. Capacity is recomputed in native float32 order and refilled; explicit ammo overrides the refill up to the new limit. Wallet, ownership and callbacks are untouched. Ten nodes are reachable from an empty mask. Other node types remain research candidates only.
+The editor offers 38 ordinary ammo-capacity nodes: positive integer additions of 1/2/4/5/20/30, none percentages or specials. Require a consistent owned weapon, valid XP/level/ammo, an attainable existing mask and an installed adjacent node (start0 implicit). Bits are add-only. Capacity is recomputed in native float32 order and refilled; explicit ammo overrides the refill up to the new limit. Wallet, ownership and callbacks are untouched. Ten capacity nodes are reachable from an empty mask.
+
+Another 132 ordinary nodes are editable for damage, range, blast radius, speed, duration, bolt/raritanium bonuses and spawn count. They use the same baseline and adjacency gates, but preserve ammo because the native capacity walker selects `MOD_AMMO` only. Labels retain signed shipped values; they are not measured final stats. Five `MOD_MISC` nodes and all 14 designated specials stay read-only. Additions cannot supply prerequisites for other unavailable nodes within the same save batch.
 
 The supplied save already has every positive node, so it cannot confirm an addition transition. Synthetic checks do not establish in-game acceptance.
 
@@ -224,7 +226,7 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | --- | --- |
 | Save/load/restart | `serialization`, `snapshot_lifecycle`, `restart_execution`, `save_tail`, `load_selection` |
 | Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_level_editing`, `gadget_ammo_editing`, `groovitron_linked_state`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
-| Purchases | `weapon_purchase`, `upgrade_purchase`, `upgrade_edit_candidates`, `ammo_upgrade_editing`, `special_modifier_effects`, `armor_consumer`, `currency_mutation` |
+| Purchases | `weapon_purchase`, `upgrade_purchase`, `upgrade_edit_candidates`, `ammo_upgrade_editing`, `ordinary_upgrade_editing`, `special_modifier_effects`, `armor_consumer`, `currency_mutation` |
 | Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
 | XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow` |
 | Collectibles and bonuses | `collectibles`, `collectible_producers`, `blueprint_producers`, `bonuses`, `bonus_effects`, `bonus_remaining`, `bonus_selection`, `bonus_selection_assets` |

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade }
     public sealed record TodEditOption(decimal Value, string Label)
     {
         public override string ToString() => Label;
@@ -190,7 +190,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade) continue; // Coupled plans already applied.
+                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade) continue; // Coupled plans already applied.
                 if (edit.Value == field.Current)
                 {
                     // Explicit ammo overrides either coupled refill, retaining
