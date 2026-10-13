@@ -64,6 +64,19 @@
       { "va": "0x3046E8", "size": 144, "sha256": "FAAA45577894C9B868D960C877A2F718D2A7DBF851C4BE770BEE5AE9A443CC42" }
     ]
   },
+  "complete_upgrade_editing": {
+    "scope": "BCUS98127 supplied v02.00; bounded add-only mask edits, not purchases or tested live effects",
+    "native_guard_sections": ["upgrade_purchase", "ammo_capacity", "special_modifier_effects"],
+    "catalog_section": "upgrade_edit_candidates",
+    "counts": { "weapons": 15, "positive_nodes": 189, "ammo_nodes": 38, "special_nodes": 14, "value_free_special_nodes": 7 },
+    "baseline": "Require existing ownership, consistent bounded XP/level, finite in-range ammo, no undefined mask bits and geometrically attainable installed nodes. Unowned or malformed weapons stay inspection-only.",
+    "individual": "Absent positive ordinary nodes require an installed orthogonal neighbor. Designated special nodes require every positive orthogonal neighbor. Numeric definitions require finite nonzero value and positive integral cost; percent values must exceed-1. Named MOD_SPECIAL16 nodes instead require a matching verified type/mask catalog entry, blank value and positive integral cost; no numeric zero is invented.",
+    "complete_grid": "upgrade_all_ID ORs every positive shipped index, preserving original start-bit state. Qualify every definition and the full graph before offering a grid. This operation explicitly includes prerequisite nodes, unlike individual immediate-frontier additions. RYNO has14 positive nodes, special marker-3 and an implicit node0 at its center, not a positive special upgrade.",
+    "write_policy": "Merge all selected mask additions, refill to the reference maximum only when capacity changes, then apply explicit ammo overrides. Preserve XP/level unless separately edited, ownership, unlock bytes, currencies, acquisitions, quick-select, story/skill bits and every unrelated byte. No removals or runtime callbacks.",
+    "bulk": "UnlockOwnedUpgrades stages complete-grid operations for supported already-owned weapons only. Preserve unrelated pending edits and explicit typed ammo overrides; already-complete grids are no-ops.",
+    "labels": "Signed shipped numeric modifiers are references, not measured final stats. MOD_MISC uses Weapon-specific parameter; blank MOD_SPECIAL nodes use Special behavior switch. No localized effect names or complete weapon behavior are claimed.",
+    "limits": "Save-file purchase-state editing only. Runtime definition overrides, effects, vendor animations/callbacks, live acceptance and other builds remain unverified."
+  },
   "binary": {
     "filename": "EBOOT.ELF",
     "title_id": "BCUS98127",
@@ -108618,7 +108631,7 @@
       "rule": "Counts exact12-byte target-token matches in the runtime list. A first match-free target returns1 without special query. For repeated targets, a runtime component6C whose float+8 is ordered below2.0 rejects before querying the modifier. Otherwise no MOD_SPECIAL rejects; MOD_SPECIAL admits exactly one previous match and rejects two or more. Every path publishes the request in a32-entry runtime ring first.",
       "boundary": "This proves a local duplicate-target admission effect, not a final projectile count, complete target eligibility or whole weapon behavior. Runtime lists/components/ring are not saved fields."
     },
-    "edit_policy": "Keep these seven nodes read-only for now. A blank numeric value is not itself a predicate blocker: the native special query does not read it. Weapon-specific effects and activation dependencies require separate qualification; do not replace unspecified values with zero.",
+    "edit_policy": "Bounded add-only saved-mask editing is now qualified separately in complete_upgrade_editing. Blank values remain unspecified: the native Boolean predicate reads type/mask only. Individual special nodes require all positive neighbors; complete grids include prerequisites. Weapon-specific runtime effects and in-game acceptance remain unverified; no numeric zero is invented.",
     "instruction_guards": [
       {
         "va": "0x466630",
@@ -109143,6 +109156,7 @@
     "observation_limit": "Reference save multiplier1.0/replay word3 is eligible; detached synthetic checks verify file writes, not actual reward amounts or in-game acceptance."
   },
   "ordinary_upgrade_editing": {
+    "superseded_by": "complete_upgrade_editing extends this original ordinary-only subset; historical definition/adjacency evidence below is retained",
     "scope": "BCUS98127 supplied v02.00; direct add-only ordinary node edits, not purchases or tested live stats",
     "catalog_section": "upgrade_edit_candidates",
     "additional_non_ammo_node_count": 132,

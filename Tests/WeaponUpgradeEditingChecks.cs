@@ -40,7 +40,7 @@ internal static partial class Program
             }
             Equal(132, count);
         });
-        Check("Weapon upgrades reject unverified dependencies, unknown effects, specials and removals", () =>
+        Check("Weapon upgrades reject unverified dependencies, unmet special prerequisites and removals", () =>
         {
             foreach (int fault in Enumerable.Range(0, 6))
             {
@@ -54,10 +54,10 @@ internal static partial class Program
                 Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits(("weapon_upgrade_2_5", 1))));
             }
             foreach (var entry in catalog.EnumerateArray())
-            foreach (var node in entry.GetProperty("nodes").EnumerateArray().Where(node => node.GetProperty("is_special").GetBoolean() || node.GetProperty("type").GetString() == "MOD_MISC"))
+            foreach (var node in entry.GetProperty("nodes").EnumerateArray().Where(node => node.GetProperty("is_special").GetBoolean()))
             {
                 int id = entry.GetProperty("id").GetInt32(), index = node.GetProperty("index").GetInt32();
-                byte[] data = AmmoUpgradeFixture(entry, index);
+                byte[] data = WeaponLevelFixture();
                 Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits(($"weapon_upgrade_{id}_{index}", 1))));
             }
             foreach (decimal value in new[] { -1m, 0.5m, 2m })

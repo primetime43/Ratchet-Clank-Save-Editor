@@ -138,17 +138,19 @@ internal static partial class Program
             var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single();
             var refill = editor.Controls.Find("MappedRefillAmmo", true).Cast<Button>().Single();
             var maxLevel = editor.Controls.Find("MappedMaxWeaponTier", true).Cast<Button>().Single();
+            var upgrades = editor.Controls.Find("MappedUnlockUpgrades", true).Cast<Button>().Single();
             var actions = editor.Controls.Find("MappedBulkActions", true).Single();
             foreach (string page in category.Items.Cast<string>().ToArray())
             {
                 category.SelectedItem = page;
                 Equal(page is "Weapon ammo" or "Gadget ammo", refill.Visible);
                 Equal(page == "Weapon levels", maxLevel.Visible);
-                Equal(page is "Weapon ammo" or "Gadget ammo" or "Weapon levels", actions.Visible);
+                Equal(page == "Weapon upgrades", upgrades.Visible);
+                Equal(page is "Weapon ammo" or "Gadget ammo" or "Weapon levels" or "Weapon upgrades", actions.Visible);
             }
             True(!editor.HasChanges, "Switching action visibility must not stage edits.");
             editor.LoadSnapshot(null, null);
-            True(!actions.Visible && !refill.Visible && !maxLevel.Visible, "No actions without a supported save.");
+            True(!actions.Visible && !refill.Visible && !maxLevel.Visible && !upgrades.Visible, "No actions without a supported save.");
         });
         Check("Skill checklist stages add-only awards and automatic HARDCORE across category switches", () =>
         {

@@ -51,7 +51,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             layout.Controls.Add(bulkActions, 0, 2);
             layout.Controls.Add(fieldsPanel, 0, 3);
             foreach (var action in new[] { (TodBulkEdit.RefillSupportedAmmo, "Refill supported ammo", "MappedRefillAmmo"),
-                (TodBulkEdit.MaximumOwnedWeaponTier, "Max weapon levels (current tier)", "MappedMaxWeaponTier") })
+                (TodBulkEdit.MaximumOwnedWeaponTier, "Max weapon levels (current tier)", "MappedMaxWeaponTier"),
+                (TodBulkEdit.UnlockOwnedUpgrades, "Unlock all owned weapon upgrades", "MappedUnlockUpgrades") })
             {
                 var button = new Button { Name = action.Item3, Text = action.Item2, Tag = action.Item1, AutoSize = true,
                     Margin = new Padding(0, 0, 12, 4) };
@@ -126,7 +127,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 notice.Text = "The staged selection was cleared because its ownership grant was cancelled. The saved selection is unchanged.";
             if (TodWeaponGrantEditing.CancelDependentSlots(field, pending))
                 notice.Text = "Quick-select assignments depending on the cancelled weapon grant were cleared. Saved slots are unchanged.";
-            if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade)
+            if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.WeaponUpgradeAll)
             {
                 string key = "ammo_" + field.Offset / 20;
                 var ammo = fields.Single(item => item.Key == key);
@@ -157,7 +158,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 var existing = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
                 // A typed same-as-original ammo value can be an intentional
                 // override of a later level-up refill. Preserve that intent.
-                if (action == TodBulkEdit.MaximumOwnedWeaponTier)
+                if (action is TodBulkEdit.MaximumOwnedWeaponTier or TodBulkEdit.UnlockOwnedUpgrades)
                 foreach (var field in fields.Where(item => item.Category == "Weapon ammo" && numericText.ContainsKey(item.Key)))
                 {
                     using var input = new NumericTextBox { Minimum = field.Minimum, Maximum = EffectiveMaximum(field),
@@ -236,8 +237,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 string key = "weapon_level_" + field.Key["ammo_".Length..];
                 var level = fields.FirstOrDefault(item => item.Key == key);
                 if ((level != null && pending.TryGetValue(key, out decimal selected) && selected > level.Current) ||
-                    pending.Any(edit => edit.Value == 1 && fields.Any(item => item.Key == edit.Key &&
-                        item.Storage == TodEditStorage.AmmoUpgrade && item.Offset / 20 == field.Offset / 20)))
+                    TodAmmoUpgradeEditing.RefillsAmmo(snapshot, field, pending))
                     return EffectiveMaximum(field);
             }
             return field.Current;
@@ -423,6 +423,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 {
                     TodBulkEdit.RefillSupportedAmmo => selectedCategory is "Weapon ammo" or "Gadget ammo",
                     TodBulkEdit.MaximumOwnedWeaponTier => selectedCategory == "Weapon levels",
+                    TodBulkEdit.UnlockOwnedUpgrades => selectedCategory == "Weapon upgrades",
                     _ => false
                 };
                 button.Visible = relevant;
@@ -440,8 +441,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Rewards" => "Bolt multiplier: 1–20×, only with an existing nonzero replay flag and valid multiplier. This does not enable replay mode. Loading seeds the runtime accumulator; sampled health loss can reset the multiplier to 1×. Fractional values use native float storage. Not yet tested in-game.",
                 "Developer helpers" => "One-shot actions on Save All. Blueprints OR the native 13-bit grant mask, preserving other bits. Unlock bonuses SETS score to 840 and changes every zero bonus state to 1, preserving nonzero states; this can request multiple effects. It does not award earned skills. Run it separately from skill awards and bonus selections. Not yet tested in-game.",
                 "Gadget ammo" => "Ammo for already-owned consumables only. Groovitron and traversal gadgets stay read-only because of linked state. Values use the native float storage and reference capacities, not a promised use count. Not yet tested in-game.",
-                "Ammo upgrades" => "Add missing ordinary capacity nodes next to already-installed nodes. Existing upgrades cannot be removed. Adding a node refills to the new capacity; Weapon ammo previews it and allows an override. Raritanium is unchanged: this is a direct save edit, not a purchase. Special and unnamed effects stay read-only. Not yet tested in-game.",
-                "Weapon upgrades" => "Add missing ordinary upgrades next to already-installed nodes. Labels show shipped modifier values, not measured live stats; signed speed/duration values are kept as defined. These nodes do not refill ammo or charge raritanium. Save and reopen to expose further adjacent nodes. No removals, special nodes or unnamed effects. Not yet tested in-game.",
+                "Ammo upgrades" => "Add missing capacity nodes next to already-installed nodes. Adding refills to the new capacity; Weapon ammo previews it and allows an override. Raritanium is unchanged. Weapon upgrades also offers complete grids, including special nodes. Existing upgrades cannot be removed. Not yet tested in-game.",
+                "Weapon upgrades" => "Choose a complete grid for one weapon, unlock all supported owned grids, or add individual available nodes. Special nodes require all positive neighbors; complete grids include those prerequisites. Blank MOD_SPECIAL values are Boolean switches, not guessed numbers. Labels show shipped modifiers, not measured live effects. Capacity increases refill ammo; Weapon ammo allows an override. No raritanium charge, removals, level/ownership change or story edits. RYNO's center is its implicit start node, not a purchased upgrade. Not yet tested in-game.",
                 "Weapon levels" => "Levels stay within the weapon's existing 1–5 or 6–10 tier. A change sets matching XP; increases refill ammo, decreases keep ammo. Weapon ammo shows the planned refill and allows an override. No ownership, upgrades or purchases are granted. Not yet tested in-game.",
                 "Skill awards" => "Check missing skills to award them on Save All. Earned skills cannot be removed. New awards add their native point values to the existing score; HARDCORE follows the last missing ordinary skill automatically. Labels are formatted native names. Existing score/bit mismatches and unknown bits are retained. Unlock bonuses must be saved separately. Not yet tested in-game.",
                 "Armor unlocks" => "Grant missing armor ownership on Save All. Already-owned entries cannot be removed. Grants do not equip armor, spend bolts, change vendor availability or enable challenge mode. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
@@ -474,6 +475,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList,
                             Enabled = field.Storage is not (TodEditStorage.OwnershipGrant or TodEditStorage.WeaponGrant or TodEditStorage.EquipmentGrant) ||
                                 field.Current == 0 && field.Maximum > 0 };
+                        if (field.Storage == TodEditStorage.WeaponUpgradeAll && field.Maximum == 0) combo.Enabled = false;
                         // Levels and schemes are numeric sequences; named choices
                         // sort by their labels without changing the saved IDs.
                         IEnumerable<TodEditOption> options = field.Storage == TodEditStorage.WeaponLevel || field.Key == "control_scheme"

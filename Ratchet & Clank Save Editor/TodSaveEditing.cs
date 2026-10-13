@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter, WeaponGrant, EquipmentGrant }
-    public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter, WeaponGrant, EquipmentGrant, WeaponUpgradeAll }
+    public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier, UnlockOwnedUpgrades }
     public sealed record TodEditOption(decimal Value, string Label)
     {
         public override string ToString() => Label;
@@ -171,9 +171,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (!Enum.IsDefined(action)) throw new ArgumentOutOfRangeException(nameof(action));
             var fields = Fields(original, region);
             var plan = new Dictionary<string, decimal>(existing, StringComparer.Ordinal);
-            var targets = fields.Where(field => action == TodBulkEdit.RefillSupportedAmmo
-                ? field.Category is "Weapon ammo" or "Gadget ammo"
-                : field.Storage == TodEditStorage.WeaponLevel);
+            var targets = fields.Where(field => action switch
+            {
+                TodBulkEdit.RefillSupportedAmmo => field.Category is "Weapon ammo" or "Gadget ammo",
+                TodBulkEdit.MaximumOwnedWeaponTier => field.Storage == TodEditStorage.WeaponLevel,
+                TodBulkEdit.UnlockOwnedUpgrades => field.Storage == TodEditStorage.WeaponUpgradeAll && field.Maximum > 0,
+                _ => false
+            });
             foreach (var field in targets)
             {
                 decimal value = action == TodBulkEdit.RefillSupportedAmmo && field.Category == "Weapon ammo"
@@ -228,7 +232,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit or TodEditStorage.WeaponGrant or TodEditStorage.EquipmentGrant) continue;
+                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.WeaponUpgradeAll or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit or TodEditStorage.WeaponGrant or TodEditStorage.EquipmentGrant) continue;
                 if (edit.Value == field.Current)
                 {
                     // Explicit ammo overrides either coupled refill, retaining

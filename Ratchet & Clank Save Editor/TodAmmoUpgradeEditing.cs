@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    // Shared ordinary-node plan. Direct add-only file edits, not purchases.
+    // Shared node plan. Direct add-only file edits, not purchases or live effects.
     internal static class TodAmmoUpgradeEditing
     {
         private static IEnumerable<JsonElement> Catalog => TodResearch.Map.GetProperty("upgrade_edit_candidates").GetProperty("catalog").EnumerateArray();
@@ -17,8 +17,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             ["MOD_DAMAGE"] = "Damage", ["MOD_RANGE"] = "Range", ["MOD_AOE"] = "Blast radius",
             ["MOD_SPEED"] = "Speed modifier", ["MOD_DURATION"] = "Duration modifier",
-            ["MOD_BOLTS"] = "Bolts bonus", ["MOD_MINERALS"] = "Raritanium bonus", ["MOD_SPAWNCOUNT"] = "Spawn count"
+            ["MOD_BOLTS"] = "Bolts bonus", ["MOD_MINERALS"] = "Raritanium bonus", ["MOD_SPAWNCOUNT"] = "Spawn count",
+            ["MOD_KNOCKBACK"] = "Knockback modifier", ["MOD_ALT_DAMAGE"] = "Alternate damage modifier",
+            ["MOD_MISC"] = "Weapon-specific parameter"
         };
+        private static string FullKey(int id) => "upgrade_all_" + id;
         private static string Key(int id, JsonElement node) =>
             $"{(node.GetProperty("type").GetString() == "MOD_AMMO" ? "ammo_upgrade" : "weapon_upgrade")}_{id}_{node.GetProperty("index").GetInt32()}";
 
@@ -46,6 +49,32 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return true;
         }
 
+        private static bool DefinitionAllowed(int id, JsonElement node)
+        {
+            if (node.GetProperty("index").GetInt32() == 0 || node.GetProperty("cost").ValueKind != JsonValueKind.Number) return false;
+            decimal cost = node.GetProperty("cost").GetDecimal();
+            if (cost <= 0 || cost != decimal.Truncate(cost)) return false;
+            string type = node.GetProperty("type").GetString();
+            if (type == "MOD_SPECIAL")
+                // This is a type/mask Boolean predicate, not a numeric modifier.
+                // Blank shipped values remain blank, never replaced with zero.
+                return node.GetProperty("is_special").GetBoolean() && node.GetProperty("runtime_value").ValueKind == JsonValueKind.Null &&
+                    TodResearch.Map.GetProperty("special_modifier_effects").GetProperty("catalog").EnumerateArray().Any(entry =>
+                        entry.GetProperty("id").GetInt32() == id && entry.GetProperty("node").GetInt32() == node.GetProperty("index").GetInt32() &&
+                        entry.GetProperty("type_id").GetInt32() == 16 && entry.GetProperty("value").ValueKind == JsonValueKind.Null);
+            if ((type != "MOD_AMMO" && !Effects.ContainsKey(type)) || !node.GetProperty("definition_qualified").GetBoolean()) return false;
+            float value = node.GetProperty("runtime_value").GetSingle();
+            bool percentage = node.GetProperty("is_percent").GetBoolean();
+            return float.IsFinite(value) && value != 0 && (type == "MOD_AMMO"
+                ? !percentage && value > 0 && value == MathF.Truncate(value) : !percentage || value > -1);
+        }
+
+        private static bool Ready(JsonElement node, uint mask) => node.GetProperty("is_special").GetBoolean()
+            ? node.GetProperty("orthogonal_neighbors").EnumerateArray().Where(neighbor => neighbor.GetInt32() > 0)
+                .All(neighbor => (mask & (1u << neighbor.GetInt32())) != 0)
+            : node.GetProperty("orthogonal_neighbors").EnumerateArray()
+                .Any(neighbor => neighbor.GetInt32() == 0 || (mask & (1u << neighbor.GetInt32())) != 0);
+
         internal static void AddFields(byte[] data, List<TodEditField> fields)
         {
             foreach (var item in Catalog)
@@ -56,25 +85,31 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 var nodes = item.GetProperty("nodes");
                 uint mask = Mask(data, id);
                 if (!Attainable(nodes, mask)) continue;
+                uint complete = (1u << nodes.GetArrayLength()) - 2;
+                if (nodes.EnumerateArray().Skip(1).All(node => DefinitionAllowed(id, node)) && Attainable(nodes, mask | complete))
+                {
+                    bool finished = (mask & complete) == complete;
+                    fields.Add(new(FullKey(id), item.GetProperty("config_name").GetString() + " · complete upgrade grid",
+                        "Weapon upgrades", id * 20 + 12, TodEditStorage.WeaponUpgradeAll, 0, finished ? 0 : 1,
+                        Options: finished ? new[] { new TodEditOption(0, "Already fully upgraded") } :
+                            new[] { new TodEditOption(0, "Keep unchanged"), new TodEditOption(1, "Unlock all upgrades") }));
+                }
                 foreach (var node in nodes.EnumerateArray())
                 {
                     int index = node.GetProperty("index").GetInt32();
                     string type = node.GetProperty("type").GetString();
                     bool ammo = type == "MOD_AMMO";
-                    if (index == 0 || node.GetProperty("is_special").GetBoolean() ||
-                        (!ammo && !Effects.ContainsKey(type)) ||
-                        !node.GetProperty("definition_qualified").GetBoolean() ||
-                        (mask & (1u << index)) != 0) continue;
-                    float value = node.GetProperty("runtime_value").GetSingle();
+                    if (!DefinitionAllowed(id, node) || (mask & (1u << index)) != 0 || !Ready(node, mask)) continue;
+                    bool flag = type == "MOD_SPECIAL";
                     bool percentage = node.GetProperty("is_percent").GetBoolean();
-                    if (!float.IsFinite(value) || value == 0 ||
-                        (ammo && (percentage || value <= 0 || value != MathF.Truncate(value))) ||
-                        (!ammo && percentage && value <= -1) ||
-                        !node.GetProperty("orthogonal_neighbors").EnumerateArray().Any(neighbor =>
-                            neighbor.GetInt32() == 0 || (mask & (1u << neighbor.GetInt32())) != 0)) continue;
-                    decimal shown = node.GetProperty("runtime_value").GetDecimal() * (percentage ? 100 : 1);
-                    string amount = shown.ToString("+0.####;-0.####;0", CultureInfo.InvariantCulture) + (percentage ? "%" : "");
-                    string label = ammo ? $"+{value} capacity" : Effects[type] + " " + amount;
+                    string label = "Special behavior switch";
+                    if (!flag)
+                    {
+                        decimal shown = node.GetProperty("runtime_value").GetDecimal() * (percentage ? 100 : 1);
+                        string amount = shown.ToString("+0.####;-0.####;0", CultureInfo.InvariantCulture) + (percentage ? "%" : "");
+                        label = ammo ? "+" + shown.ToString(CultureInfo.InvariantCulture) + " capacity" : Effects[type] + " " + amount;
+                        if (node.GetProperty("is_special").GetBoolean()) label = "Special · " + label;
+                    }
                     fields.Add(new(Key(id, node), $"{item.GetProperty("config_name").GetString()} · {label} (node {index})",
                         ammo ? "Ammo upgrades" : "Weapon upgrades", id * 20 + 12,
                         ammo ? TodEditStorage.AmmoUpgrade : TodEditStorage.WeaponUpgrade, 0, 1,
@@ -87,6 +122,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             uint mask = Mask(data, id);
             var item = Catalog.Single(entry => entry.GetProperty("id").GetInt32() == id);
+            if (edits.TryGetValue(FullKey(id), out decimal all) && all == 1)
+                mask |= (1u << item.GetProperty("nodes").GetArrayLength()) - 2;
             foreach (var node in item.GetProperty("nodes").EnumerateArray())
                 if (edits.TryGetValue(Key(id, node), out decimal value) && value == 1)
                     mask |= 1u << node.GetProperty("index").GetInt32();
@@ -113,10 +150,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         internal static decimal Maximum(byte[] data, TodEditField ammo, IReadOnlyDictionary<string, decimal> edits)
             => (decimal)Capacity(data, ammo.Offset / 20, PlannedMask(data, ammo.Offset / 20, edits));
 
+        internal static bool RefillsAmmo(byte[] data, TodEditField ammo, IReadOnlyDictionary<string, decimal> edits) =>
+            Capacity(data, ammo.Offset / 20, PlannedMask(data, ammo.Offset / 20, edits)) != Capacity(data, ammo.Offset / 20, Mask(data, ammo.Offset / 20));
+
         internal static void Apply(byte[] original, byte[] result, IReadOnlyDictionary<string, TodEditField> fields,
             IReadOnlyDictionary<string, decimal> edits)
         {
-            foreach (int id in edits.Where(edit => (fields[edit.Key].Storage is TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade) && edit.Value == 1)
+            foreach (int id in edits.Where(edit => (fields[edit.Key].Storage is TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.WeaponUpgradeAll) && edit.Value == 1)
                 .Select(edit => fields[edit.Key].Offset / 20).Distinct())
             {
                 uint mask = PlannedMask(original, id, edits);

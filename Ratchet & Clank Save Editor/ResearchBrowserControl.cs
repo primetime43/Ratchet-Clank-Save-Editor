@@ -103,6 +103,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Developer helpers: disabled Lua debug library & native grants", TodResearch.Map.GetProperty("developer_helpers"), 0));
             topics.Add(JsonTopic("Golden Groovitron: object, event & activation boundaries", TodResearch.Map.GetProperty("groovitron_linked_state"), 0));
             topics.Add(JsonTopic("Special upgrades: saved-mask query & Predator repeat targets", TodResearch.Map.GetProperty("special_modifier_effects"), 0));
+            topics.Add(JsonTopic("Complete weapon grids: all 189 upgrades and bounded special switches", TodResearch.Map.GetProperty("complete_upgrade_editing"), 0));
             topics.Add(JsonTopic("Shipped bonus selection cycling & zero-based states", TodResearch.Map.GetProperty("bonus_selection_assets"), 0));
             topics.Add(JsonTopic("Bonus art/movie queries & runtime language selection", TodResearch.Map.GetProperty("bonus_remaining"), 0));
             topics.Add(JsonTopic("Shipped bonus content-query fingerprints", TodResearch.Map.GetProperty("bonus_remaining_assets"), 0));
