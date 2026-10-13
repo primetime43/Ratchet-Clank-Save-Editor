@@ -31,6 +31,7 @@ internal static partial class Program
         StatisticsEditingChecks(root);
         WeaponGrantEditingChecks(root);
         EarlyItemGrantChecks(root);
+        CompleteUpgradeChecks(root);
         BonusEditingChecks(root);
         WeaponLevelEditingChecks(root);
         NewEditSmokeChecks();
