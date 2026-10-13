@@ -78,6 +78,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             topics.Add(JsonTopic("Upgrade purchase: mask, ammo refill & payment order", TodResearch.Map.GetProperty("upgrade_purchase"), 0));
             topics.Add(JsonTopic("Weapon purchases: level-5 gate, routing & payment order", TodResearch.Map.GetProperty("weapon_purchase"), 0));
             topics.Add(JsonTopic("Weapon grants: combat acquisition and linked saved edits", TodResearch.Map.GetProperty("weapon_grants"), 0));
+            topics.Add(JsonTopic("Early equipment grants: Charge Boots and Treasure Mapper", TodResearch.Map.GetProperty("early_equipment_grants"), 0));
             topics.Add(JsonTopic("Shipped vendor purchase method fingerprints", TodResearch.Map.GetProperty("upgrade_purchase_assets"), 0));
             topics.Add(JsonTopic("Opaque final word & settings initialization/copy ownership", TodResearch.Map.GetProperty("final_tail_fields"), 0));
             topics.Add(JsonTopic("Mission lists & flags", TodResearch.Map.GetProperty("mission_lists"), 0));

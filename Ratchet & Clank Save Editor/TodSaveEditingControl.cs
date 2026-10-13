@@ -114,6 +114,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (value == field.Current) candidate.Remove(field.Key); else candidate[field.Key] = value;
                 TodWeaponGrantEditing.Preview(snapshot, candidate);
             }
+            if (field.Storage == TodEditStorage.EquipmentGrant)
+            {
+                var candidate = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
+                if (value == field.Current) candidate.Remove(field.Key); else candidate[field.Key] = value;
+                TodEquipmentGrantEditing.Preview(snapshot, candidate);
+            }
             if (value == EffectiveDefault(field)) pending.Remove(field.Key);
             else pending[field.Key] = value;
             if (TodAppearanceEditing.CancelDependentSelection(field, pending))
@@ -426,6 +432,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             notice.Text = category.SelectedItem?.ToString() switch
             {
                 "Weapon unlocks" => "Grant missing combat weapons at level 1, zero XP and starting ammo. Each new weapon increments the acquisition counter once and fills the first empty quick-select slot, unless already assigned. Full slots are preserved. No bolt charge, Omega tier, story gadget, consumable, blueprint, upgrade or skill grant. Uncertain unowned records stay read-only. Save before editing a new weapon's levels/ammo. In-game acceptance remains untested.",
+                "Consumable unlocks" => "Grant seven supported consumables with the native +1 ammo operation, capped to reference capacity. New ownership increments the acquisition counter; owning two items in this native class also sets HERO_HAS_TWO_ITEMS. Quick-select uses the first empty slot unless explicitly assigned. Existing items are not refilled; save before editing ammo. Groovitron and story gadgets are excluded. No currency or skill awards. In-game acceptance remains untested.",
+                "Equipment unlocks" => "Grant missing Charge Boots or Treasure Mapper as one equipment object. Raises the historical peak if needed and adds one to the positive-addition counter. Existing nonzero ownership is preserved, not reset. No weapon acquisition count, quick-select slot, boot type, story flag, skill award or world pickup state is changed. In-game acceptance remains untested.",
                 "Arena challenge stats" => "Recorded wins for already-won challenges only: 1–2,147,483,647. Never-won challenges are read-only; first wins must happen in-game to retain gadget rewards and story updates. Names are shipped config descriptions, not verified localized titles. Counts can affect repeat payouts/menu ordering; no currency, items, story flags or skill awards are granted. Not yet tested in-game.",
                 "Decryptor stats" => "Wins are a retained native counter, not guaranteed lifetime wins. Losses count Sixaxis-enabled failures since success, not all attempts. Counters accept whole numbers from 0–4,294,967,295; the game can wrap them on increment. Spark speed accepts 0.6–1 when the saved multiplier is valid. These fields can affect native adaptation; editing wins does not reset losses/speed or simulate a success. No kills, deaths or global difficulty are inferred. Not yet tested in-game.",
                 "Bonus effects" => "Required skill scores: hero head 50, enemy head 100, commentary 200, James Zurkon 400, mirror 500. Commentary requests playback only in the supported runtime language (not stored here). Zurkon Off cannot override its separate runtime flag. No points or unlocks are granted. Not yet tested in-game.",
@@ -464,7 +472,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     if (field.Options != null)
                     {
                         var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList,
-                            Enabled = field.Storage is not (TodEditStorage.OwnershipGrant or TodEditStorage.WeaponGrant) ||
+                            Enabled = field.Storage is not (TodEditStorage.OwnershipGrant or TodEditStorage.WeaponGrant or TodEditStorage.EquipmentGrant) ||
                                 field.Current == 0 && field.Maximum > 0 };
                         // Levels and schemes are numeric sequences; named choices
                         // sort by their labels without changing the saved IDs.

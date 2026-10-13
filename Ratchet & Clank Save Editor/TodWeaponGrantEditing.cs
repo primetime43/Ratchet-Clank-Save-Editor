@@ -8,29 +8,42 @@ using System.Text.Json;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    // Bounded combat-weapon saved writes from466B70 and player0 auto-insertion
+    // Bounded weapon/consumable saved writes from466B70 and player0 auto-insertion
     // from1E26F0. Not purchases, runtime callbacks or gadget story transactions.
     internal static class TodWeaponGrantEditing
     {
         private const string Prefix = "weapon_grant_";
         internal sealed record Grant(int Id, float Ammo);
-        internal sealed record Plan(IReadOnlyList<Grant> Grants, uint AcquisitionCount);
+        internal sealed record Plan(IReadOnlyList<Grant> Grants, uint AcquisitionCount, bool SetTwoItems);
+        private static readonly int[] Consumables = { 16, 17, 18, 20, 21, 22, 23 };
+        private static readonly int[] Supported = Enumerable.Range(1, 15).Concat(Consumables).ToArray();
         private static string Key(int id) => Prefix + id;
 
         private static bool StartingAmmo(int id, out float ammo)
         {
             ammo = 0;
-            if (id is < 1 or > 15) return false;
+            if (!Supported.Contains(id)) return false;
             var item = TodResearch.Inventory[id];
             var reference = TodResearch.Map.GetProperty("quick_select_eligibility").GetProperty("catalog").EnumerateArray()
                 .Single(entry => entry.GetProperty("id").GetInt32() == id);
             uint flags = uint.Parse(reference.GetProperty("initial_flags").GetString().AsSpan(2), NumberStyles.HexNumber,
                 CultureInfo.InvariantCulture);
             if (reference.GetProperty("enum").GetString() != item.GetProperty("enum").GetString() ||
-                (flags & (0x203u | 0x1040u)) != 0 || !reference.GetProperty("quick_select_initially_allowed").GetBoolean() ||
-                !TodResearch.TryConfig(item.GetProperty("config_name").GetString(), out var config) ||
-                config.GetProperty("num_levels").GetInt32() != 9) return false;
+                (flags & (0x200u | 0x1040u)) != 0 || !reference.GetProperty("quick_select_initially_allowed").GetBoolean() ||
+                !TodResearch.TryConfig(item.GetProperty("config_name").GetString(), out var config)) return false;
             var variables = config.GetProperty("variables");
+            if (Consumables.Contains(id))
+            {
+                var catalog = TodResearch.Map.GetProperty("gadget_ammo_editing").GetProperty("catalog").EnumerateArray()
+                    .Single(entry => entry.GetProperty("id").GetInt32() == id);
+                if ((flags & 3) != 2 || config.GetProperty("num_levels").GetInt32() != 0 ||
+                    config.GetProperty("modifiers").GetArrayLength() != 0 ||
+                    !variables.TryGetProperty("MaxAmmo", out var capacity) || capacity.GetArrayLength() != 1 ||
+                    capacity[0].ValueKind != JsonValueKind.Number) return false;
+                ammo = capacity[0].GetSingle();
+                return float.IsFinite(ammo) && ammo > 0 && ammo == catalog.GetProperty("maximum").GetSingle();
+            }
+            if ((flags & 3) != 0 || config.GetProperty("num_levels").GetInt32() != 9) return false;
             if (!variables.TryGetProperty("XP", out var xp) || xp.GetArrayLength() != 10 ||
                 !variables.TryGetProperty("MaxAmmo", out var amounts) || amounts.GetArrayLength() != 10 ||
                 xp[0].ValueKind != JsonValueKind.Number || xp[1].ValueKind != JsonValueKind.Number ||
@@ -54,16 +67,18 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         internal static void AddFields(byte[] data, List<TodEditField> fields)
         {
-            foreach (int id in Enumerable.Range(1, 15).OrderBy(id => TodResearch.Inventory[id].GetProperty("config_name").GetString(),
+            foreach (int id in Supported.OrderBy(id => TodResearch.Inventory[id].GetProperty("config_name").GetString(),
                 StringComparer.CurrentCultureIgnoreCase))
             {
                 bool owned = data[id * 20 + 16] != 0, eligible = CanGrant(data, id, out float ammo);
+                bool consumable = Consumables.Contains(id);
+                if (eligible && consumable) ammo = Math.Min(ammo, BinaryPrimitives.ReadSingleBigEndian(data.AsSpan(id * 20 + 8, 4)) + 1f);
                 string name = TodResearch.Inventory[id].GetProperty("config_name").GetString();
                 var options = owned ? new[] { new TodEditOption(1, "Already owned") } : eligible
-                    ? new[] { new TodEditOption(0, "Keep unchanged"), new TodEditOption(1, "Grant level 1 on Save All") }
+                    ? new[] { new TodEditOption(0, "Keep unchanged"), new TodEditOption(1, consumable ? "Grant consumable on Save All" : "Grant level 1 on Save All") }
                     : new[] { new TodEditOption(0, "Uncertain record — preserved") };
                 fields.Add(new(Key(id), name + (eligible ? $" · {ammo.ToString("0.###", CultureInfo.InvariantCulture)} starting ammo" : ""),
-                    "Weapon unlocks", id * 20 + 16, TodEditStorage.WeaponGrant, owned ? 1 : 0,
+                    consumable ? "Consumable unlocks" : "Weapon unlocks", id * 20 + 16, TodEditStorage.WeaponGrant, owned ? 1 : 0,
                     owned || eligible ? 1 : 0, Minimum: owned ? 1 : 0, Options: options));
             }
         }
@@ -74,8 +89,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (var edit in edits.Where(edit => edit.Key.StartsWith(Prefix, StringComparison.Ordinal)).OrderBy(edit => edit.Key, StringComparer.Ordinal))
             {
                 if (!int.TryParse(edit.Key.AsSpan(Prefix.Length), NumberStyles.None, CultureInfo.InvariantCulture, out int id) ||
-                    id is < 1 or > 15 || edit.Key != Key(id) || edit.Value is not (0 or 1))
-                    throw new InvalidDataException("Invalid combat weapon grant: " + edit.Key);
+                    !Supported.Contains(id) || edit.Key != Key(id) || edit.Value is not (0 or 1))
+                    throw new InvalidDataException("Invalid weapon/consumable grant: " + edit.Key);
                 bool owned = data[id * 20 + 16] != 0;
                 if (owned)
                 {
@@ -84,11 +99,18 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
                 if (edit.Value == 0) continue;
                 if (!CanGrant(data, id, out float ammo)) throw new InvalidDataException("This weapon record cannot be granted safely: " + id);
+                if (Consumables.Contains(id)) ammo = Math.Min(ammo, BinaryPrimitives.ReadSingleBigEndian(data.AsSpan(id * 20 + 8, 4)) + 1f);
                 grants.Add(new(id, ammo));
             }
             ulong count = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0x280, 4)) + (ulong)grants.Count;
             if (count > uint.MaxValue) throw new InvalidDataException("These weapon grants would overflow the saved acquisition counter.");
-            return new(grants.OrderBy(grant => grant.Id).ToArray(), (uint)count);
+            bool setTwoItems = grants.Any(grant => Consumables.Contains(grant.Id)) &&
+                TodResearch.Map.GetProperty("quick_select_eligibility").GetProperty("catalog").EnumerateArray()
+                    .Count(item => (uint.Parse(item.GetProperty("initial_flags").GetString().AsSpan(2), NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture) & 2) != 0 &&
+                        (data[item.GetProperty("id").GetInt32() * 20 + 16] != 0 ||
+                            grants.Any(grant => grant.Id == item.GetProperty("id").GetInt32()))) > 1;
+            return new(grants.OrderBy(grant => grant.Id).ToArray(), (uint)count, setTwoItems);
         }
 
         internal static IReadOnlyList<TodEditOption> QuickSelectOptions(TodEditField field, byte[] data,
@@ -96,7 +118,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             if (field.Category != "Quick select") return field.Options;
             var options = field.Options.ToList();
-            for (int id = 1; id <= 15; id++)
+            foreach (int id in Supported)
                 if (edits.TryGetValue(Key(id), out decimal grant) && grant == 1 && CanGrant(data, id, out _) &&
                     !options.Any(option => option.Value == id))
                     options.Add(new(id, TodResearch.Inventory[id].GetProperty("config_name").GetString()));
@@ -137,6 +159,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     }
             }
             BinaryPrimitives.WriteUInt32BigEndian(result.AsSpan(0x280, 4), plan.AcquisitionCount);
+            if (plan.SetTwoItems)
+                BinaryPrimitives.WriteUInt64BigEndian(result.AsSpan(0x5528, 8),
+                    BinaryPrimitives.ReadUInt64BigEndian(result.AsSpan(0x5528, 8)) | 0x400UL);
         }
     }
 }

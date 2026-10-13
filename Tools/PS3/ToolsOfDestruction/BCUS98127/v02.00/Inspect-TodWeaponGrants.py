@@ -1,6 +1,6 @@
-"""Read-only exact-build combat-weapon acquisition and saved grant policy.
+"""Read-only exact-build weapon, consumable and equipment saved grant policies.
 
-Checks eleven function fingerprints, named/default constants and all combat
+Checks fourteen function fingerprints, named/default constants and supported
 initializer flags. Does not execute game code, grant items or write files.
 """
 import argparse
@@ -11,12 +11,15 @@ import runpy
 
 BINDINGS = runpy.run_path(str(Path(__file__).with_name("Inspect-TodWeaponBindings.py")))
 ELIGIBILITY = runpy.run_path(str(Path(__file__).with_name("Inspect-TodQuickSelectEligibility.py")))
+OBJECTS = runpy.run_path(str(Path(__file__).with_name("Inspect-TodObjects.py")))
 
 
 def inspect(elf_path):
     elf = BINDINGS["Elf"](elf_path)
     report = elf.mapping["weapon_grants"]
-    for guard in report["function_guards"]:
+    equipment = elf.mapping["early_equipment_grants"]
+    guards = report["function_guards"] + equipment["function_guards"]
+    for guard in guards:
         va, size = int(guard["va"], 0), guard["size"]
         if elf.functions[elf.functions.index(va) + 1] - va != size:
             raise ValueError(f"Function boundary changed at {va:#x}")
@@ -53,7 +56,26 @@ def inspect(elf_path):
                         "initial_level_index": 0, "initial_xp": 0, "initial_ammo": variables["MaxAmmo"][0]})
     if [row["id"] for row in catalog] != list(range(1, 16)):
         raise ValueError("Incomplete combat grant catalog")
-    return {**report, "catalog": catalog, "verified_functions": len(report["function_guards"])}
+    consumables = report["consumable_grants"]
+    for id_, maximum in zip(consumables["ids"], consumables["capacities"]):
+        row = next(row for row in flags if row["id"] == id_)
+        config = configs["weapons"][row["config_name"]]
+        initial_flags = int(row["initial_flags"], 0)
+        if (initial_flags & 3 != 2 or initial_flags & (0x200 | 0x1040) or
+                config["num_levels"] != 0 or config["modifiers"] or config["variables"]["MaxAmmo"] != [maximum]):
+            raise ValueError(f"Consumable starting reference changed for ID{id_}")
+    flag = next(row for row in elf.mapping["global_flags"]["catalog"] if row["id"] == 10)
+    if flag["enum"] != "HERO_HAS_TWO_ITEMS" or int(flag["word_offset"], 0) != 0x5528 or flag["word_bit"] != 10:
+        raise ValueError("Two-item flag identity changed")
+    objects = OBJECTS["inspect"](elf_path)
+    for row in equipment["catalog"]:
+        native = next(item for item in objects["catalog"] if item["id"] == row["id"])
+        for key in ("enum", "current_offset", "peak_offset", "positive_additions_offset"):
+            expected = row["additions_offset"] if key == "positive_additions_offset" else row[key]
+            if key == "enum":
+                if native[key] != expected: raise ValueError("Equipment enum changed")
+            elif int(native[key], 0) != int(expected, 0): raise ValueError("Equipment storage changed")
+    return {**report, "catalog": catalog, "equipment": equipment, "verified_functions": len(guards)}
 
 
 if __name__ == "__main__":

@@ -75,7 +75,7 @@ internal static partial class Program
                 True(data.SequenceEqual(TodSaveEditing.Apply(data, "BCUS98127", Edits(("weapon_grant_1", 0)))), "Uncertain no-ops must retain raw bits.");
             }
             byte[] valid = WeaponGrantFixture();
-            foreach (int id in new[] { 0, 16, 19, 24, 26, 30, 31, 32 })
+            foreach (int id in new[] { 0, 19, 24, 26, 30, 31, 32 })
                 Throws<InvalidDataException>(() => TodSaveEditing.Apply(valid, "BCUS98127", Edits(("weapon_grant_" + id, 1))));
             Throws<InvalidDataException>(() => TodSaveEditing.Apply(valid, "BCES00052", Edits(("weapon_grant_1", 1))));
             Throws<InvalidDataException>(() => TodSaveEditing.Apply(valid, "BCUS98127", Edits(("weapon_grant_1", 1.5m))));
@@ -173,6 +173,6 @@ internal static partial class Program
             Directory.CreateDirectory("artifacts"); screenshot.Save("artifacts/weapon-unlocks-preview.png");
         }
         Same(original, Snapshot(folder));
-        Console.WriteLine($"Actual save has {fields.Count(field => field.Current == 1)}/15 combat weapons already owned; all no-ops preserve bytes. A synthetic missing-Combuster copy grants correctly; original folder unchanged. No in-game test performed.");
+        Console.WriteLine($"Actual save has {fields.Count(field => field.Category == "Weapon unlocks" && field.Current == 1)}/15 combat weapons already owned; all no-ops preserve bytes. A synthetic missing-Combuster copy grants correctly; original folder unchanged. No in-game test performed.");
     }
 }

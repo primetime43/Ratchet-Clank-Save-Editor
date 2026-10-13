@@ -46,6 +46,12 @@ internal static partial class Program
                 Console.WriteLine($"All {passed} targeted weapon-grant checks passed.");
                 return 0;
             }
+            if (args.SequenceEqual(new[] { "--early-item-grants" }))
+            {
+                EarlyItemGrantChecks(root);
+                Console.WriteLine($"All {passed} targeted early-item checks passed.");
+                return 0;
+            }
             if (args.Length == 2 && args[0] == "--weapon-grants-with-save")
             {
                 WeaponGrantsWithSave(args[1], root);

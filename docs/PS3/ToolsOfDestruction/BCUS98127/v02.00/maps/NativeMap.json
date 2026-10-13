@@ -28,6 +28,14 @@
     "quick_select_rule": "252B08 changes TOC89FF20 to88FF38 and reaches1E26F0. Initial flags&1040 must be clear. Auto insertion checks membership across32 slots, then searches only slots0..23 for -1. If no slot is empty, no assignment occurs; a qualified runtime message can set warning byte8738. Explicit insertion calls1E22A8 to remove matches across32 before writing. Saved slots are not a confirmed physical wheel order.",
     "editor_policy": "Add-only IDs1..15. Unowned record must have stored level0, finite zero XP, zero modifier mask and finite ammo in0..starting capacity. Existing ownership bytes are preserved and duplicate grants do nothing. Write ownership1, XP+0, level0 and starting ammo; increment280 per new grant, reject overflow. Use final explicit slot edits first, then auto-insert new IDs in ascending ID order without overwriting occupied slots. Preserve tail slots, unknown bytes, flags, unlock bytes, equipped history, blueprints, skill awards and currencies. Full-wheel messages/latches, checkpoint/live callbacks, Omega tiers, consumables and story gadgets are excluded. Save before editing newly granted weapon levels/ammo.",
     "starting_ammo_by_id_1_to_15": [100, 8, 30, 5, 200, 25, 4, 30, 8, 30, 12, 4, 12, 30, 300],
+    "consumable_grants": {
+      "ids": [16, 17, 18, 20, 21, 22, 23],
+      "capacities": [4, 2, 3, 2, 1, 3, 3],
+      "rule": "Initial flags&2 set and flags&200 clear select465E18 with float1 BEFORE new ownership testing. With a bounded finite initial record, grant ammo=min(oldAmmo+1,capacity), then ownership1, zero XP/level and one acquisition-counter increment. Already-owned editor requests deliberately do nothing instead of executing native refill side effects.",
+      "two_items_flag": { "id": 10, "enum": "HERO_HAS_TWO_ITEMS", "word_offset": "0x5528", "mask": "0x0000000000000400", "store_va": "0x466CEC" },
+      "class_count": "Native466C9C..CD8 checks ownership across32 records and counts definitions with flags&2, including Groovitron19. A reached new-class-item grant sets the named flag when the count exceeds1. Editor counts final initial-reference class ownership after all staged grants, ORs only400 and never clears/repairs on no-ops. Groovitron itself remains excluded from grants because its object/event dependencies are separate.",
+      "limits": "Same zero level/XP/mask and finite0..capacity baseline policy as bounded combat grants. No payment, skills, story gadgets, Groovitron variants, runtime callback/notification or live load acceptance is reproduced."
+    },
     "function_guards": [
       { "va": "0x466B70", "size": 456, "sha256": "3643C8B9DA3C8F4D1B161399489CB34FFDFDDC3CBDB87F428DA6EB5E8718D342" },
       { "va": "0x28B4E8", "size": 680, "sha256": "3805656F2A356428B484B034568F0484E350F351B7239B37EE23AA984DE45068" },
@@ -40,6 +48,20 @@
       { "va": "0x463DE0", "size": 72, "sha256": "C0EF85FC8C135DB25D28848B60D7F81A8FCB1344BC93815FDD512B605FA90B47" },
       { "va": "0x466500", "size": 40, "sha256": "EAFCBF6A802708AED91C34E4AE0C2EC28C4AD32F41CDC617CC390D1156338B51" },
       { "va": "0x466258", "size": 168, "sha256": "E4E3FEEA7E0CF67862DE2A2721E82426CFA373411085BAFA7915D23084D7ADF9" }
+    ]
+  },
+  "early_equipment_grants": {
+    "confidence": "exact-build-object-API-saved-counter-flow",
+    "catalog": [
+      { "id": 5, "enum": "OBJ_CHARGE_BOOTS", "name": "Charge Boots", "current_offset": "0x318", "peak_offset": "0x374", "additions_offset": "0x3D0" },
+      { "id": 6, "enum": "OBJ_TREASURE_MAPPER", "name": "Treasure Mapper", "current_offset": "0x31C", "peak_offset": "0x378", "additions_offset": "0x3D4" }
+    ],
+    "native": "Named hero_add_object reaches288C58->252F78->23D870. Positive delta1 adds to current and positive-addition counters, then raises peak under unsigned comparison. Fixed producer3046E8 requests object5,+1 after context/type admission. Treasure Mapper is a mapped direct object-API grant, not a newly recovered pickup producer.",
+    "editor_policy": "Grant only from current0: write current1, peak=max(oldPeak,1), additions=oldAdditions+1. Reject addition-counter overflow. Already-nonzero current values are preserved and cannot be removed. No weapon acquisition count, quick-select, boot type, other object, skill, story flag or world pickup state is changed. Runtime callbacks and actual gameplay usability remain untested.",
+    "function_guards": [
+      { "va": "0x23D870", "size": 112, "sha256": "5822398EAD384D844D4CBA515FA24A0C59495E62B9DF70019E7EB4DEA1B81DD0" },
+      { "va": "0x23D970", "size": 64, "sha256": "96D74E68707F5D20F36273D912FE1C53D70212CA5F8AEC037FD3FCF42C65DFC8" },
+      { "va": "0x3046E8", "size": 144, "sha256": "FAAA45577894C9B868D960C877A2F718D2A7DBF851C4BE770BEE5AE9A443CC42" }
     ]
   },
   "binary": {

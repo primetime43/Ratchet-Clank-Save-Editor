@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter, WeaponGrant }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter, WeaponGrant, EquipmentGrant }
     public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier }
     public sealed record TodEditOption(decimal Value, string Label)
     {
@@ -117,6 +117,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             TodGoldBoltEditing.AddFields(data, fields);
             TodStatisticsEditing.AddFields(data, fields);
             TodWeaponGrantEditing.AddFields(data, fields);
+            TodEquipmentGrantEditing.AddFields(data, fields);
 
             TodAppearanceEditing.AddFields(data, fields);
 
@@ -214,6 +215,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
             byte[] result = (byte[])original.Clone();
             var weaponGrants = TodWeaponGrantEditing.Preview(original, edits);
+            var equipmentGrants = TodEquipmentGrantEditing.Preview(original, edits);
             var goldBolts = TodGoldBoltEditing.Preview(original, edits);
             TodSkillAwardEditing.Apply(result, edits);
             TodGoldBoltEditing.Apply(result, goldBolts);
@@ -226,7 +228,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit or TodEditStorage.WeaponGrant) continue;
+                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit or TodEditStorage.WeaponGrant or TodEditStorage.EquipmentGrant) continue;
                 if (edit.Value == field.Current)
                 {
                     // Explicit ammo overrides either coupled refill, retaining
@@ -245,6 +247,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             // Use the final staged slot layout, so explicit assignments take
             // precedence over auto-insertion and never overwrite another item.
             TodWeaponGrantEditing.Apply(result, weaponGrants);
+            TodEquipmentGrantEditing.Apply(result, equipmentGrants);
             // Reject only newly assigned duplicates. Existing unusual banks and
             // semantic no-ops stay untouched; batch moves can clear the old slot.
             foreach (var edit in requested)

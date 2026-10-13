@@ -132,7 +132,9 @@ The level-five weapon purchase path requires ownership, exactly stored level 4, 
 
 Named `hero_give_weapon` reaches `0x28B4E8`, which calls `0x466B70` with refill1 and then hero quick-select integration. The low-level grant refills **before** testing ownership. For a new combat weapon it writes ownership1, supplies float-zero XP to `0x4660A8` and increments saved `0x280` once. Optional XP/ammo defaults are −1, so those overrides are skipped. Definition flags, not saved unlock bytes, select the path.
 
-All fifteen combat initializers have flags `&0x203 == 0` and pass the initial quick-select filter. With level0, zero XP/mask and positive first XP threshold, the grant retains level0 and uses shipped `MaxAmmo[0]`. Consumables use a separate additive-ammo/global-flag path and are excluded. [WeaponGrants](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponGrants.py) checks eleven original function hashes, constants and starting definitions; the `weapon_grants` map section records the evidence.
+All fifteen combat initializers have flags `&0x203 == 0` and pass the initial quick-select filter. With level0, zero XP/mask and positive first XP threshold, the grant retains level0 and uses shipped `MaxAmmo[0]`. Consumables use the separate additive-ammo/global-flag operation below. [WeaponGrants](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponGrants.py) checks original function hashes, constants and starting definitions; the `weapon_grants` map section records the evidence.
+
+The separate **Consumable unlocks** page now supports IDs16/17/18/20/21/22/23. Their flags select `0x465E18` with delta1, not full-capacity refill; new grants use `min(oldAmmo+1,capacity)` and the same ownership/zero-XP/acquisition-count writes. The subsequent class count includes Groovitron19. When a reached new-item grant finds at least two owned definitions with flag2, it ORs `HERO_HAS_TWO_ITEMS` (ID10, BE64 mask`0x400` at`0x5528`). The editor retains other flag bits and never repairs this on a no-op. Groovitron itself remains excluded.
 
 The editor grants missing combat weapons only from bounded initial records, rejects acquisition-counter overflow and preserves all unrelated state. It applies explicit slot edits before deterministic auto-insertion into the first empty slot0–23, checking membership across all32. Full/unknown/tail slots are not overwritten; runtime warning latches and callbacks are not synthesized. Existing weapons are not reset or refilled by duplicate grants. No payment, Omega tier, story gadget, blueprint, upgrade or skill award is granted. Live acceptance remains untested.
 
@@ -171,6 +173,8 @@ Souls adds **before** later linked-handle validation/type dispatch; subsequent l
 Configured producer `0x302A10` ORs an actor-selected global flag into saved `0x5528` before rereading the selected object ID and adding it. It does not locally reject an already-set flag or already-present object. Its Ship Parts branch clears runtime scratch, not a saved object. Native ID bounds, configuration and larger dispatch remain unresolved.
 
 These counters are not unique pickup totals. A grant alone also does not establish the separate Souls skill award.
+
+**Equipment unlocks** exposes only Charge Boots5 and Treasure Mapper6 through the saved object-add `+1` transaction at `0x23D870`: current0 becomes1, peak rises only if below1, and positive additions increment once. The Charge Boots pickup producer is independently mapped; Treasure Mapper uses the named object API, not a newly recovered pickup producer. Existing nonzero counts and unrelated state are retained, overflow is rejected, and no boot-type or story/skill flags are changed. The `early_equipment_grants` map section records three function fingerprints; together with weapon acquisition, WeaponGrants now verifies fourteen. Live acceptance remains untested.
 
 ## Progression and equipment
 
@@ -261,7 +265,7 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Save/load/restart | `serialization`, `snapshot_lifecycle`, `restart_execution`, `save_tail`, `load_selection` |
 | Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_grants`, `weapon_level_editing`, `gadget_ammo_editing`, `groovitron_linked_state`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
 | Purchases | `weapon_purchase`, `upgrade_purchase`, `upgrade_edit_candidates`, `ammo_upgrade_editing`, `ordinary_upgrade_editing`, `special_modifier_effects`, `armor_consumer`, `currency_mutation` |
-| Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
+| Equipment and objects | `objects`, `object_grant_producers`, `early_equipment_grants`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
 | XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow`, `reward_multiplier_editing` |
 | Collectibles and bonuses | `collectibles`, `collectible_producers`, `blueprint_producers`, `bonuses`, `bonus_effects`, `bonus_remaining`, `bonus_selection`, `bonus_selection_assets` |
 | Worlds and missions | `world_state`, `gameplay_segments`, `world_consumers`, `reward_channels`, `mission_lists`, `mission_mutation`, `segment_bindings`, `segment_configuration_assets` |
