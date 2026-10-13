@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp }
     public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier }
     public sealed record TodEditOption(decimal Value, string Label)
     {
@@ -113,6 +113,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             TodAmmoUpgradeEditing.AddFields(data, fields);
             TodDeveloperEditing.AddFields(fields);
             TodSkillAwardEditing.AddFields(data, fields);
+            TodHeroXpEditing.AddFields(data, fields);
 
             TodAppearanceEditing.AddFields(data, fields);
 
@@ -190,6 +191,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!fields.TryGetValue(edit.Key, out var field))
                     throw new InvalidDataException("This field is not editable in the current save: " + edit.Key);
                 decimal maximum = field.Category == "Weapon ammo" ? TodAmmoUpgradeEditing.Maximum(original, field, edits) : field.Maximum;
+                if (field.Storage == TodEditStorage.HeroXp && edit.Value != field.Current)
+                    maximum = TodHeroXpEditing.MaximumXp;
                 var options = TodAppearanceEditing.SelectionOptions(field, original, edits);
                 if (edit.Value < field.Minimum || edit.Value > maximum ||
                     (field.Storage != TodEditStorage.Float && edit.Value != decimal.Truncate(edit.Value)) ||

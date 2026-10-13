@@ -140,7 +140,7 @@ Multiplier editing writes only `0x428`, bounded to finite 1–20, with an existi
 
 Developer actions reproduce two native writes: grant-all ORs `0x0007DEE4` into blueprint mask `0x86F4`; enable-all sets score `0x8708` to 840 and changes only zero bytes in `0x86F8–0x8705` to 1. Nonzero states, earned bits and unknown blueprint bits are retained. This does not award all skills or prove every bonus is active.
 
-Hero XP passes through runtime float32 conversion and a fractional accumulator. Reload can lose precision for large integers; the native routine does not simply assign a saved level. Current health and checkpoint position are runtime state with **no confirmed dedicated save offset**.
+Hero XP passes through runtime float32 conversion and a fractional accumulator. Reload can lose precision for large integers; the native routine does not simply assign a saved level. The USA editor offers integer XP0–989,000 and the 98 shipped reference thresholds, writing only `0x418`. All integers within that editor range are float32-exact. Existing higher values are preserved unless explicitly replaced; the bound is not a native clamp. Reference rows are zero-based config indices, not verified player-facing levels; runtime overrides and unpopulated rows98/99 remain unknown. Current health and checkpoint position are runtime state with **no confirmed dedicated save offset**.
 
 ## Worlds and gameplay segments
 

@@ -225,6 +225,99 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private decimal EffectiveMaximum(TodEditField field) => field.Category == "Weapon ammo"
             ? TodAmmoUpgradeEditing.Maximum(snapshot, field, pending) : field.Maximum;
 
+        private NumericTextBox NumericInput(TodEditField field, decimal value, decimal? maximum = null)
+        {
+            var numeric = new NumericTextBox
+            {
+                Minimum = field.Minimum, Maximum = maximum ?? EffectiveMaximum(field),
+                AllowDecimal = field.Storage != TodEditStorage.HeroXp, FieldName = field.Label, Value = value
+            };
+            // Keep incomplete/invalid text across category changes.
+            if (numericText.TryGetValue(field.Key, out string typed)) numeric.Text = typed;
+            numeric.ValueChanged += (_, _) =>
+            {
+                if (rendering) return;
+                numericText[field.Key] = numeric.Text;
+                if (numeric.TryGetValue(out decimal number))
+                {
+                    invalidNumbers.Remove(field.Key);
+                    Stage(field, number);
+                }
+                else
+                {
+                    pending.Remove(field.Key);
+                    invalidNumbers[field.Key] = numeric.ValidationMessage;
+                    EditsChanged?.Invoke(this, EventArgs.Empty);
+                }
+            };
+            return numeric;
+        }
+
+        private void ShowHeroXp(TodEditField field)
+        {
+            bool keepHigh = field.Current > TodHeroXpEditing.MaximumXp &&
+                !pending.ContainsKey(field.Key) && !invalidNumbers.ContainsKey(field.Key);
+            decimal initial = pending.TryGetValue(field.Key, out decimal edited) ? edited :
+                keepHigh ? field.Current : Math.Min(field.Current, TodHeroXpEditing.MaximumXp);
+            var numeric = NumericInput(field, initial, keepHigh ? field.Current : TodHeroXpEditing.MaximumXp);
+            numeric.ReadOnly = keepHigh;
+            numeric.Name = "MappedEdit_hero_xp"; numeric.Dock = DockStyle.Fill;
+            numeric.Margin = new Padding(4, 8, 4, 8);
+            var targets = new ComboBox { Name = "MappedHeroXpTarget", DropDownStyle = ComboBoxStyle.DropDownList,
+                Dock = DockStyle.Fill, MaxDropDownItems = 12, IntegralHeight = false, Margin = new Padding(4, 8, 4, 8) };
+            targets.Items.Add(new TodEditOption(-2, $"Keep saved XP ({field.Current:N0})"));
+            targets.Items.Add(new TodEditOption(-1, "Custom XP"));
+            foreach (var target in TodHeroXpEditing.Targets)
+                targets.Items.Add(new TodEditOption(target.Index, $"Reference row {target.Index} — {target.Xp:N0} XP"));
+            var summary = new Label { Name = "MappedHeroXpSummary", AutoSize = true, Dock = DockStyle.Fill,
+                Margin = new Padding(4, 8, 4, 8) };
+            bool synchronizing = false;
+            void Refresh()
+            {
+                bool valid = numeric.TryGetValue(out decimal xp);
+                var exact = valid ? TodHeroXpEditing.Targets.FirstOrDefault(target => target.Xp == xp) : null;
+                synchronizing = true;
+                int choice = valid && xp == field.Current ? -2 : exact?.Index ?? -1;
+                try { targets.SelectedItem = targets.Items.Cast<TodEditOption>().Single(option => option.Value == choice); }
+                finally { synchronizing = false; }
+                var met = valid ? TodHeroXpEditing.Targets.Last(target => target.Xp <= xp) : null;
+                summary.Text = valid && xp > TodHeroXpEditing.MaximumXp
+                    ? "Saved XP is outside the reference range and is kept unchanged. Choose a target or Custom XP to set a value from 0–989,000."
+                    : valid
+                    ? $"Saved XP: {field.Current:N0} → {xp:N0}. At/above reference row {met.Index} (zero-based); not an observed hero level."
+                    : "Enter valid whole-number XP or choose a reference target. Save All is blocked until the input is valid.";
+            }
+            targets.SelectedIndexChanged += (_, _) =>
+            {
+                if (rendering || synchronizing || targets.SelectedItem is not TodEditOption option) return;
+                if (option.Value == -1 && !numeric.ReadOnly) { numeric.Focus(); return; }
+                decimal xp = option.Value == -2 ? field.Current : option.Value == -1 ? 0 : TodHeroXpEditing.Targets[(int)option.Value].Xp;
+                bool wasRendering = rendering; rendering = true;
+                try
+                {
+                    numeric.ReadOnly = xp == field.Current && xp > TodHeroXpEditing.MaximumXp;
+                    numeric.Maximum = numeric.ReadOnly ? field.Current : TodHeroXpEditing.MaximumXp;
+                    numeric.Value = xp;
+                }
+                finally { rendering = wasRendering; }
+                numericText[field.Key] = numeric.Text;
+                invalidNumbers.Remove(field.Key);
+                Stage(field, xp);
+                Refresh();
+            };
+            numeric.ValueChanged += (_, _) => Refresh();
+            Refresh();
+            fieldsPanel.RowCount = 3;
+            for (int row = 0; row < 3; row++) fieldsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            fieldsPanel.Controls.Add(new Label { Text = "Hero XP", AutoSize = true, Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 12, 8) }, 0, 0);
+            fieldsPanel.Controls.Add(numeric, 1, 0);
+            fieldsPanel.Controls.Add(new Label { Text = "Reference target", AutoSize = true, Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 12, 8) }, 0, 1);
+            fieldsPanel.Controls.Add(targets, 1, 1);
+            fieldsPanel.Controls.Add(summary, 0, 2); fieldsPanel.SetColumnSpan(summary, 2);
+        }
+
         public bool ValidateInputs()
         {
             if (!HasInvalidInputs) return true;
@@ -251,6 +344,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Armor unlocks" => "Grant missing armor ownership on Save All. Already-owned entries cannot be removed. Grants do not equip armor, spend bolts, change vendor availability or enable challenge mode. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
                 "Skin unlocks" => "Grant missing skin ownership on Save All, including Jailbird. Already-owned entries cannot be removed. No special bolts are spent; grants do not select a skin. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
                 "Appearance" => "Select owned armor or skins, including items granted in this Save All operation. Cancelling a grant also clears a selection that depends on it. Selection alone does not grant ownership. Runtime effects are not simulated. Not yet tested in-game.",
+                "Hero XP" => "Whole-number XP from 0–989,000, or a shipped reference target. Rows 0–97 are zero-based config indices, not player-facing level labels. This is an editor bound, not a native clamp or guaranteed maximum level. Only saved XP changes; no health, level, challenge mode or runtime callbacks are written. Active config overrides and rows 98/99 are unknown. Not yet tested in-game.",
                 _ => defaultNotice
             };
             rendering = true;
@@ -263,6 +357,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 var selected = fields.Where(field => field.Category == category.SelectedItem?.ToString())
                     .Select(field => field with { Options = TodAppearanceEditing.SelectionOptions(field, snapshot, pending) }).ToArray();
                 if (category.SelectedItem?.ToString() == "Skill awards") { ShowSkillAwards(selected); return; }
+                if (category.SelectedItem?.ToString() == "Hero XP") { ShowHeroXp(selected.Single()); return; }
                 fieldsPanel.RowCount = selected.Length;
                 for (int row = 0; row < selected.Length; row++)
                 {
@@ -300,30 +395,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     }
                     else
                     {
-                        var numeric = new NumericTextBox
-                        {
-                            Minimum = field.Minimum, Maximum = EffectiveMaximum(field),
-                            AllowDecimal = true, FieldName = field.Label, Value = value
-                        };
-                        // Text survives category changes, including incomplete/invalid input.
-                        if (numericText.TryGetValue(field.Key, out string typed)) numeric.Text = typed;
-                        numeric.ValueChanged += (_, _) =>
-                        {
-                            if (rendering) return;
-                            numericText[field.Key] = numeric.Text;
-                            if (numeric.TryGetValue(out decimal number))
-                            {
-                                invalidNumbers.Remove(field.Key);
-                                Stage(field, number);
-                            }
-                            else
-                            {
-                                pending.Remove(field.Key);
-                                invalidNumbers[field.Key] = numeric.ValidationMessage;
-                                EditsChanged?.Invoke(this, EventArgs.Empty);
-                            }
-                        };
-                        input = numeric;
+                        input = NumericInput(field, value);
                     }
                     input.Name = "MappedEdit_" + field.Key;
                     input.Dock = DockStyle.Fill;

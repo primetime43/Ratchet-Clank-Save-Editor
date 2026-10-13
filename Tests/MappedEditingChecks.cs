@@ -40,6 +40,7 @@ internal static partial class Program
         SkillAndBulkEditingChecks();
         SkillAndBulkUiChecks();
         AppearanceOwnershipChecks();
+        HeroXpEditingChecks();
         Check("Quick-select choices use native initial flags and ownership, not all inventory IDs", () =>
         {
             byte[] data = EditableFixture();
@@ -123,7 +124,7 @@ internal static partial class Program
             {
                 Edits(("voice_volume", 101)), Edits(("subtitles", 0.5m)), Edits(("control_scheme", 2)),
                 Edits(("ammo_1", -1)), Edits(("ammo_1", 100.01m)), Edits(("skin", 2)), Edits(("armor", 4)),
-                Edits(("hero_xp", 100)), Edits(("modifier_mask", 1)), Edits(("global_flag_10", 1)),
+                Edits(("hero_level", 100)), Edits(("modifier_mask", 1)), Edits(("global_flag_10", 1)),
                 Edits(("voice_volume", 25), ("unknown", 1))
             }) Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", edits));
             True(data.SequenceEqual(before), "Invalid batches must leave every source byte unchanged.");

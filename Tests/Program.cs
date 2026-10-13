@@ -22,6 +22,12 @@ internal static partial class Program
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--hero-xp-edits" }))
+            {
+                HeroXpEditingChecks();
+                Console.WriteLine($"All {passed} targeted hero XP checks passed.");
+                return 0;
+            }
             if (args.SequenceEqual(new[] { "--appearance-edits" }))
             {
                 AppearanceOwnershipChecks();
@@ -49,6 +55,7 @@ internal static partial class Program
                 DeveloperEditingChecks();
                 SkillAndBulkEditingChecks();
                 AppearanceOwnershipChecks();
+                HeroXpEditingChecks();
                 Console.WriteLine($"All {passed} lightweight edit checks passed.");
                 return 0;
             }
