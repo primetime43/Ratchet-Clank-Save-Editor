@@ -83,6 +83,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 GameSaveKeyTextBox.Text = session.Profile.Key;
                 PlanetTextBox.Text = session.Metadata.Planet;
                 saveInspector.LoadSession(session);
+                inventoryPreview.LoadSession(session);
                 mappedEditor.LoadSnapshot(session.ReadInspectionData(), session.Metadata.Region);
                 BoltsTextBox.Maximum = session.Profile.MaximumBolts;
                 BoltsTextBox.Value = session.Bolts;
@@ -123,6 +124,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 string backup = await Task.Run(() => session.Save(bolts, raritanium, mappedEdits: mappedEdits));
                 pendingBolts = session.CharacterBolts.ToArray();
                 saveInspector.LoadSession(session);
+                inventoryPreview.LoadSession(session);
                 mappedEditor.LoadSnapshot(session.ReadInspectionData(), session.Metadata.Region);
                 UpdateTitle();
                 StatusLabel.Text = "Saved successfully · Original backed up";

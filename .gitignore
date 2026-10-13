@@ -3,6 +3,7 @@
 **/[Oo]bj/
 **/[Pp]ublish/
 /artifacts/
+/PreviewAssets/
 
 # Local IDE state and per-user settings
 /.vs/

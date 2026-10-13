@@ -7,10 +7,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private SaveInspectorControl saveInspector;
         private TabPage inspectionTab;
         private TabPage researchTab;
+        private TodInventoryPreviewControl inventoryPreview;
 
         private void InitializeResearchViews()
         {
             saveInspector = new SaveInspectorControl();
+            inventoryPreview = new TodInventoryPreviewControl();
+            var inventoryTab = new TabPage("Inventory") { Name = "InventoryPreviewTab", UseVisualStyleBackColor = true };
+            inventoryTab.Controls.Add(inventoryPreview);
             inspectionTab = new TabPage("Save inspector") { Name = "SaveInspectorTab", UseVisualStyleBackColor = true };
             inspectionTab.Controls.Add(saveInspector);
             researchTab = new TabPage("Research") { Name = "ResearchTab", UseVisualStyleBackColor = true };
@@ -21,6 +25,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 research.ShowWeapon(id);
                 TabControl.SelectedTab = researchTab;
             };
+            TabControl.TabPages.Add(inventoryTab);
             TabControl.TabPages.Add(inspectionTab);
             TabControl.TabPages.Add(researchTab);
             // All tabs share the readable, resizable main-window layout.

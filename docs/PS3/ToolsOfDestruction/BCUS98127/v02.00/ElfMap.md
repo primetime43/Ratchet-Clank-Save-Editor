@@ -208,6 +208,12 @@ Saved destination `0x906E8`, next-level `0x8740` and pending runtime load reques
 
 ## Non-save findings
 
+### HUD artwork
+
+The fingerprinted `global_cached.psarc` contains `/processed/texpacks/hud.tp` and `hud.tph`: 2,526,848 and6,784 bytes. The TPH has208 32-byte texture descriptors from `0x80`; each stores a payload-relative offset at `+0`, width/height at `+0x18/+0x1A`, and format at `+6`. The TP pixel section starts at `0x80`. Base images decode as bounded BC3/DXT5 blocks; mipmaps are not displayed. [RPCS3's texture implementation](https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/RSX/Common/TextureUtils.cpp) provides the compressed-block layout reference.
+
+The editor pins both asset hashes in `TodHudAssets.cs` and imports only these two entries. All208 textures have been decoded and visually inspected. Current item associations are **visual matches**, not a recovered native lookup: inventory IDs5/8/16/19 use HUD textures24/31/44/37 (BuzzBlade/FlameThrower/Zurkon/Groovitron). Other associations remain unmapped. The full gallery includes menu frames, controller prompts, upgrade/reward symbols and other HUD artwork. Save PNGs contain no per-item icon catalog; neither the preview nor import executes game scripts or changes saves.
+
 ### Developer helpers and Lua debug
 
 These findings apply to the supplied BCUS98127 ELF: disc `VERSION=02.00`, `APP_VER=01.00`. RPCS3's displayed `01.00` does not identify a different binary; use the ELF hash in the map.

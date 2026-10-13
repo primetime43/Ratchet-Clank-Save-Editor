@@ -22,6 +22,22 @@ internal static partial class Program
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--inventory-previews" }))
+            {
+                InventoryPreviewChecks(root);
+                Console.WriteLine($"All {passed} targeted inventory preview checks passed.");
+                return 0;
+            }
+            if (args.Length == 3 && args[0] == "--inventory-preview-with-game")
+            {
+                InventoryPreviewWithGame(args[1], args[2], root);
+                return 0;
+            }
+            if (args.Length == 3 && args[0] == "--hud-contact-sheet")
+            {
+                HudContactSheet(args[1], args[2]);
+                return 0;
+            }
             if (args.SequenceEqual(new[] { "--gold-bolt-edits" }))
             {
                 GoldBoltEditingChecks(root);
