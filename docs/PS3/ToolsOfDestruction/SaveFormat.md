@@ -132,6 +132,8 @@ Special-bolt balance is collected count minus `0x424`, using signed-32 subtracti
 
 The 60 skill definitions total 750 points. Awards add each definition's value, not one point per bit. Completing IDs 0–58 triggers ID 59, HARDCORE. Blueprint grants, weighted score, earned skill bits and bonus states are separate fields.
 
+The editor offers add-only skill awards: preserve the existing score, add each newly granted definition's weight, and award HARDCORE only when a new award completes IDs0–58. High bits60–63 and producer-progress fields are untouched; existing inconsistencies are not repaired. Score overflow and combining this action with the score-replacing unlock-bonuses helper are rejected. No runtime notifications or in-game acceptance are implied.
+
 Bonus requests: `0x86F9` hero head (0 Off, 1 2x, 2 4x, 3 0.5x), `0x86FB` enemy head (0 Off, 1 2.5x, 2 0.5x), `0x86FD` commentary (0 Off, 1 On), `0x8701` James Zurkon (0 Off, 1 On), `0x8703` mirror (0 Off, 1 On). Counts include state 0. Editing requires existing score `0x8708` of at least 50/100/200/400/500 respectively. Commentary dispatch additionally requires runtime language ID1, not stored here; no localized language name or playback is inferred. Zurkon has no local consumer score check and a separate runtime override can still select its alternate when Off. Unknown states, score and earned bits are preserved. Other bonus slots remain read-only.
 
 Multiplier editing writes only `0x428`, bounded to finite 1–20, with an existing nonzero replay/restart word at `0x906EC`. Loading seeds its runtime accumulator; a sampled health decrease can reset the multiplier to 1. Runtime cache/countdown fields are not serialized and must not be written to same-numbered file offsets.

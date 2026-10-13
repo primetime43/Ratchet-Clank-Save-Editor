@@ -54,4 +54,3 @@ jobs:
           python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodUpgradeCandidates.py
           python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodGroovitronState.py
           python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodSpecialModifiers.py
-          python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodDeveloperHelpers.py

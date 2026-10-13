@@ -108671,8 +108671,39 @@
     }
   },
   "developer_helpers": {
-    "scope": "BCUS98127 supplied v02.00; static native evidence, not live emulator validation",
+    "scope": "BCUS98127 supplied disc revision02.00, APP_VER01.00; static native checks with a separately recorded gameplay probe",
+    "research_status": "Runtime patch builders, memory clients and isolated emulator artifacts retired and removed. Captures below describe past tests, not a currently running emulator. Original ELF evidence and annotations retained.",
     "function_guards": [
+      {
+        "va": "0x6696c8",
+        "size": "0x120",
+        "sha256": "AAF239CD2D5C5A6EFBA3F326CF9C279B2845ED5D9E15485FF279C8B358DD6273"
+      },
+      {
+        "va": "0x668680",
+        "size": "0x18",
+        "sha256": "B7B8A673A0BF53597683CF1A407A7C1397E41BF5C7968C9EB88F546AC3F335CD"
+      },
+      {
+        "va": "0x668698",
+        "size": "0x68",
+        "sha256": "1BEB67A5E5E4FEEACB194A26904ADD8D276E25F3E2538C0A8385E1E0082371F7"
+      },
+      {
+        "va": "0x66b930",
+        "size": "0x28",
+        "sha256": "6669FB85803B138EC877FC7E83117AB981A9520ACF7132091B3197F0EC651807"
+      },
+      {
+        "va": "0x668d58",
+        "size": "0xa0",
+        "sha256": "AF012FEB9F3A1D2DCD9DAB9DC1E3F4730349BA8100404CE58CAF545633721285"
+      },
+      {
+        "va": "0x666e00",
+        "size": "0xb8",
+        "sha256": "C6FA611298AE96EA024C09D39F378FA44FBEC5DA997B575E7207FA5867591E5B"
+      },
       {
         "va": "0x810650",
         "size": "0x78",
@@ -108724,6 +108755,144 @@
         "sha256": "C9FBB02565F60B7AF4954DC83FB34D90C15165C60F13B544049D5895C5EB2CB9"
       }
     ],
+    "recorded_runtime_probe": {
+      "date": "2026-10-12",
+      "emulator": "RPCS3 0.0.43-20284-2ba2f75b",
+      "elf_sha256": "0B29763574A42760E8432DA1E2920F1176EB0C1EE862A79798DF5A7E5E10552C",
+      "marker": "TOD_DEV_PROBE\ttable\tfunction",
+      "marker_count": 2,
+      "log_elapsed_times": [
+        "0:19:37.188433",
+        "0:19:38.569219"
+      ],
+      "user_confirmed_movement": true,
+      "fatal_or_access_violation_lines": 0,
+      "scope": "Recorded isolated gameplay run, not repeated by this inspector. Confirms Lua execution and debug.debug availability at the factory hook; not console input, later persistence or an on-screen menu."
+    },
+    "recorded_memory_console": {
+      "date": "2026-10-12",
+      "emulator": "RPCS3 0.0.43-20284",
+      "elf_sha256": "CBEED9FB9A9F3BFA2535F892B8CAFE0FFE5A890F5896CB9706219AF6897962E0",
+      "automatic_controller_and_save_selection": true,
+      "transport": "Localhost PINE; verified isolated process owner and harness guards",
+      "mailbox_va": "0xc10000",
+      "input_call_patch_va": "0x810760",
+      "command": "print(\"TOD_MEMORY_COMMAND_OK\")",
+      "command_marker_time": "0:03:50.098601",
+      "console_enter_count": 2,
+      "command_marker_count": 1,
+      "console_exit_count": 2,
+      "fatal_or_access_violation_lines": 0,
+      "native_channel0_read_warnings": 0,
+      "restored_controller_and_save_imports": true,
+      "runner_lifecycle_verified": true,
+      "runner_restored_ipc_settings": true,
+      "runner_stopped_owned_emulator": true,
+      "visible_installed_repeat": {
+        "date": "2026-10-12",
+        "renderer": "Vulkan",
+        "headless": false,
+        "executable": "Installed RPCS3; isolated config, caches and saves via RPCS3_CONFIG_DIR",
+        "executable_sha256": "4638A268DF9B0BFE19171BABD5F508F2D3ABD93F5434D81C9729FF6926E41A27",
+        "command_marker_time": "0:03:55.951778",
+        "console_enter_count": 1,
+        "command_marker_count": 1,
+        "console_exit_count": 1,
+        "fatal_or_access_violation_lines": 0,
+        "native_channel0_read_warnings": 0,
+        "ipc_restored_and_owned_emulator_stopped": true,
+        "original_elf_hash_unchanged": true,
+        "visual_gameplay_confirmation": false
+      },
+      "manual_gameplay_repeat": {
+        "date": "2026-10-12",
+        "renderer": "Vulkan",
+        "command_marker_time": "0:04:04.936791",
+        "command_marker_count": 1,
+        "console_enter_count": 2,
+        "console_exit_count": 2,
+        "mailbox_command_state": 3,
+        "user_confirmed_movement": true,
+        "synthetic_controller_or_save_selector_used": false,
+        "fatal_or_access_violation_lines": 0,
+        "native_channel0_read_warnings": 0,
+        "emulator_left_running_for_manual_testing": true,
+        "scope": "User loaded the test save and confirmed movement after the prequeued command ran at initialization; not a command invoked from active gameplay."
+      },
+      "rule": "Queued command, cont, then EOF; no native stdin call. Empty input terminates instead of spinning.",
+      "scope": "Recorded fully unattended test at the game Lua factory hook. One-time harness ELF plus memory-driven controls; not a stock-ELF memory-only unlock, persistent console or on-screen developer menu."
+    },
+    "gameplay_mailbox_candidate": {
+      "protected_call_va": "0x6696c8",
+      "displaced_entry_word": "2F860000",
+      "delegate_va": "0x6696cc",
+      "game_context_owner_slot_va": "0x898eb8",
+      "owner_lua_state_offset": "0x4",
+      "lua_top_offset": "0x8",
+      "lua_base_offset": "0xc",
+      "lua_value_stride": 8,
+      "native_nesting_counter_offset": "0x2e",
+      "protected_state_restorer_va": "0x671f10",
+      "gettop_va": "0x668680",
+      "settop_va": "0x668698",
+      "load_va": "0x668d58",
+      "string_reader": {
+        "slot_va": "0x8a9e44",
+        "descriptor_va": "0x87dd28",
+        "function_va": "0x66b930",
+        "toc": "0x8afe5c",
+        "userdata": "Two words: buffer pointer and byte length; reader clears length after its first chunk."
+      },
+      "adapter_va": "0xc20800",
+      "request_va": "0xc10500",
+      "fixed_script_va": "0xc20c00",
+      "generated_elf_sha256": "DC48E373003D4416A3FA7282C6B6366273F483D520ED8FEA181CF8A677917955",
+      "request_states": {
+        "0": "Idle",
+        "1": "One fixed availability print pending",
+        "2": "Busy; recursive claims blocked",
+        "3": "Attempt finished; inspect Lua status and balanced stack",
+        "5": "Stack balance check failed"
+      },
+      "eligibility": "Original protected call returned success; current L matches owner898EB8+4; native nesting counter is zero. No extra Lua API calls when no request is pending.",
+      "execution": "Load the fixed availability script and protected-call it with no results; record API status, restore original stack height and preserve original return/registers. Does not invoke _ALERT, debug.debug, native grants or fabricated handles.",
+      "portable_adapter_checks": 8,
+      "runtime_validation_pending": false,
+      "recorded_runtime": {
+        "date": "2026-10-12",
+        "emulator": "RPCS3 0.0.43-20284",
+        "renderer": "Vulkan",
+        "elf_sha256": "DC48E373003D4416A3FA7282C6B6366273F483D520ED8FEA181CF8A677917955",
+        "command_marker_times": [
+          "0:04:57.214776",
+          "0:06:56.779634"
+        ],
+        "command_marker_count": 2,
+        "reported_types": {
+          "debug": "table",
+          "debug.debug": "function",
+          "hero_give_all_ammo": "function",
+          "ally_debug": "function"
+        },
+        "request_state_after_each": 3,
+        "lua_status_after_each": 0,
+        "stack_height_before_each": 3,
+        "stack_height_after_each": 3,
+        "command_caller_return_va": "0x293ddc",
+        "caller_function_va": "0x293c70",
+        "requests_armed_after_user_confirmed_gameplay": true,
+        "repeat_without_reload": true,
+        "user_confirmed_normal_movement_after_first_request": true,
+        "fatal_or_access_violation_lines": 0,
+        "native_channel0_read_warnings": 0,
+        "controller_or_save_bindings_changed": false,
+        "original_elf_hash_unchanged": true,
+        "emulator_left_running_for_manual_testing": true,
+        "scope": "Two explicit fixed availability prints executed at a live game-script protected-call return. No native grants, ally diagnostics or debug.debug invocation; not an on-screen menu or general console frontend."
+      },
+      "live_original_harness_observation": "Mapped game L was readable during user-confirmed gameplay; top/base matched (zero API stack elements) and the native nesting count was zero. No live code patches were made.",
+      "scope": "Exact-build experimental test ELF. A repeatable gameplay boundary and two fixed availability prints are recorded, not a recovered on-screen menu, arbitrary command frontend or tested native grants. Annotations refer only to original ELF functions."
+    },
     "debug_library": {
       "open_va": "0x810650",
       "methods": [
@@ -108780,8 +108949,28 @@
       "observed_caller_va": "0x72e9b0",
       "mask_instruction_va": "0x72eb24",
       "original_mask": "0x1f",
+      "context_scope": "Secondary context; not the separate game-connected factory at666E00.",
       "experimental_mask": "0x3f",
       "warning": "Adds debug registration at this initial call only. Later sandboxing, globals removal and reinitialization may still remove it. Does not inject Lua or connect console input."
+    },
+    "game_lua_factory": {
+      "function_va": "0x666e00",
+      "state_create_va": "0x67eb10",
+      "state_context_offset": "0x4",
+      "library_open_vas": [
+        "0x66e3a8",
+        "0x677818",
+        "0x6849e0",
+        "0x67f2f8"
+      ],
+      "stack_pop_va": "0x666e74",
+      "stack_settop_va": "0x668698",
+      "stack_settop_argument": -5,
+      "registrar_vtable_offset": "0x1c",
+      "probe_hook_va": "0x666e7c",
+      "probe_hook_bytes": "813F0000",
+      "debug_open_present": false,
+      "warning": "Separate Lua state creation path, not enabled by the72EB24 mask change. Factory debug registration and a bounded memory-fed console command are recorded; later persistence and an on-screen menu are not established."
     },
     "console": {
       "function_va": "0x8106c8",
@@ -108791,7 +108980,7 @@
       "exit_token": "cont\n",
       "execute_va": "0x66c520",
       "rule": "Command-reading loop with compile/protected-call helper and subsequent stack clear; no local save flag or controller activation found.",
-      "warning": "Input/output are native runtime streams at10143DC8/10143E98. They are not confirmed usable from RPCS3; do not auto-invoke the console, which may block."
+      "warning": "Native streams10143DC8/10143E98 reached RPCS3 channel0 and spun on empty input; GUI All channels feeds3..15. Do not use the raw-stdin patch. The separate harness replaces only the console input call with a bounded memory reader."
     },
     "runtime_helpers": [
       {
@@ -108835,7 +109024,7 @@
         "kind": "function",
         "confidence": "confirmed",
         "bytes": "F821FE61",
-        "comment": "Registered debug.debug callback: writes lua_debug> prompt, reads up to250 bytes through814E00, exits on input end or cont newline, invokes66C520 to compile/call Lua then clears stack. Host streams and live usability untested.",
+        "comment": "Registered debug.debug callback: prints lua_debug>, reads up to250 bytes through814E00, exits on input end or cont newline, executes66C520, clears stack. Raw RPCS3 stdin test spun on channel0. Separate bounded memory reader at call810760 executed one queued command and exited in an unattended test; not an on-screen menu.",
         "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
       },
       {
@@ -108844,7 +109033,34 @@
         "kind": "comment",
         "confidence": "confirmed",
         "bytes": "38A0001F",
-        "comment": "li r5,1F before743AC8. Experimental3F adds bit20 for debug-library registration without automatically opening the blocking console.",
+        "comment": "Secondary context72E9B0 supplies li r5,1F before743AC8. Experimental3F adds bit20 only here; it does not cover the separate factory666E00 or open the blocking console.",
+        "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+      },
+      {
+        "va": "0x00666E00",
+        "name": "TOD_lua_context_factory_four_libraries",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "F821FF81",
+        "comment": "Creates Lua state via67EB10 at context+4; on success opens66E3A8/677818/6849E0/67F2F8, pops four library entries via668698(L,-5), then calls context vtable+1C. No debug opener810650. Probe hook666E7C precedes virtual registration; bounded startup console execution and subsequent playable gameplay were confirmed. A gameplay console and on-screen menu remain unconfirmed.",
+        "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+      },
+      {
+        "va": "0x006696C8",
+        "name": "TOD_lua_protected_call_entry",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "2F860000",
+        "comment": "Arguments L/nargs/nresults/errfunc. First instruction cmpwi cr7,r6,0; delegates protected execution to671F10 and returns status. Game TOC thunk252BA8 tail-jumps here after switching to8AFE5C. Experimental adapter delegates entry+4 and filters mapped game L/nesting. Two fixed gameplay probes completed with status0 at caller return293DDC; no menu or native grants tested.",
+        "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+      },
+      {
+        "va": "0x00668680",
+        "name": "TOD_lua_gettop_eight_byte_values",
+        "kind": "function",
+        "confidence": "confirmed",
+        "bytes": "8003000C",
+        "comment": "Returns (L.top at+8 minus L.base at+C)/8. Stack elements are8 bytes in this exact build. Setter668698 uses matching stride. Both live fixed gameplay probes recorded stack height3 before and after restoration.",
         "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
       }
     ]
@@ -126844,7 +127060,7 @@
       "kind": "function",
       "confidence": "confirmed",
       "bytes": "F821FE61",
-      "comment": "Registered debug.debug callback: writes lua_debug> prompt, reads up to250 bytes through814E00, exits on input end or cont newline, invokes66C520 to compile/call Lua then clears stack. Host streams and live usability untested.",
+      "comment": "Registered debug.debug callback: prints lua_debug>, reads up to250 bytes through814E00, exits on input end or cont newline, executes66C520, clears stack. Raw RPCS3 stdin test spun on channel0. Separate bounded memory reader at call810760 executed one queued command and exited in an unattended test; not an on-screen menu.",
       "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
     },
     {
@@ -126853,7 +127069,34 @@
       "kind": "comment",
       "confidence": "confirmed",
       "bytes": "38A0001F",
-      "comment": "li r5,1F before743AC8. Experimental3F adds bit20 for debug-library registration without automatically opening the blocking console.",
+      "comment": "Secondary context72E9B0 supplies li r5,1F before743AC8. Experimental3F adds bit20 only here; it does not cover the separate factory666E00 or open the blocking console.",
+      "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+    },
+    {
+      "va": "0x00666E00",
+      "name": "TOD_lua_context_factory_four_libraries",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "F821FF81",
+      "comment": "Creates Lua state via67EB10 at context+4; on success opens66E3A8/677818/6849E0/67F2F8, pops four library entries via668698(L,-5), then calls context vtable+1C. No debug opener810650. Probe hook666E7C precedes virtual registration; bounded startup console execution and subsequent playable gameplay were confirmed. A gameplay console and on-screen menu remain unconfirmed.",
+      "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+    },
+    {
+      "va": "0x006696C8",
+      "name": "TOD_lua_protected_call_entry",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "2F860000",
+      "comment": "Arguments L/nargs/nresults/errfunc. First instruction cmpwi cr7,r6,0; delegates protected execution to671F10 and returns status. Game TOC thunk252BA8 tail-jumps here after switching to8AFE5C. Experimental adapter delegates entry+4 and filters mapped game L/nesting. Two fixed gameplay probes completed with status0 at caller return293DDC; no menu or native grants tested.",
+      "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
+    },
+    {
+      "va": "0x00668680",
+      "name": "TOD_lua_gettop_eight_byte_values",
+      "kind": "function",
+      "confidence": "confirmed",
+      "bytes": "8003000C",
+      "comment": "Returns (L.top at+8 minus L.base at+C)/8. Stack elements are8 bytes in this exact build. Setter668698 uses matching stride. Both live fixed gameplay probes recorded stack height3 before and after restoration.",
       "evidence": "Exact ELF function hashes and descriptor/table guards in developer_helpers; targeted read-only Ghidra assembly/decompilation."
     },
     {

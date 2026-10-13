@@ -22,6 +22,18 @@ internal static partial class Program
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--skill-bulk-ui" }))
+            {
+                SkillAndBulkUiChecks();
+                Console.WriteLine($"All {passed} targeted skill/bulk UI checks passed.");
+                return 0;
+            }
+            if (args.SequenceEqual(new[] { "--skill-bulk-edits" }))
+            {
+                SkillAndBulkEditingChecks();
+                Console.WriteLine($"All {passed} targeted skill/bulk checks passed.");
+                return 0;
+            }
             if (args.SequenceEqual(new[] { "--new-edits" }))
             {
                 NewEditSmokeChecks();
@@ -29,6 +41,7 @@ internal static partial class Program
                 WeaponUpgradeEditingChecks();
                 RewardRequestEditingChecks();
                 DeveloperEditingChecks();
+                SkillAndBulkEditingChecks();
                 Console.WriteLine($"All {passed} lightweight edit checks passed.");
                 return 0;
             }

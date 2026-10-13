@@ -37,6 +37,8 @@ internal static partial class Program
         RewardRequestEditingChecks();
         RewardRequestUiChecks();
         DeveloperEditingChecks();
+        SkillAndBulkEditingChecks();
+        SkillAndBulkUiChecks();
         Check("Quick-select choices use native initial flags and ownership, not all inventory IDs", () =>
         {
             byte[] data = EditableFixture();

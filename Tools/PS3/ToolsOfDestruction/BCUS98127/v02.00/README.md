@@ -47,20 +47,13 @@ Each inspector checks binary identity and native evidence. Neighboring `TestTod*
 
 The [full directory](.) contains the more specialized inspectors. [The evidence index](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/ElfMap.md#evidence-index) lists their map sections. Generic [PSARC inspection](../../../../../Tools/Inspect-Psarc.py) and [Lua inspection](../../../../../Tools/Inspect-Lua50.py) tools stay at the Tools root.
 
-## Experimental developer tools
+## Developer research
 
-[Inspect-TodDeveloperHelpers.py](Inspect-TodDeveloperHelpers.py) verifies ten bounded function hashes, the debug registration table and shared native grant guards. The observed initializer omits the debug-library flag. [Create-TodDebugLibraryElf.py](Create-TodDebugLibraryElf.py) creates a **new ELF copy** changing the initialization mask from `0x1F` to `0x3F` at VA `0x72EB24` (file offset `0x71EB24`). Exact original hash required; existing output files are refused.
+[Inspect-TodDeveloperHelpers.py](Inspect-TodDeveloperHelpers.py) checks sixteen bounded native function hashes, Lua registration and grant guards in the original ELF. Original-address annotations remain available for IDA and Ghidra.
 
-```powershell
-python -B Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Create-TodDebugLibraryElf.py `
-  --elf "path/to/original/EBOOT.ELF" --output "artifacts/test-debug-library.ELF" --dry-run
-```
+The [findings](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/ElfMap.md#developer-helpers-and-lua-debug) cover the working Lua console, live helper availability and debug-asset contents. No original on-screen developer menu was recovered.
 
-Remove `--dry-run` to generate the separate copy. It does not replace game files, re-sign `EBOOT.BIN`, boot RPCS3 or automatically start a console. Use only an isolated test installation; do not overwrite the original. Emulator stream access and game stability are untested.
-
-[TodDeveloperHelpers.lua](TodDeveloperHelpers.lua) is a Lua 5.0-compatible, non-autorun module for a separately established in-game loading/injection path. `available()` probes functions without granting anything. `refill_ammo(handle)` and `ally_diagnostics(handle)` require valid native objects, never invented pointers. `open_console(true)` requires explicit consent to a potentially blocking `debug.debug()` loop; input end or `cont` plus newline exits. The module is not a script loader and has not been executed in-game.
-
-Save-side **Grant all native blueprints** and **Unlock bonuses** are already available in the editor; see [Usage](../../../../../docs/Usage.md). They do not install this ELF patch.
+Experimental ELF builders, memory clients and the isolated RPCS3 test profile have been removed. Save-side blueprint and bonus actions remain in the editor; see [Usage](../../../../../docs/Usage.md).
 
 ## Ghidra
 

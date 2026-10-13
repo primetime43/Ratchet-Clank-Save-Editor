@@ -6,7 +6,8 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward }
+    public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier }
     public sealed record TodEditOption(decimal Value, string Label)
     {
         public override string ToString() => Label;
@@ -111,6 +112,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             TodGadgetAmmoEditing.AddFields(data, fields);
             TodAmmoUpgradeEditing.AddFields(data, fields);
             TodDeveloperEditing.AddFields(fields);
+            TodSkillAwardEditing.AddFields(data, fields);
 
             void Appearance(string key, string label, int ownedBase, int selectedOffset, string[] names)
             {
@@ -164,6 +166,31 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return fields.AsReadOnly();
         }
 
+        // Returns a detached, validated plan; never writes the save or grants
+        // unsupported records. Explicit bulk actions replace only their targets.
+        public static IReadOnlyDictionary<string, decimal> PlanBulk(byte[] original, string region,
+            IReadOnlyDictionary<string, decimal> existing, TodBulkEdit action)
+        {
+            if (!Supports(original, region))
+                throw new InvalidDataException("Bulk edits require the verified BCUS98127 Tools of Destruction layout.");
+            ArgumentNullException.ThrowIfNull(existing);
+            if (!Enum.IsDefined(action)) throw new ArgumentOutOfRangeException(nameof(action));
+            var fields = Fields(original, region);
+            var plan = new Dictionary<string, decimal>(existing, StringComparer.Ordinal);
+            var targets = fields.Where(field => action == TodBulkEdit.RefillSupportedAmmo
+                ? field.Category is "Weapon ammo" or "Gadget ammo"
+                : field.Storage == TodEditStorage.WeaponLevel);
+            foreach (var field in targets)
+            {
+                decimal value = action == TodBulkEdit.RefillSupportedAmmo && field.Category == "Weapon ammo"
+                    ? TodAmmoUpgradeEditing.Maximum(original, field, plan) : field.Maximum;
+                if (value == field.Current) plan.Remove(field.Key);
+                else plan[field.Key] = value;
+            }
+            Apply(original, region, plan); // preflight the complete merged batch
+            return plan;
+        }
+
         public static byte[] Apply(byte[] original, string region, IReadOnlyDictionary<string, decimal> edits)
         {
             ArgumentNullException.ThrowIfNull(original);
@@ -190,6 +217,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
             }
             byte[] result = (byte[])original.Clone();
+            TodSkillAwardEditing.Apply(result, edits);
             var levelChanges = requested.Where(edit => fields[edit.Key].Storage == TodEditStorage.WeaponLevel &&
                 edit.Value != fields[edit.Key].Current).ToArray();
             foreach (var edit in levelChanges)
@@ -199,7 +227,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction) continue; // Coupled plans already applied.
+                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward) continue; // Coupled plans already applied.
                 if (edit.Value == field.Current)
                 {
                     // Explicit ammo overrides either coupled refill, retaining
