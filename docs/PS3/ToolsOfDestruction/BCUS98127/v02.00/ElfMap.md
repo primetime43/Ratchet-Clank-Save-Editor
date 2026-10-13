@@ -196,6 +196,8 @@ Gameplay log count is separate from retained contents. The supplied save has 27 
 
 Decryptor words track a win path, Sixaxis-enabled losses since success, and spark-speed scaling—not generic lifetime wins/deaths or global difficulty.
 
+The editor exposes Decryptor counters `0x8758`/`0x875C` as uint32 and valid spark-speed `0x8760` within 0.6–1. Counter edits do not execute success/loss callbacks or reset the companion fields. Arena IDs1–22 occupy BE32 words `0x56DC–0x5730`; only already-positive win counts are editable within signed32 positive range. First-time completion, INVALID slot0, signed-negative baselines, story flags and reward transactions are not edited. These are bounded counter edits, not tested in-game completion helpers.
+
 ## Maps and settings
 
 The 21 RLE blocks decode to 512 × 512 grids. Their copied definitions contain historical pointers/handles, rectangles and seven group flags. Logical slot, browse order, level label and image ID are different mappings.

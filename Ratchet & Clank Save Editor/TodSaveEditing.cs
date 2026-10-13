@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter }
     public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier }
     public sealed record TodEditOption(decimal Value, string Label)
     {
@@ -115,6 +115,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             TodSkillAwardEditing.AddFields(data, fields);
             TodHeroXpEditing.AddFields(data, fields);
             TodGoldBoltEditing.AddFields(data, fields);
+            TodStatisticsEditing.AddFields(data, fields);
 
             TodAppearanceEditing.AddFields(data, fields);
 

@@ -299,7 +299,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             var numeric = new NumericTextBox
             {
                 Minimum = field.Minimum, Maximum = maximum ?? EffectiveMaximum(field),
-                AllowDecimal = field.Storage != TodEditStorage.HeroXp, FieldName = field.Label, Value = value
+                AllowDecimal = field.Storage == TodEditStorage.Float, FieldName = field.Label, Value = value,
+                ReadOnly = field.Minimum == field.Maximum
             };
             // Keep incomplete/invalid text across category changes.
             if (numericText.TryGetValue(field.Key, out string typed)) numeric.Text = typed;
@@ -416,6 +417,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             bulkActions.Visible = showBulkActions;
             notice.Text = category.SelectedItem?.ToString() switch
             {
+                "Arena challenge stats" => "Recorded wins for already-won challenges only: 1–2,147,483,647. Never-won challenges are read-only; first wins must happen in-game to retain gadget rewards and story updates. Names are shipped config descriptions, not verified localized titles. Counts can affect repeat payouts/menu ordering; no currency, items, story flags or skill awards are granted. Not yet tested in-game.",
+                "Decryptor stats" => "Wins are a retained native counter, not guaranteed lifetime wins. Losses count Sixaxis-enabled failures since success, not all attempts. Counters accept whole numbers from 0–4,294,967,295; the game can wrap them on increment. Spark speed accepts 0.6–1 when the saved multiplier is valid. These fields can affect native adaptation; editing wins does not reset losses/speed or simulate a success. No kills, deaths or global difficulty are inferred. Not yet tested in-game.",
                 "Bonus effects" => "Required skill scores: hero head 50, enemy head 100, commentary 200, James Zurkon 400, mirror 500. Commentary requests playback only in the supported runtime language (not stored here). Zurkon Off cannot override its separate runtime flag. No points or unlocks are granted. Not yet tested in-game.",
                 "Rewards" => "Bolt multiplier: 1–20×, only with an existing nonzero replay flag and valid multiplier. This does not enable replay mode. Loading seeds the runtime accumulator; sampled health loss can reset the multiplier to 1×. Fractional values use native float storage. Not yet tested in-game.",
                 "Developer helpers" => "One-shot actions on Save All. Blueprints OR the native 13-bit grant mask, preserving other bits. Unlock bonuses SETS score to 840 and changes every zero bonus state to 1, preserving nonzero states; this can request multiple effects. It does not award earned skills. Run it separately from skill awards and bonus selections. Not yet tested in-game.",

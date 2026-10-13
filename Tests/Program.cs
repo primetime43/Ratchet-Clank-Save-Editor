@@ -34,6 +34,17 @@ internal static partial class Program
                 Console.WriteLine($"All {passed} targeted dropdown checks passed.");
                 return 0;
             }
+            if (args.SequenceEqual(new[] { "--statistics-edits" }))
+            {
+                StatisticsEditingChecks(root);
+                Console.WriteLine($"All {passed} targeted stat checks passed.");
+                return 0;
+            }
+            if (args.Length == 2 && args[0] == "--statistics-with-save")
+            {
+                StatisticsWithSave(args[1], root);
+                return 0;
+            }
             if (args.Length == 3 && args[0] == "--inventory-preview-with-game")
             {
                 InventoryPreviewWithGame(args[1], args[2], root);

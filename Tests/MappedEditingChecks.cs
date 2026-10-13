@@ -28,6 +28,7 @@ internal static partial class Program
     private static void MappedEditingChecks(string root)
     {
         DropdownOrderingChecks(root);
+        StatisticsEditingChecks(root);
         BonusEditingChecks(root);
         WeaponLevelEditingChecks(root);
         NewEditSmokeChecks();
