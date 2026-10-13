@@ -87,7 +87,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 Name = "CharacterComboBox", DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList,
                 Location = new System.Drawing.Point(131, 99), Size = new System.Drawing.Size(110, 21),
-                TabIndex = 15, Visible = false
+                TabIndex = 15, Visible = false, Sorted = true
             };
             this.CharacterComboBox.Items.AddRange(SaveData.CharacterNames);
             this.CharacterComboBox.SelectedIndexChanged += new System.EventHandler(this.CharacterChanged);

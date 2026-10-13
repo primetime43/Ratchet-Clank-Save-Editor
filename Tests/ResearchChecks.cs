@@ -1711,7 +1711,7 @@ internal static partial class Program
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Weapon navigation must show the correct embedded definition.");
             tabs.SelectedIndex = 2;
             foreach (string view in views.Items) views.SelectedItem = view;
-            views.SelectedIndex = 0;
+            views.SelectedItem = "Weapons & gadgets";
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Browsing research must not dirty the session.");
             Capture(form, Path.GetFullPath("artifacts/ui-research-compact.png"));
             form.ClientSize = new Size(1050, 650);

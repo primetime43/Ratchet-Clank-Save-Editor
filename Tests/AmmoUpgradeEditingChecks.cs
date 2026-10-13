@@ -150,7 +150,8 @@ internal static partial class Program
             void Upgrade(bool add)
             {
                 category.SelectedItem = "Ammo upgrades";
-                editor.Controls.Find("MappedEdit_ammo_upgrade_2_7", true).Cast<ComboBox>().Single().SelectedIndex = add ? 1 : 0;
+                var choice = editor.Controls.Find("MappedEdit_ammo_upgrade_2_7", true).Cast<ComboBox>().Single();
+                choice.SelectedItem = choice.Items.Cast<TodEditOption>().Single(option => option.Value == (add ? 1 : 0));
             }
             NumericTextBox Ammo()
             {

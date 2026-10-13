@@ -147,13 +147,13 @@ internal static partial class Program
             money.Text = "500";
             money.Text = "bad";
             var characters = Field<ComboBox>(form, "CharacterComboBox");
-            characters.SelectedIndex = 1;
-            Equal(0, characters.SelectedIndex);
+            characters.SelectedItem = "Clank";
+            Equal("Ratchet", characters.SelectedItem);
             Equal("bad", money.Text);
             money.Text = "500";
-            characters.SelectedIndex = 1;
+            characters.SelectedItem = "Clank";
             Equal(123m, money.Value);
-            characters.SelectedIndex = 0;
+            characters.SelectedItem = "Ratchet";
             Equal(500m, money.Value);
         });
         Check("QForce precision limit remains enforced by the currency text box", () =>

@@ -88,7 +88,8 @@ internal static partial class Program
             multiplier.Text = "20.1";
             True(editor.HasInvalidInputs, "Multiplier must obey1..20 bounds.");
             category.SelectedItem = "Bonus effects";
-            editor.Controls.Find("MappedEdit_bonus_commentary", true).Cast<ComboBox>().Single().SelectedIndex = 1;
+            var commentary = editor.Controls.Find("MappedEdit_bonus_commentary", true).Cast<ComboBox>().Single();
+            commentary.SelectedItem = commentary.Items.Cast<TodEditOption>().Single(option => option.Value == 1);
             Throws<InvalidOperationException>(() => { var edits = editor.PendingEdits; });
             True(!editor.ValidateInputs(), "Invalid hidden multiplier must block saving.");
             Equal("Rewards", category.SelectedItem?.ToString());

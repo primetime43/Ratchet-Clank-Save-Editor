@@ -75,7 +75,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 pendingBolts = session.CharacterBolts.ToArray();
                 selectedCharacter = 0;
-                CharacterComboBox.SelectedIndex = 0;
+                CharacterComboBox.SelectedItem = SaveData.CharacterNames[selectedCharacter];
                 CharacterComboBox.Visible = CharacterLabel.Visible = session.Profile.Layout == CurrencyLayout.Characters;
                 AccountInfoGroupBox.Text = session.Profile.Name.Replace("&", "&&");
                 AccountIDTextBox.Text = session.Metadata.AccountId;
@@ -183,13 +183,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (!BoltsTextBox.IsValid)
             {
                 loadingValues = true;
-                try { CharacterComboBox.SelectedIndex = selectedCharacter; }
+                try { CharacterComboBox.SelectedItem = SaveData.CharacterNames[selectedCharacter]; }
                 finally { loadingValues = false; }
                 ValidateNumericInputs();
                 return;
             }
             pendingBolts[selectedCharacter] = decimal.ToInt32(BoltsTextBox.Value);
-            selectedCharacter = CharacterComboBox.SelectedIndex;
+            selectedCharacter = Array.IndexOf(SaveData.CharacterNames, (string)CharacterComboBox.SelectedItem);
             loadingValues = true;
             try { BoltsTextBox.Value = pendingBolts[selectedCharacter]; }
             finally { loadingValues = false; }

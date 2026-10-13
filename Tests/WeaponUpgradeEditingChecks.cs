@@ -93,14 +93,16 @@ internal static partial class Program
             form.Show();
             var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single();
             category.SelectedItem = "Weapon upgrades";
-            editor.Controls.Find("MappedEdit_weapon_upgrade_2_5", true).Cast<ComboBox>().Single().SelectedIndex = 1;
+            var upgrade = editor.Controls.Find("MappedEdit_weapon_upgrade_2_5", true).Cast<ComboBox>().Single();
+            upgrade.SelectedItem = upgrade.Items.Cast<TodEditOption>().Single(option => option.Value == 1);
             category.SelectedItem = "Weapon ammo";
             var ammo = editor.Controls.Find("MappedEdit_ammo_2", true).Cast<NumericTextBox>().Single();
             Equal(0.5m, ammo.Value);
             True(!editor.PendingEdits.ContainsKey("ammo_2"), "Non-ammo additions must not stage or preview a refill.");
             ammo.Text = "0.25";
             category.SelectedItem = "Weapon upgrades";
-            editor.Controls.Find("MappedEdit_weapon_upgrade_2_5", true).Cast<ComboBox>().Single().SelectedIndex = 0;
+            upgrade = editor.Controls.Find("MappedEdit_weapon_upgrade_2_5", true).Cast<ComboBox>().Single();
+            upgrade.SelectedItem = upgrade.Items.Cast<TodEditOption>().Single(option => option.Value == 0);
             Equal(0.25m, editor.PendingEdits["ammo_2"]);
             True(!editor.PendingEdits.ContainsKey("weapon_upgrade_2_5"), "Reverting an addition must keep unrelated ammo intent.");
         });

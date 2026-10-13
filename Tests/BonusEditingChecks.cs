@@ -104,11 +104,11 @@ internal static partial class Program
             category.SelectedItem = "Bonus effects";
             var hero = editor.Controls.Find("MappedEdit_bonus_hero_head", true).Cast<ComboBox>().Single();
             Equal(4, hero.Items.Count);
-            hero.SelectedIndex = 2;
+            hero.SelectedItem = hero.Items.Cast<TodEditOption>().Single(option => option.Value == 2);
             Equal(2m, editor.PendingEdits["bonus_hero_head"]);
             category.SelectedItem = "Game settings";
             category.SelectedItem = "Bonus effects";
-            Equal(2, editor.Controls.Find("MappedEdit_bonus_hero_head", true).Cast<ComboBox>().Single().SelectedIndex);
+            Equal(2m, ((TodEditOption)editor.Controls.Find("MappedEdit_bonus_hero_head", true).Cast<ComboBox>().Single().SelectedItem).Value);
             True(editor.Controls.Find("MappedEditNotice", true).Cast<Label>().Single().Text.Contains("No points or unlocks"), "Show the score/ownership limitation with the choices.");
             Application.DoEvents();
             using var bitmap = new Bitmap(form.Width, form.Height);

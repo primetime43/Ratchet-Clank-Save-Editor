@@ -58,6 +58,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Global event flags");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Gameplay segments");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "World object flags");
+            views.Sorted = true;
             toolbar.Controls.Add(views);
             toolbar.Controls.Add(upgradeWeapon);
             toolbar.Controls.Add(hexOffset);
@@ -94,7 +95,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             technical.CheckedChanged += (_, _) => RefreshView();
             upgradeWeapon.SelectedIndexChanged += (_, _) => { if (!updatingWeaponFilter) RefreshView(); };
             hexOffset.ValueChanged += (_, _) => UpdateHexView();
-            views.SelectedIndex = 0;
+            views.SelectedItem = "Weapons & gadgets";
         }
 
         public void LoadSession(SaveSession session)
@@ -108,7 +109,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 upgradeWeapon.Items.Clear();
                 upgradeWeapon.Items.Add("All weapons");
                 if (HasSnapshot)
-                    foreach (string weapon in snapshot.Table("Upgrade nodes").Rows.Select(row => row.Cells[0]).Distinct())
+                    foreach (string weapon in snapshot.Table("Upgrade nodes").Rows.Select(row => row.Cells[0]).Distinct()
+                        .Order(StringComparer.CurrentCultureIgnoreCase))
                         upgradeWeapon.Items.Add(weapon);
                 upgradeWeapon.SelectedItem = previous != null && upgradeWeapon.Items.Contains(previous) ? previous : "All weapons";
             }
@@ -138,7 +140,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (string column in table.Columns) grid.Columns.Add(column, column);
             foreach (var row in table.Rows)
             {
-                if (showUpgrades && HasSnapshot && upgradeWeapon.SelectedIndex > 0 && row.Cells[0] != upgradeWeapon.Text) continue;
+                if (showUpgrades && HasSnapshot && upgradeWeapon.Text != "All weapons" && row.Cells[0] != upgradeWeapon.Text) continue;
                 int index = grid.Rows.Add(row.Cells);
                 grid.Rows[index].Tag = row.Details;
                 if (view == "Weapons & gadgets" && HasSnapshot)

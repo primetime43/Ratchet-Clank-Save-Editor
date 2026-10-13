@@ -92,8 +92,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 : "Additional mapped edits are available only for the verified Tools of Destruction USA (BCUS98127) layout. Other games keep their currency controls.";
             notice.Text = defaultNotice;
             category.Visible = available;
-            foreach (string group in fields.Select(field => field.Category).Distinct()) category.Items.Add(group);
-            if (available) category.SelectedIndex = 0;
+            foreach (string group in fields.Select(field => field.Category).Distinct().Order(StringComparer.CurrentCultureIgnoreCase))
+                category.Items.Add(group);
+            if (available) category.SelectedItem = "Game settings";
             else ShowFields();
         }
 
@@ -235,7 +236,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             var planets = new ComboBox { Name = "MappedGoldBoltPlanet", DropDownStyle = ComboBoxStyle.DropDownList,
                 Dock = DockStyle.Fill, Margin = new Padding(4, 8, 4, 8) };
-            foreach (var world in TodGoldBoltEditing.Worlds)
+            foreach (var world in TodGoldBoltEditing.Worlds.OrderBy(world => world.Name, StringComparer.CurrentCultureIgnoreCase))
                 planets.Items.Add(new TodEditOption(world.Id, $"{world.Name} · {world.Total} shipped bolts"));
             planets.SelectedItem = planets.Items.Cast<TodEditOption>().Single(option => option.Value == selectedGoldWorld);
             var list = new CheckedListBox { Name = "MappedGoldBoltChecks", CheckOnClick = true, IntegralHeight = false,
@@ -452,7 +453,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     {
                         var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList,
                             Enabled = field.Storage != TodEditStorage.OwnershipGrant || field.Current == 0 };
-                        foreach (var option in field.Options) combo.Items.Add(option);
+                        // Levels and schemes are numeric sequences; named choices
+                        // sort by their labels without changing the saved IDs.
+                        IEnumerable<TodEditOption> options = field.Storage == TodEditStorage.WeaponLevel || field.Key == "control_scheme"
+                            ? field.Options : field.Options.OrderBy(option => option.Label, StringComparer.CurrentCultureIgnoreCase);
+                        foreach (var option in options) combo.Items.Add(option);
                         combo.SelectedItem = field.Options.First(option => option.Value == value);
                         combo.SelectedIndexChanged += (_, _) =>
                         {

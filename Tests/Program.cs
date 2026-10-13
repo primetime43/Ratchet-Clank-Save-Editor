@@ -28,6 +28,12 @@ internal static partial class Program
                 Console.WriteLine($"All {passed} targeted inventory preview checks passed.");
                 return 0;
             }
+            if (args.SequenceEqual(new[] { "--dropdown-ordering" }))
+            {
+                DropdownOrderingChecks(root);
+                Console.WriteLine($"All {passed} targeted dropdown checks passed.");
+                return 0;
+            }
             if (args.Length == 3 && args[0] == "--inventory-preview-with-game")
             {
                 InventoryPreviewWithGame(args[1], args[2], root);
@@ -598,13 +604,13 @@ internal static partial class Program
             {
                 var money = Field<NumericTextBox>(form, "BoltsTextBox");
                 money.Value = 111;
-                characters.SelectedIndex = 1;
+                characters.SelectedItem = "Clank";
                 Equal(123m, money.Value);
                 money.Value = 444;
-                characters.SelectedIndex = 0;
+                characters.SelectedItem = "Ratchet";
                 Equal(111m, money.Value);
                 money.Value = 123;
-                characters.SelectedIndex = 1;
+                characters.SelectedItem = "Clank";
                 Equal(444m, money.Value);
                 money.Value = 123;
                 Capture(form, Path.Combine(artifacts, "ui-all4one.png"));
