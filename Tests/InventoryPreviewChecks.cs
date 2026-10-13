@@ -13,6 +13,24 @@ internal static partial class Program
 {
     private static void InventoryPreviewChecks(string root)
     {
+        Check("Embedded icon map binds all non-wrench inventory IDs to asset-backed HUD artwork", () =>
+        {
+            var items = TodResearch.HudIcons.GetProperty("items").EnumerateArray().ToArray();
+            Equal(31, items.Length);
+            True(items.Select(item => item.GetProperty("id").GetInt32()).SequenceEqual(Enumerable.Range(1, 31)), "Only the Wrench remains unmapped.");
+            foreach (var item in items)
+            {
+                int id = item.GetProperty("id").GetInt32(), texture = item.GetProperty("texture_id").GetInt32();
+                Equal(TodResearch.Inventory[id].GetProperty("enum").GetString(), item.GetProperty("enum").GetString());
+                Equal(TodResearch.Inventory[id].GetProperty("config_name").GetString(), item.GetProperty("config_name").GetString());
+                True(texture >= 0 && texture < TodHudAssets.TextureCount && item.GetProperty("assignment_offsets").GetArrayLength() > 0,
+                    "A mapping must have a valid atlas index and compiled assignment evidence.");
+                foreach (var node in item.GetProperty("image_nodes").EnumerateArray())
+                    True(node.GetProperty("hud_texture_ids").EnumerateArray().Any(value => value.GetInt32() == texture), "All named-node matches must corroborate the selected texture.");
+            }
+            Equal(84, items.Single(item => item.GetProperty("id").GetInt32() == 16).GetProperty("texture_id").GetInt32());
+            Equal(44, items.Single(item => item.GetProperty("id").GetInt32() == 11).GetProperty("texture_id").GetInt32());
+        });
         Check("BC3 decoder handles alpha/color palettes, partial blocks and bounded inputs", () =>
         {
             byte[] block = new byte[16]; block[0] = 255; block[1] = 0;
@@ -80,6 +98,43 @@ internal static partial class Program
             // Working-copy PNGs are not held open by the inventory picture viewer.
             using var writable = new FileStream(Path.Combine(session.WorkingFolder, "PIC1.PNG"), FileMode.Open, FileAccess.ReadWrite, FileShare.None);
         });
+        Check("Artwork gallery can scroll the entire last row into view after resizing and font scaling", () =>
+        {
+            using var image = new Bitmap(8, 8);
+            var images = Enumerable.Range(0, 208).ToDictionary(index => "HUD texture " + index, _ => image);
+            using var preview = new TodInventoryPreviewControl();
+            foreach (float fontSize in new[] { 9f, 13f, 17f })
+            {
+                using var font = new Font("Segoe UI", fontSize); preview.Font = font;
+                using var window = (Form)typeof(TodInventoryPreviewControl)
+                    .GetMethod("CreateArtworkWindow", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(preview, new object[] { "Artwork scroll check", images });
+                var viewport = window.Controls.Find("ArtworkViewport", true).Cast<Panel>().Single();
+                var flow = window.Controls.Find("ArtworkImages", true).Cast<FlowLayoutPanel>().Single();
+                window.Show(); Application.DoEvents();
+                foreach (var size in new[] { new Size(900, 680), new Size(858, 740), new Size(620, 480), new Size(1100, 820) })
+                {
+                    window.Size = size; Application.DoEvents();
+                    viewport.AutoScrollPosition = Point.Empty; Application.DoEvents();
+                    viewport.ScrollControlIntoView(flow.Controls[207]);
+                    viewport.AutoScrollPosition = new Point(0, viewport.VerticalScroll.Maximum);
+                    Application.DoEvents();
+                    foreach (Control card in flow.Controls.Cast<Control>().Skip(204))
+                    {
+                        var bounds = viewport.RectangleToClient(card.RectangleToScreen(card.ClientRectangle));
+                        True(bounds.Bottom <= viewport.ClientSize.Height - flow.Padding.Bottom,
+                            $"{card.Text} must be fully reachable, including bottom padding ({fontSize}pt, {size}).");
+                    }
+                    True(!viewport.HorizontalScroll.Visible, "Artwork should wrap without horizontal scrolling.");
+                }
+                if (fontSize == 13f)
+                {
+                    using var screenshot = new Bitmap(window.Width, window.Height);
+                    window.DrawToBitmap(screenshot, new Rectangle(Point.Empty, screenshot.Size));
+                    screenshot.Save(Path.Combine(root, "artwork-gallery-bottom.png"), ImageFormat.Png);
+                }
+            }
+        });
     }
 
     private static void InventoryPreviewWithGame(string archive, string saveFolder, string root)
@@ -97,6 +152,17 @@ internal static partial class Program
         var tabs = Field<TabControl>(form, "TabControl");
         tabs.SelectedTab = tabs.TabPages.Cast<TabPage>().Single(tab => tab.Name == "InventoryPreviewTab");
         preview.Controls.Find("InventoryOwnedOnly", true).Cast<CheckBox>().Single().Checked = false;
+        var cards = preview.Controls.Find("InventoryCards", true).Cast<FlowLayoutPanel>().Single();
+        foreach (var item in TodResearch.HudIcons.GetProperty("items").EnumerateArray())
+        {
+            int id = item.GetProperty("id").GetInt32(), texture = item.GetProperty("texture_id").GetInt32();
+            var picture = cards.Controls.Find("InventoryCard_" + id, false).Single().Controls.Find("ItemIcon", true).Cast<PictureBox>().Single();
+            True(picture.Image != null, "Every mapped card must actually render its real icon.");
+            using var expected = assets.DecodeTexture(texture);
+            Equal(expected.GetPixel(32, 32).ToArgb(), ((Bitmap)picture.Image).GetPixel(32, 32).ToArgb());
+        }
+        True(cards.Controls.Find("InventoryCard_0", false).Single().Controls.Find("ItemIcon", true).Cast<PictureBox>().Single().Image == null,
+            "Unmapped Wrench must retain its placeholder, not an invented icon.");
         foreach (var scale in new[] { (new Size(1200, 820), 11f, "artifacts/inventory-preview.png"),
             (new Size(900, 700), 13f, "artifacts/inventory-preview-scaled.png") })
         {

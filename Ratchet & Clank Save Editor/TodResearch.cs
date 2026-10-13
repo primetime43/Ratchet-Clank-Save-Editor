@@ -14,6 +14,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public const string Scope = "Tools of Destruction · BCUS98127 v02.00 research. Read-only; runtime and cross-region acceptance unverified.";
         public static JsonElement Map { get; } = ReadJson("Research.Tod.Map.json");
         public static JsonElement Configs { get; } = ReadJson("Research.Tod.Configs.json");
+        public static JsonElement HudIcons { get; } = ReadJson("Research.Tod.HudIcons.json");
         public static string ElfNotes { get; } = ReadResource("Research.Tod.ElfNotes.md");
         public static string SaveNotes { get; } = ReadResource("Research.Tod.SaveNotes.md");
         public static IReadOnlyList<JsonElement> Inventory { get; } = Array.AsReadOnly(

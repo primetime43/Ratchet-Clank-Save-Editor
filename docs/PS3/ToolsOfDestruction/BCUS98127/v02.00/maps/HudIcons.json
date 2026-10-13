@@ -1,0 +1,1019 @@
+{
+  "build": "PS3 Tools of Destruction BCUS98127 v02.00",
+  "confidence": "compiled-icon-assignments-and-byte-identical-image-assets",
+  "scope": "Pause-menu item artwork mapped to the exact HUD atlas. Not a universal runtime icon getter, upgraded-art selection or cross-build compatibility proof.",
+  "assets": {
+    "/built/anark/pause/built.dat": {
+      "bytes": 1152780,
+      "sha256": "26FC24DD3564FDF94F0F6278FC0F0BC5578FE73C6813D3F39CD113FD22CF761B"
+    },
+    "/processed/texpacks/hud.tp": {
+      "bytes": 2526848,
+      "sha256": "FF662581D84107A7F4D77B83DA3B74277C5E36FDFB333C0CB15029A3FD434D16"
+    },
+    "/processed/texpacks/hud.tph": {
+      "bytes": 6784,
+      "sha256": "A057E6F0B48DD6968BB72DB33D261952D041B43196C8B262F87684F547A5FBA3"
+    },
+    "/built/anark/pause/texturebank_56.bnk": {
+      "bytes": 5640,
+      "sha256": "88B69993FDDE372AAE66D7AFBD43120ECBDE8A4863E98F88062AF3216D73E52F"
+    },
+    "/built/anark/pause/texturebank_56.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_187.bnk": {
+      "bytes": 5640,
+      "sha256": "E2D56E6C8E6E1F98EFBED0A4265E12DD42E75D34C781B8456BFE10D2DE315767"
+    },
+    "/built/anark/pause/texturebank_187.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_66.bnk": {
+      "bytes": 5640,
+      "sha256": "E90E47A5020473CD04B4E59E269EE66F0B2684A7028C28E0C5CBDC2996CED891"
+    },
+    "/built/anark/pause/texturebank_66.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_255.bnk": {
+      "bytes": 5640,
+      "sha256": "E6253CF1C50890E99B45793A3B1999801189AF5866D80EC3EB2FEB3A991223C2"
+    },
+    "/built/anark/pause/texturebank_255.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_159.bnk": {
+      "bytes": 5640,
+      "sha256": "1DB812D3C010A170BB3978B49BDC09BAA6BEBDB208AFAABA7D5ADB4F060C56AF"
+    },
+    "/built/anark/pause/texturebank_159.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_153.bnk": {
+      "bytes": 5640,
+      "sha256": "0F2E61AA2A6C15F3B54189CD3CC660345CF701506EFB9FFD4984E99A77FDE2A2"
+    },
+    "/built/anark/pause/texturebank_153.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_145.bnk": {
+      "bytes": 5640,
+      "sha256": "ED4D5103D65F1A7CD8CD614C4FB76F4D4B053F1B0EFAE64D0600E10C8D7E70FC"
+    },
+    "/built/anark/pause/texturebank_145.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_9.bnk": {
+      "bytes": 5640,
+      "sha256": "C43012E1CD3CB96B9CC131587666CCD0D6BCBFFE78F0954A5AE84EA38A356D19"
+    },
+    "/built/anark/pause/texturebank_9.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_261.bnk": {
+      "bytes": 5640,
+      "sha256": "ABAD49B883996A7EC0738A8F3CEF2E3C1AE427B2940B7E5F425607C8945CAA18"
+    },
+    "/built/anark/pause/texturebank_261.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_20.bnk": {
+      "bytes": 5640,
+      "sha256": "888886E529C3C2F4DFC2093BFB6BE7DA246A22655DA0D68CBE0EEC582C2BEEA9"
+    },
+    "/built/anark/pause/texturebank_20.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_186.bnk": {
+      "bytes": 5640,
+      "sha256": "03EA69D5452E103896AFA47D2A26EA72E38318D7A6D2177346DA9D492D5E7E29"
+    },
+    "/built/anark/pause/texturebank_186.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_117.bnk": {
+      "bytes": 5640,
+      "sha256": "28A92E52D700C1C6332ECD411ED5998937D8B7047B4C928CD295D593070F1C98"
+    },
+    "/built/anark/pause/texturebank_117.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_89.bnk": {
+      "bytes": 5640,
+      "sha256": "70E306247507FC8F46A0A613F7923C29273D345B1BFA8B97FD2808B837E71422"
+    },
+    "/built/anark/pause/texturebank_89.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_256.bnk": {
+      "bytes": 5640,
+      "sha256": "79C3B52213F3B48D50A78D6481BD9CCE476ED51080EA0C1077683101FC6F4FAD"
+    },
+    "/built/anark/pause/texturebank_256.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_260.bnk": {
+      "bytes": 5640,
+      "sha256": "F1091B67194132F9BDD02B6AFF383059DADE5B63989D5851436726F0732CD92E"
+    },
+    "/built/anark/pause/texturebank_260.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_171.bnk": {
+      "bytes": 5640,
+      "sha256": "5958C4E60036E65154922A30E0AA9ADE88CF10FB49F30F2E4B5A18D18DADCEC6"
+    },
+    "/built/anark/pause/texturebank_171.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_57.bnk": {
+      "bytes": 5640,
+      "sha256": "EC1B34FBADCC1C2B9B6710CB8457D789B96C14A1B9D4D7928682156C08BA05C8"
+    },
+    "/built/anark/pause/texturebank_57.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_0.bnk": {
+      "bytes": 5640,
+      "sha256": "E9F5F00C2524309BE1516A8E27BBAEC7EADB69214ED1640225D5D13204FC51E1"
+    },
+    "/built/anark/pause/texturebank_0.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_17.bnk": {
+      "bytes": 5640,
+      "sha256": "2E3D7060079201D00AB654E67F2B2FED934B3189891E0D66D2BEE32216753717"
+    },
+    "/built/anark/pause/texturebank_17.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_194.bnk": {
+      "bytes": 5640,
+      "sha256": "6DB52853208A7E550F9AD4930355160DCEB5061D65B2CE359DCEED804FC3DE1D"
+    },
+    "/built/anark/pause/texturebank_194.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_244.bnk": {
+      "bytes": 5640,
+      "sha256": "204508B6E83FFE1500C840B54AD35F40A12AD08621D2A2491A805795EAAEAB33"
+    },
+    "/built/anark/pause/texturebank_244.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_25.bnk": {
+      "bytes": 5640,
+      "sha256": "C781ECBA743D74438B647229998845831F4FF25809533BCA384F6AF75D908CE2"
+    },
+    "/built/anark/pause/texturebank_25.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_200.bnk": {
+      "bytes": 5640,
+      "sha256": "88879B18DD86AC24582250EC5FDE77DC26A10279A4B61DD4176FDA54E08797E0"
+    },
+    "/built/anark/pause/texturebank_200.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_55.bnk": {
+      "bytes": 5640,
+      "sha256": "9756D4558D32E20CD9A525E003B0B94071B629C828C55EAD80D65C5E261844DA"
+    },
+    "/built/anark/pause/texturebank_55.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_205.bnk": {
+      "bytes": 5640,
+      "sha256": "EDD8771E7421CE9F4F108281B1C75279834C1E6061ED0254C9C219D8F8163A5C"
+    },
+    "/built/anark/pause/texturebank_205.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_170.bnk": {
+      "bytes": 5640,
+      "sha256": "C94EE820121E9C440CF38C5C721821300778A1E2AF8E948797F15FEF7DC39C37"
+    },
+    "/built/anark/pause/texturebank_170.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_26.bnk": {
+      "bytes": 5640,
+      "sha256": "0CEE4DD76224166135911C43B786A06CA3CE50AC860FB2B8BE94F76FB9C85355"
+    },
+    "/built/anark/pause/texturebank_26.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_115.bnk": {
+      "bytes": 5640,
+      "sha256": "2712D2A637E21DF71184A6B8F35A8230916395EA09819EDB9981C12A2D42096D"
+    },
+    "/built/anark/pause/texturebank_115.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_22.bnk": {
+      "bytes": 5640,
+      "sha256": "E0BFE227AAF2DD1A605EDA2561CED5B9716120CED3A863E92D9D0BC03A97923B"
+    },
+    "/built/anark/pause/texturebank_22.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_266.bnk": {
+      "bytes": 5640,
+      "sha256": "1B1167A62D0415A9D41F7226F899D7F961FA0A27EEDC4DA7E429B33FB0062002"
+    },
+    "/built/anark/pause/texturebank_266.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    },
+    "/built/anark/pause/texturebank_112.bnk": {
+      "bytes": 5640,
+      "sha256": "90A314390B76D56721E1A8C07CF896B85290894F12F50AAA0294ACE247B8537D"
+    },
+    "/built/anark/pause/texturebank_112.bnkh": {
+      "bytes": 160,
+      "sha256": "9075AC6134523B8B1316FE98A194995F5C2AFE661A690EE1867A6576B732D848"
+    }
+  },
+  "items": [
+    {
+      "id": 1,
+      "enum": "WPN_COMBUSTER",
+      "config_name": "Combuster",
+      "scene_name": "combuster",
+      "texture_id": 83,
+      "assignment_offsets": [
+        "0x109f99",
+        "0xed686"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x75460",
+          "image_bank": 56,
+          "hud_texture_ids": [
+            83
+          ],
+          "base_bc3_sha256": "FC04588C7D18C89B5FF4E70D253DFF369681A75975DDA32A38D5DE7C86FA67E6"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "enum": "WPN_GRENADE",
+      "config_name": "Grenade",
+      "scene_name": "fusion_grenade",
+      "texture_id": 82,
+      "assignment_offsets": [
+        "0x109fa5",
+        "0xed692"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x93030",
+          "image_bank": 187,
+          "hud_texture_ids": [
+            82
+          ],
+          "base_bc3_sha256": "0BE9BA61974408468D4F109D822C25DB0AEB12460D7BB16D1A219A13F709FCD8"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "enum": "WPN_RAVAGER",
+      "config_name": "Ravager",
+      "scene_name": "shock_ravager",
+      "texture_id": 54,
+      "assignment_offsets": [
+        "0x109fb1",
+        "0xed69e"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x77010",
+          "image_bank": 66,
+          "hud_texture_ids": [
+            54
+          ],
+          "base_bc3_sha256": "BDAF94AF18D007A8C5F9D99E7A92250B56BD9CABFF305A77C325A65A2AFEE4BF"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "enum": "WPN_TORNADO",
+      "config_name": "Tornado",
+      "scene_name": "tempest",
+      "texture_id": 56,
+      "assignment_offsets": [
+        "0x109fbd",
+        "0xed6aa"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0xa8088",
+          "image_bank": 255,
+          "hud_texture_ids": [
+            56
+          ],
+          "base_bc3_sha256": "ADBEAEBC9C8C03FBF634CFEDE585765B55D07E8B9D102A450C973A802DC3FF5A"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "enum": "WPN_BUZZ_BLADES",
+      "config_name": "BuzzBlade",
+      "scene_name": "buzz_blades",
+      "texture_id": 24,
+      "assignment_offsets": [
+        "0x109fc9",
+        "0xed6b6"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x8d4f0",
+          "image_bank": 159,
+          "hud_texture_ids": [
+            24
+          ],
+          "base_bc3_sha256": "E0ADDA45FB75377C43ABC726188D1F53EA27666F7A35DE53DCBE39745B5B29FB"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "enum": "WPN_PREDATOR",
+      "config_name": "Predator",
+      "scene_name": "predator",
+      "texture_id": 49,
+      "assignment_offsets": [
+        "0x109fd5",
+        "0xed6c2"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x8aad8",
+          "image_bank": 153,
+          "hud_texture_ids": [
+            49
+          ],
+          "base_bc3_sha256": "E19B3DDF473D33C956A8E9D8530107D8AB4422C447F37BA85685290BA09F1D39"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "enum": "WPN_ALPHA_NOVA",
+      "config_name": "AlphaNova",
+      "scene_name": "alpha_nova",
+      "texture_id": 19,
+      "assignment_offsets": [
+        "0x109fe1",
+        "0xed6ce"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x891f8",
+          "image_bank": 145,
+          "hud_texture_ids": [
+            19
+          ],
+          "base_bc3_sha256": "842FEA7DE38EF558C52D93409A20189B83C7C3D4CF9A553435CDA6CB424BA429"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "enum": "WPN_FLAMETHROWER",
+      "config_name": "FlameThrower",
+      "scene_name": "flame_blaster",
+      "texture_id": 31,
+      "assignment_offsets": [
+        "0x109fed",
+        "0xed6da"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x6a588",
+          "image_bank": 9,
+          "hud_texture_ids": [
+            31
+          ],
+          "base_bc3_sha256": "96B93954A4B698F7E322C8B740A4B6CDEAD56ECED5BA323A57D58262E46A901A"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "enum": "WPN_GOOP_MINES",
+      "config_name": "GoopMine",
+      "scene_name": "plasma_beast",
+      "texture_id": 48,
+      "assignment_offsets": [
+        "0x109ff9",
+        "0xed6e6"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0xa98f4",
+          "image_bank": 261,
+          "hud_texture_ids": [
+            48
+          ],
+          "base_bc3_sha256": "8B336BC587E123E290C7F9B3DE8A947915F76F26238059B843D62E75840C07CE"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "enum": "WPN_REAPER",
+      "config_name": "Reaper",
+      "scene_name": "shard_reapers",
+      "texture_id": 53,
+      "assignment_offsets": [
+        "0x10a005",
+        "0xed6f2"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x6d290",
+          "image_bank": 20,
+          "hud_texture_ids": [
+            53
+          ],
+          "base_bc3_sha256": "0EF8A6E2B0C444C71136AAEA6FD41087017733DC3289975A31217BA94F72BD90"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "enum": "WPN_ROCKET_LAUNCHER",
+      "config_name": "Rocket",
+      "scene_name": "negotiator",
+      "texture_id": 44,
+      "assignment_offsets": [
+        "0x10a011",
+        "0xed6fe"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x92e68",
+          "image_bank": 186,
+          "hud_texture_ids": [
+            44
+          ],
+          "base_bc3_sha256": "E7471F4678F4A4391469AE27D2A87E45A570ECD9BE951EFB62095DE748C71B49"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "enum": "WPN_ROBO_HIVE",
+      "config_name": "RoboHive",
+      "scene_name": "nano-swarmers",
+      "texture_id": 43,
+      "assignment_offsets": [
+        "0x10a01d",
+        "0xed70a"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x81844",
+          "image_bank": 117,
+          "hud_texture_ids": [
+            43
+          ],
+          "base_bc3_sha256": "2CCB241285F47ADE4E38CDF212CC22FA60C157F00F5CC02AF11567CAF703FE74"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "enum": "WPN_MAG_NET",
+      "config_name": "MagNet",
+      "scene_name": "mag-net",
+      "texture_id": 42,
+      "assignment_offsets": [
+        "0x10a029",
+        "0xed716"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x7b9c0",
+          "image_bank": 89,
+          "hud_texture_ids": [
+            42
+          ],
+          "base_bc3_sha256": "E3DBCA1120E9D7E080F920D041D53FBEB3AFA1B93D14105B75E0CD77425A2FCA"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "enum": "WPN_ENERGY_CLAWS",
+      "config_name": "EnergyClaws",
+      "scene_name": "razor_claws",
+      "texture_id": 50,
+      "assignment_offsets": [
+        "0x10a035",
+        "0xed722"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0xa865c",
+          "image_bank": 256,
+          "hud_texture_ids": [
+            50
+          ],
+          "base_bc3_sha256": "4D62B150FF0E6A333ECED2B11BE322DAE8E347BC936AE2C89D0E5094A7F65880"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "enum": "WPN_RYNO",
+      "config_name": "Ryno",
+      "scene_name": "rynoIV",
+      "texture_id": 52,
+      "assignment_offsets": [
+        "0x10a041",
+        "0xed72e"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0xa93f0",
+          "image_bank": 260,
+          "hud_texture_ids": [
+            52
+          ],
+          "base_bc3_sha256": "691197214964ED326962BF384E646949B7A855906B5692BA926DC4D214168749"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "enum": "WPN_ZURKON",
+      "config_name": "Zurkon",
+      "scene_name": "mrzurkon",
+      "texture_id": 84,
+      "assignment_offsets": [
+        "0x10394f",
+        "0x10a0c5"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x8f684",
+          "image_bank": 171,
+          "hud_texture_ids": [
+            84
+          ],
+          "base_bc3_sha256": "8BB6038EB2116C154E2B1D51D187FDAC8FCC4DAD3DEF6C2B8DDBAB60BFF7D093"
+        },
+        {
+          "node_offset": "0x9e4b4",
+          "image_bank": 171,
+          "hud_texture_ids": [
+            84
+          ],
+          "base_bc3_sha256": "8BB6038EB2116C154E2B1D51D187FDAC8FCC4DAD3DEF6C2B8DDBAB60BFF7D093"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "enum": "WPN_CONFUSION_GAS",
+      "config_name": "ConfusionGas",
+      "scene_name": "confusion_gas",
+      "texture_id": 27,
+      "assignment_offsets": [
+        "0x10395b",
+        "0x10a0d1"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x75608",
+          "image_bank": 57,
+          "hud_texture_ids": [
+            27
+          ],
+          "base_bc3_sha256": "300FBD82B6C7F483A2CF6C5B910559C63D60E08A63BF3E14CE5E1EE17514303A"
+        },
+        {
+          "node_offset": "0x94258",
+          "image_bank": 57,
+          "hud_texture_ids": [
+            27
+          ],
+          "base_bc3_sha256": "300FBD82B6C7F483A2CF6C5B910559C63D60E08A63BF3E14CE5E1EE17514303A"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "enum": "WPN_SLINKONATOR",
+      "config_name": "Slinkonator",
+      "scene_name": "death_spring",
+      "texture_id": 28,
+      "assignment_offsets": [
+        "0x103907",
+        "0x10a07d"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x67e10",
+          "image_bank": 0,
+          "hud_texture_ids": [
+            28
+          ],
+          "base_bc3_sha256": "BAD2A2CFF80C8E977BEB3789486571AC5AAF2F77075C0A43781957F7F8418C83"
+        },
+        {
+          "node_offset": "0x68d44",
+          "image_bank": 0,
+          "hud_texture_ids": [
+            28
+          ],
+          "base_bc3_sha256": "BAD2A2CFF80C8E977BEB3789486571AC5AAF2F77075C0A43781957F7F8418C83"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "enum": "WPN_GROOVITRON",
+      "config_name": "Groovitron",
+      "scene_name": "grooveatron",
+      "texture_id": 37,
+      "assignment_offsets": [
+        "0x103913",
+        "0x10a089"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x6c9a4",
+          "image_bank": 17,
+          "hud_texture_ids": [
+            37
+          ],
+          "base_bc3_sha256": "F9FCE7438E96D055508908585B245D4544283B03C5DF50032AE6DD4898C3B4E9"
+        },
+        {
+          "node_offset": "0x897a0",
+          "image_bank": 17,
+          "hud_texture_ids": [
+            37
+          ],
+          "base_bc3_sha256": "F9FCE7438E96D055508908585B245D4544283B03C5DF50032AE6DD4898C3B4E9"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "enum": "WPN_MINI_LEECH",
+      "config_name": "MiniLeech",
+      "scene_name": "leech_bomb",
+      "texture_id": 41,
+      "assignment_offsets": [
+        "0x10391f",
+        "0x10a095"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x94918",
+          "image_bank": 194,
+          "hud_texture_ids": [
+            41
+          ],
+          "base_bc3_sha256": "F1FD58C5CAB457BE9375AB9549F817F58CB49221BEF942607D6B569876FE6B03"
+        },
+        {
+          "node_offset": "0xaa220",
+          "image_bank": 194,
+          "hud_texture_ids": [
+            41
+          ],
+          "base_bc3_sha256": "F1FD58C5CAB457BE9375AB9549F817F58CB49221BEF942607D6B569876FE6B03"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "enum": "WPN_MAXI_LEECH",
+      "config_name": "MaxiLeech",
+      "scene_name": "giant_leech_bomb",
+      "texture_id": 34,
+      "assignment_offsets": [
+        "0x10392b",
+        "0x10a0a1"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0xa5a80",
+          "image_bank": 244,
+          "hud_texture_ids": [
+            34
+          ],
+          "base_bc3_sha256": "81051ACB1FCC00DB40FE092D5B19877C71D75146A0FE5E563211F191DE37AB96"
+        },
+        {
+          "node_offset": "0xa8320",
+          "image_bank": 244,
+          "hud_texture_ids": [
+            34
+          ],
+          "base_bc3_sha256": "81051ACB1FCC00DB40FE092D5B19877C71D75146A0FE5E563211F191DE37AB96"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "enum": "WPN_MORPH_BOMB",
+      "config_name": "Morph",
+      "scene_name": "transmorpher",
+      "texture_id": 57,
+      "assignment_offsets": [
+        "0x103937",
+        "0x10a0ad"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x6e2c0",
+          "image_bank": 25,
+          "hud_texture_ids": [
+            57
+          ],
+          "base_bc3_sha256": "566033BE74C76C6999BEB2E015781980DF1EDBB5A70788D30CE19185F064F1FF"
+        },
+        {
+          "node_offset": "0x99c54",
+          "image_bank": 25,
+          "hud_texture_ids": [
+            57
+          ],
+          "base_bc3_sha256": "566033BE74C76C6999BEB2E015781980DF1EDBB5A70788D30CE19185F064F1FF"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "enum": "WPN_VISICOPTER",
+      "config_name": "Copter",
+      "scene_name": "visi-copter",
+      "texture_id": 59,
+      "assignment_offsets": [
+        "0x103943",
+        "0x10a0b9"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x975bc",
+          "image_bank": 200,
+          "hud_texture_ids": [
+            59
+          ],
+          "base_bc3_sha256": "DCE952FF828B82871A631F3E951AD225ABB5D4882AD0B3C7EE86C9E42DAA567F"
+        },
+        {
+          "node_offset": "0xa348c",
+          "image_bank": 200,
+          "hud_texture_ids": [
+            59
+          ],
+          "base_bc3_sha256": "DCE952FF828B82871A631F3E951AD225ABB5D4882AD0B3C7EE86C9E42DAA567F"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "enum": "WPN_INFLATOPOD",
+      "config_name": "Inflatopod",
+      "scene_name": "heli_pad",
+      "texture_id": 39,
+      "assignment_offsets": [
+        "0x10a04d",
+        "0x116ace"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x74998",
+          "image_bank": 55,
+          "hud_texture_ids": [
+            39
+          ],
+          "base_bc3_sha256": "3B05ABDC520BCBBDCC822E58227884E282365E19C91CF2E97195F7293B85729E"
+        },
+        {
+          "node_offset": "0x982fc",
+          "image_bank": 55,
+          "hud_texture_ids": [
+            39
+          ],
+          "base_bc3_sha256": "3B05ABDC520BCBBDCC822E58227884E282365E19C91CF2E97195F7293B85729E"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "enum": "WPN_SWINGSHOT",
+      "config_name": "SwingShot",
+      "scene_name": "swing_shot",
+      "texture_id": 55,
+      "assignment_offsets": [
+        "0x10a059",
+        "0x116ada"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x98fdc",
+          "image_bank": 205,
+          "hud_texture_ids": [
+            55
+          ],
+          "base_bc3_sha256": "5AF741C11060F6FACF5B0AF7CD9E4CAFF351237E88FF75F2D3113EFB090B396A"
+        },
+        {
+          "node_offset": "0xa5ef0",
+          "image_bank": 205,
+          "hud_texture_ids": [
+            55
+          ],
+          "base_bc3_sha256": "5AF741C11060F6FACF5B0AF7CD9E4CAFF351237E88FF75F2D3113EFB090B396A"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "enum": "WPN_CUTTING_LASER",
+      "config_name": "CuttingLaser",
+      "scene_name": "geo_laser",
+      "texture_id": 33,
+      "assignment_offsets": [
+        "0x1005d0"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x8f5a8",
+          "image_bank": 170,
+          "hud_texture_ids": [
+            33
+          ],
+          "base_bc3_sha256": "6F7EE9F04C362A2CD3C78EF77564E6ABBF0EC4D0076C7FAF04DBB5152934A32F"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "enum": "WPN_GELANATOR",
+      "config_name": "Gelanator",
+      "scene_name": "gelanator",
+      "texture_id": 32,
+      "assignment_offsets": [
+        "0x10a065",
+        "0x116ae6"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x6e9e8",
+          "image_bank": 26,
+          "hud_texture_ids": [
+            32
+          ],
+          "base_bc3_sha256": "1920FA1EDF233A1513B8D9089F5F1683551EF128F9AE446D3410F337FB952B68"
+        },
+        {
+          "node_offset": "0xafac4",
+          "image_bank": 26,
+          "hud_texture_ids": [
+            32
+          ],
+          "base_bc3_sha256": "1920FA1EDF233A1513B8D9089F5F1683551EF128F9AE446D3410F337FB952B68"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "enum": "WPN_ROBOWINGS",
+      "config_name": "RoboWings",
+      "scene_name": "robo_wings",
+      "texture_id": 51,
+      "assignment_offsets": [
+        "0x116af2"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x8141c",
+          "image_bank": 115,
+          "hud_texture_ids": [
+            51
+          ],
+          "base_bc3_sha256": "770FBD885EF273F315E52405D9A50360226FB3A38D59600F0FD55A5CF1DC47AB"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "enum": "WPN_MAGCYCLE",
+      "config_name": "MagCycle",
+      "scene_name": "gyro_cycle",
+      "texture_id": 38,
+      "assignment_offsets": [
+        "0x1005dc"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x6e024",
+          "image_bank": 22,
+          "hud_texture_ids": [
+            38
+          ],
+          "base_bc3_sha256": "B8A522515EDFA1D8C6C84E0FB920B25DCC295F1B55140E65E6112550ABA1BD2D"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "enum": "WPN_PIRATEGUISE",
+      "config_name": "PirateGadget",
+      "scene_name": "holo_pirate",
+      "texture_id": 40,
+      "assignment_offsets": [
+        "0x10a071",
+        "0x116afe"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0xaaf0c",
+          "image_bank": 266,
+          "hud_texture_ids": [
+            40
+          ],
+          "base_bc3_sha256": "4BD4D84C09E5B0E0891FF323F650A011C323F809735D9D0D690405B78835EDE4"
+        },
+        {
+          "node_offset": "0xac10c",
+          "image_bank": 266,
+          "hud_texture_ids": [
+            40
+          ],
+          "base_bc3_sha256": "4BD4D84C09E5B0E0891FF323F650A011C323F809735D9D0D690405B78835EDE4"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "enum": "WPN_DECRYPTOR",
+      "config_name": "Decryptor",
+      "scene_name": "decryptor",
+      "texture_id": 29,
+      "assignment_offsets": [
+        "0x1005e8"
+      ],
+      "image_nodes": [
+        {
+          "node_offset": "0x80588",
+          "image_bank": 112,
+          "hud_texture_ids": [
+            29
+          ],
+          "base_bc3_sha256": "050351DE8BBACD52D61CC75736FE377CE7E8A66729FF237C7EBDB668A56DF61A"
+        }
+      ]
+    }
+  ],
+  "unmapped": [
+    {
+      "id": 0,
+      "config_name": "Wrench",
+      "reason": "No validated named-image BC3 match"
+    }
+  ]
+}

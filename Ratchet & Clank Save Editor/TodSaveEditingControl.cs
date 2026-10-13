@@ -53,7 +53,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (var action in new[] { (TodBulkEdit.RefillSupportedAmmo, "Refill supported ammo", "MappedRefillAmmo"),
                 (TodBulkEdit.MaximumOwnedWeaponTier, "Max weapon levels (current tier)", "MappedMaxWeaponTier") })
             {
-                var button = new Button { Name = action.Item3, Text = action.Item2, AutoSize = true,
+                var button = new Button { Name = action.Item3, Text = action.Item2, Tag = action.Item1, AutoSize = true,
                     Margin = new Padding(0, 0, 12, 4) };
                 button.Click += (_, _) => StageBulk(action.Item1);
                 bulkActions.Controls.Add(button);
@@ -92,7 +92,6 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 : "Additional mapped edits are available only for the verified Tools of Destruction USA (BCUS98127) layout. Other games keep their currency controls.";
             notice.Text = defaultNotice;
             category.Visible = available;
-            bulkActions.Visible = available;
             foreach (string group in fields.Select(field => field.Category).Distinct()) category.Items.Add(group);
             if (available) category.SelectedIndex = 0;
             else ShowFields();
@@ -400,6 +399,20 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private void ShowFields()
         {
+            string selectedCategory = category.SelectedItem?.ToString();
+            bool showBulkActions = false;
+            foreach (Button button in bulkActions.Controls)
+            {
+                bool relevant = button.Tag switch
+                {
+                    TodBulkEdit.RefillSupportedAmmo => selectedCategory is "Weapon ammo" or "Gadget ammo",
+                    TodBulkEdit.MaximumOwnedWeaponTier => selectedCategory == "Weapon levels",
+                    _ => false
+                };
+                button.Visible = relevant;
+                showBulkActions |= relevant;
+            }
+            bulkActions.Visible = showBulkActions;
             notice.Text = category.SelectedItem?.ToString() switch
             {
                 "Bonus effects" => "Required skill scores: hero head 50, enemy head 100, commentary 200, James Zurkon 400, mirror 500. Commentary requests playback only in the supported runtime language (not stored here). Zurkon Off cannot override its separate runtime flag. No points or unlocks are granted. Not yet tested in-game.",

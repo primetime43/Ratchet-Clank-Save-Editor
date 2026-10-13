@@ -47,6 +47,7 @@ jobs:
           python -B Tests/TestResearchOrganization.py
           python -B Tests/TestPsarc.py
           python -B Tests/TestLua50.py
+          python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodHudIcons.py
           python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodElfMap.py
           python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodBonusSelection.py
           python -B Tests/PS3/ToolsOfDestruction/BCUS98127/v02.00/TestTodWeaponLevels.py

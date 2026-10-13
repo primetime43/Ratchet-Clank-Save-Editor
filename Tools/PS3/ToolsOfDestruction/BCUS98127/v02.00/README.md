@@ -43,6 +43,7 @@ Each inspector checks binary identity and native evidence. Neighboring `TestTod*
 | Events/arena | [GlobalFlags](Inspect-TodGlobalFlags.py), [ResetCategories](Inspect-TodResetCategories.py), [ArenaChallenges](Inspect-TodArenaChallenges.py), [ArenaTable](Inspect-TodArenaTable.py) |
 | Maps | [StateStorage](Inspect-TodStateStorage.py), [PersistentGrid](Inspect-TodPersistentGrid.py), [GridGeometry](Inspect-TodGridGeometry.py) |
 | Settings | [Settings](Inspect-TodSettings.py), [SettingsApply](Inspect-TodSettingsApply.py), [SettingsMenu](Inspect-TodSettingsMenu.py) |
+| Item artwork | [HudIcons](Inspect-TodHudIcons.py): `--archive` checks compiled pause-menu icon assignments, named image references and identical HUD BC3 payloads; metadata only, no game execution or extraction. |
 | Save/reset/unknowns | [SnapshotLifecycle](Inspect-TodSnapshotLifecycle.py), [SaveTail](Inspect-TodSaveTail.py), [WorldAux](Inspect-TodWorldAux.py), [FinalTail](Inspect-TodFinalTail.py) |
 
 The [full directory](.) contains the more specialized inspectors. [The evidence index](../../../../../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/ElfMap.md#evidence-index) lists their map sections. Generic [PSARC inspection](../../../../../Tools/Inspect-Psarc.py) and [Lua inspection](../../../../../Tools/Inspect-Lua50.py) tools stay at the Tools root.

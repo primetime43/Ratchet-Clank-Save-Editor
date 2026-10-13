@@ -30,10 +30,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly Dictionary<string, Bitmap> saveArtwork = new(StringComparer.Ordinal);
         private string assetMessage = "No game artwork loaded. Use Load game icons to select global_cached.psarc from your game dump.";
 
-        // Clear visual matches in the fingerprinted atlas. These are not a
-        // recovered full native icon table; unconfirmed associations stay empty.
+        // Literal pause-menu icon assignments -> named image-bank properties ->
+        // byte-identical BC3 payloads in the pinned HUD atlas. No visual guesses.
         private static readonly IReadOnlyDictionary<int, int> IconMatches = new Dictionary<int, int>
-        { [5] = 24, [8] = 31, [16] = 44, [19] = 37 };
+            (TodResearch.HudIcons.GetProperty("items").EnumerateArray().ToDictionary(
+                item => item.GetProperty("id").GetInt32(), item => item.GetProperty("texture_id").GetInt32()));
 
         public TodInventoryPreviewControl()
         {
@@ -90,7 +91,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             ArgumentNullException.ThrowIfNull(source);
             assets = source; gallery.Enabled = true;
-            assetMessage = "208 verified USA-build HUD textures loaded locally. Item icon matches are visual; unconfirmed items have no assigned icon.";
+            assetMessage = $"208 verified USA-build HUD textures loaded locally; {IconMatches.Count} item icons matched through named pause-menu assets and identical texture data. Wrench remains unmapped. This does not select level-dependent alternate artwork.";
             Render();
         }
 
@@ -144,7 +145,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 var items = inspection.Inventory.Where(item => (!ownedOnly.Checked || item.ScriptOwned) &&
                     (search.Text.Length == 0 || item.Name.Contains(search.Text, StringComparison.OrdinalIgnoreCase))).ToArray();
                 status.Text = $"{items.Length} shown · {inspection.Inventory.Count(item => item.ScriptOwned)}/32 owned · " + AppearanceSummary() +
-                    "\r\nSaved values, not staged edits · " + (assets == null ? "No game icons loaded" : "208 HUD textures · 4 visual item-icon matches");
+                    "\r\nSaved values, not staged edits · " + (assets == null ? "No game icons loaded" : $"208 HUD textures · {IconMatches.Count} asset-backed item icons");
                 help.SetToolTip(status, "Names are native config names, not localized labels. " + assetMessage);
                 foreach (var item in items) cards.Controls.Add(Card(item));
             }
@@ -193,7 +194,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 details.Text = $"{item.Name} · inventory ID {item.Id}\r\n" +
                 $"Script ownership: {(item.ScriptOwned ? "Yes" : "No")} (raw byte 0x{item.Ownership:X2}); stored level index: {item.StoredLevel}.\r\n" +
                 $"Saved ammo: {item.Ammo:R}; saved XP: {item.Xp:R}; upgrade mask: 0x{item.ModifierMask:X8}.\r\n" +
-                (matched ? $"HUD texture {IconMatches[item.Id]}: visually matched artwork, not a recovered native icon lookup.\r\n" : "Item artwork association not confirmed.\r\n") +
+                (matched ? $"HUD texture {IconMatches[item.Id]}: compiled pause-menu icon name and image-bank reference match this atlas image byte-for-byte. Not a universal runtime icon getter or level-dependent alternate-art selection.\r\n" : "Item artwork association not confirmed.\r\n") +
                 item.Warning + "\r\nThese cards do not establish runtime usability or execute game UI code.";
             };
             layout.Controls.Add(picture, 0, 0); layout.Controls.Add(summary, 1, 0);
@@ -229,15 +230,29 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private void ShowSaveArtwork() => ShowImages("Save artwork", saveArtwork);
         private void ShowImages(string title, IReadOnlyDictionary<string, Bitmap> images)
         {
-            using var window = new Form { Text = title, Size = new Size(900, 680), MinimumSize = new Size(440, 360), StartPosition = FormStartPosition.CenterParent };
-            var flow = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, WrapContents = true, Padding = new Padding(12) };
+            using var window = CreateArtworkWindow(title, images);
+            window.ShowDialog(FindForm());
+        }
+
+        private Form CreateArtworkWindow(string title, IReadOnlyDictionary<string, Bitmap> images)
+        {
+            var window = new Form { Text = title, Font = Font, AutoScaleMode = AutoScaleMode.Font,
+                Size = new Size(900, 680), MinimumSize = new Size(440, 360), StartPosition = FormStartPosition.CenterParent };
+            // Scroll the full, auto-sized content panel, not the wrapping flow itself.
+            // FlowLayoutPanel's own scroll extent can omit the bottom row's padding.
+            var viewport = new Panel { Name = "ArtworkViewport", Dock = DockStyle.Fill, AutoScroll = true };
+            var flow = new FlowLayoutPanel { Name = "ArtworkImages", Dock = DockStyle.Top, AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink, WrapContents = true, Padding = new Padding(12) };
+            flow.SuspendLayout();
             foreach (var image in images)
             {
                 var group = new GroupBox { Text = image.Key, Width = images.Count > 2 ? 170 : 400, Height = images.Count > 2 ? 190 : 290, Margin = new Padding(6) };
                 group.Controls.Add(new PictureBox { Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(38, 44, 52), Image = image.Value });
                 flow.Controls.Add(group);
             }
-            window.Controls.Add(flow); window.ShowDialog(FindForm());
+            viewport.Controls.Add(flow); window.Controls.Add(viewport);
+            flow.ResumeLayout(true);
+            return window;
         }
 
         protected override void Dispose(bool disposing)

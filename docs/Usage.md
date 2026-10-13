@@ -62,7 +62,7 @@ Changes are staged until **Save All** and use the existing backup/encryption che
 
 The **Inventory** tab shows saved Tools of Destruction weapons/gadgets, ownership, ammo, levels and equipped armor/skin. Search or show owned items only; **View details** exposes warnings and raw state. It is read-only and refreshes after Save All, not during staging. Names remain native config names.
 
-**Load game icons…** accepts `PS3_GAME/USRDIR/packed/game/global_cached.psarc` from the researched USA build. Only its two fingerprinted HUD assets are read and cached under `PreviewAssets/PS3/ToolsOfDestruction/BCUS98127/v02.00` beside the executable. **Game UI artwork…** displays all208 decoded textures. Four item associations are visual matches (BuzzBlade, FlameThrower, Zurkon and Groovitron); others show an unmapped placeholder. This is not a recovered full native icon table or a 3D viewer. Game assets are not bundled or committed.
+**Load game icons…** accepts `PS3_GAME/USRDIR/packed/game/global_cached.psarc` from the researched USA build. Only its two fingerprinted HUD assets are read and cached under `PreviewAssets/PS3/ToolsOfDestruction/BCUS98127/v02.00` beside the executable. **Game UI artwork…** displays all208 decoded textures. **31 item icons** are mapped through compiled pause-menu assignments, named image references and byte-identical texture data; only Wrench remains unmapped. This maps menu artwork, not level-dependent alternate icons, a universal runtime getter or 3D models. Game assets are not bundled or committed.
 
 **Save artwork…** shows available `ICON0.PNG` and `PIC1.PNG`, including for other games. Invalid artwork does not prevent opening a save.
 

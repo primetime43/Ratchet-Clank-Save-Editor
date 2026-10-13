@@ -130,6 +130,26 @@ internal static partial class Program
 
     private static void SkillAndBulkUiChecks()
     {
+        Check("Bulk buttons appear only on their related editing pages", () =>
+        {
+            using var form = new Form { ClientSize = new Size(1100, 850) };
+            using var editor = new TodSaveEditingControl(); form.Controls.Add(editor);
+            editor.LoadSnapshot(EditableFixture(), "BCUS98127"); form.Show();
+            var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single();
+            var refill = editor.Controls.Find("MappedRefillAmmo", true).Cast<Button>().Single();
+            var maxLevel = editor.Controls.Find("MappedMaxWeaponTier", true).Cast<Button>().Single();
+            var actions = editor.Controls.Find("MappedBulkActions", true).Single();
+            foreach (string page in category.Items.Cast<string>().ToArray())
+            {
+                category.SelectedItem = page;
+                Equal(page is "Weapon ammo" or "Gadget ammo", refill.Visible);
+                Equal(page == "Weapon levels", maxLevel.Visible);
+                Equal(page is "Weapon ammo" or "Gadget ammo" or "Weapon levels", actions.Visible);
+            }
+            True(!editor.HasChanges, "Switching action visibility must not stage edits.");
+            editor.LoadSnapshot(null, null);
+            True(!actions.Visible && !refill.Visible && !maxLevel.Visible, "No actions without a supported save.");
+        });
         Check("Skill checklist stages add-only awards and automatic HARDCORE across category switches", () =>
         {
             byte[] data = EditableFixture();
@@ -156,8 +176,10 @@ internal static partial class Program
             using var editor = new TodSaveEditingControl(); form.Controls.Add(editor); editor.LoadSnapshot(data, "BCUS98127"); form.Show();
             var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single(); category.SelectedItem = "Weapon ammo";
             var ammo = editor.Controls.Find("MappedEdit_ammo_1", true).Cast<NumericTextBox>().Single(); ammo.Text = "0.50";
+            category.SelectedItem = "Weapon levels";
             editor.Controls.Find("MappedMaxWeaponTier", true).Cast<Button>().Single().PerformClick();
             Equal(4m, editor.PendingEdits["weapon_level_1"]); Equal(0.5m, editor.PendingEdits["ammo_1"]);
+            category.SelectedItem = "Weapon ammo";
             editor.Controls.Find("MappedRefillAmmo", true).Cast<Button>().Single().PerformClick();
             byte[] result = TodSaveEditing.Apply(data, "BCUS98127", editor.PendingEdits);
             Equal(100f, BinaryPrimitives.ReadSingleBigEndian(result.AsSpan(28, 4)));
