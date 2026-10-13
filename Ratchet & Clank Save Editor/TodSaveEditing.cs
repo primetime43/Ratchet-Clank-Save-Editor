@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit }
     public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier }
     public sealed record TodEditOption(decimal Value, string Label)
     {
@@ -114,6 +114,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             TodDeveloperEditing.AddFields(fields);
             TodSkillAwardEditing.AddFields(data, fields);
             TodHeroXpEditing.AddFields(data, fields);
+            TodGoldBoltEditing.AddFields(data, fields);
 
             TodAppearanceEditing.AddFields(data, fields);
 
@@ -206,7 +207,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
             }
             byte[] result = (byte[])original.Clone();
+            var goldBolts = TodGoldBoltEditing.Preview(original, edits);
             TodSkillAwardEditing.Apply(result, edits);
+            TodGoldBoltEditing.Apply(result, goldBolts);
             var levelChanges = requested.Where(edit => fields[edit.Key].Storage == TodEditStorage.WeaponLevel &&
                 edit.Value != fields[edit.Key].Current).ToArray();
             foreach (var edit in levelChanges)
@@ -216,7 +219,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward) continue; // Coupled plans already applied.
+                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit) continue; // Coupled plans already applied.
                 if (edit.Value == field.Current)
                 {
                     // Explicit ammo overrides either coupled refill, retaining

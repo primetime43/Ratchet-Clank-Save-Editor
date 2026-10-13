@@ -24,6 +24,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly Dictionary<string, string> invalidNumbers = new(StringComparer.Ordinal);
         private bool rendering;
         private string defaultNotice = string.Empty;
+        private int selectedGoldWorld = 1;
         public bool HasChanges => pending.Count > 0 || HasInvalidInputs;
         public bool HasInvalidInputs => invalidNumbers.Count > 0;
         public string ValidationMessage => invalidNumbers.Values.FirstOrDefault() ?? string.Empty;
@@ -82,6 +83,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             invalidNumbers.Clear();
             snapshot = data == null ? null : (byte[])data.Clone();
             snapshotRegion = region;
+            selectedGoldWorld = 1;
             fields = TodSaveEditing.Fields(data, region);
             category.Items.Clear();
             bool available = fields.Count > 0;
@@ -99,7 +101,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private void Stage(TodEditField field, decimal value)
         {
             if (rendering) return;
-            if (field.Storage == TodEditStorage.SkillAward || field.Key == "dev_unlock_bonuses")
+            if (field.Storage is TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit || field.Key == "dev_unlock_bonuses")
             {
                 var candidate = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
                 if (value == field.Current) candidate.Remove(field.Key);
@@ -188,9 +190,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 uint saved = BinaryPrimitives.ReadUInt32BigEndian(snapshot.AsSpan(0x8708, 4));
                 summary.Text = $"Earned after saving: {BitOperations.PopCount(current.Bits & ((1UL << 60) - 1))}/60 · " +
                     $"Weighted points: {saved} → {current.Score} · New awards: {current.NewAwards}";
-                int final = Array.FindIndex(selected, field => TodSkillAwardEditing.Id(field) == 59);
                 bool wasRendering = rendering; rendering = true;
-                try { if (final >= 0) list.SetItemChecked(final, (current.Bits & (1UL << 59)) != 0); }
+                try
+                {
+                    for (int index = 0; index < selected.Length; index++)
+                        list.SetItemChecked(index, (current.Bits & (1UL << TodSkillAwardEditing.Id(selected[index]))) != 0);
+                }
                 finally { rendering = wasRendering; }
             }
             RefreshSummary();
@@ -202,6 +207,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 try
                 {
                     Stage(field, e.NewValue == CheckState.Checked ? 1 : 0);
+                    e.NewValue = (TodSkillAwardEditing.Preview(snapshot, pending).Bits & (1UL << TodSkillAwardEditing.Id(field))) != 0
+                        ? CheckState.Checked : CheckState.Unchecked;
                     RefreshSummary();
                 }
                 catch (InvalidDataException error) { e.NewValue = e.CurrentValue; notice.Text = error.Message; }
@@ -224,6 +231,68 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private decimal EffectiveMaximum(TodEditField field) => field.Category == "Weapon ammo"
             ? TodAmmoUpgradeEditing.Maximum(snapshot, field, pending) : field.Maximum;
+
+        private void ShowGoldBolts(TodEditField[] selected)
+        {
+            var planets = new ComboBox { Name = "MappedGoldBoltPlanet", DropDownStyle = ComboBoxStyle.DropDownList,
+                Dock = DockStyle.Fill, Margin = new Padding(4, 8, 4, 8) };
+            foreach (var world in TodGoldBoltEditing.Worlds)
+                planets.Items.Add(new TodEditOption(world.Id, $"{world.Name} · {world.Total} shipped bolts"));
+            planets.SelectedItem = planets.Items.Cast<TodEditOption>().Single(option => option.Value == selectedGoldWorld);
+            var list = new CheckedListBox { Name = "MappedGoldBoltChecks", CheckOnClick = true, IntegralHeight = false,
+                Dock = DockStyle.Fill, HorizontalScrollbar = true, Height = Math.Max(120, Font.Height * 6),
+                Margin = new Padding(4, 8, 4, 8) };
+            var summary = new Label { Name = "MappedGoldBoltSummary", AutoSize = true, Dock = DockStyle.Fill,
+                Margin = new Padding(4, 8, 4, 8) };
+            TodEditField[] localFields = Array.Empty<TodEditField>();
+            void RefreshSummary()
+            {
+                var plan = TodGoldBoltEditing.Preview(snapshot, pending);
+                var skills = TodSkillAwardEditing.Preview(snapshot, pending);
+                var world = TodGoldBoltEditing.Worlds[selectedGoldWorld];
+                int count = BitOperations.PopCount(plan.Masks[world.Offset]);
+                summary.Text = $"{world.Name}: native count {count} / {world.Total} shipped. " +
+                    $"All planets: {plan.Before} → {plan.Collected} collected · {plan.Spent} spent · {plan.Balance} available.\r\n" +
+                    $"After saving: GOLDEN {((skills.Bits & (1UL << 46)) != 0 ? "earned" : "not earned")}; " +
+                    $"HARDCORE {((skills.Bits & (1UL << 59)) != 0 ? "earned" : "not earned")}; weighted points {skills.Score}. " +
+                    "Native counts include existing unknown bits, which are preserved.";
+            }
+            void RenderPlanet()
+            {
+                var world = TodGoldBoltEditing.Worlds[selectedGoldWorld];
+                localFields = selected.Where(field => field.Offset == world.Offset).ToArray();
+                bool wasRendering = rendering; rendering = true;
+                try
+                {
+                    list.Items.Clear();
+                    foreach (var field in localFields)
+                        list.Items.Add(field.Label, pending.TryGetValue(field.Key, out decimal edited) ? edited == 1 : field.Current == 1);
+                    list.Enabled = localFields.Length != 0;
+                }
+                finally { rendering = wasRendering; }
+                RefreshSummary();
+            }
+            planets.SelectedIndexChanged += (_, _) =>
+            {
+                if (planets.SelectedItem is not TodEditOption option) return;
+                selectedGoldWorld = (int)option.Value;
+                RenderPlanet();
+            };
+            list.ItemCheck += (_, e) =>
+            {
+                if (rendering) return;
+                try { Stage(localFields[e.Index], e.NewValue == CheckState.Checked ? 1 : 0); RefreshSummary(); }
+                catch (InvalidDataException error) { e.NewValue = e.CurrentValue; notice.Text = error.Message; }
+            };
+            RenderPlanet();
+            fieldsPanel.RowCount = 3;
+            for (int row = 0; row < 3; row++) fieldsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            fieldsPanel.Controls.Add(new Label { Text = "Planet / native level", AutoSize = true, Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 12, 8) }, 0, 0);
+            fieldsPanel.Controls.Add(planets, 1, 0);
+            fieldsPanel.Controls.Add(list, 0, 1); fieldsPanel.SetColumnSpan(list, 2);
+            fieldsPanel.Controls.Add(summary, 0, 2); fieldsPanel.SetColumnSpan(summary, 2);
+        }
 
         private NumericTextBox NumericInput(TodEditField field, decimal value, decimal? maximum = null)
         {
@@ -345,6 +414,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Skin unlocks" => "Grant missing skin ownership on Save All, including Jailbird. Already-owned entries cannot be removed. No special bolts are spent; grants do not select a skin. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
                 "Appearance" => "Select owned armor or skins, including items granted in this Save All operation. Cancelling a grant also clears a selection that depends on it. Selection alone does not grant ownership. Runtime effects are not simulated. Not yet tested in-game.",
                 "Hero XP" => "Whole-number XP from 0–989,000, or a shipped reference target. Rows 0–97 are zero-based config indices, not player-facing level labels. This is an editor bound, not a native clamp or guaranteed maximum level. Only saved XP changes; no health, level, challenge mode or runtime callbacks are written. Active config overrides and rows 98/99 are unknown. Not yet tested in-game.",
+                "Gold bolts" => "Edit local collectible bits within each planet's shipped count; IDs are not recovered pickup locations. Spent bolts are unchanged: add before removing if needed to keep a nonnegative balance. Completing native planet counts with a new bolt awards GOLDEN and its points; HARDCORE follows if all ordinary skills are earned. Existing awards/unknown bits and slot 19 are preserved. No-op edits do not repair missing awards. Save linked awards separately from Unlock bonuses. Not yet tested in-game.",
                 _ => defaultNotice
             };
             rendering = true;
@@ -358,6 +428,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     .Select(field => field with { Options = TodAppearanceEditing.SelectionOptions(field, snapshot, pending) }).ToArray();
                 if (category.SelectedItem?.ToString() == "Skill awards") { ShowSkillAwards(selected); return; }
                 if (category.SelectedItem?.ToString() == "Hero XP") { ShowHeroXp(selected.Single()); return; }
+                if (category.SelectedItem?.ToString() == "Gold bolts") { ShowGoldBolts(selected); return; }
                 fieldsPanel.RowCount = selected.Length;
                 for (int row = 0; row < selected.Length; row++)
                 {

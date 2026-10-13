@@ -41,6 +41,7 @@ internal static partial class Program
         SkillAndBulkUiChecks();
         AppearanceOwnershipChecks();
         HeroXpEditingChecks();
+        GoldBoltEditingChecks(root);
         Check("Quick-select choices use native initial flags and ownership, not all inventory IDs", () =>
         {
             byte[] data = EditableFixture();

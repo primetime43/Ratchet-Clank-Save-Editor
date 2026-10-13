@@ -128,6 +128,8 @@ Armor IDs: 0 None, 1 Durafiber, 2 Hyperplate, 3 Tetramesh, 4 Quantonium. Ownersh
 
 Skin IDs and shipped special-bolt costs: 0 None (0), 1 Dan (6), 2 Snowman (3), 3 Cragmite (6), 4 Pete (6), 5 Cronk (4), 6 Zephyr (4), 7 Jailbird (0), 8 Furioso (3). Jailbird availability requires ownership. A zero price is not an unlock rule.
 
+The USA editor's **Gold bolts** checklist changes only local IDs below each shipped planet count. The collector initializer's enumeration starts at0; this bounded allowlist does not identify pickup positions or guarantee later runtime layouts. Unknown mask bits and slot19 are retained. Collected counts include all set bits across levels0–18, as the native getter does; the spent word at `0x424` is never edited. Changed masks must leave collected≥spent and require a valid initial balance. A new bit satisfying all nineteen native count checks requests GOLDEN through the shared skill-award plan (+40 points, with HARDCORE +20 when applicable). Removed bits do not revoke earned skills or points; unchanged masks do not repair old missing awards. Runtime messages, callbacks and in-game acceptance are not simulated.
+
 Special-bolt balance is collected count minus `0x424`, using signed-32 subtraction. The 19 shipped level totals sum to 32. Extra bits and negative balances are retained, not repaired.
 
 The 60 skill definitions total 750 points. Awards add each definition's value, not one point per bit. Completing IDs 0–58 triggers ID 59, HARDCORE. Blueprint grants, weighted score, earned skill bits and bonus states are separate fields.

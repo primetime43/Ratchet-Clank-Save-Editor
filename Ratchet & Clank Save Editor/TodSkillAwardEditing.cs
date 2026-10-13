@@ -40,11 +40,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             uint originalScore = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(ScoreOffset, 4));
             ulong score = originalScore;
             int added = 0;
+            bool golden = TodGoldBoltEditing.Preview(data, edits).AwardGolden;
             var catalog = TodResearch.Map.GetProperty("progression").GetProperty("skill_points").GetProperty("catalog");
             foreach (var skill in catalog.EnumerateArray())
             {
                 int id = skill.GetProperty("id").GetInt32();
-                if (id == 59 || !edits.TryGetValue("skill_award_" + id, out decimal value) || value != 1 ||
+                bool requested = (edits.TryGetValue("skill_award_" + id, out decimal value) && value == 1) || (id == 46 && golden);
+                if (id == 59 || !requested ||
                     (bits & (1UL << id)) != 0) continue;
                 bits |= 1UL << id;
                 score += skill.GetProperty("points").GetUInt32();
