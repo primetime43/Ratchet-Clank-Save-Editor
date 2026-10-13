@@ -29,6 +29,7 @@ internal static partial class Program
     {
         DropdownOrderingChecks(root);
         StatisticsEditingChecks(root);
+        WeaponGrantEditingChecks(root);
         BonusEditingChecks(root);
         WeaponLevelEditingChecks(root);
         NewEditSmokeChecks();

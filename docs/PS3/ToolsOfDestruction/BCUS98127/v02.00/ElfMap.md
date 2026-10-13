@@ -128,6 +128,14 @@ Special query `0x466630` returns true for any enabled declared node of type `MOD
 
 The level-five weapon purchase path requires ownership, exactly stored level 4, replay state and definition prerequisites. Dispatch and later recheck sample those conditions separately. Level/XP/ammo publication precedes bolt payment. Repeated normal acquisition can charge an already-owned record.
 
+### Combat weapon grants
+
+Named `hero_give_weapon` reaches `0x28B4E8`, which calls `0x466B70` with refill1 and then hero quick-select integration. The low-level grant refills **before** testing ownership. For a new combat weapon it writes ownership1, supplies float-zero XP to `0x4660A8` and increments saved `0x280` once. Optional XP/ammo defaults are −1, so those overrides are skipped. Definition flags, not saved unlock bytes, select the path.
+
+All fifteen combat initializers have flags `&0x203 == 0` and pass the initial quick-select filter. With level0, zero XP/mask and positive first XP threshold, the grant retains level0 and uses shipped `MaxAmmo[0]`. Consumables use a separate additive-ammo/global-flag path and are excluded. [WeaponGrants](../../../../../Tools/PS3/ToolsOfDestruction/BCUS98127/v02.00/Inspect-TodWeaponGrants.py) checks eleven original function hashes, constants and starting definitions; the `weapon_grants` map section records the evidence.
+
+The editor grants missing combat weapons only from bounded initial records, rejects acquisition-counter overflow and preserves all unrelated state. It applies explicit slot edits before deterministic auto-insertion into the first empty slot0–23, checking membership across all32. Full/unknown/tail slots are not overwritten; runtime warning latches and callbacks are not synthesized. Existing weapons are not reset or refilled by duplicate grants. No payment, Omega tier, story gadget, blueprint, upgrade or skill award is granted. Live acceptance remains untested.
+
 ### Within-tier level edits
 
 The editor now offers the 15 combat weapons' levels only within their existing stored 0–4 or 5–9 tier (shown as levels 1–5 or 6–10). It requires ownership, consistent finite XP, valid ammo and known modifier bits. The reference base capacity is constant within each tier; Ryno's two tiers differ, so that boundary is not crossed.
@@ -251,7 +259,7 @@ Search these top-level keys in [NativeMap.json](maps/NativeMap.json), or use the
 | Topic | Map sections |
 | --- | --- |
 | Save/load/restart | `serialization`, `snapshot_lifecycle`, `restart_execution`, `save_tail`, `load_selection` |
-| Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_level_editing`, `gadget_ammo_editing`, `groovitron_linked_state`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
+| Weapons, XP and ammo | `weapon_configuration`, `weapon_progression`, `weapon_grants`, `weapon_level_editing`, `gadget_ammo_editing`, `groovitron_linked_state`, `inventory_queries`, `inventory_reset`, `ammo_capacity`, `ammo_crate`, `weapon_ammo_debit`, `gelanator_transition` |
 | Purchases | `weapon_purchase`, `upgrade_purchase`, `upgrade_edit_candidates`, `ammo_upgrade_editing`, `ordinary_upgrade_editing`, `special_modifier_effects`, `armor_consumer`, `currency_mutation` |
 | Equipment and objects | `objects`, `object_grant_producers`, `inventory_aux`, `equipment_lifecycle`, `equipment_mutation`, `hero_aux_fields`, `quick_select_warning`, `quick_select_eligibility` |
 | XP, health and awards | `progression`, `hero_xp_flow`, `hero_config_assets`, `health_persistence`, `skill_award`, `skill_producers`, `bolt_multiplier_flow`, `reward_multiplier_editing` |

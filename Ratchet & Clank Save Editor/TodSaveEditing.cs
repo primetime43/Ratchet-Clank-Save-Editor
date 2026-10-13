@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter, WeaponGrant }
     public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier }
     public sealed record TodEditOption(decimal Value, string Label)
     {
@@ -116,6 +116,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             TodHeroXpEditing.AddFields(data, fields);
             TodGoldBoltEditing.AddFields(data, fields);
             TodStatisticsEditing.AddFields(data, fields);
+            TodWeaponGrantEditing.AddFields(data, fields);
 
             TodAppearanceEditing.AddFields(data, fields);
 
@@ -153,6 +154,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
             return fields.AsReadOnly();
         }
+
+        internal static IReadOnlyList<TodEditOption> SelectionOptions(TodEditField field, byte[] data, IReadOnlyDictionary<string, decimal> edits) =>
+            field.Category == "Quick select" ? TodWeaponGrantEditing.QuickSelectOptions(field, data, edits) :
+                TodAppearanceEditing.SelectionOptions(field, data, edits);
 
         // Returns a detached, validated plan; never writes the save or grants
         // unsupported records. Explicit bulk actions replace only their targets.
@@ -195,7 +200,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 decimal maximum = field.Category == "Weapon ammo" ? TodAmmoUpgradeEditing.Maximum(original, field, edits) : field.Maximum;
                 if (field.Storage == TodEditStorage.HeroXp && edit.Value != field.Current)
                     maximum = TodHeroXpEditing.MaximumXp;
-                var options = TodAppearanceEditing.SelectionOptions(field, original, edits);
+                var options = SelectionOptions(field, original, edits);
                 if (edit.Value < field.Minimum || edit.Value > maximum ||
                     (field.Storage != TodEditStorage.Float && edit.Value != decimal.Truncate(edit.Value)) ||
                     (options != null && !options.Any(option => option.Value == edit.Value)))
@@ -208,6 +213,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 }
             }
             byte[] result = (byte[])original.Clone();
+            var weaponGrants = TodWeaponGrantEditing.Preview(original, edits);
             var goldBolts = TodGoldBoltEditing.Preview(original, edits);
             TodSkillAwardEditing.Apply(result, edits);
             TodGoldBoltEditing.Apply(result, goldBolts);
@@ -220,7 +226,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit) continue; // Coupled plans already applied.
+                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit or TodEditStorage.WeaponGrant) continue;
                 if (edit.Value == field.Current)
                 {
                     // Explicit ammo overrides either coupled refill, retaining
@@ -236,6 +242,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     BinaryPrimitives.WriteInt32BigEndian(result.AsSpan(field.Offset, 4), (int)edit.Value);
                 else BinaryPrimitives.WriteUInt32BigEndian(result.AsSpan(field.Offset, 4), (uint)edit.Value);
             }
+            // Use the final staged slot layout, so explicit assignments take
+            // precedence over auto-insertion and never overwrite another item.
+            TodWeaponGrantEditing.Apply(result, weaponGrants);
             // Reject only newly assigned duplicates. Existing unusual banks and
             // semantic no-ops stay untouched; batch moves can clear the old slot.
             foreach (var edit in requested)

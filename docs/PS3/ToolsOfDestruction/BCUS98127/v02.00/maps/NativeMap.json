@@ -1,6 +1,47 @@
 {
   "schema_version": 1,
   "title": "Tools of Destruction USA v02.00 executable and save research map",
+  "weapon_grants": {
+    "confidence": "exact-build-static-flow-and-shipped-starting-definitions",
+    "scope": "USA BCUS98127 v02.00; bounded combat-weapon file edits, not executed purchases or gameplay-tested unlocks",
+    "native": {
+      "lua_wrapper": "0x2BB778",
+      "named_hero_grant": "0x28B4E8",
+      "acquisition": "0x466B70",
+      "hero_inventory_integration": "0x252B08",
+      "quick_select_auto_insertion": "0x1E26F0",
+      "ownership_store": "0x466C4C",
+      "xp_initialization_call": "0x466C50",
+      "acquisition_counter_store": "0x466CF8"
+    },
+    "constants": {
+      "initial_xp": { "va": "0x8A5F0C", "bits": "00000000" },
+      "consumable_ammo_delta": { "va": "0x8A5F10", "bits": "3F800000" },
+      "saved_root_pointer": { "va": "0x8A5F14", "bits": "101EFB20" },
+      "zero_mask_multiplier": { "va": "0x8A5F00", "bits": "3F800000" },
+      "optional_xp_ammo_default": { "va": "0x899670", "bits": "BF800000" },
+      "hero_grant_name_pointer": { "va": "0x8993F8", "bits": "1001B3C8", "name": "hero_give_weapon" }
+    },
+    "combat_rule": "For refill1 with definition flags&0x200 clear and flags&2 clear, refill via465D88 occurs BEFORE ownership testing. Previously unowned records store ownership1, then call4660A8 with zero XP and increment saved280 once. No local modifier-mask, unlock-byte or payment write. With zero stored level/XP/mask and positive first XP threshold, level remains0 and ammo resolves to MaxAmmo[0].",
+    "separate_consumable_rule": "Definition flags&2 selects an additive1-ammo path and can OR global flag400(hex) after counting owned items in that class. This is not the combat-weapon path and is excluded from this editor operation.",
+    "hero_rule": "The named wrapper's optional XP/ammo defaults are -1. Native28B4E8 calls acquire(refill1), then252B08(hero,id,-1), and only overrides XP/ammo when the respective signed input is >=0. Runtime hero/type/message gates and later callbacks are not reproduced.",
+    "quick_select_rule": "252B08 changes TOC89FF20 to88FF38 and reaches1E26F0. Initial flags&1040 must be clear. Auto insertion checks membership across32 slots, then searches only slots0..23 for -1. If no slot is empty, no assignment occurs; a qualified runtime message can set warning byte8738. Explicit insertion calls1E22A8 to remove matches across32 before writing. Saved slots are not a confirmed physical wheel order.",
+    "editor_policy": "Add-only IDs1..15. Unowned record must have stored level0, finite zero XP, zero modifier mask and finite ammo in0..starting capacity. Existing ownership bytes are preserved and duplicate grants do nothing. Write ownership1, XP+0, level0 and starting ammo; increment280 per new grant, reject overflow. Use final explicit slot edits first, then auto-insert new IDs in ascending ID order without overwriting occupied slots. Preserve tail slots, unknown bytes, flags, unlock bytes, equipped history, blueprints, skill awards and currencies. Full-wheel messages/latches, checkpoint/live callbacks, Omega tiers, consumables and story gadgets are excluded. Save before editing newly granted weapon levels/ammo.",
+    "starting_ammo_by_id_1_to_15": [100, 8, 30, 5, 200, 25, 4, 30, 8, 30, 12, 4, 12, 30, 300],
+    "function_guards": [
+      { "va": "0x466B70", "size": 456, "sha256": "3643C8B9DA3C8F4D1B161399489CB34FFDFDDC3CBDB87F428DA6EB5E8718D342" },
+      { "va": "0x28B4E8", "size": 680, "sha256": "3805656F2A356428B484B034568F0484E350F351B7239B37EE23AA984DE45068" },
+      { "va": "0x2BB778", "size": 472, "sha256": "E02D282F5B8952E2B3404DD50AD6E9C92FFEB4DEC1ECF890A98B5B6A98F4D823" },
+      { "va": "0x1E26F0", "size": 416, "sha256": "B49AED563820E019C059F3451BCA8167D178A288DCB376FE339505927E2139C9" },
+      { "va": "0x1E22A8", "size": 80, "sha256": "1900FC7F43B85F7538110C2048C75E69411CF4B1102DDD1B98CB915E37DC2186" },
+      { "va": "0x1E22F8", "size": 88, "sha256": "2E0FAF1845E33348D4B870394E031A85F52120AFA6F127E198DE75DE2E325120" },
+      { "va": "0x465D88", "size": 56, "sha256": "FCC6B5F87F12B04EF6F193D8EB7E7487C4C2465712D091C119B11CBFFD3793BF" },
+      { "va": "0x4660A8", "size": 312, "sha256": "9AB26F9BFCCA717CF57738287073598F8FC08D2C04876A94AE0985F5E3569724" },
+      { "va": "0x463DE0", "size": 72, "sha256": "C0EF85FC8C135DB25D28848B60D7F81A8FCB1344BC93815FDD512B605FA90B47" },
+      { "va": "0x466500", "size": 40, "sha256": "EAFCBF6A802708AED91C34E4AE0C2EC28C4AD32F41CDC617CC390D1156338B51" },
+      { "va": "0x466258", "size": 168, "sha256": "E4E3FEEA7E0CF67862DE2A2721E82426CFA373411085BAFA7915D23084D7ADF9" }
+    ]
+  },
   "binary": {
     "filename": "EBOOT.ELF",
     "title_id": "BCUS98127",
