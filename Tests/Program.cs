@@ -22,6 +22,12 @@ internal static partial class Program
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--appearance-edits" }))
+            {
+                AppearanceOwnershipChecks();
+                Console.WriteLine($"All {passed} targeted appearance checks passed.");
+                return 0;
+            }
             if (args.SequenceEqual(new[] { "--skill-bulk-ui" }))
             {
                 SkillAndBulkUiChecks();
@@ -42,6 +48,7 @@ internal static partial class Program
                 RewardRequestEditingChecks();
                 DeveloperEditingChecks();
                 SkillAndBulkEditingChecks();
+                AppearanceOwnershipChecks();
                 Console.WriteLine($"All {passed} lightweight edit checks passed.");
                 return 0;
             }

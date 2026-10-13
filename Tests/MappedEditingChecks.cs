@@ -39,6 +39,7 @@ internal static partial class Program
         DeveloperEditingChecks();
         SkillAndBulkEditingChecks();
         SkillAndBulkUiChecks();
+        AppearanceOwnershipChecks();
         Check("Quick-select choices use native initial flags and ownership, not all inventory IDs", () =>
         {
             byte[] data = EditableFixture();

@@ -108,6 +108,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
             if (value == EffectiveDefault(field)) pending.Remove(field.Key);
             else pending[field.Key] = value;
+            if (TodAppearanceEditing.CancelDependentSelection(field, pending))
+                notice.Text = "The staged selection was cleared because its ownership grant was cancelled. The saved selection is unchanged.";
             if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade)
             {
                 string key = "ammo_" + field.Offset / 20;
@@ -246,6 +248,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Weapon upgrades" => "Add missing ordinary upgrades next to already-installed nodes. Labels show shipped modifier values, not measured live stats; signed speed/duration values are kept as defined. These nodes do not refill ammo or charge raritanium. Save and reopen to expose further adjacent nodes. No removals, special nodes or unnamed effects. Not yet tested in-game.",
                 "Weapon levels" => "Levels stay within the weapon's existing 1–5 or 6–10 tier. A change sets matching XP; increases refill ammo, decreases keep ammo. Weapon ammo shows the planned refill and allows an override. No ownership, upgrades or purchases are granted. Not yet tested in-game.",
                 "Skill awards" => "Check missing skills to award them on Save All. Earned skills cannot be removed. New awards add their native point values to the existing score; HARDCORE follows the last missing ordinary skill automatically. Labels are formatted native names. Existing score/bit mismatches and unknown bits are retained. Unlock bonuses must be saved separately. Not yet tested in-game.",
+                "Armor unlocks" => "Grant missing armor ownership on Save All. Already-owned entries cannot be removed. Grants do not equip armor, spend bolts, change vendor availability or enable challenge mode. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
+                "Skin unlocks" => "Grant missing skin ownership on Save All, including Jailbird. Already-owned entries cannot be removed. No special bolts are spent; grants do not select a skin. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
+                "Appearance" => "Select owned armor or skins, including items granted in this Save All operation. Cancelling a grant also clears a selection that depends on it. Selection alone does not grant ownership. Runtime effects are not simulated. Not yet tested in-game.",
                 _ => defaultNotice
             };
             rendering = true;
@@ -255,7 +260,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 foreach (Control control in fieldsPanel.Controls.Cast<Control>().ToArray()) control.Dispose();
                 fieldsPanel.Controls.Clear();
                 fieldsPanel.RowStyles.Clear();
-                var selected = fields.Where(field => field.Category == category.SelectedItem?.ToString()).ToArray();
+                var selected = fields.Where(field => field.Category == category.SelectedItem?.ToString())
+                    .Select(field => field with { Options = TodAppearanceEditing.SelectionOptions(field, snapshot, pending) }).ToArray();
                 if (category.SelectedItem?.ToString() == "Skill awards") { ShowSkillAwards(selected); return; }
                 fieldsPanel.RowCount = selected.Length;
                 for (int row = 0; row < selected.Length; row++)
@@ -265,7 +271,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     Control input;
                     if (field.Options != null)
                     {
-                        var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+                        var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList,
+                            Enabled = field.Storage != TodEditStorage.OwnershipGrant || field.Current == 0 };
                         foreach (var option in field.Options) combo.Items.Add(option);
                         combo.SelectedItem = field.Options.First(option => option.Value == value);
                         combo.SelectedIndexChanged += (_, _) =>

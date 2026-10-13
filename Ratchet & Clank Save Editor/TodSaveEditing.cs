@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant }
     public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier }
     public sealed record TodEditOption(decimal Value, string Label)
     {
@@ -114,22 +114,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             TodDeveloperEditing.AddFields(fields);
             TodSkillAwardEditing.AddFields(data, fields);
 
-            void Appearance(string key, string label, int ownedBase, int selectedOffset, string[] names)
-            {
-                uint selected = Word(selectedOffset);
-                var options = new List<TodEditOption>();
-                for (int id = 0; id < names.Length; id++)
-                    if (Word(ownedBase + 4 * id) != 0)
-                        options.Add(new(id, names[id]));
-                if (!options.Any(option => option.Value == selected))
-                    options.Add(new(selected, "Current: " + selected + " (unverified)"));
-                fields.Add(new(key, label, "Appearance", selectedOffset, TodEditStorage.Choice,
-                    selected, uint.MaxValue, Options: options.AsReadOnly()));
-            }
-            Appearance("armor", "Selected armor", 0x444, 0x458,
-                new[] { "None", "Durafiber", "Hyperplate", "Tetramesh", "Quantonium" });
-            Appearance("skin", "Selected skin", 0x45C, 0x480,
-                new[] { "None", "Dan", "Snowman", "Cragmite", "Pete", "Cronk", "Zephyr", "Jailbird", "Furioso" });
+            TodAppearanceEditing.AddFields(data, fields);
 
             // Physical bonus IDs, not language-remapped menu indices. The shipped
             // menu cycles 0..count-1; the generic native setter's 1..8 bound is wider.
@@ -205,9 +190,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!fields.TryGetValue(edit.Key, out var field))
                     throw new InvalidDataException("This field is not editable in the current save: " + edit.Key);
                 decimal maximum = field.Category == "Weapon ammo" ? TodAmmoUpgradeEditing.Maximum(original, field, edits) : field.Maximum;
+                var options = TodAppearanceEditing.SelectionOptions(field, original, edits);
                 if (edit.Value < field.Minimum || edit.Value > maximum ||
                     (field.Storage != TodEditStorage.Float && edit.Value != decimal.Truncate(edit.Value)) ||
-                    (field.Options != null && !field.Options.Any(option => option.Value == edit.Value)))
+                    (options != null && !options.Any(option => option.Value == edit.Value)))
                     throw new InvalidDataException("Invalid value for " + field.Label + ".");
                 if (field.Storage == TodEditStorage.Float)
                 {
