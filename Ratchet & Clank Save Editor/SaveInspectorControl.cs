@@ -46,7 +46,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             grid.ColumnHeadersDefaultCellStyle.Padding = new Padding(6, 6, 6, 6);
             grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             grid.GridColor = SystemColors.ControlLight;
-            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(247, 249, 252);
+            grid.AlternatingRowsDefaultCellStyle.BackColor = SystemColors.Control;
+            grid.EnableHeadersVisualStyles = false;
+            grid.ColumnHeadersDefaultCellStyle.BackColor = SystemColors.Control;
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = SystemColors.ControlText;
+            grid.DefaultCellStyle.SelectionForeColor = SystemColors.Window.GetBrightness() < 0.5f
+                ? SystemColors.ControlText : SystemColors.HighlightText;
+            grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = SystemColors.Control;
+            grid.ColumnHeadersDefaultCellStyle.SelectionForeColor = SystemColors.ControlText;
             grid.RowTemplate.MinimumHeight = 32;
             technical.Margin = new Padding(10, 7, 3, 3);
             views.Items.AddRange(new object[] { "Weapons & gadgets", "Upgrade nodes", "Skill points", "Armor", "Skins", "Special bolts", "Blueprints", "Bonuses & cheats", "Objects & equipment", "World progress", "Quick select", "Player summary", "Hero XP reference", "Saved locations", "Save layout", "Prefix words (technical)", "Files & metadata", "Hex bytes (technical)" });

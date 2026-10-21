@@ -27,6 +27,9 @@ dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release
 python -B Tests/TestResearchOrganization.py
 ```
 
+On Windows 11, append `-- --dark-mode` to the .NET command to run the same checks and capture UI previews using the native dark theme.
+Use `-- --theme-ui` (optionally followed by `--dark-mode`) for just numeric validation and UI rendering checks.
+
 The .NET runner covers save formats, backups, encryption, rollback, metadata bindings and the UI. The Python check validates documentation links and embedded resource paths.
 
 To include an actual Tools of Destruction save, append `-- --tod-save "path/to/save-folder"` to the .NET command. Source files are read-only; edit/reopen tests use disposable copies.

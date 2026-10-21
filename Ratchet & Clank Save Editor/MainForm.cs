@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -36,9 +37,47 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             InitializeComponent();
             InitializeReadableLayout();
             InitializeResearchViews();
+            InitializeAppearance();
             ResumeLayout(true);
             SetBusy(false);
             UpdateTitle();
+        }
+
+        private void InitializeAppearance()
+        {
+            foreach (TabPage page in TabControl.TabPages)
+            {
+                page.UseVisualStyleBackColor = false;
+                page.BackColor = SystemColors.Control;
+            }
+            var view = new ToolStripMenuItem("&View");
+            var theme = new ToolStripMenuItem("&Theme (restart to apply)");
+            foreach (var (label, mode) in new[]
+            {
+                ("&System", SystemColorMode.System),
+                ("&Light", SystemColorMode.Classic),
+                ("&Dark", SystemColorMode.Dark)
+            })
+            {
+                var item = new ToolStripMenuItem(label) { Checked = AppTheme.Preference == mode };
+                item.Click += (_, _) =>
+                {
+                    try
+                    {
+                        AppTheme.SavePreference(mode);
+                        foreach (ToolStripMenuItem choice in theme.DropDownItems) choice.Checked = choice == item;
+                        StatusLabel.Text = "Theme saved · Restart the editor to apply";
+                    }
+                    catch (Exception error) when (error is IOException or UnauthorizedAccessException or SecurityException)
+                    {
+                        MessageBox.Show(this, "Could not save the theme preference.\n\n" + error.Message,
+                            "Theme", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
+                theme.DropDownItems.Add(item);
+            }
+            view.DropDownItems.Add(theme);
+            MenuStrip.Items.Add(view);
         }
 
         private async void openFolderToolStripMenuItem_Click(object sender, EventArgs e) => await OpenFolder(false);

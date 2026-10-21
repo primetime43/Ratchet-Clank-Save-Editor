@@ -18,10 +18,24 @@ internal static partial class Program
     private static int Main(string[] args)
     {
         ApplicationConfiguration.Initialize();
+        if (args.Contains("--dark-mode"))
+        {
+#pragma warning disable WFO5001
+            Application.SetColorMode(SystemColorMode.Dark);
+#pragma warning restore WFO5001
+            args = args.Where(arg => arg != "--dark-mode").ToArray();
+        }
         string root = Path.Combine(Path.GetTempPath(), "RatchetClankSaveEditor-Tests-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--theme-ui" }))
+            {
+                NumericInputChecks(root);
+                ThemeUiChecks(root);
+                Console.WriteLine($"All {passed} theme/UI checks passed.");
+                return 0;
+            }
             if (args.SequenceEqual(new[] { "--inventory-previews" }))
             {
                 InventoryPreviewChecks(root);

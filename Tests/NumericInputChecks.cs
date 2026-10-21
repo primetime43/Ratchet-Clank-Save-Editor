@@ -25,7 +25,13 @@ internal static partial class Program
                 input.Text = text;
                 True(!input.IsValid, "Invalid integer accepted: " + text);
                 True(input.ValidationMessage.Contains("Bolts"), "Error must identify the field.");
-                Equal(Color.MistyRose, input.BackColor);
+                if (SystemColors.Window.GetBrightness() >= 0.5f) Equal(Color.MistyRose, input.BackColor);
+                else
+                {
+                    True(input.BackColor != SystemColors.Window, "Invalid dark-mode input must remain highlighted.");
+                    True(input.ForeColor.GetBrightness() - input.BackColor.GetBrightness() > 0.5f,
+                        "Invalid dark-mode input must retain readable text.");
+                }
                 Throws<InvalidOperationException>(() => { _ = input.Value; });
             }
             input.Text = "123";

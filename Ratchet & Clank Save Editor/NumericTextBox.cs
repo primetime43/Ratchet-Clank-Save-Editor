@@ -75,7 +75,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             string lower = hexadecimal ? ((uint)minimum).ToString("X", CultureInfo.InvariantCulture) : minimum.ToString(CultureInfo.InvariantCulture);
             string upper = hexadecimal ? ((uint)maximum).ToString("X", CultureInfo.InvariantCulture) : maximum.ToString(CultureInfo.InvariantCulture);
             ValidationMessage = valid ? string.Empty : $"{fieldName}: enter {syntax} between {lower} and {upper}.";
-            BackColor = valid ? SystemColors.Window : Color.MistyRose;
+            BackColor = valid ? SystemColors.Window : AppTheme.InvalidInputBackground;
             AccessibleDescription = ValidationMessage;
             validationTip?.SetToolTip(this, ValidationMessage);
             ValueChanged?.Invoke(this, EventArgs.Empty);

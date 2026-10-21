@@ -2,6 +2,10 @@
 
 [Main README](../README.md) · [Supported regions](PS3/Compatibility.md)
 
+## Appearance
+
+Use **View → Theme** to choose **System**, **Light**, or **Dark**, then restart the editor to apply the choice. The preference is remembered for your Windows account. The default is **System**, which reads the Windows app color setting at launch; changes to that Windows setting also require restarting the editor. Native dark mode requires Windows 11 and is disabled by Windows contrast themes.
+
 ## Opening and saving
 
 Encrypted saves need the complete folder, including `PARAM.SFO`, `PARAM.PFD` and game data. Decrypted/RPCS3 saves may omit the PFD; an existing PFD is left unchanged. RPCS3's `RPCS3_BLIST` metadata is recognized automatically.

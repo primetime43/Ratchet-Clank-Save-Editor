@@ -12,6 +12,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         static void Main()
         {
             ApplicationConfiguration.Initialize();
+            AppTheme.Initialize();
             Application.Run(new MainForm());
         }
     }
