@@ -54,7 +54,7 @@ The .NET runner covers save formats, backups, encryption, rollback, metadata bin
 
 To include an actual Tools of Destruction save, append `-- --tod-save "path/to/save-folder"` to the .NET command. Source files are read-only; edit/reopen tests use disposable copies.
 
-Use `-- --rc1` for RC1 inspection, ammo, grants and quick-select checks, or `-- --rc1-save "path/to/save-folder"` to also test a plaintext RPCS3 RC1 save. The latter edits only disposable copies and verifies byte preservation and the untouched source. UI previews are written to ignored `artifacts/rc1-inspector.png`, `artifacts/rc1-ammo-editor.png`, `artifacts/rc1-grants.png` and `artifacts/rc1-quick-select.png`. See the [RC1 format notes](PS3/RatchetAndClank1/SaveFormat.md) and [native research tools](../Tools/PS3/RatchetAndClank1/NPEA00385/unknown/README.md).
+Use `-- --rc1` for RC1 inspection, ammo, all 15 combat grants and quick-select checks, or `-- --rc1-save "path/to/save-folder"` to also test a plaintext RPCS3 RC1 save. The latter edits only disposable copies and verifies byte preservation and the untouched source, including the Suck Cannon/Morph-o-Ray/R.Y.N.O. batch. UI previews are written to ignored `artifacts/rc1-inspector.png`, `artifacts/rc1-ammo-editor.png`, `artifacts/rc1-grants.png`, `artifacts/rc1-quick-select.png` and `artifacts/rc1-all-weapons.png`. See the [RC1 format notes](PS3/RatchetAndClank1/SaveFormat.md) and [native research tools](../Tools/PS3/RatchetAndClank1/NPEA00385/unknown/README.md).
 
 Optional public integration samples:
 

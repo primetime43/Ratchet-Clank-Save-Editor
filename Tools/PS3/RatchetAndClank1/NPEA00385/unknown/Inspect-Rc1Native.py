@@ -1,7 +1,7 @@
 """Inspect the supplied European trilogy RC1 ELF without executing game code.
 
-Checks exact binary identity and bounded native function fingerprints, then
-extracts the player record table and ammo capacities. JSON goes to stdout.
+Checks exact binary identity and bounded native function fingerprints, extracts
+record/item definitions and audits notification memory effects. JSON goes to stdout.
 """
 import argparse
 import hashlib
@@ -25,11 +25,109 @@ FUNCTIONS = {
     "assign_quick_select": (0x143980, 0x2B0, "F5102C83624F7FEB021752811C446C412CBF0DDC54047DBFB1D31B904C227B08"),
     "load_quick_select": (0x143C30, 0x8C, "B6F5C3069DB87AA29FFCFF4E6956E50E8C1FA73BD5A01FAA5FCE18A52E420432"),
     "store_quick_select": (0x143CBC, 0x40, "E7FE7EDA407550382F9A5AC6966DF64A47093D33E40EB89ED8C9DAD91A010D6D"),
+    "notification_text_lookup": (0x7B740, 0x98, "89E8D93A3EA42FAC22010C6D94E5FA18849292DC5914139D9E20CD2982019204"),
+    "notification_text_copy": (0x5CC8D8, 0xEC, "23752406F48D66B6340793A5E7E880F1E0C6DDDAC958F42F9F66CAF2FD6A5258"),
 }
 ITEM_NAMES = {10: "Bomb Glove", 11: "Devastator", 13: "Visibomb Gun", 15: "Blaster",
               16: "Pyrocitor", 17: "Mine Glove", 19: "Tesla Claw", 20: "Glove of Doom",
               23: "R.Y.N.O.", 24: "Drone Device", 25: "Decoy Glove"}
 WEAPON_NAMES = {**ITEM_NAMES, 9: 'Suck Cannon', 14: 'Taunter', 18: 'Walloper', 21: 'Morph-o-Ray'}
+
+
+def audit_notification(read, saved_ranges):
+    """Bounded straight-line memory/control-flow audit, not a PPC emulator.
+
+    Vector loads/arithmetic are decoded for their memory effects; timer values
+    and localized text are not evaluated. Call effects follow the two pinned,
+    separately traced helpers. Refuse any additional instruction or call.
+    """
+    def signed(value, bits=16):
+        return value - (1 << bits) if value & (1 << (bits - 1)) else value
+
+    registers = {3: 'message_id', 28: 0x96C140, 31: 'item_id'}
+    loads, calls, stores = [], [], []
+    vector_count = 0
+    for address in range(0x112EA4, 0x112F30, 4):
+        word = struct.unpack('>I', read(address, 4))[0]
+        op, rt, ra, rb = word >> 26, word >> 21 & 31, word >> 16 & 31, word >> 11 & 31
+        immediate = signed(word & 65535)
+        if op in (12, 14, 15):
+            base = 0 if ra == 0 else registers.get(ra)
+            if not isinstance(base, int):
+                raise ValueError('Unknown notification address base')
+            registers[rt] = (base + immediate * (65536 if op == 15 else 1)) & 0xFFFFFFFF
+        elif op == 24:  # ori, including register copies and nop
+            if rt == ra == 0 and word & 65535 == 0:
+                continue
+            source = registers.get(rt)
+            if word & 65535 == 0:
+                registers[ra] = source
+            elif isinstance(source, int):
+                registers[ra] = source | (word & 65535)
+            else:
+                raise ValueError('Unknown notification OR source')
+        elif op == 4:
+            # VX forms: splats, shift, conversion and comparison. VA forms:
+            # vmaddfp and vsel. None writes GPRs or memory.
+            if word & 2047 not in (0x38C, 0x184, 0x28C, 0x3CA, 0x086) and word & 63 not in (0x2E, 0x2A):
+                raise ValueError(f'Unknown notification vector instruction at 0x{address:X}')
+            vector_count += 1
+        elif op == 31:
+            xo = word >> 1 & 1023
+            if xo == 986:  # extsw
+                if registers.get(rt) != 'message_id':
+                    raise ValueError('Unexpected notification sign extension')
+                registers[ra] = 'message_id'
+            elif xo == 519:  # Cell lvlx: aligned read + register shift only
+                base = 0 if ra == 0 else registers.get(ra)
+                index = registers.get(rb)
+                if not isinstance(base, int) or not isinstance(index, int):
+                    raise ValueError('Unknown Cell load address')
+                effective = (base + index) & 0xFFFFFFFF
+                loads.append(dict(address=hex(address), mnemonic='lvlx', effective_address=hex(effective),
+                                  aligned_read=hex(effective & ~15), bytes=16))
+            elif xo == 87:  # lbzx: reload saved ownership for the following path
+                if (registers.get(ra), registers.get(rb)) != (0x96C140, 'item_id'):
+                    raise ValueError('Unexpected notification ownership reload')
+                registers[rt] = 'ownership_byte'
+            elif xo == 199:  # stvewx: one aligned BE32 at a fixed runtime address
+                base = 0 if ra == 0 else registers.get(ra)
+                index = registers.get(rb)
+                if not isinstance(base, int) or not isinstance(index, int):
+                    raise ValueError('Unknown notification store address')
+                stores.append(dict(address=hex(address), destination=hex(((base + index) & 0xFFFFFFFF) & ~3), bytes=4))
+            else:
+                raise ValueError(f'Unexpected notification X-form instruction at 0x{address:X}')
+        elif op == 18 and word & 1:
+            displacement = signed(word & 0x3FFFFFC, 26)
+            target = (displacement if word & 2 else address + displacement) & 0xFFFFFFFF
+            if target == 0x7B740 and registers.get(3) == 'message_id':
+                calls.append(dict(address=hex(address), target=hex(target), role='localized text lookup; no writes'))
+                result = 'localized_text_pointer'
+            elif target == 0x5CC8D8 and registers.get(3) == 0xA15C8C and registers.get(4) == 'localized_text_pointer':
+                calls.append(dict(address=hex(address), target=hex(target), role='NUL-terminated string copy', destination='0xa15c8c'))
+                result = 0xA15C8C
+            else:
+                raise ValueError('Unexpected notification call or arguments')
+            for register in (0, *range(3, 13)):
+                registers.pop(register, None)
+            registers[3] = result
+        else:
+            raise ValueError(f'Unexpected notification control flow or instruction at 0x{address:X}')
+
+    if [load['effective_address'] for load in loads] != ['0x112e10', '0x71f410', '0x112e14'] or len(calls) != 2:
+        raise ValueError('Notification load/call sequence mismatch')
+    if stores != [dict(address='0x112f2c', destination='0xa15c80', bytes=4)] or registers.get(4) != 'ownership_byte':
+        raise ValueError('Notification store/exit mismatch')
+    for destination, length in ((0xA15C80, 4), (0xA15C8C, 1)):
+        if any(destination < start + size and start < destination + length for start, size in saved_ranges):
+            raise ValueError('Notification destination overlaps serialized state')
+    return dict(start='0x112ea4', end_exclusive='0x112f30', instruction_count=35,
+                sha256=hashlib.sha256(read(0x112EA4, 0x8C)).hexdigest().upper(),
+                vector_register_operations=vector_count, vector_loads=loads, calls=calls, direct_stores=stores,
+                serialized_destination_overlap=False,
+                text_extent='Runtime NUL-terminated localized string; length is not inferred from a save.',
+                rule='Notification text/timer remain runtime-only; the shared grant tail supplies the saved writes.')
 
 
 def inspect(path):
@@ -76,6 +174,14 @@ def inspect(path):
     by_id = {record['id']: record for record in records}
     if (by_id[9]['runtime_address'], by_id[10]['runtime_address']) != ('0x96c0ac', '0x96c140'):
         raise ValueError("Unexpected inventory serialization roots")
+    saved_ranges = [(int(record['runtime_address'], 0), record['length']) for record in records]
+    # Include all twenty repeated world payloads, not only player records.
+    for index in range(12):
+        address, size, _, _ = struct.unpack('>IIII', read(0x7269A0 + index * 16, 16))
+        if not address:
+            break
+        saved_ranges.extend((address + world * size, size) for world in range(20))
+    notification = audit_notification(read, saved_ranges)
     ammo = []
     for item_id, name in ITEM_NAMES.items():
         slot = 0x737D30 + item_id * 24 + 14
@@ -95,9 +201,9 @@ def inspect(path):
         price = struct.unpack('>H', read(item + 8, 2))[0]
         kind = struct.unpack('>I', read(0x721008 + item_id * 76, 4))[0]
         messages = [struct.unpack('>i', read(0x729380 + (item_id + bank * 37) * 4, 4))[0] for bank in (0, 1)]
-        # The Cell-vector notification path is not fully decoded by Ghidra.
-        # Permit grants only for items whose two message selectors bypass it.
-        grant = messages == [-1, -1] and kind == 0
+        # The previously excluded Cell path is now audited separately. Its
+        # notification buffer/timer are outside the serialized record ranges.
+        grant = kind == 0
         if initial > capacity or kind != 0:
             raise ValueError('Unexpected combat weapon definition')
         weapons.append(dict(id=item_id, name=name, maximum=capacity, initial_ammo=initial if price else 0,
@@ -106,13 +212,13 @@ def inspect(path):
                             acquisition_flag_offset=by_id[11]['offset'] + item_id,
                             ammo_offset=by_id[9]['offset'] + 4 * item_id,
                             item_type=kind, notification_ids=messages))
-    if sum(item['grant_supported'] for item in weapons) != 12:
+    if sum(item['grant_supported'] for item in weapons) != 15:
         raise ValueError('Unexpected safe grant allowlist')
     if struct.unpack('>II', read(0x112E9C, 8)) != (0x2C03FFFF, 0x41820090):
         raise ValueError('Grant notification bypass branch changed')
     return dict(collection_id='BCES01503', save_id='NPEA00385', executable_version='unknown',
                 binary=dict(file='RC1.ppu.elf', size=ELF_SIZE, sha256=ELF_SHA256),
-                functions=guards, player_records=records, ammo=ammo, weapons=weapons,
+                functions=guards, player_records=records, ammo=ammo, weapons=weapons, notification=notification,
                 grant_layout=dict(flag_record=11, acquisition_record=12, acquisition_offset=by_id[12]['offset'],
                                   acquisition_bytes=12, acquisition_empty=255, acquisition_flag=64,
                                   quick_record=13, quick_offset=by_id[13]['offset'], quick_slots=8, quick_empty=0,

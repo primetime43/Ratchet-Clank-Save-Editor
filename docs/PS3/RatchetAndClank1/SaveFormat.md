@@ -49,7 +49,7 @@ The supplied `BCES01503` trilogy's decrypted `RC1.ppu.elf` independently confirm
 
 The matching European `NPEA00385` format supports ammo editing/refill for 11 potential weapons. A weapon must already have ownership byte `1` and an existing ammo word inside its recovered reference limit. Writes change only the requested BE32 ammo words; Save All also applies the existing player checksum sentinel. Record 11, quick select, world data, statistics and alignment bytes are retained. Other RC1 regions remain inspection/currency-only for now.
 
-Separate **Weapon unlocks** and **Quick select** categories now support 12 combat grants and edits to the eight stored quick-select words. A new grant sets ownership and the independent record-11 flag, raises ammo to its starting amount, updates the bounded acquisition list when required, and uses a free quick-select slot. Explicit slot edits take precedence. Three combat grants with a partly decoded notification path remain excluded. See the [grant evidence and exact boundaries](NPEA00385/unknown/ElfMap.md#weapon-grants).
+Separate **Weapon unlocks** and **Quick select** categories support all 15 combat grants and edits to the eight stored quick-select words. A new grant sets ownership and the independent record-11 flag, raises ammo to its starting amount, updates the bounded acquisition list when required, and uses a free quick-select slot. Explicit slot edits take precedence. Suck Cannon, Morph-o-Ray and R.Y.N.O. are included after a complete memory-effect audit of their runtime notification path. See the [grant evidence and exact boundaries](NPEA00385/unknown/ElfMap.md#weapon-grants).
 
 ## Reproducible validation
 

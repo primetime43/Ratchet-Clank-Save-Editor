@@ -84,12 +84,33 @@ Runtime equipment selectors, notification buffers and trophy callbacks are outsi
 
 ### Notification-path boundary
 
-The helper selects a message from a two-bank table at `0x729380`, depending on saved ownership. It compares that message ID with `-1` at `0x112E9C`; opcode `41820090` at `0x112EA0` branches to `0x112F30` when no notification is required. This bypasses the Cell-vector notification block. Ghidra's selected language does not decode the vector loads at `0x112EC8` / `0x112ECC`, so that block is not treated as fully reversed.
+The helper selects a message from a two-bank table at `0x729380`, depending on saved ownership. It compares that message ID with `-1` at `0x112E9C`; opcode `41820090` at `0x112EA0` branches to `0x112F30` when no notification is required. Ghidra's selected language still stops at the Cell `lvlx` instructions, but a separate bounded audit now decodes the memory/control-flow effects of every instruction in the 35-instruction notification block (`0x112EA4..0x112F2F`).
 
-The new grant allowlist contains only combat items whose **both** message entries are `-1`. Suck Cannon (ID9), Morph-o-Ray (ID21) and R.Y.N.O. (ID23) do not satisfy this check and remain unavailable for granting. Their existing owned state and applicable ammo edits remain supported. Gadgets and story equipment are excluded from the combat-grant allowlist.
+The Cell operations were checked against [RPCS3's opcode decoder](https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUOpcodes.h) and [interpreter](https://github.com/RPCS3/rpcs3/blob/master/rpcs3/Emu/Cell/PPUInterpreter.cpp). `lvlx` reads an aligned 16-byte region into a vector register; `stvewx` writes one aligned word. The vector splats, arithmetic, conversions and comparison/select operations do not write memory. The audit classifies their effects without executing the game or simulating display timing.
+
+| Instruction / call | Verified effect |
+| --- | --- |
+| `0x112EC8`, `0x112ECC`, `0x112ED4` | Three `lvlx` reads, effectively at `0x112E10`, `0x71F410`, `0x112E14` |
+| `0x112F04 → 0x7B740` | Read-only localized-text lookup; decompiled helper only searches the loaded text table |
+| `0x112F14 → 0x5CC8D8` | NUL-terminated string copy to fixed runtime destination `0xA15C8C` |
+| `0x112F28` | Reload ownership at `0x96C140 + item_id` for the shared grant tail |
+| `0x112F2C` | One-word `stvewx` to runtime control/timer word `0xA15C80` |
+
+Both call targets have pinned function hashes in the map. Neither fixed notification destination belongs to the 48 player payloads or any of the 20 repeated world payloads. The runtime text's length is not inferred from a save, and notification strings/timer values are not fabricated by the editor. Unknown instructions, calls, store destinations or overlap with serialized ranges fail the audit. Ghidra's incomplete pseudocode is not used as proof that the omitted block has no effects.
+
+The former notification-based exclusion is therefore removed. All **15 combat grants** use the same confirmed saved-state tail, including Suck Cannon (ID9), Morph-o-Ray (ID21) and R.Y.N.O. (ID23). Gadgets and story equipment remain excluded.
+
+| Newly supported ID | Ownership-dependent notification IDs (owned / unowned) | Initial ammo | Acquisition-list entry |
+| --- | --- | --- | --- |
+| 9, Suck Cannon | 4007 / 21471 | No ammo initialization | None |
+| 21, Morph-o-Ray | 14002 / 14002 | No ammo initialization | None |
+| 23, R.Y.N.O. | 5014 / 21474 | 25, reference capacity 50 | None |
+
+The three IDs do not occur in the acquisition-membership table at `0x737BF0`. They can therefore be granted even when the separate acquisition list is full. A full quick-select bank is still preserved. As with every grant, the editor requires canonical unowned flags and in-range stored ammo; Suck Cannon and Morph-o-Ray have no manual ammo editor.
 
 | Grant ID | Weapon | Starting ammo |
 | --- | --- | --- |
+| 9 | Suck Cannon | 0 (no ammo field initialized) |
 | 10 | Bomb Glove | 10 |
 | 11 | Devastator | 10 |
 | 13 | Visibomb Gun | 10 |
@@ -100,6 +121,8 @@ The new grant allowlist contains only combat items whose **both** message entrie
 | 18 | Walloper | 0 (no ammo field initialized) |
 | 19 | Tesla Claw | 120 |
 | 20 | Glove of Doom | 3 |
+| 21 | Morph-o-Ray | 0 (no ammo field initialized) |
+| 23 | R.Y.N.O. | 25 |
 | 24 | Drone Device | 3 |
 | 25 | Decoy Glove | 10 |
 
@@ -117,7 +140,7 @@ Complete batches support moves and swaps. A new nonzero assignment is rejected i
 
 ## Validation added for grants and slots
 
-The RC1 runner verifies each grant's exact changed bytes, all 12 supported IDs, starting ammo, acquisition-list bounds, canonical flag guards, no-op preservation, deterministic batches, atomic slot moves/swaps, preserved unknown IDs, hidden invalid input, staging/cancellation, game reloads and failed-encryption preservation. The supplied save was tested on a disposable copy with a Blaster grant plus a Bomb Glove slot move; independent expected bytes matched exactly, and the source folder remained unchanged. This remains software validation rather than gameplay acceptance.
+The RC1 runner verifies each grant's exact changed bytes, all 15 supported IDs, starting ammo, acquisition-list bounds, canonical flag guards, no-op preservation, deterministic batches, atomic slot moves/swaps, preserved unknown IDs, hidden invalid input, staging/cancellation, game reloads and failed-encryption preservation. The supplied save was tested on disposable copies with a Blaster/slot edit and with all three notification-path grants; independently expected bytes matched exactly, reopening retained ownership and R.Y.N.O. ammo, and the source folder remained unchanged. Native tests also reject untraced stores/calls and serialized-address overlap. This remains software validation rather than gameplay acceptance.
 
 ## Reproduction
 

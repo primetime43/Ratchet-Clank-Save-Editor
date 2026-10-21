@@ -48,10 +48,10 @@ class NativeChecks(unittest.TestCase):
     def test_grant_allowlist_and_initial_ammo(self):
         report = native.inspect(ELF)
         weapons = {item['id']: item for item in report['weapons']}
-        self.assertEqual({10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 24, 25},
+        self.assertEqual({9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25},
                          {key for key, value in weapons.items() if value['grant_supported']})
-        self.assertEqual({10: 10, 11: 10, 13: 10, 14: 0, 15: 100, 16: 120,
-                          17: 25, 18: 0, 19: 120, 20: 3, 24: 3, 25: 10},
+        self.assertEqual({9: 0, 10: 10, 11: 10, 13: 10, 14: 0, 15: 100, 16: 120,
+                          17: 25, 18: 0, 19: 120, 20: 3, 21: 0, 23: 25, 24: 3, 25: 10},
                          {key: value['initial_ammo'] for key, value in weapons.items() if value['grant_supported']})
         for weapon in weapons.values():
             self.assertEqual(0, weapon['item_type'])
@@ -60,6 +60,41 @@ class NativeChecks(unittest.TestCase):
         self.assertEqual(0x218, report['grant_layout']['acquisition_offset'])
         self.assertEqual(0x22C, report['grant_layout']['quick_offset'])
         self.assertEqual(8, report['grant_layout']['quick_slots'])
+
+    def test_notification_memory_effects(self):
+        report = native.inspect(ELF)
+        audit = report['notification']
+        self.assertEqual(35, audit['instruction_count'])
+        self.assertEqual(14, audit['vector_register_operations'])
+        self.assertEqual(['0x112e10', '0x71f410', '0x112e14'],
+                         [load['effective_address'] for load in audit['vector_loads']])
+        self.assertEqual(['0x7b740', '0x5cc8d8'], [call['target'] for call in audit['calls']])
+        self.assertEqual('0xa15c8c', audit['calls'][1]['destination'])
+        self.assertEqual([dict(address='0x112f2c', destination='0xa15c80', bytes=4)], audit['direct_stores'])
+        self.assertFalse(audit['serialized_destination_overlap'])
+        weapons = {weapon['id']: weapon for weapon in report['weapons']}
+        self.assertEqual({9: [4007, 21471], 21: [14002, 14002], 23: [5014, 21474]},
+                         {item_id: weapons[item_id]['notification_ids'] for item_id in (9, 21, 23)})
+        self.assertTrue(all(not weapons[item_id]['acquisition_list'] for item_id in (9, 21, 23)))
+
+    def test_notification_audit_rejects_untraced_effects_and_saved_overlap(self):
+        raw = ELF.read_bytes()
+        def read(address, length):
+            return raw[address - 0x10000:address - 0x10000 + length]
+        native.audit_notification(read, [])
+        for address, word in ((0x112EA8, 0x98000000),  # unexpected byte store
+                              (0x112F04, 0x48000005),  # different call target
+                              (0x112ED8, 0x3C800096)):  # changed string destination
+            def modified(current, length):
+                data = bytearray(read(current, length))
+                if current <= address < current + length:
+                    data[address - current:address - current + 4] = word.to_bytes(4, 'big')
+                return bytes(data)
+            with self.subTest(address=hex(address)), self.assertRaises(ValueError):
+                native.audit_notification(modified, [])
+        for destination in (0xA15C80, 0xA15C8C):
+            with self.subTest(saved_overlap=hex(destination)), self.assertRaises(ValueError):
+                native.audit_notification(read, [(destination, 4)])
 
 
 if __name__ == '__main__':

@@ -114,7 +114,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     AddPageRow("Weapon unlocks", check); layout.SetColumnSpan(check, 3);
                 }
                 var grantHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
-                    Text = "Grants add ownership, starting ammo and related inventory entries without spending bolts. Suck Cannon, Morph-o-Ray and R.Y.N.O. grants are not available yet.", Margin = new Padding(4, 10, 4, 8) };
+                    Text = "Grants add ownership, starting ammo and related inventory entries without spending bolts. All 15 combat weapons are supported.", Margin = new Padding(4, 10, 4, 8) };
                 AddPageRow("Weapon unlocks", grantHint); layout.SetColumnSpan(grantHint, 3);
                 int slotIndex = 0;
                 foreach (var field in Rc1WeaponEditing.QuickSelect(data, region))

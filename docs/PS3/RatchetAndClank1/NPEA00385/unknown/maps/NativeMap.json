@@ -72,6 +72,16 @@
       "address": "0x143cbc",
       "size": 64,
       "sha256": "E7FE7EDA407550382F9A5AC6966DF64A47093D33E40EB89ED8C9DAD91A010D6D"
+    },
+    "notification_text_lookup": {
+      "address": "0x7b740",
+      "size": 152,
+      "sha256": "89E8D93A3EA42FAC22010C6D94E5FA18849292DC5914139D9E20CD2982019204"
+    },
+    "notification_text_copy": {
+      "address": "0x5cc8d8",
+      "size": 236,
+      "sha256": "23752406F48D66B6340793A5E7E880F1E0C6DDDAC958F42F9F66CAF2FD6A5258"
     }
   },
   "player_records": [
@@ -508,7 +518,7 @@
       "name": "Suck Cannon",
       "maximum": 0,
       "initial_ammo": 0,
-      "grant_supported": false,
+      "grant_supported": true,
       "acquisition_list": false,
       "ownership_offset": 449,
       "acquisition_flag_offset": 497,
@@ -684,7 +694,7 @@
       "name": "Morph-o-Ray",
       "maximum": 0,
       "initial_ammo": 0,
-      "grant_supported": false,
+      "grant_supported": true,
       "acquisition_list": false,
       "ownership_offset": 461,
       "acquisition_flag_offset": 509,
@@ -700,7 +710,7 @@
       "name": "R.Y.N.O.",
       "maximum": 50,
       "initial_ammo": 25,
-      "grant_supported": false,
+      "grant_supported": true,
       "acquisition_list": false,
       "ownership_offset": 463,
       "acquisition_flag_offset": 511,
@@ -744,6 +754,59 @@
       ]
     }
   ],
+  "notification": {
+    "start": "0x112ea4",
+    "end_exclusive": "0x112f30",
+    "instruction_count": 35,
+    "sha256": "507ECE217A3E57556152CCAC2DD99278CB0173B726643404E92FEEA0779A96BD",
+    "vector_register_operations": 14,
+    "vector_loads": [
+      {
+        "address": "0x112ec8",
+        "mnemonic": "lvlx",
+        "effective_address": "0x112e10",
+        "aligned_read": "0x112e10",
+        "bytes": 16
+      },
+      {
+        "address": "0x112ecc",
+        "mnemonic": "lvlx",
+        "effective_address": "0x71f410",
+        "aligned_read": "0x71f410",
+        "bytes": 16
+      },
+      {
+        "address": "0x112ed4",
+        "mnemonic": "lvlx",
+        "effective_address": "0x112e14",
+        "aligned_read": "0x112e10",
+        "bytes": 16
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x112f04",
+        "target": "0x7b740",
+        "role": "localized text lookup; no writes"
+      },
+      {
+        "address": "0x112f14",
+        "target": "0x5cc8d8",
+        "role": "NUL-terminated string copy",
+        "destination": "0xa15c8c"
+      }
+    ],
+    "direct_stores": [
+      {
+        "address": "0x112f2c",
+        "destination": "0xa15c80",
+        "bytes": 4
+      }
+    ],
+    "serialized_destination_overlap": false,
+    "text_extent": "Runtime NUL-terminated localized string; length is not inferred from a save.",
+    "rule": "Notification text/timer remain runtime-only; the shared grant tail supplies the saved writes."
+  },
   "grant_layout": {
     "flag_record": 11,
     "acquisition_record": 12,

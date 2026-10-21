@@ -44,7 +44,7 @@ internal static partial class Program
                 byte[] unchanged = Rc1SaveEditing.Apply(edited, "NPEA00385", Rc1Edits(("rc1_grant_" + weapon.Id, 1)));
                 True(edited.SequenceEqual(unchanged), "Duplicate grants must not refill or append again.");
             }
-            Equal(12, Rc1Research.Weapons.Count(weapon => weapon.GrantSupported));
+            Equal(15, Rc1Research.Weapons.Count(weapon => weapon.GrantSupported));
         });
         Check("RC1 grant batches are deterministic and preserve existing ammo, full slots and unrelated state", () =>
         {
@@ -67,7 +67,7 @@ internal static partial class Program
         Check("RC1 rejects uncertain grants, removals and list overflow without applying any part of a batch", () =>
         {
             byte[] data = Rc1GrantFixture();
-            foreach (string key in new[] { "rc1_grant_9", "rc1_grant_21", "rc1_grant_23", "rc1_grant_12", "rc1_grant_999" })
+            foreach (string key in new[] { "rc1_grant_12", "rc1_grant_999" })
                 Throws<InvalidDataException>(() => Rc1SaveEditing.Apply(data, "NPEA00385", Rc1Edits((key, 1))));
             Throws<InvalidDataException>(() => Rc1SaveEditing.Apply(data, "NPEA00385", Rc1Edits(("rc1_grant_10", 0))));
             Throws<InvalidDataException>(() => Rc1SaveEditing.Apply(data, "NPEA00385", Rc1Edits(("rc1_grant_15", 0.5m))));
@@ -111,7 +111,7 @@ internal static partial class Program
             var ammo = editor.Controls.Find("Rc1Edit_rc1_ammo_10", true).Cast<NumericTextBox>().Single(); ammo.Text = "5";
             category.SelectedItem = "Weapon unlocks";
             var grant = editor.Controls.Find("Rc1Edit_rc1_grant_15", true).Cast<CheckBox>().Single();
-            Equal(0, editor.Controls.Find("Rc1Edit_rc1_grant_23", true).Length);
+            Equal(1, editor.Controls.Find("Rc1Edit_rc1_grant_23", true).Length);
             grant.Checked = true; Equal(1m, editor.PendingEdits["rc1_grant_15"]); Equal(5m, editor.PendingEdits["rc1_ammo_10"]);
             grant.Checked = false; True(!editor.PendingEdits.ContainsKey("rc1_grant_15"), "Cancelling a grant must clear it.");
             grant.Checked = true;
