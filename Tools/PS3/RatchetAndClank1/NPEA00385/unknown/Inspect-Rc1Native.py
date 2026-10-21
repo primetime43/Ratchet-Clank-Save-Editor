@@ -27,6 +27,10 @@ FUNCTIONS = {
     "store_quick_select": (0x143CBC, 0x40, "E7FE7EDA407550382F9A5AC6966DF64A47093D33E40EB89ED8C9DAD91A010D6D"),
     "notification_text_lookup": (0x7B740, 0x98, "89E8D93A3EA42FAC22010C6D94E5FA18849292DC5914139D9E20CD2982019204"),
     "notification_text_copy": (0x5CC8D8, 0xEC, "23752406F48D66B6340793A5E7E880F1E0C6DDDAC958F42F9F66CAF2FD6A5258"),
+    "gold_vendor_purchase": (0x339B70, 0x244, "EA95CCCC67869BC8A2491C9543A2E0341091E176099B5C3ACA47796CCEE42C11"),
+    "count_gold_upgrades": (0x11B124, 0x90, "F30D20B411342EE68BCDE1405AA4990CB93D3D81A8AA184727C37C6FD459DD91"),
+    "available_gold_bolts": (0x11B2C4, 0x1D0, "4B2964778705D724CEB0C9B8E96765C1C59D8ACA3AD8A02D3CC1985EEB33EDF2"),
+    "gold_inventory_icons": (0x14B214, 0x118, "5AF4BDA9881284C8942A72535847CC8A181CF9D0447BF9389D303772E546DCD2"),
 }
 ITEM_NAMES = {10: "Bomb Glove", 11: "Devastator", 13: "Visibomb Gun", 15: "Blaster",
               16: "Pyrocitor", 17: "Mine Glove", 19: "Tesla Claw", 20: "Glove of Doom",
@@ -216,9 +220,11 @@ def inspect(path):
         raise ValueError('Unexpected safe grant allowlist')
     if struct.unpack('>II', read(0x112E9C, 8)) != (0x2C03FFFF, 0x41820090):
         raise ValueError('Grant notification bypass branch changed')
+    gold = extract_gold_upgrades(read, by_id, weapons)
     return dict(collection_id='BCES01503', save_id='NPEA00385', executable_version='unknown',
                 binary=dict(file='RC1.ppu.elf', size=ELF_SIZE, sha256=ELF_SHA256),
                 functions=guards, player_records=records, ammo=ammo, weapons=weapons, notification=notification,
+                gold_upgrades=gold,
                 grant_layout=dict(flag_record=11, acquisition_record=12, acquisition_offset=by_id[12]['offset'],
                                   acquisition_bytes=12, acquisition_empty=255, acquisition_flag=64,
                                   quick_record=13, quick_offset=by_id[13]['offset'], quick_slots=8, quick_empty=0,
@@ -228,6 +234,30 @@ def inspect(path):
                        "Capacities are shipped reference limits, not a live runtime query.",
                        "Record 11 and ownership bytes are not changed by ammo edits.",
                        "Software round trips do not establish gameplay acceptance."])
+
+
+def extract_gold_upgrades(read, records, weapons):
+    record = records[30]
+    if (record['runtime_address'], record['offset'], record['length']) != ('0x969ca8', 0x11D8, 40):
+        raise ValueError('Unexpected gold-upgrade serialization root')
+    vendor_ids = struct.unpack('>10I', read(0x811CB0, 40))
+    expected = {9, 10, 11, 15, 16, 17, 19, 20, 21, 25}
+    if len(set(vendor_ids)) != 10 or set(vendor_ids) != expected:
+        raise ValueError('Unexpected gold vendor item table')
+    result = []
+    for weapon in weapons:
+        address = 0x721008 + weapon['id'] * 76 + 54
+        maximum = struct.unpack('>H', read(address, 2))[0]
+        if maximum != int(weapon['id'] in expected):
+            raise ValueError('Gold vendor and item upgrade limits disagree')
+        if maximum:
+            result.append(dict(id=weapon['id'], name=weapon['name'], offset=record['offset'] + weapon['id'],
+                               ownership_offset=weapon['ownership_offset'], maximum=maximum,
+                               limit_address=hex(address)))
+    return dict(record_id=30, runtime_address='0x969ca8', offset=record['offset'], bytes=40,
+                vendor_table_address='0x811cb0', vendor_ids=list(vendor_ids), weapons=result,
+                rule='Add-only flags for already-owned weapons. No purchase, currency, collectible, equipment or trophy writes.',
+                balance_rule='The game clamps collected gold bolts minus four per counted upgrade to 0..40; flags affect this derived balance.')
 
 
 if __name__ == '__main__':

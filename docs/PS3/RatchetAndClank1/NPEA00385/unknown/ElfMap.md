@@ -33,6 +33,7 @@ The world descriptor table starts at `0x7269A0`. The writer's first prefix word 
 | 11, 37 bytes | `0x96C165` | `0x1E8` | Per-item flag set by ordinary grants; not a gold-upgrade flag |
 | 12, 12 bytes | `0x71FB2C` | `0x218` | Acquisition list: six-bit item IDs with high flags; `FF` is empty |
 | 13, 32 bytes | `0x96C1DC` | `0x22C` | Eight stored quick-select IDs; zero is empty |
+| 30, 40 bytes | `0x969CA8` | `0x11D8` | Per-item gold-upgrade flags; ten combat items are supported |
 
 The writer copies the descriptor payloads without normalizing neighboring records or alignment bytes. The reader accepts differing lengths with a bounded copy and a status result; the editor deliberately requires the exact observed table shape for new mapped edits.
 
@@ -128,7 +129,28 @@ The three IDs do not occur in the acquisition-membership table at `0x737BF0`. Th
 
 New grants require ownership and record-11 flags to be zero, and a nonnegative in-range ammo word. Acquisition-list items also require a free byte and no conflicting retained entry for the same ID. Existing owned weapons are shown as owned; repeated grants are byte-preserving no-ops and cannot remove ownership or refill ammo.
 
-Combined grants run in ascending native ID order, so dictionary insertion order cannot change their placement. Explicit quick-select edits run first. New ammo/slot choices become available after saving the grant and loading the refreshed baseline. The editor does not edit gold-upgrade state, spend bolts, synthesize world pickups or award trophies.
+Combined grants run in ascending native ID order, so dictionary insertion order cannot change their placement. Explicit quick-select edits run first. New ammo/slot choices become available after saving the grant and loading the refreshed baseline. Weapon grants preserve gold-upgrade state and do not spend bolts, synthesize world pickups or award trophies.
+
+## Gold upgrades
+
+Record 30 is **40 bytes at save offset `0x11D8`**, serialized from runtime `0x969CA8` by the descriptor at `0x726860`. A weapon's byte is indexed by its existing item ID. This bank is separate from ownership (record 10) and the ordinary grant flag (record 11).
+
+| Native address | Evidence |
+| --- | --- |
+| `0x339B70` | Gold vendor state handler: after confirmed dialogue, writes `1` to `0x969CA8 + item_id`, subtracts the item's BE16 ordinary-bolt price from `0x737D44 + id * 24`, then starts an acquisition presentation |
+| `0x811CB0` | Ten BE32 vendor IDs: `19, 10, 11, 16, 17, 15, 21, 20, 25, 9` |
+| `0x721008 + id * 76 + 54` | BE16 upgrade limit: `1` for those ten combat weapons, `0` for the other five |
+| `0x14B214` | Owned weapon inventory builder: a nonzero upgrade byte selects icon variant 4 and the alternate name at item definition offset 58 instead of 56 |
+| `0x11B124` | Counts nonzero item bytes over 37 IDs, clamped to ten gold upgrades |
+| `0x11B2C4` | Counts collected gold-bolt flags at runtime `0xA0CA34`, clamps collection to 40, subtracts four per counted upgrade and clamps the result to `0..40` |
+
+The purchase instructions at `0x339CC4` form the flag-bank address, `0x339CC8` loads `1`, and `0x339CE4` stores that byte with `stbx`. The separate bank and weapon-ID table were checked against the complete native serialization map. The four purchase/count/balance/icon functions have pinned hashes in the native inspector; both the vendor table and each combat item's upgrade limit must agree before map generation succeeds. The extra item-definition entry at ID36 is outside the combat allowlist and is never exposed.
+
+Supported upgrades are **Suck Cannon, Bomb Glove, Devastator, Blaster, Pyrocitor, Mine Glove, Tesla Claw, Glove of Doom, Morph-o-Ray and Decoy Glove**. The editor exposes canonical owned (`1`) weapons whose upgrade byte is `0` or `1`. Requests are add-only; existing upgrades are disabled in the UI and repeated requests preserve bytes. Unsupported IDs, noncanonical flags, fractions, removals and unowned weapons reject the entire detached batch. A weapon grant must be saved before its gold upgrade becomes available.
+
+This implements the persistent upgrade flag without simulating vendor payment, its presentation calls, equipped-weapon changes or trophy callbacks. Only requested gold bytes change; ordinary bolts, ammo, ownership, acquisition records, quick-select slots, collectibles and all other bytes are preserved unless separately edited. **The game's available gold-bolt balance can still decrease**, because it derives spending from the upgrade flags; this is not an independently stored balance. Upgrades do not require sufficient currency in the editor. Collection flags and progression are not fabricated to fund them.
+
+Tests cover all ten independent byte offsets, mixed batches and rejection without source changes, hidden invalid ammo, staging/cancellation, installed-state refresh, backups and later currency saves retaining upgrades. A disposable copy of the supplied save also receives Gold Bomb Glove with exact-byte comparison and reopening. Gameplay reload and gold weapon behavior remain untested.
 
 ## Quick-select editing
 

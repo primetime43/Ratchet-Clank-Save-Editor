@@ -12,9 +12,10 @@ The first game in the PS3 Trilogy/Collection saves under its individual game ID.
 
 - **Weapon ammo**: edits for 11 potential owned weapons, plus **Refill owned weapon ammo**. Only canonical owned weapons with existing ammo inside the native reference limit are editable.
 - **Weapon unlocks**: all 15 combat grants, including Suck Cannon, Morph-o-Ray and R.Y.N.O., with starting ammo where applicable and associated inventory/quick-select entries. Existing weapons are preserved.
+- **Gold upgrades**: add the ten supported gold upgrades to already-owned weapons. Ordinary bolts and collectibles are preserved; available gold bolts can decrease because the game derives spending from upgrade flags.
 - **Quick select**: assign owned combat weapons or clear any of the eight stored slots. New duplicates are rejected; unknown current IDs can be retained.
 
-Changes remain staged until Save All and use the existing backup workflow. Save grants before editing their ammo or choosing a specific slot for the new weapon. Progression, gold upgrades and story equipment remain outside these edits.
+Changes remain staged until Save All and use the existing backup workflow. Save grants before editing their ammo, adding a gold upgrade or choosing a specific slot for the new weapon. Progression and story equipment remain outside these edits.
 
 The save inspector offers player summary, weapon/gadget unlock flags and ammo, raw quick-select IDs, player records, save layout, metadata and hex bytes. These views are read-only and exclude pending edits. Tools of Destruction mappings do not apply.
 

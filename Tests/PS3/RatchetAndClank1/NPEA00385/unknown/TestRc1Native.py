@@ -77,6 +77,31 @@ class NativeChecks(unittest.TestCase):
                          {item_id: weapons[item_id]['notification_ids'] for item_id in (9, 21, 23)})
         self.assertTrue(all(not weapons[item_id]['acquisition_list'] for item_id in (9, 21, 23)))
 
+    def test_gold_upgrade_vendor_limits_and_serialization(self):
+        report = native.inspect(ELF)
+        gold = report['gold_upgrades']
+        self.assertEqual((30, '0x969ca8', 0x11D8, 40),
+                         (gold['record_id'], gold['runtime_address'], gold['offset'], gold['bytes']))
+        self.assertEqual([19, 10, 11, 16, 17, 15, 21, 20, 25, 9], gold['vendor_ids'])
+        self.assertEqual({9, 10, 11, 15, 16, 17, 19, 20, 21, 25}, {item['id'] for item in gold['weapons']})
+        for item in gold['weapons']:
+            self.assertEqual(0x11D8 + item['id'], item['offset'])
+            self.assertEqual(0x1B8 + item['id'], item['ownership_offset'])
+            self.assertEqual(1, item['maximum'])
+
+    def test_gold_extractor_rejects_disagreeing_vendor_or_limit_tables(self):
+        report = native.inspect(ELF)
+        raw = ELF.read_bytes()
+        records = {item['id']: item for item in report['player_records']}
+        for address in (0x811CB0, 0x721008 + 10 * 76 + 54):
+            def modified(current, length):
+                result = bytearray(raw[current - 0x10000:current - 0x10000 + length])
+                if current <= address < current + length:
+                    result[address - current] ^= 1
+                return bytes(result)
+            with self.subTest(address=hex(address)), self.assertRaises(ValueError):
+                native.extract_gold_upgrades(modified, records, report['weapons'])
+
     def test_notification_audit_rejects_untraced_effects_and_saved_overlap(self):
         raw = ELF.read_bytes()
         def read(address, length):

@@ -61,7 +61,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!supported) return;
                 category = new ComboBox { Name = "Rc1EditCategory", DropDownStyle = ComboBoxStyle.DropDownList,
                     Dock = DockStyle.Fill, Margin = new Padding(4, 4, 4, 12), Sorted = true };
-                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select" });
+                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select", "Gold upgrades" });
                 category.SelectedIndexChanged += (_, _) => ShowCategory();
                 AddRow(category); layout.SetColumnSpan(category, 3);
                 var refill = new Button { Name = "Rc1RefillAmmo", Text = "Refill owned weapon ammo", AutoSize = true,
@@ -116,6 +116,26 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 var grantHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
                     Text = "Grants add ownership, starting ammo and related inventory entries without spending bolts. All 15 combat weapons are supported.", Margin = new Padding(4, 10, 4, 8) };
                 AddPageRow("Weapon unlocks", grantHint); layout.SetColumnSpan(grantHint, 3);
+                var goldFields = Rc1GoldUpgradeEditing.Fields(data, region);
+                foreach (var field in goldFields)
+                {
+                    var check = new CheckBox { Name = "Rc1Edit_" + field.Key, Text = "Gold " + field.Name,
+                        Checked = field.Upgraded, Enabled = !field.Upgraded, AutoSize = true, Margin = new Padding(4, 6, 4, 6) };
+                    check.CheckedChanged += (_, _) =>
+                    {
+                        if (loading) return;
+                        if (TryStage(field.Key, check.Checked ? 1 : 0, field.Upgraded ? 1 : 0)) return;
+                        loading = true; check.Checked = !check.Checked; loading = false;
+                    };
+                    AddPageRow("Gold upgrades", check); layout.SetColumnSpan(check, 3);
+                }
+                var goldHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
+                    Text = (goldFields.Count == 0 ? "No owned weapons with supported gold upgrades are available.\r\n" : "") +
+                        "Add gold upgrades to owned weapons. Save a weapon grant first to expose its upgrade.\r\n" +
+                        "Ordinary bolts and collected gold bolts are preserved.\r\n" +
+                        "The game counts four gold bolts spent per upgrade; the available balance may fall to zero.",
+                    Margin = new Padding(4, 10, 4, 8) };
+                AddPageRow("Gold upgrades", goldHint); layout.SetColumnSpan(goldHint, 3);
                 int slotIndex = 0;
                 foreach (var field in Rc1WeaponEditing.QuickSelect(data, region))
                 {

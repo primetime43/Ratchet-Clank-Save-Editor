@@ -82,6 +82,26 @@
       "address": "0x5cc8d8",
       "size": 236,
       "sha256": "23752406F48D66B6340793A5E7E880F1E0C6DDDAC958F42F9F66CAF2FD6A5258"
+    },
+    "gold_vendor_purchase": {
+      "address": "0x339b70",
+      "size": 580,
+      "sha256": "EA95CCCC67869BC8A2491C9543A2E0341091E176099B5C3ACA47796CCEE42C11"
+    },
+    "count_gold_upgrades": {
+      "address": "0x11b124",
+      "size": 144,
+      "sha256": "F30D20B411342EE68BCDE1405AA4990CB93D3D81A8AA184727C37C6FD459DD91"
+    },
+    "available_gold_bolts": {
+      "address": "0x11b2c4",
+      "size": 464,
+      "sha256": "4B2964778705D724CEB0C9B8E96765C1C59D8ACA3AD8A02D3CC1985EEB33EDF2"
+    },
+    "gold_inventory_icons": {
+      "address": "0x14b214",
+      "size": 280,
+      "sha256": "5AF4BDA9881284C8942A72535847CC8A181CF9D0447BF9389D303772E546DCD2"
     }
   },
   "player_records": [
@@ -806,6 +826,109 @@
     "serialized_destination_overlap": false,
     "text_extent": "Runtime NUL-terminated localized string; length is not inferred from a save.",
     "rule": "Notification text/timer remain runtime-only; the shared grant tail supplies the saved writes."
+  },
+  "gold_upgrades": {
+    "record_id": 30,
+    "runtime_address": "0x969ca8",
+    "offset": 4568,
+    "bytes": 40,
+    "vendor_table_address": "0x811cb0",
+    "vendor_ids": [
+      19,
+      10,
+      11,
+      16,
+      17,
+      15,
+      21,
+      20,
+      25,
+      9
+    ],
+    "weapons": [
+      {
+        "id": 9,
+        "name": "Suck Cannon",
+        "offset": 4577,
+        "ownership_offset": 449,
+        "maximum": 1,
+        "limit_address": "0x7212ea"
+      },
+      {
+        "id": 10,
+        "name": "Bomb Glove",
+        "offset": 4578,
+        "ownership_offset": 450,
+        "maximum": 1,
+        "limit_address": "0x721336"
+      },
+      {
+        "id": 11,
+        "name": "Devastator",
+        "offset": 4579,
+        "ownership_offset": 451,
+        "maximum": 1,
+        "limit_address": "0x721382"
+      },
+      {
+        "id": 15,
+        "name": "Blaster",
+        "offset": 4583,
+        "ownership_offset": 455,
+        "maximum": 1,
+        "limit_address": "0x7214b2"
+      },
+      {
+        "id": 16,
+        "name": "Pyrocitor",
+        "offset": 4584,
+        "ownership_offset": 456,
+        "maximum": 1,
+        "limit_address": "0x7214fe"
+      },
+      {
+        "id": 17,
+        "name": "Mine Glove",
+        "offset": 4585,
+        "ownership_offset": 457,
+        "maximum": 1,
+        "limit_address": "0x72154a"
+      },
+      {
+        "id": 19,
+        "name": "Tesla Claw",
+        "offset": 4587,
+        "ownership_offset": 459,
+        "maximum": 1,
+        "limit_address": "0x7215e2"
+      },
+      {
+        "id": 20,
+        "name": "Glove of Doom",
+        "offset": 4588,
+        "ownership_offset": 460,
+        "maximum": 1,
+        "limit_address": "0x72162e"
+      },
+      {
+        "id": 21,
+        "name": "Morph-o-Ray",
+        "offset": 4589,
+        "ownership_offset": 461,
+        "maximum": 1,
+        "limit_address": "0x72167a"
+      },
+      {
+        "id": 25,
+        "name": "Decoy Glove",
+        "offset": 4593,
+        "ownership_offset": 465,
+        "maximum": 1,
+        "limit_address": "0x7217aa"
+      }
+    ],
+    "rule": "Add-only flags for already-owned weapons. No purchase, currency, collectible, equipment or trophy writes.",
+    "balance_rule": "The game clamps collected gold bolts minus four per counted upgrade to 0..40; flags affect this derived balance."
   },
   "grant_layout": {
     "flag_record": 11,

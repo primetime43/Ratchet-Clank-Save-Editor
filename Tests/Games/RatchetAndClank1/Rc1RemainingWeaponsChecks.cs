@@ -11,13 +11,18 @@ internal static partial class Program
     private static byte[] Rc1RemainingWeaponsExpected(byte[] original, bool saved = false)
     {
         byte[] expected = original.ToArray();
-        // Independent expectations for the supplied start-of-game baseline:
-        // two flags per item, RYNO ammo, then first free quick-select slots.
-        foreach (int offset in new[] { 0x1C1, 0x1F1, 0x1CD, 0x1FD, 0x1CF, 0x1FF }) expected[offset] = 1;
-        BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x178), 25);
-        BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x230), 9);
-        BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x234), 21);
-        BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x238), 23);
+        // Independent offsets, including saves where some of these weapons
+        // were already obtained. Existing weapons retain their ammo and slots.
+        foreach (var (id, owned, flag) in new[] { (9, 0x1C1, 0x1F1), (21, 0x1CD, 0x1FD), (23, 0x1CF, 0x1FF) })
+        {
+            if (original[owned] == 1) continue;
+            expected[owned] = expected[flag] = 1;
+            if (id == 23) BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(0x178), Math.Max(25, BinaryPrimitives.ReadInt32BigEndian(original.AsSpan(0x178))));
+            var slots = Enumerable.Range(0, 8).Select(slot => 0x22C + slot * 4).ToArray();
+            if (slots.Any(offset => BinaryPrimitives.ReadInt32BigEndian(expected.AsSpan(offset)) == id)) continue;
+            int empty = Array.FindIndex(slots, offset => BinaryPrimitives.ReadInt32BigEndian(expected.AsSpan(offset)) == 0);
+            if (empty >= 0) BinaryPrimitives.WriteInt32BigEndian(expected.AsSpan(slots[empty]), id);
+        }
         if (saved) BinaryPrimitives.WriteUInt32BigEndian(expected.AsSpan(12), uint.MaxValue);
         return expected;
     }
@@ -110,7 +115,7 @@ internal static partial class Program
             using var reopened = SaveSession.Open(folder, tools, backupRoot: Path.Combine(root, "rc1-remaining-reference-backups"));
             foreach (int id in new[] { 9, 21, 23 })
                 True(Rc1WeaponEditing.Grants(reopened.ReadInspectionData(), "NPEA00385").Single(field => field.Weapon.Id == id).Owned, "The new weapon must survive reopening.");
-            Equal(25, Rc1SaveEditing.Fields(reopened.ReadInspectionData(), "NPEA00385").Single(field => field.Id == 23).Current);
+            Equal(BinaryPrimitives.ReadInt32BigEndian(expected.AsSpan(0x178)), Rc1SaveEditing.Fields(reopened.ReadInspectionData(), "NPEA00385").Single(field => field.Id == 23).Current);
             foreach (string name in original.Keys.Where(name => name != "USR-DATA"))
                 True(original[name].SequenceEqual(File.ReadAllBytes(Path.Combine(folder, name))), "Unrelated file changed: " + name);
             Same(original, Snapshot(source)); Equal(0, tools.CryptoCalls);

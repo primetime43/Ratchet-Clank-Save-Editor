@@ -38,6 +38,7 @@ The inspector rejects duplicate IDs, truncated headers, out-of-bounds lengths, m
 | 11 | `0x1E8` | 37 | Per-item flag set by ordinary grants, independently of ownership |
 | 12 | `0x218` | 12 | Acquisition entries: flagged item IDs; `FF` marks an empty byte |
 | 13 | `0x22C` | 32 | Eight raw quick-select IDs, BE32 |
+| 30 | `0x11D8` | 40 | Gold-upgrade bytes indexed by item ID; ten combat entries supported |
 
 The ammo and unlock names/offsets come from [Slim's Editor RC1 definitions](https://github.com/RatchetModding/slimseditor/blob/master/slimseditor/game/rac.json). Its [PS3 backend](https://github.com/RatchetModding/slimseditor/blob/master/slimseditor/backends.py) selects the same RC1 IDs and big-endian decoding. These mappings are external reference evidence, not independently traced executable functions. Values are shown as stored; an unlock flag does not prove current usability, and quick-select IDs are not translated to guessed names. Unmapped ammo remains explicitly unmapped.
 
@@ -50,6 +51,8 @@ The supplied `BCES01503` trilogy's decrypted `RC1.ppu.elf` independently confirm
 The matching European `NPEA00385` format supports ammo editing/refill for 11 potential weapons. A weapon must already have ownership byte `1` and an existing ammo word inside its recovered reference limit. Writes change only the requested BE32 ammo words; Save All also applies the existing player checksum sentinel. Record 11, quick select, world data, statistics and alignment bytes are retained. Other RC1 regions remain inspection/currency-only for now.
 
 Separate **Weapon unlocks** and **Quick select** categories support all 15 combat grants and edits to the eight stored quick-select words. A new grant sets ownership and the independent record-11 flag, raises ammo to its starting amount, updates the bounded acquisition list when required, and uses a free quick-select slot. Explicit slot edits take precedence. Suck Cannon, Morph-o-Ray and R.Y.N.O. are included after a complete memory-effect audit of their runtime notification path. See the [grant evidence and exact boundaries](NPEA00385/unknown/ElfMap.md#weapon-grants).
+
+**Gold upgrades** adds the ten native vendor upgrades to already-owned weapons by setting only their record-30 bytes. Upgrades are add-only, with canonical flags required; save new weapon grants first. No currency or collectible records are written, but the game derives available gold bolts by subtracting four per upgrade. See [native gold-upgrade evidence](NPEA00385/unknown/ElfMap.md#gold-upgrades).
 
 ## Reproducible validation
 

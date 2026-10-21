@@ -18,7 +18,8 @@ public class TraceRc1Ammo extends GhidraScript {
         currentProgram.getProgramContext().setValue(currentProgram.getRegister("r2"),
             toAddr(0x10230), toAddr(0x64ed7f), BigInteger.valueOf(0x722328));
         long[] addresses = {0xe6cd8, 0xe6fe4, 0xe784c, 0xe7984, 0x8e0f4, 0xaa258, 0xaa2e8, 0xeb0f4,
-            0x112e18, 0x16cc50, 0x143980, 0x143c30, 0x143cbc, 0x7b740, 0x5cc8d8};
+            0x112e18, 0x16cc50, 0x143980, 0x143c30, 0x143cbc, 0x7b740, 0x5cc8d8,
+            0x339b70, 0x11b124, 0x11b2c4, 0x14b214};
         DecompInterface decompiler = new DecompInterface();
         decompiler.openProgram(currentProgram);
         try (PrintWriter output = new PrintWriter(getScriptArgs()[0])) {
