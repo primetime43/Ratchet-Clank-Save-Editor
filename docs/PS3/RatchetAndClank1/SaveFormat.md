@@ -15,7 +15,7 @@ All offsets below are plaintext `USR-DATA` file offsets. Multi-byte game values 
 | Offset | Sample value | Observation |
 | --- | --- | --- |
 | `0x0` | `0x153C` | Player payload length + 8 |
-| `0x4` | `0x82A4` | Uninterpreted second prefix word |
+| `0x4` | `0x82A4` | Repeated world block stride, confirmed by the native writer/loader |
 | `0x8` | `0x1534` | Player payload length |
 | `0xC` | `0` | Stored player checksum; not verified by inspection |
 | `0x10` | Record ID 0 | Start of player records |
@@ -42,6 +42,12 @@ The ammo and unlock names/offsets come from [Slim's Editor RC1 definitions](http
 
 The current currency writer changes only BE32 bolts at `0x24` and the player checksum at `0xC` to `FFFFFFFF`, using the existing PS3 disabled-checksum convention. It does not rewrite every block checksum or apply the PS2 checksum routine. The inspector itself performs no checksum validation or writes.
 
+## Native evidence and ammo edits
+
+The supplied `BCES01503` trilogy's decrypted `RC1.ppu.elf` independently confirms all 48 player record descriptors, ammo at runtime `0x96C0AC`, ownership at `0x96C140`, and per-item capacity reads from a 24-byte definition table. The [native map](NPEA00385/unknown/ElfMap.md) records the serializer, loader, ammo consumer addresses and binary fingerprints; the inspector tool reproduces the embedded JSON from the original ELF.
+
+The matching European `NPEA00385` format supports ammo editing/refill for 11 potential weapons. A weapon must already have ownership byte `1` and an existing ammo word inside its recovered reference limit. Writes change only the requested BE32 ammo words; Save All also applies the existing player checksum sentinel. Record 11, quick select, world data, statistics and alignment bytes are retained. Other RC1 regions remain inspection/currency-only for now.
+
 ## Reproducible validation
 
 ```powershell
@@ -49,6 +55,6 @@ dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release -- --rc1
 dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release -- --rc1-save "path/to/NPEA00385_RC1_SAVEDATA_A"
 ```
 
-The first command checks framing, nonzero alignment preservation, snapshot isolation, malformed data, optional mapping guards and switching between RC1/ToD inspection views. The second also copies a supplied plaintext RPCS3 save into a disposable directory, verifies automatic backups, edits bolts, reopens the result, compares every byte against the explicitly allowed changes and verifies the source remains unchanged. No user save files are committed to the repository.
+The first command checks framing, alignment preservation, snapshot isolation, malformed data, optional mapping guards, ammo limits/ownership, invalid-input UI behavior, game switching, backup handling and later currency saves retaining committed ammo. The second also copies a supplied plaintext RPCS3 save into disposable directories, verifies automatic backups, edits bolts and refills eligible ammo, reopens the results, compares every byte against the explicitly allowed changes and verifies the source remains unchanged. No user save files are committed to the repository.
 
 Before enabling more edits, validate each field with controlled before/after gameplay saves or the matching RC1 executable. In-game reload testing is still needed for acceptance of edited output.

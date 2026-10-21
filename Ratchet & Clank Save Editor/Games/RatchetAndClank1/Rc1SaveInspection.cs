@@ -111,7 +111,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (view == "Save regions")
                 return new(new[] { "Section", "Offset", "Bytes", "Interpretation" }, new[]
                 {
-                    Row("Container prefix", "0x0", "8", "Two big-endian words. The first is player payload size + 8; the second is not interpreted."),
+                    Row("Container prefix", "0x0", "8", "Two big-endian block strides: player and repeated world blocks. The European reference writer emits 0x153C and 0x82A4."),
                     Row("Player block header", "0x8", "8", "Payload length and stored checksum; integrity is not checked by this view."),
                     Row("Player payload", "0x10", (PlayerEnd - 16).ToString(CultureInfo.InvariantCulture), "Tagged records aligned to four bytes, including a terminator."),
                     Row("Remaining save data", Hex(PlayerEnd), (Length - PlayerEnd).ToString(CultureInfo.InvariantCulture), "Opaque retained blocks and reserved storage; not assumed padding or unused.")
@@ -160,7 +160,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 return Row(item.Name, flag == 0 ? "Clear" : "Set", $"0x{flag:X2}",
                     item.Ammo is int ammo ? Word(ammo).ToString(CultureInfo.InvariantCulture) : "Unmapped",
                     Hex(item.Flag), item.Ammo is int offset ? Hex(offset) : "",
-                    "External RC1 reference mapping; saved unlock flag and raw ammo only. No in-game grant or availability check.");
+                    "RC1 reference item names; native European record table confirms ammo/unlock storage. Saved flags and ammo only; no current availability check.");
             }).ToArray();
             return new(new[] { "Item", "Unlock flag", "Raw flag", "Stored ammo", "Flag offset", "Ammo offset", "Interpretation" }, rows);
         }

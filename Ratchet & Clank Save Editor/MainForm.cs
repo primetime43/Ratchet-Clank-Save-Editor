@@ -20,12 +20,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private int selectedCharacter;
         private int[] pendingBolts;
         private TodSaveEditingControl mappedEditor;
+        private Rc1SaveEditingControl rc1Editor;
         private bool HasInvalidNumericInput => !BoltsTextBox.IsValid ||
             (session?.Profile.RaritaniumOffset.HasValue == true && !RaritaniumTextBox.IsValid) ||
-            mappedEditor?.HasInvalidInputs == true;
+            mappedEditor?.HasInvalidInputs == true || rc1Editor?.HasInvalidInputs == true;
         private bool Dirty => session != null && (session.MetadataChanged ||
             HasInvalidNumericInput ||
-            mappedEditor.HasChanges ||
+            mappedEditor.HasChanges || rc1Editor.HasChanges ||
             (pendingBolts != null && !pendingBolts.SequenceEqual(session.CharacterBolts)) ||
             (session.Profile.RaritaniumOffset.HasValue && RaritaniumTextBox.Value != session.Raritanium));
 
@@ -122,7 +123,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 PlanetTextBox.Text = session.Metadata.Planet;
                 saveInspector.LoadSession(session);
                 inventoryPreview.LoadSession(session);
-                mappedEditor.LoadSnapshot(session.ReadInspectionData(), session.Metadata.Region);
+                LoadMappedEditors();
                 BoltsTextBox.Maximum = session.Profile.MaximumBolts;
                 BoltsTextBox.Value = session.Bolts;
                 RaritaniumTextBox.Value = session.Raritanium;
@@ -156,14 +157,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             pendingBolts[selectedCharacter] = decimal.ToInt32(BoltsTextBox.Value);
             int[] bolts = pendingBolts.ToArray();
             int raritanium = session.Profile.RaritaniumOffset.HasValue ? decimal.ToInt32(RaritaniumTextBox.Value) : 0;
-            var mappedEdits = mappedEditor.PendingEdits;
+            var mappedEdits = Rc1SaveInspection.Supports(session.Metadata.Region) ? rc1Editor.PendingEdits : mappedEditor.PendingEdits;
             return await RunOperation("Verifying and saving changes…", async () =>
             {
                 string backup = await Task.Run(() => session.Save(bolts, raritanium, mappedEdits: mappedEdits));
                 pendingBolts = session.CharacterBolts.ToArray();
                 saveInspector.LoadSession(session);
                 inventoryPreview.LoadSession(session);
-                mappedEditor.LoadSnapshot(session.ReadInspectionData(), session.Metadata.Region);
+                LoadMappedEditors();
                 UpdateTitle();
                 StatusLabel.Text = "Saved successfully · Original backed up";
                 string format = session.IsEncrypted ? "encrypted PS3" : "decrypted/RPCS3";
@@ -241,7 +242,15 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 
         private string NumericValidationMessage => !BoltsTextBox.IsValid ? BoltsTextBox.ValidationMessage :
             session?.Profile.RaritaniumOffset.HasValue == true && !RaritaniumTextBox.IsValid
-                ? RaritaniumTextBox.ValidationMessage : mappedEditor.ValidationMessage;
+                ? RaritaniumTextBox.ValidationMessage : rc1Editor.HasInvalidInputs ? rc1Editor.ValidationMessage : mappedEditor.ValidationMessage;
+
+        private void LoadMappedEditors()
+        {
+            byte[] data = session.ReadInspectionData();
+            mappedEditor.LoadSnapshot(data, session.Metadata.Region);
+            mappedEditor.Visible = !Rc1SaveInspection.Supports(session.Metadata.Region);
+            rc1Editor.LoadSnapshot(data, session.Metadata.Region);
+        }
 
         private bool ValidateNumericInputs()
         {
@@ -250,6 +259,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (!BoltsTextBox.IsValid) { BoltsTextBox.Focus(); BoltsTextBox.SelectAll(); }
             else if (session.Profile.RaritaniumOffset.HasValue && !RaritaniumTextBox.IsValid)
             { RaritaniumTextBox.Focus(); RaritaniumTextBox.SelectAll(); }
+            else if (rc1Editor.HasInvalidInputs) rc1Editor.ValidateInputs();
             else mappedEditor.ValidateInputs();
             return false;
         }

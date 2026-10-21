@@ -34,7 +34,12 @@ internal static partial class Program
             if (args.SequenceEqual(new[] { "--rc1" }) || args.Length == 2 && args[0] == "--rc1-save")
             {
                 Rc1Checks(root);
-                if (args.Length == 2) Rc1ReferenceChecks(root, Path.GetFullPath(args[1]));
+                Rc1AmmoChecks(root);
+                if (args.Length == 2)
+                {
+                    Rc1ReferenceChecks(root, Path.GetFullPath(args[1]));
+                    Rc1AmmoReferenceChecks(root, Path.GetFullPath(args[1]));
+                }
                 Console.WriteLine($"All {passed} RC1 checks passed.");
                 return 0;
             }
@@ -304,6 +309,7 @@ internal static partial class Program
             });
             CompatibilityChecks(root);
             Rc1Checks(root);
+            Rc1AmmoChecks(root);
             NativeCryptoChecks(root);
             Check("Missing, unsupported, truncated and invalid saves are rejected", () =>
             {

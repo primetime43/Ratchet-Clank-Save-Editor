@@ -104,6 +104,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             mappedEditor = new TodSaveEditingControl();
             mappedEditor.EditsChanged += ValuesChanged;
             mappedGroup.Controls.Add(mappedEditor);
+            rc1Editor = new Rc1SaveEditingControl();
+            rc1Editor.EditsChanged += ValuesChanged;
+            mappedGroup.Controls.Add(rc1Editor);
             editing.Controls.Add(mappedGroup, 0, 1);
             editing.Controls.Add(new Label
             {

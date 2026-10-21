@@ -14,6 +14,7 @@
     <ApplicationIcon>Ratchet.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="../docs/PS3/RatchetAndClank1/NPEA00385/unknown/maps/NativeMap.json" LogicalName="Research.Rc1.Map.json" />
     <EmbeddedResource Include="../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/NativeMap.json" LogicalName="Research.Tod.Map.json" />
     <EmbeddedResource Include="../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/WeaponConfigs.json" LogicalName="Research.Tod.Configs.json" />
     <EmbeddedResource Include="../docs/PS3/ToolsOfDestruction/BCUS98127/v02.00/maps/HudIcons.json" LogicalName="Research.Tod.HudIcons.json" />

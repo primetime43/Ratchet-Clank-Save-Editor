@@ -1,6 +1,6 @@
 # Ratchet & Clank Save Editor
 
-Windows editor for PS3 Ratchet & Clank saves. Edit currency, back up saves, export artwork and inspect save data. Tools of Destruction USA also supports selected mapped-field edits.
+Windows editor for PS3 Ratchet & Clank saves. Edit currency, back up saves, export artwork and inspect save data. European RC1 supports owned-weapon ammo edits; Tools of Destruction USA supports selected mapped-field edits.
 
 ## Use
 
@@ -28,7 +28,7 @@ Backups are created on opening and before saving, under `Backups` beside the exe
 
 Support is limited to listed PS3 formats and [regions](docs/PS3/Compatibility.md). It does not cover every save field or guarantee in-game acceptance for every release.
 
-PS3 Trilogy/Collection saves use the individual game's save ID. The [RC1 inspector](docs/PS3/RatchetAndClank1/README.md) shows tagged player records, reference inventory flags/ammo and raw quick-select IDs alongside existing bolt editing.
+PS3 Trilogy/Collection saves use the individual game's save ID. [RC1 support](docs/PS3/RatchetAndClank1/README.md) includes bolt editing, ammo edits/refills for supported owned weapons in the European `NPEA00385` layout, and inspection of tagged player records, inventory flags/ammo and raw quick-select IDs.
 
 ## Documentation
 

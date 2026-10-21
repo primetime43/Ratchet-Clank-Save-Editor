@@ -1,0 +1,486 @@
+{
+  "collection_id": "BCES01503",
+  "save_id": "NPEA00385",
+  "executable_version": "unknown",
+  "binary": {
+    "file": "RC1.ppu.elf",
+    "size": 9437216,
+    "sha256": "CCE4E741C395518DC4374CF87A7A81E6975F573F99CAD8AC2B6B3EAAFA4BAE9A"
+  },
+  "functions": {
+    "load_block": {
+      "address": "0xe6cd8",
+      "size": 780,
+      "sha256": "CAFFBD339D1B49E440578B01A0F732D5E3B1EEFDE64B3E7A895A22E951281715"
+    },
+    "load_save": {
+      "address": "0xe6fe4",
+      "size": 368,
+      "sha256": "F4CB31B962D01F429E78D94106F7C509DE065F92476B8A37B8F75148433C3511"
+    },
+    "write_block": {
+      "address": "0xe784c",
+      "size": 312,
+      "sha256": "94E6EF41E04B1624ADED0C6F1FDAC4DACADE5E0EB29E74075DB3572CDDB08A21"
+    },
+    "write_save": {
+      "address": "0xe7984",
+      "size": 308,
+      "sha256": "2316686251A900E645619CA465A88D7FDB226B4F96E363A12D85AD8F32102580"
+    },
+    "read_ammo": {
+      "address": "0x8e0f4",
+      "size": 124,
+      "sha256": "888203AF45378B141BB5A6A01E49DADC3041A162FA206D9DC465244A58E1FD68"
+    },
+    "spend_ammo": {
+      "address": "0xaa258",
+      "size": 144,
+      "sha256": "2E6B91C89D52A6BCA99E27BD53B2248CC0C736AC08D99253A3CB11E6A9AC3458"
+    },
+    "add_ammo": {
+      "address": "0xaa2e8",
+      "size": 128,
+      "sha256": "322BB4720233042AC29968D976B77A1BC8B637CCC58D9DB35E12C373209B9F30"
+    },
+    "has_item": {
+      "address": "0xeb0f4",
+      "size": 36,
+      "sha256": "A8B5398F4CFA5CDC350BB0FB2048DCD8A0F61714AB4F982B0B924DD0960FDCC1"
+    }
+  },
+  "player_records": [
+    {
+      "id": 0,
+      "length": 4,
+      "offset": 24,
+      "table_address": "0x726690",
+      "runtime_address": "0x969c70"
+    },
+    {
+      "id": 1,
+      "length": 4,
+      "offset": 36,
+      "table_address": "0x7266a0",
+      "runtime_address": "0x969ca0"
+    },
+    {
+      "id": 2,
+      "length": 4,
+      "offset": 48,
+      "table_address": "0x7266b0",
+      "runtime_address": "0x96c9fc"
+    },
+    {
+      "id": 3,
+      "length": 4,
+      "offset": 60,
+      "table_address": "0x7266c0",
+      "runtime_address": "0x96ca00"
+    },
+    {
+      "id": 4,
+      "length": 8,
+      "offset": 72,
+      "table_address": "0x7266d0",
+      "runtime_address": "0x96ca04"
+    },
+    {
+      "id": 5,
+      "length": 128,
+      "offset": 88,
+      "table_address": "0x7266e0",
+      "runtime_address": "0x96bff0"
+    },
+    {
+      "id": 7,
+      "length": 12,
+      "offset": 224,
+      "table_address": "0x7266f0",
+      "runtime_address": "0x96c074"
+    },
+    {
+      "id": 8,
+      "length": 32,
+      "offset": 244,
+      "table_address": "0x726700",
+      "runtime_address": "0x96c08c"
+    },
+    {
+      "id": 9,
+      "length": 148,
+      "offset": 284,
+      "table_address": "0x726710",
+      "runtime_address": "0x96c0ac"
+    },
+    {
+      "id": 10,
+      "length": 37,
+      "offset": 440,
+      "table_address": "0x726720",
+      "runtime_address": "0x96c140"
+    },
+    {
+      "id": 11,
+      "length": 37,
+      "offset": 488,
+      "table_address": "0x726730",
+      "runtime_address": "0x96c165"
+    },
+    {
+      "id": 12,
+      "length": 12,
+      "offset": 536,
+      "table_address": "0x726740",
+      "runtime_address": "0x71fb2c"
+    },
+    {
+      "id": 13,
+      "length": 32,
+      "offset": 556,
+      "table_address": "0x726750",
+      "runtime_address": "0x96c1dc"
+    },
+    {
+      "id": 19,
+      "length": 4,
+      "offset": 596,
+      "table_address": "0x726760",
+      "runtime_address": "0x71fb28"
+    },
+    {
+      "id": 14,
+      "length": 20,
+      "offset": 608,
+      "table_address": "0x726770",
+      "runtime_address": "0x96ca0c"
+    },
+    {
+      "id": 20,
+      "length": 80,
+      "offset": 636,
+      "table_address": "0x726780",
+      "runtime_address": "0x96c18c"
+    },
+    {
+      "id": 15,
+      "length": 1936,
+      "offset": 724,
+      "table_address": "0x726790",
+      "runtime_address": "0x96c24c"
+    },
+    {
+      "id": 16,
+      "length": 1184,
+      "offset": 2668,
+      "table_address": "0x7267a0",
+      "runtime_address": "0xa1000c"
+    },
+    {
+      "id": 17,
+      "length": 288,
+      "offset": 3860,
+      "table_address": "0x7267b0",
+      "runtime_address": "0xa0feec"
+    },
+    {
+      "id": 18,
+      "length": 296,
+      "offset": 4156,
+      "table_address": "0x7267c0",
+      "runtime_address": "0xa0fdc4"
+    },
+    {
+      "id": 21,
+      "length": 4,
+      "offset": 4460,
+      "table_address": "0x7267d0",
+      "runtime_address": "0x969c98"
+    },
+    {
+      "id": 22,
+      "length": 4,
+      "offset": 4472,
+      "table_address": "0x7267e0",
+      "runtime_address": "0x71fb24"
+    },
+    {
+      "id": 23,
+      "length": 4,
+      "offset": 4484,
+      "table_address": "0x7267f0",
+      "runtime_address": "0x969c9c"
+    },
+    {
+      "id": 24,
+      "length": 4,
+      "offset": 4496,
+      "table_address": "0x726800",
+      "runtime_address": "0x969ca4"
+    },
+    {
+      "id": 25,
+      "length": 4,
+      "offset": 4508,
+      "table_address": "0x726810",
+      "runtime_address": "0x71fb3c"
+    },
+    {
+      "id": 26,
+      "length": 4,
+      "offset": 4520,
+      "table_address": "0x726820",
+      "runtime_address": "0x71fb38"
+    },
+    {
+      "id": 27,
+      "length": 4,
+      "offset": 4532,
+      "table_address": "0x726830",
+      "runtime_address": "0x71fb40"
+    },
+    {
+      "id": 28,
+      "length": 1,
+      "offset": 4544,
+      "table_address": "0x726840",
+      "runtime_address": "0x71fb58"
+    },
+    {
+      "id": 29,
+      "length": 1,
+      "offset": 4556,
+      "table_address": "0x726850",
+      "runtime_address": "0x71fb59"
+    },
+    {
+      "id": 30,
+      "length": 40,
+      "offset": 4568,
+      "table_address": "0x726860",
+      "runtime_address": "0x969ca8"
+    },
+    {
+      "id": 31,
+      "length": 4,
+      "offset": 4616,
+      "table_address": "0x726870",
+      "runtime_address": "0x969cd0"
+    },
+    {
+      "id": 32,
+      "length": 28,
+      "offset": 4628,
+      "table_address": "0x726880",
+      "runtime_address": "0x969c7c"
+    },
+    {
+      "id": 33,
+      "length": 1,
+      "offset": 4664,
+      "table_address": "0x726890",
+      "runtime_address": "0x969c78"
+    },
+    {
+      "id": 34,
+      "length": 4,
+      "offset": 4676,
+      "table_address": "0x7268a0",
+      "runtime_address": "0x71fb44"
+    },
+    {
+      "id": 35,
+      "length": 4,
+      "offset": 4688,
+      "table_address": "0x7268b0",
+      "runtime_address": "0x71fb48"
+    },
+    {
+      "id": 36,
+      "length": 4,
+      "offset": 4700,
+      "table_address": "0x7268c0",
+      "runtime_address": "0x71fb4c"
+    },
+    {
+      "id": 37,
+      "length": 12,
+      "offset": 4712,
+      "table_address": "0x7268d0",
+      "runtime_address": "0x96c080"
+    },
+    {
+      "id": 1000,
+      "length": 148,
+      "offset": 4732,
+      "table_address": "0x7268e0",
+      "runtime_address": "0xa0f51c"
+    },
+    {
+      "id": 1001,
+      "length": 148,
+      "offset": 4888,
+      "table_address": "0x7268f0",
+      "runtime_address": "0xa0f5b0"
+    },
+    {
+      "id": 1002,
+      "length": 148,
+      "offset": 5044,
+      "table_address": "0x726900",
+      "runtime_address": "0xa0f644"
+    },
+    {
+      "id": 1003,
+      "length": 4,
+      "offset": 5200,
+      "table_address": "0x726910",
+      "runtime_address": "0xa0f6d8"
+    },
+    {
+      "id": 1004,
+      "length": 4,
+      "offset": 5212,
+      "table_address": "0x726920",
+      "runtime_address": "0xa0f6dc"
+    },
+    {
+      "id": 1005,
+      "length": 4,
+      "offset": 5224,
+      "table_address": "0x726930",
+      "runtime_address": "0xa0f6e0"
+    },
+    {
+      "id": 1008,
+      "length": 4,
+      "offset": 5236,
+      "table_address": "0x726940",
+      "runtime_address": "0xa0fd14"
+    },
+    {
+      "id": 1009,
+      "length": 4,
+      "offset": 5248,
+      "table_address": "0x726950",
+      "runtime_address": "0xa0fd18"
+    },
+    {
+      "id": 1010,
+      "length": 150,
+      "offset": 5260,
+      "table_address": "0x726960",
+      "runtime_address": "0xa104ac"
+    },
+    {
+      "id": 1011,
+      "length": 4,
+      "offset": 5420,
+      "table_address": "0x726970",
+      "runtime_address": "0x71fb5c"
+    },
+    {
+      "id": 1012,
+      "length": 4,
+      "offset": 5432,
+      "table_address": "0x726980",
+      "runtime_address": "0xa52e64"
+    }
+  ],
+  "ammo": [
+    {
+      "id": 10,
+      "name": "Bomb Glove",
+      "maximum": 40,
+      "offset": 324,
+      "ownership_offset": 450,
+      "capacity_address": "0x737e2e"
+    },
+    {
+      "id": 11,
+      "name": "Devastator",
+      "maximum": 20,
+      "offset": 328,
+      "ownership_offset": 451,
+      "capacity_address": "0x737e46"
+    },
+    {
+      "id": 13,
+      "name": "Visibomb Gun",
+      "maximum": 20,
+      "offset": 336,
+      "ownership_offset": 453,
+      "capacity_address": "0x737e76"
+    },
+    {
+      "id": 15,
+      "name": "Blaster",
+      "maximum": 200,
+      "offset": 344,
+      "ownership_offset": 455,
+      "capacity_address": "0x737ea6"
+    },
+    {
+      "id": 16,
+      "name": "Pyrocitor",
+      "maximum": 240,
+      "offset": 348,
+      "ownership_offset": 456,
+      "capacity_address": "0x737ebe"
+    },
+    {
+      "id": 17,
+      "name": "Mine Glove",
+      "maximum": 50,
+      "offset": 352,
+      "ownership_offset": 457,
+      "capacity_address": "0x737ed6"
+    },
+    {
+      "id": 19,
+      "name": "Tesla Claw",
+      "maximum": 240,
+      "offset": 360,
+      "ownership_offset": 459,
+      "capacity_address": "0x737f06"
+    },
+    {
+      "id": 20,
+      "name": "Glove of Doom",
+      "maximum": 10,
+      "offset": 364,
+      "ownership_offset": 460,
+      "capacity_address": "0x737f1e"
+    },
+    {
+      "id": 23,
+      "name": "R.Y.N.O.",
+      "maximum": 50,
+      "offset": 376,
+      "ownership_offset": 463,
+      "capacity_address": "0x737f66"
+    },
+    {
+      "id": 24,
+      "name": "Drone Device",
+      "maximum": 10,
+      "offset": 380,
+      "ownership_offset": 464,
+      "capacity_address": "0x737f7e"
+    },
+    {
+      "id": 25,
+      "name": "Decoy Glove",
+      "maximum": 20,
+      "offset": 384,
+      "ownership_offset": 465,
+      "capacity_address": "0x737f96"
+    }
+  ],
+  "notes": [
+    "Names follow the existing external RC1 reference; native evidence binds IDs, storage and capacities.",
+    "Capacities are shipped reference limits, not a live runtime query.",
+    "Record 11 and ownership bytes are not changed by ammo edits.",
+    "Software round trips do not establish gameplay acceptance."
+  ]
+}

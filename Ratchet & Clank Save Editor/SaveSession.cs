@@ -94,7 +94,9 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             // Use the latest committed plaintext, not the original opening copy:
             // a later currency-only save must retain earlier mapped-field edits.
             byte[] expected = mappedEdits == null ? (byte[])plaintextData.Clone() :
-                TodSaveEditing.Apply(plaintextData, Metadata.Region, mappedEdits);
+                Rc1SaveInspection.Supports(Metadata.Region)
+                    ? Rc1SaveEditing.Apply(plaintextData, Metadata.Region, mappedEdits)
+                    : TodSaveEditing.Apply(plaintextData, Metadata.Region, mappedEdits);
             SaveData.Write(expected, Profile, values, raritanium);
             File.WriteAllBytes(candidateData, expected);
             // Encrypt and update integrity in isolation. Failed tools never touch the source.

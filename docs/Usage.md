@@ -14,7 +14,7 @@ Encrypted saves need the complete folder, including `PARAM.SFO`, `PARAM.PFD` and
 
 Use **Open Folder** (`Ctrl+O`) for encrypted saves and **Open Decrypted Folder** (`Ctrl+Shift+O`) for plaintext. Opening does not alter source files. **Save All** (`Ctrl+S`) commits pending changes in the original input format.
 
-Numeric fields use text boxes: currency requires whole numbers; ammo and percentages accept a decimal point. Existing field limits still apply. Invalid entries are highlighted and block saving, including invalid pasted text.
+Numeric fields use text boxes: currency and RC1 ammo require whole numbers; Tools of Destruction ammo and percentages accept a decimal point. Existing field limits still apply. Invalid entries are highlighted and block saving, including invalid pasted text.
 
 Manually decrypted console saves must be re-encrypted through their original save-management workflow before console transfer. Do not mix plaintext game data with encrypted metadata.
 
@@ -35,6 +35,8 @@ If another application changes the source folder while it is open, reopen it bef
 Changing encrypted metadata needs original signing keys that the editor does not have. Account resigning is not supported.
 
 ## Mapped-field edits
+
+For European RC1 (`NPEA00385`), **Game Save Editing → Mapped fields** offers ammo for already-owned weapons, up to the capacities recovered from the supplied trilogy executable. **Refill owned weapon ammo** stages the same changes for all eligible weapons; **Save All** commits them with a backup. Unowned weapons and unusual ownership/ammo values stay read-only. These actions do not grant weapons or alter quick select, progression or statistics. See the [native evidence and limitations](PS3/RatchetAndClank1/NPEA00385/unknown/ElfMap.md).
 
 **Game Save Editing → Mapped fields** supports the matching Tools of Destruction USA (`BCUS98127`) plaintext layout:
 
@@ -70,7 +72,7 @@ These reproduce confirmed saved writes, not live calls into the game; in-game ac
 
 Fields with nonfinite, out-of-range or unrecognized inputs stay read-only unless a documented bounded replacement is offered. Arbitrary weapon XP or masks outside the defined upgrade graph, Groovitron variants, story-gadget ownership, story flags, unnamed counters and other progress remain inspection-only. Runtime-only space-combat stats cannot be edited from a save.
 
-Changes are staged until **Save All** and use the existing backup/encryption checks. These edits are based on USA v02.00 research; the save layout check cannot identify every executable revision. In-game acceptance and live ammo capacities are not yet validated. Other games and regions keep currency editing only.
+Changes are staged until **Save All** and use the existing backup/encryption checks. The Tools of Destruction edits above are based on USA v02.00 research; the save layout check cannot identify every executable revision. In-game acceptance and live ammo capacities are not yet validated. Formats without mapped-edit support keep currency editing.
 
 ## Inventory previews
 

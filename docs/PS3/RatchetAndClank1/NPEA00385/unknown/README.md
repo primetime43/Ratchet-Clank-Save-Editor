@@ -2,7 +2,7 @@
 
 [RC1 index](../../README.md) · [Save format](../../SaveFormat.md)
 
-Reference supplied from RPCS3 running the European `BCES01503` trilogy. The launcher identifies the collection disc; the save identifies the first individual game as `NPEA00385`. No executable or version metadata was examined, so this directory does not assert a particular build.
+Reference supplied from RPCS3 running the European `BCES01503` trilogy. The launcher identifies the collection disc; the save identifies the first individual game as `NPEA00385`. The collection's `RC1.ppu.self` has now been decrypted and traced; its exact fingerprints and native findings are in the [executable map](ElfMap.md). Its executable version remains unidentified.
 
 | Item | Observation |
 | --- | --- |
@@ -16,4 +16,4 @@ Reference supplied from RPCS3 running the European `BCES01503` trilogy. The laun
 | Bolts | 0 in metadata and BE32 at `0x24` |
 | Player payload | `0x10..0x1543`, 48 records plus terminator |
 
-The fingerprint identifies this observation without distributing the user's save. The test runner accepts a local path and verifies edits on a copy. Gameplay acceptance, exact executable functions and additional editable fields remain unverified.
+The fingerprint identifies this observation without distributing the user's save. The test runner accepts a local path and verifies bolt and owned-weapon ammo edits on disposable copies. The original remains untouched. Gameplay acceptance and further editable fields remain unverified.
