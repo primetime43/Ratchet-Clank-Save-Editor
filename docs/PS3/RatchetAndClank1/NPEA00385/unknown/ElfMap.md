@@ -99,7 +99,7 @@ The Cell operations were checked against [RPCS3's opcode decoder](https://github
 
 Both call targets have pinned function hashes in the map. Neither fixed notification destination belongs to the 48 player payloads or any of the 20 repeated world payloads. The runtime text's length is not inferred from a save, and notification strings/timer values are not fabricated by the editor. Unknown instructions, calls, store destinations or overlap with serialized ranges fail the audit. Ghidra's incomplete pseudocode is not used as proof that the omitted block has no effects.
 
-The former notification-based exclusion is therefore removed. All **15 combat grants** use the same confirmed saved-state tail, including Suck Cannon (ID9), Morph-o-Ray (ID21) and R.Y.N.O. (ID23). Selected gadgets are documented separately below; movement equipment remains excluded.
+The former notification-based exclusion is therefore removed. All **15 combat grants** use the same confirmed saved-state tail, including Suck Cannon (ID9), Morph-o-Ray (ID21) and R.Y.N.O. (ID23). Gadget and equipment ownership grants are documented separately below.
 
 | Newly supported ID | Ownership-dependent notification IDs (owned / unowned) | Initial ammo | Acquisition-list entry |
 | --- | --- | --- | --- |
@@ -174,9 +174,42 @@ Additional pinned consumers confirm individual flags: `0x80910` gates Metal Dete
 
 **Gadget unlocks** exposes these nine add-only grants. New grants require both flags to be zero; canonical owned items (`1`) are retained without repairing flags, adding slots or otherwise changing bytes. Unknown flags and unsupported IDs reject the detached batch. Unused ammo words are preserved even when nonzero because the native gadget path does not touch them. Full acquisition lists cannot block gadget grants, and full quick-select banks are retained.
 
-Combined batches apply explicit slot assignments first, combat grants in ascending ID order second, and gadget grants in ascending ID order third. Handheld gadgets use only the remaining empty slots and do not duplicate a retained matching slot. Passive items are never offered as new quick-select choices. Save a new grant before assigning a specific slot. Currency, world pickups, mission completion, movement equipment, gold-upgrade bytes, statistics and trophy state are preserved unless separately edited. Pack/boot/hoverboard ownership is not enabled by this map. This implements the inventory state without claiming story completion or gameplay acceptance.
+Combined batches apply explicit slot assignments first, combat grants in ascending ID order second, and gadget grants in ascending ID order third. Handheld gadgets use only the remaining empty slots and do not duplicate a retained matching slot. Passive items are never offered as new quick-select choices. Save a new grant before assigning a specific slot. Currency, world pickups, mission completion, movement equipment, gold-upgrade bytes, statistics and trophy state are preserved unless separately edited. Equipment ownership has its own category below. This implements the inventory state without claiming story completion or gameplay acceptance.
 
 Tests cover all nine flag pairs, six handheld slot paths, preserved unused ammo and acquisition data, no-ops, full wheels, retained slots, mixed combat/ammo/gold/slot batches, rejection guards, UI staging/cancellation, hidden invalid inputs, backup/reopen and failed encryption. A disposable copy of the supplied save also receives all nine grants with exact-byte comparison and source preservation. Gameplay reload remains untested.
+
+## Equipment grants
+
+The nine equipment entries below follow the pinned generic grant routine `0x112E18`. The recovered item types are all nonzero, so they bypass its quick-select append. Their ammo-price, capacity and initial-ammo words are zero; none belongs to the acquisition table at `0x737BF0`. The editor implements the ownership/grant-flag writes without requesting an immediate equip. All use the previously audited runtime notification path.
+
+| ID | Equipment | Native type | Ownership / grant save offset |
+| --- | --- | --- | --- |
+| 2 | Heli-Pack | 3 | `0x1BA` / `0x1EA` |
+| 3 | Thruster-Pack | 3 | `0x1BB` / `0x1EB` |
+| 4 | Hydro-Pack | 3 | `0x1BC` / `0x1EC` |
+| 5 | Sonic Summoner | 2 | `0x1BD` / `0x1ED` |
+| 6 | O2 Mask | 2 | `0x1BE` / `0x1EE` |
+| 7 | Pilot's Helmet | 2 | `0x1BF` / `0x1EF` |
+| 28 | Magneboots | 1 | `0x1D4` / `0x204` |
+| 29 | Grindboots | 1 | `0x1D5` / `0x205` |
+| 30 | Hoverboard | 1 | `0x1D6` / `0x206` |
+
+Additional pinned native consumers distinguish possession from selection and gameplay state:
+
+| Native function | Observation |
+| --- | --- |
+| `0x85B30` | Equipment switching maintains a saved selection bank at runtime `0x969C7C` (record 32, 28 bytes at `0x1214`) and a separate Thruster-Pack selection indicator at `0x969C9C` (record 23, four bytes at `0x1184`). Contextual O2 Mask, Hydro-Pack and boot choices also check ownership and live movement state. |
+| `0xA2750` | O2 Mask ownership gates underwater oxygen depletion; Hydro-Pack ownership gates the swimming input path. The editor does not refill oxygen or change movement state. |
+| `0x8B690` | Magneboots ownership participates in a movement-state decision alongside live surface/state checks. |
+| `0x950E8` | Grindboots update exits when ID29 is unowned and also applies world/location/state restrictions. |
+| `0x3D8CA0` | Sonic Summoner ownership is checked with the live selected-equipment value before its consumer runs. |
+| `0x23E140` | The Pilot's Helmet pickup checks ownership and additionally changes world/pickup state and runtime headgear selection. Those pickup side effects are not simulated. |
+
+**Equipment unlocks** is add-only and requires both ownership and ordinary grant flag to be zero for a new grant. Existing ownership byte `1` is retained without repairing the other flag. Unsupported IDs, uncertain flags, removals and non-Boolean requests reject the entire detached batch. The native-map extractor requires the expected type for every entry, no ammo initialization/acquisition-list path, and the expected retained selection-record roots and lengths.
+
+Only the two requested flag bytes per new item change. Both saved selection records, unused ammo words, quick-select words, acquisition entries, currency, health, statistics and all world data are preserved unless independently edited. Packs are not automatically selected; select them in-game after saving/reloading. Equipment grants do not complete quests, award race results, spawn pickups or replace story prerequisites. IDs1, 8 and 36 remain excluded. Inventory round trips do not establish gameplay acceptance.
+
+Tests independently compare every byte for each equipment grant and a combined nine-item batch, retaining opaque ammo, full acquisition/quick-select banks and unusual saved selection values. Mixed ammo/weapon/gadget/gold/slot batches, no-op preservation, invalid ownership/flags, UI staging/cancellation, hidden invalid input, original backups, later currency saves and failed encryption are covered. The reference-save check edits only a disposable copy, reopens it and verifies the source folder stays unchanged.
 
 ## Quick-select editing
 

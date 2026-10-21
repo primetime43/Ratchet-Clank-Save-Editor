@@ -122,6 +122,36 @@
       "address": "0x87a88",
       "size": 1920,
       "sha256": "E700A9CA83358AD519CDBBAC8989710EBD4FD44F840D35959BB4B977EC4ED308"
+    },
+    "equipment_switch": {
+      "address": "0x85b30",
+      "size": 3300,
+      "sha256": "40D382DD755EE166C232E9D7718046263866B0F8FD4D79FF4774CED7B5843522"
+    },
+    "magneboots_state": {
+      "address": "0x8b690",
+      "size": 232,
+      "sha256": "46F6F767DC28733E5934B717C13A4DDAD773848F53C874493FED55DC4695B294"
+    },
+    "grindboots_update": {
+      "address": "0x950e8",
+      "size": 992,
+      "sha256": "8C02ABB599065F8A269D8147F8722283467540ABC7413CE39893D0D3049EAAE9"
+    },
+    "swimming_equipment": {
+      "address": "0xa2750",
+      "size": 696,
+      "sha256": "66C7E9C438D7F2F98D6D1412DCF8F45EDE675389E3ED89EBE4EFF5A96B4F9512"
+    },
+    "sonic_summoner_consumer": {
+      "address": "0x3d8ca0",
+      "size": 1276,
+      "sha256": "AC81E936D6419B5F36FAC76A3F268B2D96BE133DED79F0D1F6C1BCAEC441DA69"
+    },
+    "pilots_helmet_pickup": {
+      "address": "0x23e140",
+      "size": 880,
+      "sha256": "35054985E0BD942759167C3C08A4996C5C1F4BE591AAF3969EF58A64CA9A4659"
     }
   },
   "player_records": [
@@ -1076,6 +1106,143 @@
       ],
       "acquisition_list": false,
       "initializes_ammo": false
+    }
+  ],
+  "equipment": [
+    {
+      "id": 2,
+      "name": "Heli-Pack",
+      "item_type": 3,
+      "quick_select": false,
+      "ownership_offset": 442,
+      "acquisition_flag_offset": 490,
+      "notification_ids": [
+        3015,
+        3015
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
+    },
+    {
+      "id": 3,
+      "name": "Thruster-Pack",
+      "item_type": 3,
+      "quick_select": false,
+      "ownership_offset": 443,
+      "acquisition_flag_offset": 491,
+      "notification_ids": [
+        11012,
+        11012
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
+    },
+    {
+      "id": 4,
+      "name": "Hydro-Pack",
+      "item_type": 3,
+      "quick_select": false,
+      "ownership_offset": 444,
+      "acquisition_flag_offset": 492,
+      "notification_ids": [
+        12006,
+        12006
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
+    },
+    {
+      "id": 5,
+      "name": "Sonic Summoner",
+      "item_type": 2,
+      "quick_select": false,
+      "ownership_offset": 445,
+      "acquisition_flag_offset": 493,
+      "notification_ids": [
+        2016,
+        2016
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
+    },
+    {
+      "id": 6,
+      "name": "O2 Mask",
+      "item_type": 2,
+      "quick_select": false,
+      "ownership_offset": 446,
+      "acquisition_flag_offset": 494,
+      "notification_ids": [
+        11013,
+        11013
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
+    },
+    {
+      "id": 7,
+      "name": "Pilot's Helmet",
+      "item_type": 2,
+      "quick_select": false,
+      "ownership_offset": 447,
+      "acquisition_flag_offset": 495,
+      "notification_ids": [
+        9002,
+        9002
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
+    },
+    {
+      "id": 28,
+      "name": "Magneboots",
+      "item_type": 1,
+      "quick_select": false,
+      "ownership_offset": 468,
+      "acquisition_flag_offset": 516,
+      "notification_ids": [
+        10011,
+        10011
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
+    },
+    {
+      "id": 29,
+      "name": "Grindboots",
+      "item_type": 1,
+      "quick_select": false,
+      "ownership_offset": 469,
+      "acquisition_flag_offset": 517,
+      "notification_ids": [
+        6013,
+        6013
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
+    },
+    {
+      "id": 30,
+      "name": "Hoverboard",
+      "item_type": 1,
+      "quick_select": false,
+      "ownership_offset": 470,
+      "acquisition_flag_offset": 518,
+      "notification_ids": [
+        2017,
+        2017
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false,
+      "editor_requests_equip": false
     }
   ],
   "grant_layout": {

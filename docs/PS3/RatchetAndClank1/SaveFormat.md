@@ -56,6 +56,8 @@ Separate **Weapon unlocks** and **Quick select** categories support all 15 comba
 
 **Gadget unlocks** grants six handheld gadgets and three passive upgrades using the same ownership/grant banks. Handheld items use a free quick-select word; passive items do not. Ammo and acquisition-list bytes are preserved, including unusual unused ammo values. No mission, movement-equipment or equipped-item state is changed. Quick select offers owned supported handheld gadgets after saving. See [gadget evidence and limits](NPEA00385/unknown/ElfMap.md#gadget-grants).
 
+**Equipment unlocks** grants nine packs/headgear/boots/hoverboard entries using only their ownership and ordinary grant flags. Ammo, acquisition entries, quick select, world state and both saved equipment-selection records are retained. Select a pack in-game after saving/reloading; these grants do not complete associated quests or races. See [equipment evidence and limits](NPEA00385/unknown/ElfMap.md#equipment-grants).
+
 ## Reproducible validation
 
 ```powershell

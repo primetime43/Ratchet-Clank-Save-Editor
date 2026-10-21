@@ -151,6 +151,41 @@ class NativeChecks(unittest.TestCase):
             with self.subTest(address=hex(address)), self.assertRaises(ValueError):
                 native.extract_gadgets(modified, records)
 
+    def test_equipment_paths_and_flags_preserve_selection(self):
+        report = native.inspect(ELF)
+        equipment = {item['id']: item for item in report['equipment']}
+        self.assertEqual({2, 3, 4, 5, 6, 7, 28, 29, 30}, set(equipment))
+        for key, item in equipment.items():
+            self.assertEqual(0x1B8 + key, item['ownership_offset'])
+            self.assertEqual(0x1E8 + key, item['acquisition_flag_offset'])
+            self.assertEqual(3 if key in (2, 3, 4) else 2 if key in (5, 6, 7) else 1, item['item_type'])
+            for field in ('quick_select', 'acquisition_list', 'initializes_ammo', 'editor_requests_equip'):
+                self.assertFalse(item[field])
+        records = {item['id']: item for item in report['player_records']}
+        self.assertEqual((0x1214, 28), (records[32]['offset'], records[32]['length']))
+        self.assertEqual((0x1184, 4), (records[23]['offset'], records[23]['length']))
+
+    def test_equipment_extractor_rejects_changed_native_paths(self):
+        report, raw = native.inspect(ELF), ELF.read_bytes()
+        records = {item['id']: item for item in report['player_records']}
+        for address, changed in ((0x721008 + 2 * 76, (0).to_bytes(4, 'big')),
+                                 (0x737D30 + 6 * 24 + 8, b'\x00\x01'),
+                                 (0x737D30 + 28 * 24 + 14, b'\x00\x01'),
+                                 (0x737D30 + 30 * 24 + 18, b'\x00\x01'),
+                                 (0x737BF0, (29).to_bytes(4, 'big'))):
+            def modified(current, length):
+                result = bytearray(raw[current - 0x10000:current - 0x10000 + length])
+                for index in range(length):
+                    if address <= current + index < address + len(changed):
+                        result[index] = changed[current + index - address]
+                return bytes(result)
+            with self.subTest(address=hex(address)), self.assertRaises(ValueError):
+                native.extract_equipment(modified, records)
+        changed_records = {key: dict(value) for key, value in records.items()}
+        changed_records[32]['length'] = 24
+        with self.assertRaises(ValueError):
+            native.extract_equipment(lambda address, length: raw[address - 0x10000:address - 0x10000 + length], changed_records)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)

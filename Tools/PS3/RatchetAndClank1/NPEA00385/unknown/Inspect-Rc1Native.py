@@ -35,6 +35,12 @@ FUNCTIONS = {
     "has_hologuise": (0xEB22C, 0x24, "0807452DB6593E9CDF605A55AAF514116249D459944F23D317D8E274880A4E34"),
     "map_variant_selection": (0xE22F4, 0x1B8, "092CE3F2BEDF3A472F971C78ACFE93A3881F084632113D3111313C045DF6CBF4"),
     "bolt_pickup_radius": (0x87A88, 0x780, "E700A9CA83358AD519CDBBAC8989710EBD4FD44F840D35959BB4B977EC4ED308"),
+    "equipment_switch": (0x85B30, 0xCE4, "40D382DD755EE166C232E9D7718046263866B0F8FD4D79FF4774CED7B5843522"),
+    "magneboots_state": (0x8B690, 0xE8, "46F6F767DC28733E5934B717C13A4DDAD773848F53C874493FED55DC4695B294"),
+    "grindboots_update": (0x950E8, 0x3E0, "8C02ABB599065F8A269D8147F8722283467540ABC7413CE39893D0D3049EAAE9"),
+    "swimming_equipment": (0xA2750, 0x2B8, "66C7E9C438D7F2F98D6D1412DCF8F45EDE675389E3ED89EBE4EFF5A96B4F9512"),
+    "sonic_summoner_consumer": (0x3D8CA0, 0x4FC, "AC81E936D6419B5F36FAC76A3F268B2D96BE133DED79F0D1F6C1BCAEC441DA69"),
+    "pilots_helmet_pickup": (0x23E140, 0x370, "35054985E0BD942759167C3C08A4996C5C1F4BE591AAF3969EF58A64CA9A4659"),
 }
 ITEM_NAMES = {10: "Bomb Glove", 11: "Devastator", 13: "Visibomb Gun", 15: "Blaster",
               16: "Pyrocitor", 17: "Mine Glove", 19: "Tesla Claw", 20: "Glove of Doom",
@@ -42,6 +48,8 @@ ITEM_NAMES = {10: "Bomb Glove", 11: "Devastator", 13: "Visibomb Gun", 15: "Blast
 WEAPON_NAMES = {**ITEM_NAMES, 9: 'Suck Cannon', 14: 'Taunter', 18: 'Walloper', 21: 'Morph-o-Ray'}
 GADGET_NAMES = {12: 'Swingshot', 22: 'Hydrodisplacer', 26: 'Trespasser', 27: 'Metal Detector',
                 31: 'Hologuise', 32: 'Gadgetron PDA', 33: 'Map-o-matic', 34: 'Bolt Grabber', 35: 'Persuader'}
+EQUIPMENT_NAMES = {2: 'Heli-Pack', 3: 'Thruster-Pack', 4: 'Hydro-Pack', 5: 'Sonic Summoner',
+                   6: 'O2 Mask', 7: "Pilot's Helmet", 28: 'Magneboots', 29: 'Grindboots', 30: 'Hoverboard'}
 
 
 def audit_notification(read, saved_ranges):
@@ -228,10 +236,11 @@ def inspect(path):
         raise ValueError('Grant notification bypass branch changed')
     gold = extract_gold_upgrades(read, by_id, weapons)
     gadgets = extract_gadgets(read, by_id)
+    equipment = extract_equipment(read, by_id)
     return dict(collection_id='BCES01503', save_id='NPEA00385', executable_version='unknown',
                 binary=dict(file='RC1.ppu.elf', size=ELF_SIZE, sha256=ELF_SHA256),
                 functions=guards, player_records=records, ammo=ammo, weapons=weapons, notification=notification,
-                gold_upgrades=gold, gadgets=gadgets,
+                gold_upgrades=gold, gadgets=gadgets, equipment=equipment,
                 grant_layout=dict(flag_record=11, acquisition_record=12, acquisition_offset=by_id[12]['offset'],
                                   acquisition_bytes=12, acquisition_empty=255, acquisition_flag=64,
                                   quick_record=13, quick_offset=by_id[13]['offset'], quick_slots=8, quick_empty=0,
@@ -241,6 +250,27 @@ def inspect(path):
                        "Capacities are shipped reference limits, not a live runtime query.",
                        "Record 11 and ownership bytes are not changed by ammo edits.",
                        "Software round trips do not establish gameplay acceptance."])
+
+
+def extract_equipment(read, records):
+    if (records[32]['runtime_address'], records[32]['length']) != ('0x969c7c', 28) or (
+            records[23]['runtime_address'], records[23]['length']) != ('0x969c9c', 4):
+        raise ValueError('Unexpected retained equipment selection records')
+    pickup_ids = struct.unpack('>20I', read(0x737BF0, 80))
+    result = []
+    for item_id, name in EQUIPMENT_NAMES.items():
+        kind = struct.unpack('>I', read(0x721008 + item_id * 76, 4))[0]
+        expected_kind = 3 if item_id in (2, 3, 4) else 2 if item_id in (5, 6, 7) else 1
+        ammo = [struct.unpack('>H', read(0x737D30 + item_id * 24 + offset, 2))[0] for offset in (8, 14, 18)]
+        if kind != expected_kind or any(ammo) or item_id in pickup_ids:
+            raise ValueError('Unexpected equipment grant path, ammo initialization or acquisition membership')
+        messages = [struct.unpack('>i', read(0x729380 + (item_id + bank * 37) * 4, 4))[0] for bank in (0, 1)]
+        result.append(dict(id=item_id, name=name, item_type=kind, quick_select=False,
+                           ownership_offset=records[10]['offset'] + item_id,
+                           acquisition_flag_offset=records[11]['offset'] + item_id,
+                           notification_ids=messages, acquisition_list=False, initializes_ammo=False,
+                           editor_requests_equip=False))
+    return result
 
 
 def extract_gadgets(read, records):
