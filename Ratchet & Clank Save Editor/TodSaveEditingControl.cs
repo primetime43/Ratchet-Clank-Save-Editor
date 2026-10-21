@@ -102,6 +102,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private void Stage(TodEditField field, decimal value)
         {
             if (rendering) return;
+            if (field.Storage is TodEditStorage.OmegaPromotion or TodEditStorage.WeaponLevel)
+            {
+                var candidate = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
+                if (value == field.Current) candidate.Remove(field.Key); else candidate[field.Key] = value;
+                TodOmegaPromotionEditing.Validate(snapshot, fields, candidate);
+            }
             if (field.Storage is TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit || field.Key == "dev_unlock_bonuses")
             {
                 var candidate = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
@@ -127,7 +133,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 notice.Text = "The staged selection was cleared because its ownership grant was cancelled. The saved selection is unchanged.";
             if (TodWeaponGrantEditing.CancelDependentSlots(field, pending))
                 notice.Text = "Quick-select assignments depending on the cancelled weapon grant were cleared. Saved slots are unchanged.";
-            if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.WeaponUpgradeAll)
+            if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.OmegaPromotion or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.WeaponUpgradeAll)
             {
                 string key = "ammo_" + field.Offset / 20;
                 var ammo = fields.Single(item => item.Key == key);
@@ -444,6 +450,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Ammo upgrades" => "Add missing capacity nodes next to already-installed nodes. Adding refills to the new capacity; Weapon ammo previews it and allows an override. Raritanium is unchanged. Weapon upgrades also offers complete grids, including special nodes. Existing upgrades cannot be removed. Not yet tested in-game.",
                 "Weapon upgrades" => "Choose a complete grid for one weapon, unlock all supported owned grids, or add individual available nodes. Special nodes require all positive neighbors; complete grids include those prerequisites. Blank MOD_SPECIAL values are Boolean switches, not guessed numbers. Labels show shipped modifiers, not measured live effects. Capacity increases refill ammo; Weapon ammo allows an override. No raritanium charge, removals, level/ownership change or story edits. RYNO's center is its implicit start node, not a purchased upgrade. Not yet tested in-game.",
                 "Weapon levels" => "Levels stay within the weapon's existing 1–5 or 6–10 tier. A change sets matching XP; increases refill ammo, decreases keep ammo. Weapon ammo shows the planned refill and allows an override. No ownership, upgrades or purchases are granted. Not yet tested in-game.",
+                "Omega promotions" => "Promote verified, owned level-5 weapons to Omega level 6 in an existing replay / Challenge Mode save. Sets matching XP and refills ammo using the promoted tier and staged upgrades; Weapon ammo allows an override. Save before editing levels 6–10. Currency and replay state are preserved. In-game acceptance remains untested.",
                 "Skill awards" => "Check missing skills to award them on Save All. Earned skills cannot be removed. New awards add their native point values to the existing score; HARDCORE follows the last missing ordinary skill automatically. Labels are formatted native names. Existing score/bit mismatches and unknown bits are retained. Unlock bonuses must be saved separately. Not yet tested in-game.",
                 "Armor unlocks" => "Grant missing armor ownership on Save All. Already-owned entries cannot be removed. Grants do not equip armor, spend bolts, change vendor availability or enable challenge mode. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
                 "Skin unlocks" => "Grant missing skin ownership on Save All, including Jailbird. Already-owned entries cannot be removed. No special bolts are spent; grants do not select a skin. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
@@ -475,7 +482,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList,
                             Enabled = field.Storage is not (TodEditStorage.OwnershipGrant or TodEditStorage.WeaponGrant or TodEditStorage.EquipmentGrant) ||
                                 field.Current == 0 && field.Maximum > 0 };
-                        if (field.Storage == TodEditStorage.WeaponUpgradeAll && field.Maximum == 0) combo.Enabled = false;
+                        if ((field.Storage == TodEditStorage.WeaponUpgradeAll && field.Maximum == 0) ||
+                            (field.Storage == TodEditStorage.OmegaPromotion && (field.Current != 0 || field.Maximum == 0))) combo.Enabled = false;
                         // Levels and schemes are numeric sequences; named choices
                         // sort by their labels without changing the saved IDs.
                         IEnumerable<TodEditOption> options = field.Storage == TodEditStorage.WeaponLevel || field.Key == "control_scheme"

@@ -34,6 +34,7 @@ internal static partial class Program
         CompleteUpgradeChecks(root);
         BonusEditingChecks(root);
         WeaponLevelEditingChecks(root);
+        OmegaPromotionChecks(root);
         NewEditSmokeChecks();
         AmmoUpgradeEditingChecks();
         AmmoUpgradeUiChecks();

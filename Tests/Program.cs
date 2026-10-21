@@ -31,6 +31,12 @@ internal static partial class Program
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--omega-promotions" }))
+            {
+                OmegaPromotionChecks(root);
+                Console.WriteLine($"All {passed} Omega promotion checks passed.");
+                return 0;
+            }
             if (args.SequenceEqual(new[] { "--theme-ui" }))
             {
                 NumericInputChecks(root);

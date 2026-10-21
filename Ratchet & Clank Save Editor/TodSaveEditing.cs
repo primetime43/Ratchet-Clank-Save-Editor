@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
-    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter, WeaponGrant, EquipmentGrant, WeaponUpgradeAll }
+    public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter, WeaponGrant, EquipmentGrant, WeaponUpgradeAll, OmegaPromotion }
     public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier, UnlockOwnedUpgrades }
     public sealed record TodEditOption(decimal Value, string Label)
     {
@@ -109,6 +109,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             }
 
             TodWeaponLevelEditing.AddFields(data, fields);
+            TodOmegaPromotionEditing.AddFields(data, fields);
             TodGadgetAmmoEditing.AddFields(data, fields);
             TodAmmoUpgradeEditing.AddFields(data, fields);
             TodDeveloperEditing.AddFields(fields);
@@ -217,6 +218,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         throw new InvalidDataException("Value exceeds the reference limit for " + field.Label + ".");
                 }
             }
+            TodOmegaPromotionEditing.Validate(original, fields.Values.ToArray(), edits);
             byte[] result = (byte[])original.Clone();
             var weaponGrants = TodWeaponGrantEditing.Preview(original, edits);
             var equipmentGrants = TodEquipmentGrantEditing.Preview(original, edits);
@@ -227,12 +229,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 edit.Value != fields[edit.Key].Current).ToArray();
             foreach (var edit in levelChanges)
                 TodWeaponLevelEditing.Apply(original, result, fields[edit.Key], edit.Value, fields);
+            TodOmegaPromotionEditing.Apply(original, result, fields, edits);
             TodAmmoUpgradeEditing.Apply(original, result, fields, edits);
             TodDeveloperEditing.Apply(result, edits, fields);
             foreach (var edit in requested)
             {
                 var field = fields[edit.Key];
-                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.WeaponUpgradeAll or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit or TodEditStorage.WeaponGrant or TodEditStorage.EquipmentGrant) continue;
+                if (field.Storage is TodEditStorage.WeaponLevel or TodEditStorage.OmegaPromotion or TodEditStorage.AmmoUpgrade or TodEditStorage.WeaponUpgrade or TodEditStorage.WeaponUpgradeAll or TodEditStorage.DeveloperAction or TodEditStorage.SkillAward or TodEditStorage.GoldBoltBit or TodEditStorage.WeaponGrant or TodEditStorage.EquipmentGrant) continue;
                 if (edit.Value == field.Current)
                 {
                     // Explicit ammo overrides either coupled refill, retaining

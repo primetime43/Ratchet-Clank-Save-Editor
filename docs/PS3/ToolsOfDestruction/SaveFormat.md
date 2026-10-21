@@ -70,6 +70,8 @@ Ownership is separate from availability at `0x5754 + ID`. Ammo and level getters
 
 XP, level, ammo and modifiers are related. Native XP updates can recalculate level and refill ammo; modifier updates can change capacity. Editing one raw field does not reproduce those operations. The [definition catalogs](BCUS98127/v02.00/ElfMap.md#weapon-definitions) include all 32 IDs, 28 shipped configurations and 15 upgrade grids.
 
+The USA editor's **Omega promotions** action uses the separate `0x465E78` bridge: stored level4 →5 (displayed5 →6), XP from shipped threshold5, and promoted-tier ammo capacity. It requires an already-owned, verified combat record, exactly stored level4 and existing nonzero replay word`0x906EC`, matching the saved prerequisites of `0x2D20C8`. All fifteen definitions pass the reference flag and level-count checks. Normal level edits remain within their original tier; save a promotion before editing levels6–10. Pending upgrades use the promoted capacity, and explicit ammo edits override refills. No automatic currency, replay, ownership, modifier, acquisition-counter or quick-select changes occur. Duplicate already-Omega actions preserve accumulated XP and ammo. Runtime purchase callbacks and in-game acceptance remain unverified.
+
 Word `0x280` changes during acquisition/removal. It is **not the number of nonzero ownership bytes**. The USA sample has value 46 and 25 nonzero ownership records. A mapped removal leaf exists, but its gameplay caller is unresolved.
 
 ### Quick select and equipment

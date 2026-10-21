@@ -142,9 +142,11 @@ The editor grants missing combat weapons only from bounded initial records, reje
 
 ### Within-tier level edits
 
-The editor now offers the 15 combat weapons' levels only within their existing stored 0–4 or 5–9 tier (shown as levels 1–5 or 6–10). It requires ownership, consistent finite XP, valid ammo and known modifier bits. The reference base capacity is constant within each tier; Ryno's two tiers differ, so that boundary is not crossed.
+The level editor offers the 15 combat weapons' levels within their existing stored 0–4 or 5–9 tier (shown as levels 1–5 or 6–10). It requires ownership, consistent finite XP, valid ammo and known modifier bits. The reference base capacity is constant within each tier; Ryno's two tiers differ, so an ordinary level change does not cross that boundary.
 
 A changed level also writes its reference float XP threshold. Increases refill the exact reference maximum; decreases preserve ammo. An explicit ammo edit overrides a refill regardless of edit order. Same-level requests preserve the original XP and ammo bits. Ownership, modifiers, unlock bytes, counters and payment fields are untouched. This is a coupled file-edit policy, not a purchase or execution of native callbacks; live definitions and in-game acceptance remain unverified.
+
+The separate **Omega promotions** editor applies `0x465E78`'s stored4 →5 bridge using the existing saved gate from `0x2D20C8`: ownership, exactly stored4, low definition flags clear, nonzero replay and a sufficient definition level count. The editor additionally reuses the level editor's reference and baseline validation. It writes stored5, shipped XP threshold5 and the new capacity; staged upgrades participate in that capacity and explicit ammo overrides win. Currency, replay, ownership, acquisition count and slots are preserved; modifiers change only through separately staged upgrades. A changed same-weapon normal-level request conflicts with promotion: save the bridge first to expose levels6–10. Already-Omega actions do nothing, retaining raw XP/ammo bits. Native vendor payment, downstream callbacks, live definition overrides and in-game acceptance are not reproduced or verified.
 
 Armor purchase, deferred equip, skin purchase and history publication also have separate steps. A direct field edit does not reproduce their callbacks or payment rules.
 

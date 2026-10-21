@@ -130,10 +130,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return mask;
         }
 
-        private static float Capacity(byte[] data, int id, uint mask)
+        private static float Capacity(byte[] data, int id, uint mask, bool promote = false)
         {
             TodResearch.TryConfig(TodResearch.Inventory[id].GetProperty("config_name").GetString(), out var config);
-            float maximum = config.GetProperty("variables").GetProperty("MaxAmmo")[data[id * 20 + 17]].GetSingle(), factor = 1;
+            float maximum = config.GetProperty("variables").GetProperty("MaxAmmo")[promote ? 5 : data[id * 20 + 17]].GetSingle(), factor = 1;
             // Keep native physical-index float32 arithmetic, not decimal sums.
             foreach (var node in config.GetProperty("modifiers").EnumerateArray())
             {
@@ -147,11 +147,16 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             return maximum;
         }
 
+        private static float PlannedCapacity(byte[] data, int id, IReadOnlyDictionary<string, decimal> edits) =>
+            Capacity(data, id, PlannedMask(data, id, edits),
+                data[id * 20 + 17] == 4 && TodOmegaPromotionEditing.Promotes(id, edits));
+
         internal static decimal Maximum(byte[] data, TodEditField ammo, IReadOnlyDictionary<string, decimal> edits)
-            => (decimal)Capacity(data, ammo.Offset / 20, PlannedMask(data, ammo.Offset / 20, edits));
+            => (decimal)PlannedCapacity(data, ammo.Offset / 20, edits);
 
         internal static bool RefillsAmmo(byte[] data, TodEditField ammo, IReadOnlyDictionary<string, decimal> edits) =>
-            Capacity(data, ammo.Offset / 20, PlannedMask(data, ammo.Offset / 20, edits)) != Capacity(data, ammo.Offset / 20, Mask(data, ammo.Offset / 20));
+            data[ammo.Offset / 20 * 20 + 17] == 4 && TodOmegaPromotionEditing.Promotes(ammo.Offset / 20, edits) ||
+            PlannedCapacity(data, ammo.Offset / 20, edits) != Capacity(data, ammo.Offset / 20, Mask(data, ammo.Offset / 20));
 
         internal static void Apply(byte[] original, byte[] result, IReadOnlyDictionary<string, TodEditField> fields,
             IReadOnlyDictionary<string, decimal> edits)
