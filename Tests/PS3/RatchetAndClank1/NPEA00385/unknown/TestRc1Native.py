@@ -121,6 +121,36 @@ class NativeChecks(unittest.TestCase):
             with self.subTest(saved_overlap=hex(destination)), self.assertRaises(ValueError):
                 native.audit_notification(read, [(destination, 4)])
 
+    def test_gadget_paths_and_flags(self):
+        gadgets = {item['id']: item for item in native.inspect(ELF)['gadgets']}
+        self.assertEqual({12, 22, 26, 27, 31, 32, 33, 34, 35}, set(gadgets))
+        self.assertEqual({12, 22, 26, 27, 31, 32}, {key for key, value in gadgets.items() if value['quick_select']})
+        for key, item in gadgets.items():
+            self.assertEqual(0x1B8 + key, item['ownership_offset'])
+            self.assertEqual(0x1E8 + key, item['acquisition_flag_offset'])
+            self.assertEqual(4 if key in (33, 34) else 5 if key == 35 else 0, item['item_type'])
+            self.assertFalse(item['acquisition_list'])
+            self.assertFalse(item['initializes_ammo'])
+        self.assertEqual([14003, 21469], gadgets[32]['notification_ids'])
+        self.assertEqual([16005, 21468], gadgets[33]['notification_ids'])
+
+    def test_gadget_extractor_rejects_unknown_grant_paths(self):
+        report, raw = native.inspect(ELF), ELF.read_bytes()
+        records = {item['id']: item for item in report['player_records']}
+        for address, changed in ((0x721008 + 12 * 76, (2).to_bytes(4, 'big')),
+                                 (0x737D30 + 12 * 24 + 8, b'\x00\x01'),
+                                 (0x737D30 + 33 * 24 + 14, b'\x00\x01'),
+                                 (0x737D30 + 35 * 24 + 18, b'\x00\x01'),
+                                 (0x737BF0, (12).to_bytes(4, 'big'))):
+            def modified(current, length):
+                result = bytearray(raw[current - 0x10000:current - 0x10000 + length])
+                for index in range(length):
+                    if address <= current + index < address + len(changed):
+                        result[index] = changed[current + index - address]
+                return bytes(result)
+            with self.subTest(address=hex(address)), self.assertRaises(ValueError):
+                native.extract_gadgets(modified, records)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)

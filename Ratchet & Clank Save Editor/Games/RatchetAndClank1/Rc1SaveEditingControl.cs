@@ -61,7 +61,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!supported) return;
                 category = new ComboBox { Name = "Rc1EditCategory", DropDownStyle = ComboBoxStyle.DropDownList,
                     Dock = DockStyle.Fill, Margin = new Padding(4, 4, 4, 12), Sorted = true };
-                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select", "Gold upgrades" });
+                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select", "Gold upgrades", "Gadget unlocks" });
                 category.SelectedIndexChanged += (_, _) => ShowCategory();
                 AddRow(category); layout.SetColumnSpan(category, 3);
                 var refill = new Button { Name = "Rc1RefillAmmo", Text = "Refill owned weapon ammo", AutoSize = true,
@@ -116,6 +116,24 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 var grantHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
                     Text = "Grants add ownership, starting ammo and related inventory entries without spending bolts. All 15 combat weapons are supported.", Margin = new Padding(4, 10, 4, 8) };
                 AddPageRow("Weapon unlocks", grantHint); layout.SetColumnSpan(grantHint, 3);
+                foreach (var field in Rc1GadgetEditing.Grants(data, region))
+                {
+                    var check = new CheckBox { Name = "Rc1Edit_" + field.Key, Text = field.Gadget.Name,
+                        Checked = field.Owned, Enabled = !field.Owned, AutoSize = true, Margin = new Padding(4, 6, 4, 6) };
+                    check.CheckedChanged += (_, _) =>
+                    {
+                        if (loading) return;
+                        if (TryStage(field.Key, check.Checked ? 1 : 0, field.Owned ? 1 : 0)) return;
+                        loading = true; check.Checked = !check.Checked; loading = false;
+                    };
+                    AddPageRow("Gadget unlocks", check); layout.SetColumnSpan(check, 3);
+                }
+                var gadgetHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
+                    Text = "Grants add six handheld gadgets and three passive upgrades without spending bolts.\r\n" +
+                        "Handheld gadgets use a free quick-select slot when available. Save first to choose a specific slot.\r\n" +
+                        "Mission progress, movement equipment and the currently equipped item are preserved.",
+                    Margin = new Padding(4, 10, 4, 8) };
+                AddPageRow("Gadget unlocks", gadgetHint); layout.SetColumnSpan(gadgetHint, 3);
                 var goldFields = Rc1GoldUpgradeEditing.Fields(data, region);
                 foreach (var field in goldFields)
                 {
@@ -155,7 +173,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     AddPageRow("Quick select", label, choices); layout.SetColumnSpan(choices, 2);
                 }
                 var slotHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
-                    Text = "Choose an owned combat weapon or Empty. Clear an item's old slot before moving it. Stored slot numbers are not wheel positions.", Margin = new Padding(4, 10, 4, 8) };
+                    Text = "Choose an owned weapon, supported handheld gadget or Empty.\r\nClear an item's old slot before moving it. Stored slot numbers are not wheel positions.", Margin = new Padding(4, 10, 4, 8) };
                 AddPageRow("Quick select", slotHint); layout.SetColumnSpan(slotHint, 3);
                 category.SelectedItem = "Weapon ammo";
             }

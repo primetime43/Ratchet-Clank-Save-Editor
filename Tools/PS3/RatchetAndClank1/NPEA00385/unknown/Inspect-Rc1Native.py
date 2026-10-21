@@ -31,11 +31,17 @@ FUNCTIONS = {
     "count_gold_upgrades": (0x11B124, 0x90, "F30D20B411342EE68BCDE1405AA4990CB93D3D81A8AA184727C37C6FD459DD91"),
     "available_gold_bolts": (0x11B2C4, 0x1D0, "4B2964778705D724CEB0C9B8E96765C1C59D8ACA3AD8A02D3CC1985EEB33EDF2"),
     "gold_inventory_icons": (0x14B214, 0x118, "5AF4BDA9881284C8942A72535847CC8A181CF9D0447BF9389D303772E546DCD2"),
+    "metal_detector_update": (0x80910, 0xF8, "B64A2EE671F4FBFC15744D610444669589FF0535E4A0878B50718ABD0F5F4E85"),
+    "has_hologuise": (0xEB22C, 0x24, "0807452DB6593E9CDF605A55AAF514116249D459944F23D317D8E274880A4E34"),
+    "map_variant_selection": (0xE22F4, 0x1B8, "092CE3F2BEDF3A472F971C78ACFE93A3881F084632113D3111313C045DF6CBF4"),
+    "bolt_pickup_radius": (0x87A88, 0x780, "E700A9CA83358AD519CDBBAC8989710EBD4FD44F840D35959BB4B977EC4ED308"),
 }
 ITEM_NAMES = {10: "Bomb Glove", 11: "Devastator", 13: "Visibomb Gun", 15: "Blaster",
               16: "Pyrocitor", 17: "Mine Glove", 19: "Tesla Claw", 20: "Glove of Doom",
               23: "R.Y.N.O.", 24: "Drone Device", 25: "Decoy Glove"}
 WEAPON_NAMES = {**ITEM_NAMES, 9: 'Suck Cannon', 14: 'Taunter', 18: 'Walloper', 21: 'Morph-o-Ray'}
+GADGET_NAMES = {12: 'Swingshot', 22: 'Hydrodisplacer', 26: 'Trespasser', 27: 'Metal Detector',
+                31: 'Hologuise', 32: 'Gadgetron PDA', 33: 'Map-o-matic', 34: 'Bolt Grabber', 35: 'Persuader'}
 
 
 def audit_notification(read, saved_ranges):
@@ -221,10 +227,11 @@ def inspect(path):
     if struct.unpack('>II', read(0x112E9C, 8)) != (0x2C03FFFF, 0x41820090):
         raise ValueError('Grant notification bypass branch changed')
     gold = extract_gold_upgrades(read, by_id, weapons)
+    gadgets = extract_gadgets(read, by_id)
     return dict(collection_id='BCES01503', save_id='NPEA00385', executable_version='unknown',
                 binary=dict(file='RC1.ppu.elf', size=ELF_SIZE, sha256=ELF_SHA256),
                 functions=guards, player_records=records, ammo=ammo, weapons=weapons, notification=notification,
-                gold_upgrades=gold,
+                gold_upgrades=gold, gadgets=gadgets,
                 grant_layout=dict(flag_record=11, acquisition_record=12, acquisition_offset=by_id[12]['offset'],
                                   acquisition_bytes=12, acquisition_empty=255, acquisition_flag=64,
                                   quick_record=13, quick_offset=by_id[13]['offset'], quick_slots=8, quick_empty=0,
@@ -234,6 +241,23 @@ def inspect(path):
                        "Capacities are shipped reference limits, not a live runtime query.",
                        "Record 11 and ownership bytes are not changed by ammo edits.",
                        "Software round trips do not establish gameplay acceptance."])
+
+
+def extract_gadgets(read, records):
+    pickup_ids = struct.unpack('>20I', read(0x737BF0, 80))
+    result = []
+    for item_id, name in GADGET_NAMES.items():
+        kind = struct.unpack('>I', read(0x721008 + item_id * 76, 4))[0]
+        expected_kind = 4 if item_id in (33, 34) else 5 if item_id == 35 else 0
+        ammo = [struct.unpack('>H', read(0x737D30 + item_id * 24 + offset, 2))[0] for offset in (8, 14, 18)]
+        if kind != expected_kind or any(ammo) or item_id in pickup_ids:
+            raise ValueError('Unexpected gadget grant path, ammo initialization or acquisition membership')
+        messages = [struct.unpack('>i', read(0x729380 + (item_id + bank * 37) * 4, 4))[0] for bank in (0, 1)]
+        result.append(dict(id=item_id, name=name, item_type=kind, quick_select=kind == 0,
+                           ownership_offset=records[10]['offset'] + item_id,
+                           acquisition_flag_offset=records[11]['offset'] + item_id,
+                           notification_ids=messages, acquisition_list=False, initializes_ammo=False))
+    return result
 
 
 def extract_gold_upgrades(read, records, weapons):

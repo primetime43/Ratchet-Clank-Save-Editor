@@ -102,6 +102,26 @@
       "address": "0x14b214",
       "size": 280,
       "sha256": "5AF4BDA9881284C8942A72535847CC8A181CF9D0447BF9389D303772E546DCD2"
+    },
+    "metal_detector_update": {
+      "address": "0x80910",
+      "size": 248,
+      "sha256": "B64A2EE671F4FBFC15744D610444669589FF0535E4A0878B50718ABD0F5F4E85"
+    },
+    "has_hologuise": {
+      "address": "0xeb22c",
+      "size": 36,
+      "sha256": "0807452DB6593E9CDF605A55AAF514116249D459944F23D317D8E274880A4E34"
+    },
+    "map_variant_selection": {
+      "address": "0xe22f4",
+      "size": 440,
+      "sha256": "092CE3F2BEDF3A472F971C78ACFE93A3881F084632113D3111313C045DF6CBF4"
+    },
+    "bolt_pickup_radius": {
+      "address": "0x87a88",
+      "size": 1920,
+      "sha256": "E700A9CA83358AD519CDBBAC8989710EBD4FD44F840D35959BB4B977EC4ED308"
     }
   },
   "player_records": [
@@ -930,6 +950,134 @@
     "rule": "Add-only flags for already-owned weapons. No purchase, currency, collectible, equipment or trophy writes.",
     "balance_rule": "The game clamps collected gold bolts minus four per counted upgrade to 0..40; flags affect this derived balance."
   },
+  "gadgets": [
+    {
+      "id": 12,
+      "name": "Swingshot",
+      "item_type": 0,
+      "quick_select": true,
+      "ownership_offset": 452,
+      "acquisition_flag_offset": 500,
+      "notification_ids": [
+        3016,
+        3016
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    },
+    {
+      "id": 22,
+      "name": "Hydrodisplacer",
+      "item_type": 0,
+      "quick_select": true,
+      "ownership_offset": 462,
+      "acquisition_flag_offset": 510,
+      "notification_ids": [
+        6012,
+        6012
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    },
+    {
+      "id": 26,
+      "name": "Trespasser",
+      "item_type": 0,
+      "quick_select": true,
+      "ownership_offset": 466,
+      "acquisition_flag_offset": 514,
+      "notification_ids": [
+        2015,
+        2015
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    },
+    {
+      "id": 27,
+      "name": "Metal Detector",
+      "item_type": 0,
+      "quick_select": true,
+      "ownership_offset": 467,
+      "acquisition_flag_offset": 515,
+      "notification_ids": [
+        8009,
+        8009
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    },
+    {
+      "id": 31,
+      "name": "Hologuise",
+      "item_type": 0,
+      "quick_select": true,
+      "ownership_offset": 471,
+      "acquisition_flag_offset": 519,
+      "notification_ids": [
+        16006,
+        16006
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    },
+    {
+      "id": 32,
+      "name": "Gadgetron PDA",
+      "item_type": 0,
+      "quick_select": true,
+      "ownership_offset": 472,
+      "acquisition_flag_offset": 520,
+      "notification_ids": [
+        14003,
+        21469
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    },
+    {
+      "id": 33,
+      "name": "Map-o-matic",
+      "item_type": 4,
+      "quick_select": false,
+      "ownership_offset": 473,
+      "acquisition_flag_offset": 521,
+      "notification_ids": [
+        16005,
+        21468
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    },
+    {
+      "id": 34,
+      "name": "Bolt Grabber",
+      "item_type": 4,
+      "quick_select": false,
+      "ownership_offset": 474,
+      "acquisition_flag_offset": 522,
+      "notification_ids": [
+        15011,
+        21467
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    },
+    {
+      "id": 35,
+      "name": "Persuader",
+      "item_type": 5,
+      "quick_select": false,
+      "ownership_offset": 475,
+      "acquisition_flag_offset": 523,
+      "notification_ids": [
+        11014,
+        21470
+      ],
+      "acquisition_list": false,
+      "initializes_ammo": false
+    }
+  ],
   "grant_layout": {
     "flag_record": 11,
     "acquisition_record": 12,

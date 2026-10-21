@@ -44,6 +44,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (!Rc1SaveEditing.Supports(data, region)) return Array.Empty<Rc1QuickField>();
             var choices = Rc1Research.Weapons.Where(weapon => data[weapon.OwnershipOffset] == 1)
                 .Select(weapon => new Rc1QuickOption((uint)weapon.Id, weapon.Name))
+                .Concat(Rc1Research.Gadgets.Where(item => item.QuickSelect && data[item.OwnershipOffset] == 1)
+                    .Select(item => new Rc1QuickOption((uint)item.Id, item.Name)))
                 .Append(new(0, "Empty")).ToArray();
             return Enumerable.Range(0, QuickCount).Select(slot =>
             {
@@ -75,7 +77,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 {
                     if (edit.Value != decimal.Truncate(edit.Value) || edit.Value < 0 || edit.Value > uint.MaxValue ||
                         !slot.Options.Any(option => option.Value == edit.Value))
-                        throw new InvalidDataException("Quick select requires an owned supported weapon, Empty, or the unchanged stored value.");
+                        throw new InvalidDataException("Quick select requires an owned supported weapon or gadget, Empty, or the unchanged stored value.");
                     if (edit.Value == slot.Current) continue;
                     BinaryPrimitives.WriteUInt32BigEndian(result.AsSpan(slot.Offset, 4), (uint)edit.Value);
                 }
@@ -103,17 +105,21 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     if (empty < 0) throw new InvalidDataException("The RC1 acquisition list has no free entry. No grant was saved.");
                     result[AcquisitionOffset + empty] = (byte)(weapon.Id | 0x40);
                 }
-                bool assigned = Enumerable.Range(0, QuickCount).Any(index => Word(result, QuickOffset + index * 4) == weapon.Id);
-                if (assigned) continue;
-                for (int index = 0; index < QuickCount; index++)
-                {
-                    int offset = QuickOffset + index * 4;
-                    if (Word(result, offset) != 0) continue;
-                    BinaryPrimitives.WriteUInt32BigEndian(result.AsSpan(offset, 4), (uint)weapon.Id);
-                    break;
-                }
+                AssignFirstFreeSlot(result, weapon.Id);
             }
             return result;
+        }
+
+        internal static void AssignFirstFreeSlot(byte[] data, int id)
+        {
+            if (Enumerable.Range(0, QuickCount).Any(index => Word(data, QuickOffset + index * 4) == id)) return;
+            for (int index = 0; index < QuickCount; index++)
+            {
+                int offset = QuickOffset + index * 4;
+                if (Word(data, offset) != 0) continue;
+                BinaryPrimitives.WriteUInt32BigEndian(data.AsSpan(offset, 4), (uint)id);
+                break;
+            }
         }
     }
 }

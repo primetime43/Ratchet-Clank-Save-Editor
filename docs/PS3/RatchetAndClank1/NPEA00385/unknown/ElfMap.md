@@ -99,7 +99,7 @@ The Cell operations were checked against [RPCS3's opcode decoder](https://github
 
 Both call targets have pinned function hashes in the map. Neither fixed notification destination belongs to the 48 player payloads or any of the 20 repeated world payloads. The runtime text's length is not inferred from a save, and notification strings/timer values are not fabricated by the editor. Unknown instructions, calls, store destinations or overlap with serialized ranges fail the audit. Ghidra's incomplete pseudocode is not used as proof that the omitted block has no effects.
 
-The former notification-based exclusion is therefore removed. All **15 combat grants** use the same confirmed saved-state tail, including Suck Cannon (ID9), Morph-o-Ray (ID21) and R.Y.N.O. (ID23). Gadgets and story equipment remain excluded.
+The former notification-based exclusion is therefore removed. All **15 combat grants** use the same confirmed saved-state tail, including Suck Cannon (ID9), Morph-o-Ray (ID21) and R.Y.N.O. (ID23). Selected gadgets are documented separately below; movement equipment remains excluded.
 
 | Newly supported ID | Ownership-dependent notification IDs (owned / unowned) | Initial ammo | Acquisition-list entry |
 | --- | --- | --- | --- |
@@ -152,11 +152,37 @@ This implements the persistent upgrade flag without simulating vendor payment, i
 
 Tests cover all ten independent byte offsets, mixed batches and rejection without source changes, hidden invalid ammo, staging/cancellation, installed-state refresh, backups and later currency saves retaining upgrades. A disposable copy of the supplied save also receives Gold Bomb Glove with exact-byte comparison and reopening. Gameplay reload and gold weapon behavior remain untested.
 
+## Gadget grants
+
+The same `0x112E18` grant routine covers the following nine item IDs. All use the already-audited notification block, then write ownership at `0x96C140 + id` and the independent grant flag at `0x96C165 + id`. Their ammo-price, capacity and initial-ammo entries in the 24-byte item table are zero, so the native ammo initializer is skipped. None occurs in the acquisition-membership table at `0x737BF0`, so none consumes a byte in record 12.
+
+| ID | Label | Native item type | Auto quick select | Ownership / grant save offset |
+| --- | --- | --- | --- | --- |
+| 12 | Swingshot | 0 | Yes | `0x1C4` / `0x1F4` |
+| 22 | Hydrodisplacer | 0 | Yes | `0x1CE` / `0x1FE` |
+| 26 | Trespasser | 0 | Yes | `0x1D2` / `0x202` |
+| 27 | Metal Detector | 0 | Yes | `0x1D3` / `0x203` |
+| 31 | Hologuise | 0 | Yes | `0x1D7` / `0x207` |
+| 32 | Gadgetron PDA | 0 | Yes | `0x1D8` / `0x208` |
+| 33 | Map-o-matic | 4 | No | `0x1D9` / `0x209` |
+| 34 | Bolt Grabber | 4 | No | `0x1DA` / `0x20A` |
+| 35 | Persuader | 5 | No | `0x1DB` / `0x20B` |
+
+The native type lookup uses `0x721008 + id * 76`. Its final type-zero check appends only the six handheld gadgets to the first free quick-select word. Types 4 and 5 bypass quick select. The optional equip branch updates runtime selection roots for types 0, 2 or 3; types 4 and 5 retain the previous roots. The editor preserves all equipped-item state for every gadget rather than reproducing an immediate equip request.
+
+Additional pinned consumers confirm individual flags: `0x80910` gates Metal Detector updates on ID27, `0xEB22C` queries Hologuise ownership, `0xE22F4` chooses map variants using Map-o-matic ownership, and `0x87A88` selects pickup-radius parameters using Bolt Grabber ownership. The previously pinned vendor purchase routine `0x16CC50` selects the ordinary or alternate item-price entry according to Persuader ownership. Names retain the existing RC1 reference labels; none of these functions proves that every quest or world interaction is satisfied.
+
+**Gadget unlocks** exposes these nine add-only grants. New grants require both flags to be zero; canonical owned items (`1`) are retained without repairing flags, adding slots or otherwise changing bytes. Unknown flags and unsupported IDs reject the detached batch. Unused ammo words are preserved even when nonzero because the native gadget path does not touch them. Full acquisition lists cannot block gadget grants, and full quick-select banks are retained.
+
+Combined batches apply explicit slot assignments first, combat grants in ascending ID order second, and gadget grants in ascending ID order third. Handheld gadgets use only the remaining empty slots and do not duplicate a retained matching slot. Passive items are never offered as new quick-select choices. Save a new grant before assigning a specific slot. Currency, world pickups, mission completion, movement equipment, gold-upgrade bytes, statistics and trophy state are preserved unless separately edited. Pack/boot/hoverboard ownership is not enabled by this map. This implements the inventory state without claiming story completion or gameplay acceptance.
+
+Tests cover all nine flag pairs, six handheld slot paths, preserved unused ammo and acquisition data, no-ops, full wheels, retained slots, mixed combat/ammo/gold/slot batches, rejection guards, UI staging/cancellation, hidden invalid inputs, backup/reopen and failed encryption. A disposable copy of the supplied save also receives all nine grants with exact-byte comparison and source preservation. Gameplay reload remains untested.
+
 ## Quick-select editing
 
 `0x143C30` copies the eight saved words to the menu's working bank. `0x143CBC` copies all eight working words back unchanged. `0x143980` handles an owned item's assignment, clearing its prior occurrence before putting it in the chosen slot; it also maintains separate UI-use statistics that the editor leaves untouched.
 
-The editor offers the 15 recognized combat IDs with canonical saved ownership byte `1`, plus Empty (`0`). Unknown current IDs and noncombat assignments can be retained unchanged or cleared, but are not offered as new assignments in other slots. Stored indices are not claimed to be wheel positions.
+The editor offers the 15 recognized combat IDs and six supported handheld gadget IDs with canonical saved ownership byte `1`, plus Empty (`0`). Unknown current IDs and other noncombat assignments can be retained unchanged or cleared, but are not offered as new assignments in other slots. Stored indices are not claimed to be wheel positions.
 
 Complete batches support moves and swaps. A new nonzero assignment is rejected if it would duplicate an ID in the final eight-word bank; existing duplicates remain untouched until explicitly changed. UI users clear the old slot before assigning a weapon elsewhere. Grants use only remaining empty slots and never overwrite a full bank.
 

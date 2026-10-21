@@ -54,6 +54,8 @@ Separate **Weapon unlocks** and **Quick select** categories support all 15 comba
 
 **Gold upgrades** adds the ten native vendor upgrades to already-owned weapons by setting only their record-30 bytes. Upgrades are add-only, with canonical flags required; save new weapon grants first. No currency or collectible records are written, but the game derives available gold bolts by subtracting four per upgrade. See [native gold-upgrade evidence](NPEA00385/unknown/ElfMap.md#gold-upgrades).
 
+**Gadget unlocks** grants six handheld gadgets and three passive upgrades using the same ownership/grant banks. Handheld items use a free quick-select word; passive items do not. Ammo and acquisition-list bytes are preserved, including unusual unused ammo values. No mission, movement-equipment or equipped-item state is changed. Quick select offers owned supported handheld gadgets after saving. See [gadget evidence and limits](NPEA00385/unknown/ElfMap.md#gadget-grants).
+
 ## Reproducible validation
 
 ```powershell

@@ -16,6 +16,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public static IReadOnlyList<Rc1RecordDefinition> PlayerRecords { get; }
         public static IReadOnlyList<Rc1WeaponDefinition> Weapons { get; }
         public static IReadOnlyList<Rc1GoldUpgradeField> GoldUpgrades { get; }
+        public static IReadOnlyList<Rc1GadgetDefinition> Gadgets { get; }
 
         static Rc1Research()
         {
@@ -39,6 +40,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 new Rc1GoldUpgradeField("rc1_gold_" + item.GetProperty("id").GetInt32(), item.GetProperty("name").GetString(),
                     item.GetProperty("id").GetInt32(), item.GetProperty("offset").GetInt32(),
                     item.GetProperty("ownership_offset").GetInt32(), false)).ToArray());
+            Gadgets = Array.AsReadOnly(document.RootElement.GetProperty("gadgets").EnumerateArray().Select(item =>
+                new Rc1GadgetDefinition(item.GetProperty("id").GetInt32(), item.GetProperty("name").GetString(),
+                    item.GetProperty("ownership_offset").GetInt32(), item.GetProperty("acquisition_flag_offset").GetInt32(),
+                    item.GetProperty("quick_select").GetBoolean())).ToArray());
         }
     }
 
@@ -78,7 +83,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 if (!fields.TryGetValue(edit.Key, out var field))
                 {
-                    if (Rc1WeaponEditing.IsKey(edit.Key) || Rc1GoldUpgradeEditing.IsKey(edit.Key)) continue;
+                    if (Rc1WeaponEditing.IsKey(edit.Key) || Rc1GoldUpgradeEditing.IsKey(edit.Key) || Rc1GadgetEditing.IsKey(edit.Key)) continue;
                     throw new InvalidDataException("Unsupported RC1 edit or unavailable owned weapon: " + edit.Key);
                 }
                 if (edit.Value != decimal.Truncate(edit.Value) || edit.Value < 0 || edit.Value > field.Maximum)
@@ -89,6 +94,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (fields.TryGetValue(edit.Key, out var field))
                     BinaryPrimitives.WriteInt32BigEndian(result.AsSpan(field.Offset, 4), (int)edit.Value);
             Rc1WeaponEditing.Apply(original, result, region, edits);
+            Rc1GadgetEditing.Apply(original, result, region, edits);
             return Rc1GoldUpgradeEditing.Apply(original, result, region, edits);
         }
     }
