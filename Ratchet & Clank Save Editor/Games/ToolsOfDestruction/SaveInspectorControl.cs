@@ -25,8 +25,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly TextBox hex = new() { Name = "HexBytes", Font = new Font("Consolas", 11F), Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, WordWrap = false, ScrollBars = ScrollBars.Both, Visible = false };
         private readonly ToolTip tip = new();
         private TodSaveInspection snapshot;
+        private Rc1SaveInspection rc1;
+        private readonly string[] todViews;
         private InspectionTable containers;
-        public bool HasSnapshot => snapshot?.Available == true;
+        public bool HasSnapshot => snapshot?.Available == true || rc1?.Available == true;
+        private bool HasTodSnapshot => snapshot?.Available == true;
+        private string SnapshotMessage => rc1?.Message ?? snapshot?.Message;
         public event Action<int> WeaponReferenceRequested;
 
         public SaveInspectorControl()
@@ -66,6 +70,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "Gameplay segments");
             views.Items.Insert(views.Items.IndexOf("World progress") + 1, "World object flags");
             views.Sorted = true;
+            todViews = views.Items.Cast<string>().ToArray();
             toolbar.Controls.Add(views);
             toolbar.Controls.Add(upgradeWeapon);
             toolbar.Controls.Add(hexOffset);
@@ -83,16 +88,16 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             Controls.Add(split);
             Controls.Add(toolbar);
             tip.SetToolTip(views, "Read-only views of the current plaintext session baseline. Resize the window for more space.");
-            tip.SetToolTip(hexOffset, "GAME.SAV file offset in hexadecimal; 256 bytes are displayed.");
+            tip.SetToolTip(hexOffset, "Save data file offset in hexadecimal; 256 bytes are displayed.");
             tip.SetToolTip(upgradeWeapon, "Show upgrades for one weapon, or all weapons. Select a row for technical details.");
             tip.SetToolTip(technical, "Show original research columns and exact values, including unknown fields. Inspection is always read-only.");
             tip.SetToolTip(grid, "Double-click a weapon to view its native binding, shipped levels, upgrades and vendor grid on the Research tab.");
             grid.CellDoubleClick += (_, args) =>
             {
-                if (views.Text == "Weapons & gadgets" && HasSnapshot && args.RowIndex >= 0 &&
+                if (views.Text == "Weapons & gadgets" && HasTodSnapshot && args.RowIndex >= 0 &&
                     grid.Rows[args.RowIndex].HeaderCell.Tag is int id) WeaponReferenceRequested?.Invoke(id);
             };
-            grid.SelectionChanged += (_, _) => details.Text = grid.CurrentRow?.Tag as string ?? snapshot?.Message ?? "Open a save folder to inspect it. Bundled references are on the Research tab.";
+            grid.SelectionChanged += (_, _) => details.Text = grid.CurrentRow?.Tag as string ?? SnapshotMessage ?? "Open a save folder to inspect it. Bundled references are on the Research tab.";
             grid.FontChanged += (_, _) => FitColumns();
             grid.SizeChanged += (_, _) =>
             {
@@ -109,13 +114,17 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             byte[] bytes = session.ReadInspectionData();
             snapshot = TodSaveInspection.Read(bytes, session.Metadata.Region);
+            rc1 = Rc1SaveInspection.Supports(session.Metadata.Region) ? Rc1SaveInspection.Read(bytes, session.Metadata.Region) : null;
+            tip.SetToolTip(grid, rc1 != null
+                ? "Select a row for stored values, offsets and mapping limitations. These RC1 views are read-only."
+                : "Double-click a weapon to view its native binding, shipped levels, upgrades and vendor grid on the Research tab.");
             updatingWeaponFilter = true;
             try
             {
                 string previous = upgradeWeapon.SelectedItem as string;
                 upgradeWeapon.Items.Clear();
                 upgradeWeapon.Items.Add("All weapons");
-                if (HasSnapshot)
+                if (HasTodSnapshot)
                     foreach (string weapon in snapshot.Table("Upgrade nodes").Rows.Select(row => row.Cells[0]).Distinct()
                         .Order(StringComparer.CurrentCultureIgnoreCase))
                         upgradeWeapon.Items.Add(weapon);
@@ -124,7 +133,19 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             finally { updatingWeaponFilter = false; }
             containers = SaveContainerInspection.Read(session.WorkingFolder, session.Profile.FileName, bytes);
             hexOffset.Value = 0;
-            hexOffset.Maximum = Math.Max(0, snapshot.Length - 1);
+            hexOffset.Maximum = Math.Max(0, (rc1?.Length ?? snapshot.Length) - 1);
+            string previousView = views.SelectedItem as string;
+            views.BeginUpdate();
+            try
+            {
+                views.Items.Clear();
+                views.Items.AddRange(rc1 != null
+                    ? new object[] { "Player summary", "Weapons & gadgets", "Quick select", "Player records", "Save layout", "Files & metadata", "Hex bytes (technical)" }
+                    : todViews.Cast<object>().ToArray());
+                views.SelectedItem = previousView != null && views.Items.Contains(previousView)
+                    ? previousView : rc1 != null ? "Player summary" : "Weapons & gadgets";
+            }
+            finally { views.EndUpdate(); }
             RefreshView();
         }
 
@@ -133,24 +154,24 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             string view = InspectionPresentation.ViewKey(views.Text);
             bool showHex = view == "Hex bytes";
             bool showUpgrades = views.Text == "Upgrade nodes";
-            upgradeWeapon.Visible = showUpgrades && HasSnapshot;
+            upgradeWeapon.Visible = showUpgrades && HasTodSnapshot;
             grid.Visible = !showHex;
             hex.Visible = showHex;
             hexOffset.Visible = showHex && HasSnapshot;
-            details.Text = snapshot?.Message ?? "Open a save folder to inspect it. Bundled references are on the Research tab.";
+            details.Text = SnapshotMessage ?? "Open a save folder to inspect it. Bundled references are on the Research tab.";
             if (showHex) { UpdateHexView(); return; }
             grid.Rows.Clear();
             grid.Columns.Clear();
-            InspectionTable table = view == "Files & headers" ? containers : snapshot?.Table(view);
+            InspectionTable table = view == "Files & headers" ? containers : rc1 != null ? rc1.Table(view, technical.Checked) : snapshot?.Table(view);
             if (table == null) return;
-            if (!technical.Checked) table = InspectionPresentation.Simplify(view, table);
+            if (!technical.Checked && (rc1 == null || view == "Files & headers")) table = InspectionPresentation.Simplify(view, table);
             foreach (string column in table.Columns) grid.Columns.Add(column, column);
             foreach (var row in table.Rows)
             {
-                if (showUpgrades && HasSnapshot && upgradeWeapon.Text != "All weapons" && row.Cells[0] != upgradeWeapon.Text) continue;
+                if (showUpgrades && HasTodSnapshot && upgradeWeapon.Text != "All weapons" && row.Cells[0] != upgradeWeapon.Text) continue;
                 int index = grid.Rows.Add(row.Cells);
                 grid.Rows[index].Tag = row.Details;
-                if (view == "Weapons & gadgets" && HasSnapshot)
+                if (view == "Weapons & gadgets" && HasTodSnapshot)
                     grid.Rows[index].HeaderCell.Tag = snapshot.Inventory[index].Id;
             }
             FitColumns();
@@ -164,7 +185,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private void UpdateHexView()
         {
             hex.Text = !HasSnapshot ? details.Text : hexOffset.TryGetValue(out decimal offset)
-                ? snapshot.HexBytes((int)offset) : hexOffset.ValidationMessage;
+                ? rc1 != null ? rc1.HexBytes((int)offset) : snapshot.HexBytes((int)offset) : hexOffset.ValidationMessage;
         }
 
         private void FitColumns()

@@ -31,6 +31,13 @@ internal static partial class Program
         Directory.CreateDirectory(root);
         try
         {
+            if (args.SequenceEqual(new[] { "--rc1" }) || args.Length == 2 && args[0] == "--rc1-save")
+            {
+                Rc1Checks(root);
+                if (args.Length == 2) Rc1ReferenceChecks(root, Path.GetFullPath(args[1]));
+                Console.WriteLine($"All {passed} RC1 checks passed.");
+                return 0;
+            }
             if (args.SequenceEqual(new[] { "--omega-promotions" }))
             {
                 OmegaPromotionChecks(root);
@@ -296,6 +303,7 @@ internal static partial class Program
                 Equal(123, session.Bolts);
             });
             CompatibilityChecks(root);
+            Rc1Checks(root);
             NativeCryptoChecks(root);
             Check("Missing, unsupported, truncated and invalid saves are rejected", () =>
             {

@@ -54,6 +54,8 @@ The .NET runner covers save formats, backups, encryption, rollback, metadata bin
 
 To include an actual Tools of Destruction save, append `-- --tod-save "path/to/save-folder"` to the .NET command. Source files are read-only; edit/reopen tests use disposable copies.
 
+Use `-- --rc1` for the RC1 tagged-record inspector checks, or `-- --rc1-save "path/to/save-folder"` to also test a plaintext RPCS3 RC1 save. The latter edits only a disposable copy and verifies byte preservation and the untouched source. A UI preview is written to ignored `artifacts/rc1-inspector.png`. See the [RC1 format notes](PS3/RatchetAndClank1/SaveFormat.md).
+
 Optional public integration samples:
 
 ```powershell

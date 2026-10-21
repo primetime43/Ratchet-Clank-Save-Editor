@@ -19,6 +19,8 @@ These are the title IDs recognized by the editor. Region recognition and softwar
 
 Disc trilogy collections use the individual game's save-directory ID, not the enclosing collection disc ID. PS2 Classics, PSP and Vita formats are outside this editor's scope.
 
+The European BCES01503 trilogy's supplied RC1 RPCS3 save resolves to `NPEA00385` and matches the existing bolt layout. RC1 also has a read-only tagged-record inspector; see [sample evidence and limitations](RatchetAndClank1/SaveFormat.md).
+
 ## Format notes
 
 - HD remasters use big-endian player blocks. The edited block's checksum is set to the PS3 disabled-checksum sentinel `FFFFFFFF`; other blocks are retained. This is not the PS2 checksum algorithm.

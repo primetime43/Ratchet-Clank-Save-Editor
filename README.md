@@ -28,6 +28,8 @@ Backups are created on opening and before saving, under `Backups` beside the exe
 
 Support is limited to listed PS3 formats and [regions](docs/PS3/Compatibility.md). It does not cover every save field or guarantee in-game acceptance for every release.
 
+PS3 Trilogy/Collection saves use the individual game's save ID. The [RC1 inspector](docs/PS3/RatchetAndClank1/README.md) shows tagged player records, reference inventory flags/ammo and raw quick-select IDs alongside existing bolt editing.
+
 ## Documentation
 
 - [Save handling and recovery](docs/Usage.md)
