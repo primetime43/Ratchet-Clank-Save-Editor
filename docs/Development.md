@@ -18,6 +18,8 @@ dotnet build "Ratchet And Clank Save Editor.sln" -c Release
 
 Output: `Ratchet & Clank Save Editor/bin/Release/net10.0-windows/`. Framework-dependent builds require the .NET 10 Desktop Runtime.
 
+The current version is **1.1.0**. Set `<Version>` in the application project to bump the default version. That one value supplies assembly/file metadata, **File → About**, the window title, and the executable name (`Ratchet & Clank Save Editor v1.1.0.exe`). A build can override it with `-p:Version=1.2.3` or a prerelease such as `-p:Version=1.2.3-rc.1`.
+
 ## Standalone Windows x64 build
 
 ```powershell
@@ -30,7 +32,7 @@ This output includes the runtime.
 
 After `.github/workflows/release.yml` is pushed to the default branch, open **Actions → Create release (manual) → Run workflow**. Choose the branch to build and enter a new tag such as `v1.2.3`. Optionally select **prerelease** or **draft**; tags with a suffix such as `v1.2.3-rc.1` are automatically prereleases.
 
-The workflow sets the application and file versions from the tag in its checkout, builds and runs the application regressions, checks bundled research/documentation, and publishes a standalone Windows x64 ZIP with the .NET 10 Desktop Runtime, license and usage instructions. It attaches the ZIP and SHA-256 checksum to a GitHub release with generated release notes. The tag points to the exact commit used by that workflow run. Existing tags are rejected; source version files are not committed back to the repository.
+The workflow passes the tag's version to the build and publish commands, builds and runs the application regressions, checks bundled research/documentation, and publishes a standalone Windows x64 ZIP with the .NET 10 Desktop Runtime, license and usage instructions. The executable name, window title and About dialog include the complete version, including any prerelease suffix. It attaches the ZIP and SHA-256 checksum to a GitHub release with generated release notes. The tag points to the exact commit used by that workflow run. Existing tags are rejected; source version files are unchanged.
 
 Only the release job receives `contents: write`, using GitHub's automatic token; no personal access token is required. Packaging runs on Actions. The existing manual regression workflow remains available separately.
 

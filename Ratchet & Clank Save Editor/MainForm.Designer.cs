@@ -69,7 +69,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.TabControl.SuspendLayout();
             this.GameSaveInformationTabPage.SuspendLayout();
@@ -386,7 +386,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.toolStripSeparator1,
             this.saveAllToolStripMenuItem,
             this.toolStripSeparator2,
-            this.creditsToolStripMenuItem});
+            this.aboutToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.fileToolStripMenuItem.Text = "&File";
@@ -421,12 +421,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
             // 
-            // creditsToolStripMenuItem
+            // aboutToolStripMenuItem
             // 
-            this.creditsToolStripMenuItem.Name = "creditsToolStripMenuItem";
-            this.creditsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.creditsToolStripMenuItem.Text = "Credits";
-            this.creditsToolStripMenuItem.Click += new System.EventHandler(this.creditsToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Text = "&About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // contextMenuStrip1
             // 
@@ -508,7 +508,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private NumericTextBox RaritaniumTextBox;
         private NumericTextBox BoltsTextBox;
         private System.Windows.Forms.Label MoneyLabel;
-        private System.Windows.Forms.ToolStripMenuItem creditsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.TextBox PlanetTextBox;
         private System.Windows.Forms.Label label1;

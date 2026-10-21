@@ -65,15 +65,7 @@ jobs:
             if ([int]$_.Exception.Response.StatusCode -ne 404) { throw }
           }
           if ($null -ne $existingTag) { throw "Tag $env:RELEASE_TAG already exists. Choose a new release tag." }
-          $releaseVersion = $releaseParts -join '.'
-          $assemblyInfoPath = 'Ratchet & Clank Save Editor/Properties/AssemblyInfo.cs'
-          $assemblyInfo = Get-Content -LiteralPath $assemblyInfoPath -Raw
-          foreach ($attribute in @('AssemblyVersion', 'AssemblyFileVersion')) {
-            $pattern = '(?m)^\[assembly: ' + $attribute + '\("[^"\r\n]+"\)\]'
-            if ([regex]::Matches($assemblyInfo, $pattern).Count -ne 1) { throw "Expected one $attribute attribute." }
-            $assemblyInfo = [regex]::Replace($assemblyInfo, $pattern, "[assembly: $attribute(`"$releaseVersion.0`")]")
-          }
-          Set-Content -LiteralPath $assemblyInfoPath -Value $assemblyInfo -NoNewline -Encoding utf8
+          "RELEASE_VERSION=$($env:RELEASE_TAG.Substring(1))" >> $env:GITHUB_ENV
           "tag=$env:RELEASE_TAG" >> $env:GITHUB_OUTPUT
           "prerelease=$($env:RELEASE_PRERELEASE -eq 'true' -or $releaseSuffix.Length -gt 0)".ToLowerInvariant() >> $env:GITHUB_OUTPUT
       - uses: actions/setup-dotnet@v6
@@ -83,28 +75,36 @@ jobs:
         with:
           python-version: '3.12'
       - name: Build
-        run: dotnet build 'Ratchet And Clank Save Editor.sln' -c Release
+        run: dotnet build 'Ratchet And Clank Save Editor.sln' -c Release "-p:Version=$env:RELEASE_VERSION"
       - name: Run application regressions
-        run: dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release --no-build
+        run: dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release --no-build "-p:Version=$env:RELEASE_VERSION"
       - name: Check bundled research and documentation
         run: python -B Tests/TestResearchOrganization.py
       - name: Publish standalone application
-        run: dotnet publish 'Ratchet & Clank Save Editor/Ratchet & Clank Save Editor.csproj' -c Release -r win-x64 --self-contained true -o artifacts/publish/win-x64
+        run: dotnet publish 'Ratchet & Clank Save Editor/Ratchet & Clank Save Editor.csproj' -c Release -r win-x64 --self-contained true -o artifacts/publish/win-x64 "-p:Version=$env:RELEASE_VERSION"
       - name: Package release and checksum
         env:
           RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: |
           $publishDirectory = 'artifacts/publish/win-x64'
-          $publishedAssembly = Join-Path $publishDirectory 'Ratchet & Clank Save Editor.dll'
+          $applicationName = "Ratchet & Clank Save Editor $env:RELEASE_TAG"
+          $publishedAssembly = Join-Path $publishDirectory "$applicationName.dll"
+          if (-not (Test-Path -LiteralPath (Join-Path $publishDirectory "$applicationName.exe"))) {
+            throw 'The versioned application executable is missing.'
+          }
           $expectedVersion = ($env:RELEASE_TAG -split '-', 2)[0].Substring(1) + '.0'
           if ([Reflection.AssemblyName]::GetAssemblyName($publishedAssembly).Version.ToString() -ne $expectedVersion) {
             throw 'Published application version does not match the release tag.'
+          }
+          $productVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo((Resolve-Path -LiteralPath $publishedAssembly)).ProductVersion
+          if ($productVersion.Split('+')[0] -ne $env:RELEASE_VERSION) {
+            throw 'Published display version does not match the release tag.'
           }
           Copy-Item -LiteralPath LICENSE -Destination (Join-Path $publishDirectory 'LICENSE')
           @(
             "Ratchet & Clank Save Editor $env:RELEASE_TAG - Windows x64",
             '',
-            'Extract the entire ZIP to a writable folder, then run Ratchet & Clank Save Editor.exe.',
+            "Extract the entire ZIP to a writable folder, then run $applicationName.exe.",
             'The .NET 10 Desktop Runtime is included.',
             'Backups are kept in Backups beside the executable.',
             'Choose View > Theme to select System, Light or Dark, then restart. Native dark mode requires Windows 11.',

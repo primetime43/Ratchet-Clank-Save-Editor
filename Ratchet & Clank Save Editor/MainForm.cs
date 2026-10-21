@@ -11,8 +11,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
 {
     public partial class MainForm : Form
     {
-        private static readonly string WindowTitle = "Ratchet & Clank Save Editor v" +
-            typeof(MainForm).Assembly.GetName().Version.ToString(3);
+        private static readonly string WindowTitle = AppInfo.WindowTitle;
         private readonly Encryption tools = new();
         private SaveSession session;
         private bool busy;
@@ -361,8 +360,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             catch (Exception error) { MessageBox.Show(this, error.Message, "Could not open file", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
-        private void creditsToolStripMenuItem_Click(object sender, EventArgs e) => MessageBox.Show(this,
-            "Ratchet & Clank Save Editor\n\nCreated by primetime43 with help from Red_EyeX32.\nPS3 save tools by flatz.",
-            "Credits", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using var about = new AboutForm { Icon = Icon };
+            about.ShowDialog(this);
+        }
     }
 }

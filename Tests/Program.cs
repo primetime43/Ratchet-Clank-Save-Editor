@@ -39,6 +39,7 @@ internal static partial class Program
             }
             if (args.SequenceEqual(new[] { "--theme-ui" }))
             {
+                AboutUiChecks();
                 NumericInputChecks(root);
                 ThemeUiChecks(root);
                 Console.WriteLine($"All {passed} theme/UI checks passed.");
@@ -356,6 +357,7 @@ internal static partial class Program
                 Same(original, Snapshot(folder));
             });
             ResearchChecks(root);
+            AboutUiChecks();
             NumericInputChecks(root);
             MappedEditingChecks(root);
             Check("Readable UI loads, resizes, switches games and renders at higher scale", () => UiChecks(root));

@@ -5,7 +5,12 @@
     <RootNamespace>primetime43_Ratchet_Clank_Save_Editor</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Version>1.1.0</Version>
+    <Product>Ratchet &amp; Clank Save Editor</Product>
+    <AssemblyTitle>$(Product)</AssemblyTitle>
+    <AssemblyName>$(Product) v$(Version)</AssemblyName>
+    <Company>primetime43</Company>
+    <Copyright>Copyright ©  2013</Copyright>
     <ApplicationIcon>Ratchet.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
