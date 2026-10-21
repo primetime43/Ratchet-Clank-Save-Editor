@@ -17,6 +17,88 @@ internal static partial class Program
 
     private static void OmegaPromotionChecks(string root)
     {
+        Check("Bulk Omega promotion matches individual promotions and retains staged upgrades and ammo", () =>
+        {
+            byte[] data = OmegaFixture(), before = data.ToArray();
+            var existing = Edits(("subtitles", 1), ("hero_xp", 45000), ("upgrade_all_15", 1), ("ammo_15", 0.25m));
+            var originalEdits = existing.ToArray();
+            var expected = existing.ToDictionary(edit => edit.Key, edit => edit.Value);
+            for (int id = 1; id <= 15; id++) expected["omega_promote_" + id] = 1;
+            var plan = TodSaveEditing.PlanBulk(data, "BCUS98127", existing, TodBulkEdit.PromoteEligibleOmegaWeapons);
+            Equal(15, plan.Keys.Count(key => key.StartsWith("omega_promote_")));
+            True(TodSaveEditing.Apply(data, "BCUS98127", expected).SequenceEqual(TodSaveEditing.Apply(data, "BCUS98127", plan)),
+                "Bulk promotion must reuse each weapon's coupled XP/level/ammo edits and explicit overrides.");
+            True(originalEdits.SequenceEqual(existing) && before.SequenceEqual(data), "Planning must not mutate the baseline or existing edit dictionary.");
+            var repeated = TodSaveEditing.PlanBulk(data, "BCUS98127", plan, TodBulkEdit.PromoteEligibleOmegaWeapons);
+            True(plan.OrderBy(edit => edit.Key).SequenceEqual(repeated.OrderBy(edit => edit.Key)), "Repeated bulk staging must be idempotent.");
+            byte[] saved = TodSaveEditing.Apply(data, "BCUS98127", plan);
+            var noOps = TodSaveEditing.PlanBulk(saved, "BCUS98127", Edits(), TodBulkEdit.PromoteEligibleOmegaWeapons);
+            Equal(0, noOps.Count);
+            True(saved.SequenceEqual(TodSaveEditing.Apply(saved, "BCUS98127", noOps)), "Already-Omega weapons must not be reset or refilled by the bulk action.");
+        });
+        Check("Bulk Omega promotion skips lower, unowned, already-Omega, malformed and staged-decrease records", () =>
+        {
+            byte[] data = OmegaFixture();
+            WeaponLevelFixture(3).AsSpan(2 * 20, 20).CopyTo(data.AsSpan(2 * 20, 20));
+            data[3 * 20 + 16] = 0;
+            OmegaFixture(6).AsSpan(4 * 20, 20).CopyTo(data.AsSpan(4 * 20, 20));
+            BinaryPrimitives.WriteSingleBigEndian(data.AsSpan(5 * 20 + 8, 4), float.NaN);
+            BinaryPrimitives.WriteUInt32BigEndian(data.AsSpan(6 * 20 + 12, 4), 0x80000000);
+            var existing = Edits(("weapon_level_7", 2), ("weapon_level_8", 4), ("subtitles", 1));
+            var plan = TodSaveEditing.PlanBulk(data, "BCUS98127", existing, TodBulkEdit.PromoteEligibleOmegaWeapons);
+            int[] eligible = { 1, 8, 9, 10, 11, 12, 13, 14, 15 };
+            var expected = existing.ToDictionary(edit => edit.Key, edit => edit.Value);
+            foreach (int id in eligible) expected["omega_promote_" + id] = 1;
+            Equal(expected.Count, plan.Count);
+            True(expected.OrderBy(edit => edit.Key).SequenceEqual(plan.OrderBy(edit => edit.Key)), "Only currently eligible, non-conflicting records should be promoted.");
+            True(TodSaveEditing.Apply(data, "BCUS98127", expected).SequenceEqual(TodSaveEditing.Apply(data, "BCUS98127", plan)),
+                "Skipped records and unrelated pending edits must retain their exact behavior.");
+        });
+        Check("Bulk Omega promotion is a no-op without eligible saved level-5 weapons or replay state", () =>
+        {
+            foreach (byte[] data in new[] { OmegaFixture(replay: 0), OmegaFixture(3), OmegaFixture(5) })
+            {
+                var plan = TodSaveEditing.PlanBulk(data, "BCUS98127", Edits(), TodBulkEdit.PromoteEligibleOmegaWeapons);
+                Equal(0, plan.Count);
+                True(data.SequenceEqual(TodSaveEditing.Apply(data, "BCUS98127", plan)), "A no-op must not grant ownership, levels or replay mode.");
+            }
+            var stagedLevel = TodSaveEditing.PlanBulk(OmegaFixture(3), "BCUS98127", Edits(("weapon_level_1", 4)), TodBulkEdit.PromoteEligibleOmegaWeapons);
+            Equal(1, stagedLevel.Count); Equal(4m, stagedLevel["weapon_level_1"]);
+        });
+        Check("Bulk Omega UI preserves typed ammo, skips staged level changes and blocks hidden invalid input", () =>
+        {
+            using var form = new Form { ClientSize = new Size(1100, 820), StartPosition = FormStartPosition.Manual,
+                Location = new Point(-20000, -20000), ShowInTaskbar = false };
+            using var editor = new TodSaveEditingControl(); form.Controls.Add(editor);
+            byte[] data = OmegaFixture(); BinaryPrimitives.WriteSingleBigEndian(data.AsSpan(28, 4), 0.5f);
+            editor.LoadSnapshot(data, "BCUS98127"); form.Show();
+            var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single();
+            var bulk = editor.Controls.Find("MappedPromoteOmega", true).Cast<Button>().Single();
+            category.SelectedItem = "Weapon ammo";
+            editor.Controls.Find("MappedEdit_ammo_1", true).Cast<NumericTextBox>().Single().Text = "0.50";
+            category.SelectedItem = "Weapon levels";
+            var level = editor.Controls.Find("MappedEdit_weapon_level_2", true).Cast<ComboBox>().Single();
+            level.SelectedItem = level.Items.Cast<TodEditOption>().Single(option => option.Value == 3);
+            category.SelectedItem = "Omega promotions"; True(bulk.Visible && bulk.Enabled, "Expose the action on the Omega page when eligible weapons exist.");
+            bulk.PerformClick();
+            var edits = editor.PendingEdits;
+            Equal(14, edits.Keys.Count(key => key.StartsWith("omega_promote_")));
+            Equal(3m, edits["weapon_level_2"]); Equal(0.5m, edits["ammo_1"]);
+            Equal(0.5f, BinaryPrimitives.ReadSingleBigEndian(TodSaveEditing.Apply(data, "BCUS98127", edits).AsSpan(28, 4)));
+            editor.LoadSnapshot(data, "BCUS98127"); category.SelectedItem = "Weapon ammo";
+            editor.Controls.Find("MappedEdit_ammo_1", true).Cast<NumericTextBox>().Single().Text = "invalid";
+            category.SelectedItem = "Omega promotions"; bulk.PerformClick();
+            Equal("Weapon ammo", category.SelectedItem);
+            True(editor.HasInvalidInputs, "Hidden invalid input must stop bulk staging.");
+            editor.Controls.Find("MappedEdit_ammo_1", true).Cast<NumericTextBox>().Single().Text = "0.5";
+            True(!editor.PendingEdits.Keys.Any(key => key.StartsWith("omega_promote_")), "A blocked bulk action must not partially stage promotions.");
+            foreach (byte[] unavailable in new[] { OmegaFixture(replay: 0), OmegaFixture(3), OmegaFixture(5) })
+            {
+                editor.LoadSnapshot(unavailable, "BCUS98127"); category.SelectedItem = "Omega promotions";
+                True(bulk.Visible && !bulk.Enabled && !editor.HasChanges, "Disable the button when no weapons qualify.");
+            }
+            editor.LoadSnapshot(null, null); True(!bulk.Visible, "Hide the action without a supported save.");
+        });
         Check("Omega promotion requires verified owned level-5 weapons and existing replay state", () =>
         {
             foreach (int level in Enumerable.Range(0, 10))

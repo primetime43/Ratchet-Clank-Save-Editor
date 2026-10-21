@@ -15,6 +15,10 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         internal static bool Promotes(int id, IReadOnlyDictionary<string, decimal> edits) =>
             edits.TryGetValue(Key(id), out decimal value) && value == 1;
 
+        internal static bool CanBulkPromote(TodEditField field, IReadOnlyDictionary<string, decimal> edits) =>
+            field.Storage == TodEditStorage.OmegaPromotion && field.Current == 0 && field.Maximum == 1 &&
+            (!edits.TryGetValue("weapon_level_" + field.Offset / 20, out decimal level) || level == 4);
+
         internal static void AddFields(byte[] data, List<TodEditField> fields)
         {
             bool replay = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0x906EC, 4)) != 0;

@@ -52,7 +52,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             layout.Controls.Add(fieldsPanel, 0, 3);
             foreach (var action in new[] { (TodBulkEdit.RefillSupportedAmmo, "Refill supported ammo", "MappedRefillAmmo"),
                 (TodBulkEdit.MaximumOwnedWeaponTier, "Max weapon levels (current tier)", "MappedMaxWeaponTier"),
-                (TodBulkEdit.UnlockOwnedUpgrades, "Unlock all owned weapon upgrades", "MappedUnlockUpgrades") })
+                (TodBulkEdit.UnlockOwnedUpgrades, "Unlock all owned weapon upgrades", "MappedUnlockUpgrades"),
+                (TodBulkEdit.PromoteEligibleOmegaWeapons, "Promote all eligible weapons to Omega", "MappedPromoteOmega") })
             {
                 var button = new Button { Name = action.Item3, Text = action.Item2, Tag = action.Item1, AutoSize = true,
                     Margin = new Padding(0, 0, 12, 4) };
@@ -164,7 +165,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 var existing = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
                 // A typed same-as-original ammo value can be an intentional
                 // override of a later level-up refill. Preserve that intent.
-                if (action is TodBulkEdit.MaximumOwnedWeaponTier or TodBulkEdit.UnlockOwnedUpgrades)
+                if (action is TodBulkEdit.MaximumOwnedWeaponTier or TodBulkEdit.UnlockOwnedUpgrades or TodBulkEdit.PromoteEligibleOmegaWeapons)
                 foreach (var field in fields.Where(item => item.Category == "Weapon ammo" && numericText.ContainsKey(item.Key)))
                 {
                     using var input = new NumericTextBox { Minimum = field.Minimum, Maximum = EffectiveMaximum(field),
@@ -454,9 +455,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     TodBulkEdit.RefillSupportedAmmo => selectedCategory is "Weapon ammo" or "Gadget ammo",
                     TodBulkEdit.MaximumOwnedWeaponTier => selectedCategory == "Weapon levels",
                     TodBulkEdit.UnlockOwnedUpgrades => selectedCategory == "Weapon upgrades",
+                    TodBulkEdit.PromoteEligibleOmegaWeapons => selectedCategory == "Omega promotions",
                     _ => false
                 };
                 button.Visible = relevant;
+                if (button.Tag is TodBulkEdit.PromoteEligibleOmegaWeapons)
+                    button.Enabled = fields.Any(field => TodOmegaPromotionEditing.CanBulkPromote(field, pending));
                 showBulkActions |= relevant;
             }
             bulkActions.Visible = showBulkActions;
@@ -474,7 +478,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Ammo upgrades" => "Add missing capacity nodes next to already-installed nodes. Adding refills to the new capacity; Weapon ammo previews it and allows an override. Raritanium is unchanged. Weapon upgrades also offers complete grids, including special nodes. Existing upgrades cannot be removed. Not yet tested in-game.",
                 "Weapon upgrades" => "Choose a complete grid for one weapon, unlock all supported owned grids, or add individual available nodes. Special nodes require all positive neighbors; complete grids include those prerequisites. Blank MOD_SPECIAL values are Boolean switches, not guessed numbers. Labels show shipped modifiers, not measured live effects. Capacity increases refill ammo; Weapon ammo allows an override. No raritanium charge, removals, level/ownership change or story edits. RYNO's center is its implicit start node, not a purchased upgrade. Not yet tested in-game.",
                 "Weapon levels" => "Levels stay within the weapon's existing 1–5 or 6–10 tier. A change sets matching XP; increases refill ammo, decreases keep ammo. Weapon ammo shows the planned refill and allows an override. No ownership, upgrades or purchases are granted. Not yet tested in-game.",
-                "Omega promotions" => "Promote verified, owned level-5 weapons to Omega level 6 in an existing replay / Challenge Mode save. Sets matching XP and refills ammo using the promoted tier and staged upgrades; Weapon ammo allows an override. Save before editing levels 6–10. Currency and replay state are preserved. In-game acceptance remains untested.",
+                "Omega promotions" => "Promote verified, owned level-5 weapons to Omega level 6 in an existing replay / Challenge Mode save. Promote all eligible weapons skips unavailable weapons and staged level decreases. Sets matching XP and refills ammo using the promoted tier and staged upgrades; Weapon ammo allows an override. Save before editing levels 6–10. Currency and replay state are preserved. In-game acceptance remains untested.",
                 "Skill awards" => "Check missing skills to award them on Save All. Earned skills cannot be removed. New awards add their native point values to the existing score; HARDCORE follows the last missing ordinary skill automatically. Labels are formatted native names. Existing score/bit mismatches and unknown bits are retained. Unlock bonuses must be saved separately. Not yet tested in-game.",
                 "Armor unlocks" => "Grant missing armor ownership on Save All. Already-owned entries cannot be removed. Grants do not equip armor, spend bolts, change vendor availability or enable challenge mode. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
                 "Skin unlocks" => "Grant missing skin ownership on Save All, including Jailbird. Already-owned entries cannot be removed. No special bolts are spent; grants do not select a skin. Choose a granted item under Appearance if wanted. Not yet tested in-game.",

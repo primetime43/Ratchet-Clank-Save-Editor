@@ -7,7 +7,7 @@ using System.Linq;
 namespace primetime43_Ratchet_Clank_Save_Editor
 {
     public enum TodEditStorage { BooleanByte, BooleanWord, Float, Choice, ByteChoice, WeaponLevel, AmmoUpgrade, WeaponUpgrade, DeveloperAction, SkillAward, OwnershipGrant, HeroXp, GoldBoltBit, UInt32Counter, WeaponGrant, EquipmentGrant, WeaponUpgradeAll, OmegaPromotion }
-    public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier, UnlockOwnedUpgrades }
+    public enum TodBulkEdit { RefillSupportedAmmo, MaximumOwnedWeaponTier, UnlockOwnedUpgrades, PromoteEligibleOmegaWeapons }
     public sealed record TodEditOption(decimal Value, string Label)
     {
         public override string ToString() => Label;
@@ -177,6 +177,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 TodBulkEdit.RefillSupportedAmmo => field.Category is "Weapon ammo" or "Gadget ammo",
                 TodBulkEdit.MaximumOwnedWeaponTier => field.Storage == TodEditStorage.WeaponLevel,
                 TodBulkEdit.UnlockOwnedUpgrades => field.Storage == TodEditStorage.WeaponUpgradeAll && field.Maximum > 0,
+                TodBulkEdit.PromoteEligibleOmegaWeapons => TodOmegaPromotionEditing.CanBulkPromote(field, plan),
                 _ => false
             });
             foreach (var field in targets)
