@@ -84,7 +84,7 @@ jobs:
         run: python -B Tests/TestResearchOrganization.py
       - name: Publish standalone application
         run: dotnet publish 'Ratchet & Clank Save Editor/Ratchet & Clank Save Editor.csproj' -c Release -r win-x64 --self-contained true -o artifacts/publish/win-x64 "-p:Version=$env:RELEASE_VERSION"
-      - name: Package release and checksum
+      - name: Package release
         env:
           RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: |
@@ -120,12 +120,10 @@ jobs:
           $archiveName = "Ratchet-Clank-Save-Editor-$env:RELEASE_TAG-win-x64.zip"
           $archivePath = Join-Path 'artifacts/release' $archiveName
           Compress-Archive -Path "$publishDirectory/*" -DestinationPath $archivePath
-          $archiveHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
-          [IO.File]::WriteAllText("$archivePath.sha256", "$archiveHash  $archiveName`n", [Text.Encoding]::ASCII)
       - uses: actions/upload-artifact@v7
         with:
           name: release-assets
-          path: artifacts/release/*
+          path: artifacts/release/*.zip
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
@@ -142,7 +140,7 @@ jobs:
         with:
           name: release-assets
           path: release-assets
-      - name: Verify and publish release assets
+      - name: Publish release assets
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -151,8 +149,7 @@ jobs:
           RELEASE_DRAFT: ${{ inputs.draft }}
         run: |
           cd release-assets
-          sha256sum --check -- *.sha256
-          release_args=("$RELEASE_TAG" *.zip *.sha256 --target "$GITHUB_SHA" --title "Ratchet & Clank Save Editor $RELEASE_TAG" --generate-notes)
+          release_args=("$RELEASE_TAG" *.zip --target "$GITHUB_SHA" --title "$RELEASE_TAG" --generate-notes)
           if [[ "$RELEASE_PRERELEASE" == "true" ]]; then
             release_args+=(--prerelease)
           fi
