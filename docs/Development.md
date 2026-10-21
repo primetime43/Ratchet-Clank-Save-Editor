@@ -26,6 +26,14 @@ dotnet publish "Ratchet & Clank Save Editor/Ratchet & Clank Save Editor.csproj" 
 
 This output includes the runtime.
 
+## Manual GitHub releases
+
+After `.github/workflows/release.yml` is pushed to the default branch, open **Actions → Create release (manual) → Run workflow**. Choose the branch to build and enter a new tag such as `v1.2.3`. Optionally select **prerelease** or **draft**; tags with a suffix such as `v1.2.3-rc.1` are automatically prereleases.
+
+The workflow sets the application and file versions from the tag in its checkout, builds and runs the application regressions, checks bundled research/documentation, and publishes a standalone Windows x64 ZIP with the .NET 10 Desktop Runtime, license and usage instructions. It attaches the ZIP and SHA-256 checksum to a GitHub release with generated release notes. The tag points to the exact commit used by that workflow run. Existing tags are rejected; source version files are not committed back to the repository.
+
+Only the release job receives `contents: write`, using GitHub's automatic token; no personal access token is required. Packaging runs on Actions. The existing manual regression workflow remains available separately.
+
 ## Tests
 
 ```powershell

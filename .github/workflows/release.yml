@@ -1,0 +1,158 @@
+name: Create release (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'New release tag, e.g. v1.2.3 or v1.2.3-rc.1'
+        required: true
+        type: string
+      prerelease:
+        description: Mark as a prerelease (automatic for tags with a suffix)
+        default: false
+        type: boolean
+      draft:
+        description: Create a draft release
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Test and package Windows x64
+    runs-on: windows-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      DOTNET_NOLOGO: 'true'
+      DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Validate tag and set application version
+        id: version
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_PRERELEASE: ${{ inputs.prerelease }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $releaseMatch = [regex]::Match($env:RELEASE_TAG, '\Av(?<major>0|[1-9][0-9]{0,4})\.(?<minor>0|[1-9][0-9]{0,4})\.(?<patch>0|[1-9][0-9]{0,4})(?:-(?<suffix>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?\z')
+          if (-not $releaseMatch.Success) { throw 'Use a tag such as v1.2.3 or v1.2.3-rc.1.' }
+          $releaseParts = @('major', 'minor', 'patch' | ForEach-Object { [int]$releaseMatch.Groups[$_].Value })
+          if ($releaseParts.Where({ $_ -ge 65535 }).Count -gt 0) { throw 'Version components must be below 65535.' }
+          $releaseSuffix = $releaseMatch.Groups['suffix'].Value
+          if ($releaseSuffix.Split('.').Where({ $_ -match '\A0[0-9]+\z' }).Count -gt 0) {
+            throw 'Numeric prerelease identifiers cannot have leading zeroes.'
+          }
+          $releaseHeaders = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = 'application/vnd.github+json' }
+          $existingTag = $null
+          try {
+            $existingTag = Invoke-RestMethod -Uri "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/git/ref/tags/$env:RELEASE_TAG" -Headers $releaseHeaders
+          } catch {
+            if ([int]$_.Exception.Response.StatusCode -ne 404) { throw }
+          }
+          if ($null -ne $existingTag) { throw "Tag $env:RELEASE_TAG already exists. Choose a new release tag." }
+          $releaseVersion = $releaseParts -join '.'
+          $assemblyInfoPath = 'Ratchet & Clank Save Editor/Properties/AssemblyInfo.cs'
+          $assemblyInfo = Get-Content -LiteralPath $assemblyInfoPath -Raw
+          foreach ($attribute in @('AssemblyVersion', 'AssemblyFileVersion')) {
+            $pattern = '(?m)^\[assembly: ' + $attribute + '\("[^"\r\n]+"\)\]'
+            if ([regex]::Matches($assemblyInfo, $pattern).Count -ne 1) { throw "Expected one $attribute attribute." }
+            $assemblyInfo = [regex]::Replace($assemblyInfo, $pattern, "[assembly: $attribute(`"$releaseVersion.0`")]")
+          }
+          Set-Content -LiteralPath $assemblyInfoPath -Value $assemblyInfo -NoNewline -Encoding utf8
+          "tag=$env:RELEASE_TAG" >> $env:GITHUB_OUTPUT
+          "prerelease=$($env:RELEASE_PRERELEASE -eq 'true' -or $releaseSuffix.Length -gt 0)".ToLowerInvariant() >> $env:GITHUB_OUTPUT
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Build
+        run: dotnet build 'Ratchet And Clank Save Editor.sln' -c Release
+      - name: Run application regressions
+        run: dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release --no-build
+      - name: Check bundled research and documentation
+        run: python -B Tests/TestResearchOrganization.py
+      - name: Publish standalone application
+        run: dotnet publish 'Ratchet & Clank Save Editor/Ratchet & Clank Save Editor.csproj' -c Release -r win-x64 --self-contained true -o artifacts/publish/win-x64
+      - name: Package release and checksum
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          $publishDirectory = 'artifacts/publish/win-x64'
+          $publishedAssembly = Join-Path $publishDirectory 'Ratchet & Clank Save Editor.dll'
+          $expectedVersion = ($env:RELEASE_TAG -split '-', 2)[0].Substring(1) + '.0'
+          if ([Reflection.AssemblyName]::GetAssemblyName($publishedAssembly).Version.ToString() -ne $expectedVersion) {
+            throw 'Published application version does not match the release tag.'
+          }
+          Copy-Item -LiteralPath LICENSE -Destination (Join-Path $publishDirectory 'LICENSE')
+          @(
+            "Ratchet & Clank Save Editor $env:RELEASE_TAG - Windows x64",
+            '',
+            'Extract the entire ZIP to a writable folder, then run Ratchet & Clank Save Editor.exe.',
+            'The .NET 10 Desktop Runtime is included.',
+            'Backups are kept in Backups beside the executable.',
+            'Choose View > Theme to select System, Light or Dark, then restart. Native dark mode requires Windows 11.',
+            '',
+            "Documentation: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/blob/$env:GITHUB_SHA/docs/Usage.md",
+            "Source commit: $env:GITHUB_SHA"
+          ) | Set-Content -LiteralPath (Join-Path $publishDirectory 'README.txt') -Encoding utf8
+          New-Item -ItemType Directory -Path artifacts/release -Force | Out-Null
+          $archiveName = "Ratchet-Clank-Save-Editor-$env:RELEASE_TAG-win-x64.zip"
+          $archivePath = Join-Path 'artifacts/release' $archiveName
+          Compress-Archive -Path "$publishDirectory/*" -DestinationPath $archivePath
+          $archiveHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          [IO.File]::WriteAllText("$archivePath.sha256", "$archiveHash  $archiveName`n", [Text.Encoding]::ASCII)
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-assets
+          path: artifacts/release/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+  release:
+    name: Create GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: release-assets
+          path: release-assets
+      - name: Verify and publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.build.outputs.tag }}
+          RELEASE_PRERELEASE: ${{ needs.build.outputs.prerelease }}
+          RELEASE_DRAFT: ${{ inputs.draft }}
+        run: |
+          cd release-assets
+          sha256sum --check -- *.sha256
+          release_args=("$RELEASE_TAG" *.zip *.sha256 --target "$GITHUB_SHA" --title "Ratchet & Clank Save Editor $RELEASE_TAG" --generate-notes)
+          if [[ "$RELEASE_PRERELEASE" == "true" ]]; then
+            release_args+=(--prerelease)
+          fi
+          if [[ "$RELEASE_DRAFT" == "true" ]]; then
+            release_args+=(--draft)
+          fi
+          gh release create "${release_args[@]}"
