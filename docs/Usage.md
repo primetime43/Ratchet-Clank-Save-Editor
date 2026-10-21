@@ -2,6 +2,8 @@
 
 [Main README](../README.md) · [Supported regions](PS3/Compatibility.md)
 
+Encrypted saves and metadata tools require the **Microsoft Visual C++ 2010 SP1 Redistributable (x86)**, even on 64-bit Windows. Install `vcredist_x86.exe` from [Microsoft](https://www.microsoft.com/en-us/download/details.aspx?id=26999). The release includes the .NET runtime; this native save-tool prerequisite is installed separately.
+
 ## Appearance
 
 Use **View → Theme** to choose **System**, **Light**, or **Dark**, then restart the editor to apply the choice. The preference is remembered for your Windows account. The default is **System**, which reads the Windows app color setting at launch; changes to that Windows setting also require restarting the editor. Native dark mode requires Windows 11 and is disabled by Windows contrast themes.

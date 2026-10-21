@@ -76,6 +76,8 @@ jobs:
           python-version: '3.12'
       - name: Build
         run: dotnet build 'Ratchet And Clank Save Editor.sln' -c Release "-p:Version=$env:RELEASE_VERSION"
+      - name: Install native save-tool runtime
+        run: ./Tools/Install-NativeDependencies.ps1
       - name: Run application regressions
         run: dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release --no-build "-p:Version=$env:RELEASE_VERSION"
       - name: Check bundled research and documentation
@@ -106,6 +108,8 @@ jobs:
             '',
             "Extract the entire ZIP to a writable folder, then run $applicationName.exe.",
             'The .NET 10 Desktop Runtime is included.',
+            'Encrypted saves and metadata tools also require Microsoft Visual C++ 2010 SP1 Redistributable (x86), even on 64-bit Windows.',
+            'Download vcredist_x86.exe from Microsoft: https://www.microsoft.com/en-us/download/details.aspx?id=26999',
             'Backups are kept in Backups beside the executable.',
             'Choose View > Theme to select System, Light or Dark, then restart. Native dark mode requires Windows 11.',
             '',

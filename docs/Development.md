@@ -4,6 +4,8 @@
 
 Requires Windows and the .NET 10 SDK.
 
+The bundled `pfdtool.exe` and `sfopatcher.exe` also require the **Visual C++ 2010 SP1 Redistributable (x86)** (`MSVCR100.dll`), including on 64-bit Windows. Install `vcredist_x86.exe` from [Microsoft](https://www.microsoft.com/en-us/download/details.aspx?id=26999) before running native encryption regressions. Both Windows workflows run `Tools/Install-NativeDependencies.ps1` to install this prerequisite when absent, using Microsoft's installer with a pinned SHA-256 checksum.
+
 ## Source organization
 
 Game-specific application code lives under `Ratchet & Clank Save Editor/Games/<GameName>/`. `Games/ToolsOfDestruction/` contains its editors, inventory previews, research helpers and inspection UI. Shared save sessions, profiles, encryption, metadata, numeric controls, theming and the main window remain at the application root.

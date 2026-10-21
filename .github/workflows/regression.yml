@@ -27,6 +27,8 @@ jobs:
           dotnet-version: '10.0.x'
       - name: Build
         run: dotnet build 'Ratchet And Clank Save Editor.sln' -c Release
+      - name: Install native save-tool runtime
+        run: ./Tools/Install-NativeDependencies.ps1
       - name: Run app regressions with disposable fixtures
         run: dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release --no-build
 
