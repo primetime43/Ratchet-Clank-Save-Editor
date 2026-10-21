@@ -4,6 +4,12 @@
 
 Requires Windows and the .NET 10 SDK.
 
+## Source organization
+
+Game-specific application code lives under `Ratchet & Clank Save Editor/Games/<GameName>/`. `Games/ToolsOfDestruction/` contains its editors, inventory previews, research helpers and inspection UI. Shared save sessions, profiles, encryption, metadata, numeric controls, theming and the main window remain at the application root.
+
+Game-specific C# regression checks mirror that layout under `Tests/Games/<GameName>/`; shared UI and validation checks remain at the test root. The native research checks, tools and documentation retain their existing game/region/version folders under `Tests/PS3/`, `Tools/PS3/` and `docs/PS3/`.
+
 ## Build
 
 ```powershell
