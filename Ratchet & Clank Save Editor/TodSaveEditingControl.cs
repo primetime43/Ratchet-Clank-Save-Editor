@@ -358,7 +358,15 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             targets.Items.Add(new TodEditOption(-2, $"Keep saved XP ({field.Current:N0})"));
             targets.Items.Add(new TodEditOption(-1, "Custom XP"));
             foreach (var target in TodHeroXpEditing.Targets)
-                targets.Items.Add(new TodEditOption(target.Index, $"Reference row {target.Index} — {target.Xp:N0} XP"));
+                targets.Items.Add(new TodEditOption(target.Index, $"Reference row {target.Index} — {target.Xp:N0} XP / {target.MaximumHealth:0.###} HP"));
+            Label ReferenceLabel(string name) => new() { Name = name, AutoSize = true, Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 4, 8) };
+            string Describe(TodHeroXpEditing.Target target) => target == null ? "Outside the populated reference range"
+                : $"Row {target.Index} · {target.MaximumHealth:0.###} HP · {target.Xp:N0} XP threshold";
+            var savedReference = ReferenceLabel("MappedHeroXpSavedReference");
+            savedReference.Text = Describe(TodHeroXpEditing.ReferenceFor(field.Current));
+            var proposedReference = ReferenceLabel("MappedHeroXpProposedReference");
+            var nextReference = ReferenceLabel("MappedHeroXpNextReference");
             var summary = new Label { Name = "MappedHeroXpSummary", AutoSize = true, Dock = DockStyle.Fill,
                 Margin = new Padding(4, 8, 4, 8) };
             bool synchronizing = false;
@@ -370,11 +378,18 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 int choice = valid && xp == field.Current ? -2 : exact?.Index ?? -1;
                 try { targets.SelectedItem = targets.Items.Cast<TodEditOption>().Single(option => option.Value == choice); }
                 finally { synchronizing = false; }
-                var met = valid ? TodHeroXpEditing.Targets.Last(target => target.Xp <= xp) : null;
+                var met = valid ? TodHeroXpEditing.ReferenceFor(xp) : null;
+                proposedReference.Text = valid ? Describe(met) : "Enter valid whole-number XP to preview";
+                var next = met != null && met.Index + 1 < TodHeroXpEditing.Targets.Count
+                    ? TodHeroXpEditing.Targets[met.Index + 1] : null;
+                nextReference.Text = !valid ? "Unavailable until XP is valid" : met == null
+                    ? "Unavailable outside the populated reference range" : next == null
+                    ? "Highest populated reference target reached"
+                    : $"Row {next.Index} · {next.Xp:N0} XP / {next.MaximumHealth:0.###} HP · {next.Xp - xp:N0} XP remaining";
                 summary.Text = valid && xp > TodHeroXpEditing.MaximumXp
                     ? "Saved XP is outside the reference range and is kept unchanged. Choose a target or Custom XP to set a value from 0–989,000."
                     : valid
-                    ? $"Saved XP: {field.Current:N0} → {xp:N0}. At/above reference row {met.Index} (zero-based); not an observed hero level."
+                    ? $"Saved XP: {field.Current:N0} → {xp:N0}. Rows are zero-based reference indices. Reference HP is not current health; actual in-game health and levels still need verification."
                     : "Enter valid whole-number XP or choose a reference target. Save All is blocked until the input is valid.";
             }
             targets.SelectedIndexChanged += (_, _) =>
@@ -397,15 +412,24 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             };
             numeric.ValueChanged += (_, _) => Refresh();
             Refresh();
-            fieldsPanel.RowCount = 3;
-            for (int row = 0; row < 3; row++) fieldsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            fieldsPanel.RowCount = 6;
+            for (int row = 0; row < 6; row++) fieldsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             fieldsPanel.Controls.Add(new Label { Text = "Hero XP", AutoSize = true, Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 12, 8) }, 0, 0);
             fieldsPanel.Controls.Add(numeric, 1, 0);
             fieldsPanel.Controls.Add(new Label { Text = "Reference target", AutoSize = true, Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 12, 8) }, 0, 1);
             fieldsPanel.Controls.Add(targets, 1, 1);
-            fieldsPanel.Controls.Add(summary, 0, 2); fieldsPanel.SetColumnSpan(summary, 2);
+            fieldsPanel.Controls.Add(new Label { Text = "Saved reference row / HP", AutoSize = true, Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 12, 8) }, 0, 2);
+            fieldsPanel.Controls.Add(savedReference, 1, 2);
+            fieldsPanel.Controls.Add(new Label { Text = "Proposed reference row / HP", AutoSize = true, Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 12, 8) }, 0, 3);
+            fieldsPanel.Controls.Add(proposedReference, 1, 3);
+            fieldsPanel.Controls.Add(new Label { Text = "Next reference target", AutoSize = true, Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 8, 12, 8) }, 0, 4);
+            fieldsPanel.Controls.Add(nextReference, 1, 4);
+            fieldsPanel.Controls.Add(summary, 0, 5); fieldsPanel.SetColumnSpan(summary, 2);
         }
 
         public bool ValidateInputs()
@@ -455,7 +479,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 "Armor unlocks" => "Grant missing armor ownership on Save All. Already-owned entries cannot be removed. Grants do not equip armor, spend bolts, change vendor availability or enable challenge mode. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
                 "Skin unlocks" => "Grant missing skin ownership on Save All, including Jailbird. Already-owned entries cannot be removed. No special bolts are spent; grants do not select a skin. Choose a granted item under Appearance if wanted. Not yet tested in-game.",
                 "Appearance" => "Select owned armor or skins, including items granted in this Save All operation. Cancelling a grant also clears a selection that depends on it. Selection alone does not grant ownership. Runtime effects are not simulated. Not yet tested in-game.",
-                "Hero XP" => "Whole-number XP from 0–989,000, or a shipped reference target. Rows 0–97 are zero-based config indices, not player-facing level labels. This is an editor bound, not a native clamp or guaranteed maximum level. Only saved XP changes; no health, level, challenge mode or runtime callbacks are written. Active config overrides and rows 98/99 are unknown. Not yet tested in-game.",
+                "Hero XP" => "Ratchet progression · Choose an XP / HP reference target or enter whole-number XP from 0–989,000. HP values are reference maximums. Saving changes XP only.",
                 "Gold bolts" => "Edit local collectible bits within each planet's shipped count; IDs are not recovered pickup locations. Spent bolts are unchanged: add before removing if needed to keep a nonnegative balance. Completing native planet counts with a new bolt awards GOLDEN and its points; HARDCORE follows if all ordinary skills are earned. Existing awards/unknown bits and slot 19 are preserved. No-op edits do not repair missing awards. Save linked awards separately from Unlock bonuses. Not yet tested in-game.",
                 _ => defaultNotice
             };

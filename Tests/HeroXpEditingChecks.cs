@@ -1,5 +1,6 @@
 using System;
 using System.Buffers.Binary;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -117,6 +118,88 @@ internal static partial class Program
             Choose(-2); True(Input().ReadOnly && !editor.HasChanges && Input().Value == uint.MaxValue, "Keep restores the raw high value without creating an edit.");
             Choose(-1); Equal(0m, editor.PendingEdits["hero_xp"]); Input().Text = "12345";
             Equal(12345m, editor.PendingEdits["hero_xp"]);
+        });
+        Check("Progression preview matches all reference HP targets and handles XP threshold boundaries", () =>
+        {
+            using var editor = new TodSaveEditingControl();
+            byte[] data = HeroXpFixture(0), original = data.ToArray(); editor.LoadSnapshot(data, "BCUS98127");
+            var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single();
+            category.SelectedItem = "Hero XP";
+            var input = editor.Controls.Find("MappedEdit_hero_xp", true).Cast<NumericTextBox>().Single();
+            var targets = editor.Controls.Find("MappedHeroXpTarget", true).Cast<ComboBox>().Single();
+            Label Label(string name) => editor.Controls.Find(name, true).Cast<Label>().Single();
+            var saved = Label("MappedHeroXpSavedReference");
+            var proposed = Label("MappedHeroXpProposedReference");
+            var next = Label("MappedHeroXpNextReference");
+            string savedReference = saved.Text;
+            var rows = TodResearch.Map.GetProperty("hero_config_assets").GetProperty("rows").EnumerateArray().ToArray();
+            for (int index = 0; index < rows.Length; index++)
+            {
+                var row = rows[index]; uint xp = row.GetProperty("xp").GetUInt32();
+                string health = row.GetProperty("hp").GetSingle().ToString("0.###") + " HP";
+                var option = targets.Items.Cast<TodEditOption>().Single(option => option.Value == index);
+                True(option.Label.Contains(health), "Each XP target must show its shipped HP reference.");
+                targets.SelectedItem = option;
+                True(proposed.Text.StartsWith($"Row {index} · {health} ·"), "Exact thresholds must select the matching reference row/HP.");
+                Equal(savedReference, saved.Text);
+                if (index == rows.Length - 1)
+                    True(next.Text.Contains("Highest populated reference"), "Do not fabricate rows beyond the catalog.");
+                else
+                {
+                    uint nextXp = rows[index + 1].GetProperty("xp").GetUInt32();
+                    True(next.Text.StartsWith($"Row {index + 1} ·") && next.Text.Contains($"{nextXp - xp:N0} XP remaining"), "Next-target preview must use the following XP threshold.");
+                }
+                byte[] expected = original.ToArray(); BinaryPrimitives.WriteUInt32BigEndian(expected.AsSpan(0x418, 4), xp);
+                True(expected.SequenceEqual(TodSaveEditing.Apply(data, "BCUS98127", editor.PendingEdits)), "Reference HP previews must never add a health or level write.");
+                if (index > 0)
+                {
+                    input.Value = xp - 1;
+                    True(proposed.Text.StartsWith($"Row {index - 1} ·"), "XP immediately below a threshold must retain the preceding reference row.");
+                    True(next.Text.Contains("1 XP remaining"), "The target should be one XP away.");
+                }
+            }
+            category.SelectedItem = "Game settings"; category.SelectedItem = "Hero XP";
+            True(Label("MappedHeroXpProposedReference").Text.StartsWith("Row 96 ·"), "Custom XP previews must survive category changes.");
+            True(original.SequenceEqual(data), "Progression previews must not mutate the original snapshot.");
+        });
+        Check("Progression preview never invents HP for invalid XP or values beyond the catalog", () =>
+        {
+            using var editor = new TodSaveEditingControl(); editor.LoadSnapshot(HeroXpFixture(uint.MaxValue), "BCUS98127");
+            var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single(); category.SelectedItem = "Hero XP";
+            var targets = editor.Controls.Find("MappedHeroXpTarget", true).Cast<ComboBox>().Single();
+            var input = editor.Controls.Find("MappedEdit_hero_xp", true).Cast<NumericTextBox>().Single();
+            Label Label(string name) => editor.Controls.Find(name, true).Cast<Label>().Single();
+            var saved = Label("MappedHeroXpSavedReference");
+            var proposed = Label("MappedHeroXpProposedReference");
+            var next = Label("MappedHeroXpNextReference");
+            True(saved.Text.Contains("Outside") && proposed.Text.Contains("Outside") && next.Text.Contains("outside"), "High XP must not be silently mapped to the last HP row.");
+            True(!editor.HasChanges && input.ReadOnly, "Unknown high XP must be preserved on load.");
+            targets.SelectedItem = targets.Items.Cast<TodEditOption>().Single(option => option.Value == 1);
+            True(saved.Text.Contains("Outside") && proposed.Text.Contains("11 HP"), "Keep saved and proposed references separate.");
+            input.Text = "1.5";
+            True(!proposed.Text.Contains("HP") && next.Text.Contains("until XP is valid") && editor.HasInvalidInputs, "Invalid XP must clear stale proposed HP and block saving.");
+            targets.SelectedItem = targets.Items.Cast<TodEditOption>().Single(option => option.Value == -2);
+            True(!editor.HasChanges && proposed.Text.Contains("Outside"), "Keep saved XP must restore the unknown reference without an edit.");
+        });
+        Check("Ratchet progression panel renders at narrow widths and larger fonts", () =>
+        {
+            using var form = new Form { ClientSize = new Size(900, 700), AutoScroll = true,
+                StartPosition = FormStartPosition.Manual, Location = new Point(-20000, -20000), ShowInTaskbar = false };
+            using var editor = new TodSaveEditingControl(); form.Controls.Add(editor);
+            editor.LoadSnapshot(HeroXpFixture(1500), "BCUS98127");
+            var category = editor.Controls.Find("MappedEditCategory", true).Cast<ComboBox>().Single(); category.SelectedItem = "Hero XP";
+            editor.Controls.Find("MappedEdit_hero_xp", true).Cast<NumericTextBox>().Single().Value = 2000;
+            form.Show();
+            foreach (float size in new[] { 11f, 16f })
+            {
+                using var font = new Font("Segoe UI", size); form.Font = font; form.PerformLayout();
+                foreach (var control in Descendants(editor).Where(control => control.Name.StartsWith("MappedHeroXp")))
+                    True(control.Parent.ClientRectangle.Contains(control.Bounds), "Progression controls must fit their layout at larger font sizes.");
+                using var preview = new Bitmap(form.Width, form.Height);
+                form.DrawToBitmap(preview, new Rectangle(Point.Empty, preview.Size));
+                Directory.CreateDirectory("artifacts");
+                preview.Save($"artifacts/ratchet-progression-{(SystemColors.Window.GetBrightness() < 0.5f ? "dark" : "light")}-{size:0}.png");
+            }
         });
     }
 }

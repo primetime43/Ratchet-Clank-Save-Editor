@@ -30,6 +30,7 @@ python -B Tests/TestResearchOrganization.py
 On Windows 11, append `-- --dark-mode` to the .NET command to run the same checks and capture UI previews using the native dark theme.
 Use `-- --theme-ui` (optionally followed by `--dark-mode`) for just numeric validation and UI rendering checks.
 Use `-- --omega-promotions` for the promotion prerequisites, byte-preservation, ammo/upgrade composition, UI staging and backup/save/reopen checks; these also run in the full suite.
+Use `-- --hero-xp-edits` for XP validation, reference HP and threshold previews, and progression-panel rendering; these also run in the full suite.
 
 The .NET runner covers save formats, backups, encryption, rollback, metadata bindings and the UI. The Python check validates documentation links and embedded resource paths.
 
