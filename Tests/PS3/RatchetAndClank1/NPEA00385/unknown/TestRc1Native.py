@@ -45,6 +45,22 @@ class NativeChecks(unittest.TestCase):
                 native.inspect(target)
         self.assertEqual(original, ELF.read_bytes())
 
+    def test_grant_allowlist_and_initial_ammo(self):
+        report = native.inspect(ELF)
+        weapons = {item['id']: item for item in report['weapons']}
+        self.assertEqual({10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 24, 25},
+                         {key for key, value in weapons.items() if value['grant_supported']})
+        self.assertEqual({10: 10, 11: 10, 13: 10, 14: 0, 15: 100, 16: 120,
+                          17: 25, 18: 0, 19: 120, 20: 3, 24: 3, 25: 10},
+                         {key: value['initial_ammo'] for key, value in weapons.items() if value['grant_supported']})
+        for weapon in weapons.values():
+            self.assertEqual(0, weapon['item_type'])
+            self.assertEqual(0x1B8 + weapon['id'], weapon['ownership_offset'])
+            self.assertEqual(0x1E8 + weapon['id'], weapon['acquisition_flag_offset'])
+        self.assertEqual(0x218, report['grant_layout']['acquisition_offset'])
+        self.assertEqual(0x22C, report['grant_layout']['quick_offset'])
+        self.assertEqual(8, report['grant_layout']['quick_slots'])
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)

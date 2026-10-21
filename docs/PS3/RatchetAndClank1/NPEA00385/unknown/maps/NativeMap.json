@@ -47,6 +47,31 @@
       "address": "0xeb0f4",
       "size": 36,
       "sha256": "A8B5398F4CFA5CDC350BB0FB2048DCD8A0F61714AB4F982B0B924DD0960FDCC1"
+    },
+    "grant_item": {
+      "address": "0x112e18",
+      "size": 912,
+      "sha256": "77E44E39B9BE1200193822E81454626F2A7A61D5D4E825F4CE3F4EEA3B99EF22"
+    },
+    "vendor_purchase": {
+      "address": "0x16cc50",
+      "size": 3640,
+      "sha256": "E3B544F3D6134838A000BC21E38A1016023C5B0403EAA9F75ABFB3001996051F"
+    },
+    "assign_quick_select": {
+      "address": "0x143980",
+      "size": 688,
+      "sha256": "F5102C83624F7FEB021752811C446C412CBF0DDC54047DBFB1D31B904C227B08"
+    },
+    "load_quick_select": {
+      "address": "0x143c30",
+      "size": 140,
+      "sha256": "B6F5C3069DB87AA29FFCFF4E6956E50E8C1FA73BD5A01FAA5FCE18A52E420432"
+    },
+    "store_quick_select": {
+      "address": "0x143cbc",
+      "size": 64,
+      "sha256": "E7FE7EDA407550382F9A5AC6966DF64A47093D33E40EB89ED8C9DAD91A010D6D"
     }
   },
   "player_records": [
@@ -477,6 +502,265 @@
       "capacity_address": "0x737f96"
     }
   ],
+  "weapons": [
+    {
+      "id": 9,
+      "name": "Suck Cannon",
+      "maximum": 0,
+      "initial_ammo": 0,
+      "grant_supported": false,
+      "acquisition_list": false,
+      "ownership_offset": 449,
+      "acquisition_flag_offset": 497,
+      "ammo_offset": 320,
+      "item_type": 0,
+      "notification_ids": [
+        4007,
+        21471
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Bomb Glove",
+      "maximum": 40,
+      "initial_ammo": 10,
+      "grant_supported": true,
+      "acquisition_list": false,
+      "ownership_offset": 450,
+      "acquisition_flag_offset": 498,
+      "ammo_offset": 324,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Devastator",
+      "maximum": 20,
+      "initial_ammo": 10,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 451,
+      "acquisition_flag_offset": 499,
+      "ammo_offset": 328,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Visibomb Gun",
+      "maximum": 20,
+      "initial_ammo": 10,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 453,
+      "acquisition_flag_offset": 501,
+      "ammo_offset": 336,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Taunter",
+      "maximum": 0,
+      "initial_ammo": 0,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 454,
+      "acquisition_flag_offset": 502,
+      "ammo_offset": 340,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Blaster",
+      "maximum": 200,
+      "initial_ammo": 100,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 455,
+      "acquisition_flag_offset": 503,
+      "ammo_offset": 344,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Pyrocitor",
+      "maximum": 240,
+      "initial_ammo": 120,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 456,
+      "acquisition_flag_offset": 504,
+      "ammo_offset": 348,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Mine Glove",
+      "maximum": 50,
+      "initial_ammo": 25,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 457,
+      "acquisition_flag_offset": 505,
+      "ammo_offset": 352,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Walloper",
+      "maximum": 0,
+      "initial_ammo": 0,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 458,
+      "acquisition_flag_offset": 506,
+      "ammo_offset": 356,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Tesla Claw",
+      "maximum": 240,
+      "initial_ammo": 120,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 459,
+      "acquisition_flag_offset": 507,
+      "ammo_offset": 360,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Glove of Doom",
+      "maximum": 10,
+      "initial_ammo": 3,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 460,
+      "acquisition_flag_offset": 508,
+      "ammo_offset": 364,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Morph-o-Ray",
+      "maximum": 0,
+      "initial_ammo": 0,
+      "grant_supported": false,
+      "acquisition_list": false,
+      "ownership_offset": 461,
+      "acquisition_flag_offset": 509,
+      "ammo_offset": 368,
+      "item_type": 0,
+      "notification_ids": [
+        14002,
+        14002
+      ]
+    },
+    {
+      "id": 23,
+      "name": "R.Y.N.O.",
+      "maximum": 50,
+      "initial_ammo": 25,
+      "grant_supported": false,
+      "acquisition_list": false,
+      "ownership_offset": 463,
+      "acquisition_flag_offset": 511,
+      "ammo_offset": 376,
+      "item_type": 0,
+      "notification_ids": [
+        5014,
+        21474
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Drone Device",
+      "maximum": 10,
+      "initial_ammo": 3,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 464,
+      "acquisition_flag_offset": 512,
+      "ammo_offset": 380,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Decoy Glove",
+      "maximum": 20,
+      "initial_ammo": 10,
+      "grant_supported": true,
+      "acquisition_list": true,
+      "ownership_offset": 465,
+      "acquisition_flag_offset": 513,
+      "ammo_offset": 384,
+      "item_type": 0,
+      "notification_ids": [
+        -1,
+        -1
+      ]
+    }
+  ],
+  "grant_layout": {
+    "flag_record": 11,
+    "acquisition_record": 12,
+    "acquisition_offset": 536,
+    "acquisition_bytes": 12,
+    "acquisition_empty": 255,
+    "acquisition_flag": 64,
+    "quick_record": 13,
+    "quick_offset": 556,
+    "quick_slots": 8,
+    "quick_empty": 0,
+    "notification_bypass": {
+      "compare_address": "0x112e9c",
+      "branch_address": "0x112ea0",
+      "target_address": "0x112f30"
+    }
+  },
   "notes": [
     "Names follow the existing external RC1 reference; native evidence binds IDs, storage and capacities.",
     "Capacities are shipped reference limits, not a live runtime query.",

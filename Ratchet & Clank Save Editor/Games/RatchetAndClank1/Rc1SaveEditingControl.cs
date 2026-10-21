@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.IO;
 using System.Windows.Forms;
 
 namespace primetime43_Ratchet_Clank_Save_Editor
@@ -11,6 +12,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly TableLayoutPanel layout = new() { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 3 };
         private readonly Dictionary<string, NumericTextBox> inputs = new(StringComparer.Ordinal);
         private readonly Dictionary<string, decimal> pending = new(StringComparer.Ordinal);
+        private readonly Dictionary<Control, string> pages = new();
+        private ComboBox category;
+        private Label notice;
+        private byte[] snapshot;
+        private string snapshotRegion;
         private bool loading;
         public bool HasInvalidInputs => inputs.Values.Any(input => !input.IsValid);
         public bool HasChanges => pending.Count > 0 || HasInvalidInputs;
@@ -40,19 +46,24 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 foreach (Control control in layout.Controls.Cast<Control>().ToArray()) control.Dispose();
                 layout.Controls.Clear(); layout.RowStyles.Clear(); layout.RowCount = 0;
-                inputs.Clear(); pending.Clear();
+                inputs.Clear(); pending.Clear(); pages.Clear();
+                snapshot = data == null ? null : (byte[])data.Clone(); snapshotRegion = region;
                 bool isRc1 = Rc1SaveInspection.Supports(region);
                 Visible = isRc1;
                 if (!isRc1) return;
                 var fields = Rc1SaveEditing.Fields(data, region);
                 bool supported = Rc1SaveEditing.Supports(data, region);
-                var notice = new Label { Name = "Rc1EditNotice", AutoSize = true, Dock = DockStyle.Fill,
+                notice = new Label { Name = "Rc1EditNotice", AutoSize = true, Dock = DockStyle.Fill,
                     Margin = new Padding(4, 8, 4, 12), Text = !supported
-                        ? "Ammo edits require the verified European RC1 (NPEA00385) layout."
-                        : fields.Count == 0 ? "No owned weapons with supported ammo values are available in this save."
-                        : "RC1 weapon ammo · Edit ammo for owned weapons up to the reference capacity. Apply changes with Save All." };
+                        ? "Mapped edits require the verified European RC1 (NPEA00385) layout."
+                        : "RC1 mapped edits · Save All applies staged changes. Save weapon grants before editing their ammo or assigning a specific quick-select slot." };
                 AddRow(notice); layout.SetColumnSpan(notice, 3);
-                if (fields.Count == 0) return;
+                if (!supported) return;
+                category = new ComboBox { Name = "Rc1EditCategory", DropDownStyle = ComboBoxStyle.DropDownList,
+                    Dock = DockStyle.Fill, Margin = new Padding(4, 4, 4, 12), Sorted = true };
+                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select" });
+                category.SelectedIndexChanged += (_, _) => ShowCategory();
+                AddRow(category); layout.SetColumnSpan(category, 3);
                 var refill = new Button { Name = "Rc1RefillAmmo", Text = "Refill owned weapon ammo", AutoSize = true,
                     Margin = new Padding(4, 4, 4, 12) };
                 refill.Click += (_, _) =>
@@ -60,7 +71,13 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                     if (!ValidateInputs()) return;
                     foreach (var field in fields) inputs[field.Key].Value = field.Maximum;
                 };
-                AddRow(refill); layout.SetColumnSpan(refill, 3);
+                AddPageRow("Weapon ammo", refill); layout.SetColumnSpan(refill, 3);
+                refill.Enabled = fields.Count > 0;
+                if (fields.Count == 0)
+                {
+                    var empty = new Label { AutoSize = true, Text = "No owned weapons with supported ammo values are available." };
+                    AddPageRow("Weapon ammo", empty); layout.SetColumnSpan(empty, 3);
+                }
                 foreach (var field in fields)
                 {
                     var input = new NumericTextBox { Name = "Rc1Edit_" + field.Key, FieldName = field.Name + " ammo",
@@ -81,8 +98,46 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         UseMnemonic = false, TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 6, 4, 6) };
                     var limit = new Label { Text = "Max " + field.Maximum, AutoSize = true, Dock = DockStyle.Fill,
                         TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(8, 6, 4, 6) };
-                    AddRow(label, input, limit);
+                    AddPageRow("Weapon ammo", label, input, limit);
                 }
+                foreach (var field in Rc1WeaponEditing.Grants(data, region))
+                {
+                    var check = new CheckBox { Name = "Rc1Edit_" + field.Key, Text = field.Weapon.Name,
+                        Checked = field.Owned, Enabled = !field.Owned, AutoSize = true, Margin = new Padding(4, 6, 4, 6) };
+                    check.CheckedChanged += (_, _) =>
+                    {
+                        if (loading) return;
+                        decimal value = check.Checked ? 1 : 0;
+                        if (TryStage(field.Key, value, field.Owned ? 1 : 0)) return;
+                        loading = true; check.Checked = !check.Checked; loading = false;
+                    };
+                    AddPageRow("Weapon unlocks", check); layout.SetColumnSpan(check, 3);
+                }
+                var grantHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
+                    Text = "Grants add ownership, starting ammo and related inventory entries without spending bolts. Suck Cannon, Morph-o-Ray and R.Y.N.O. grants are not available yet.", Margin = new Padding(4, 10, 4, 8) };
+                AddPageRow("Weapon unlocks", grantHint); layout.SetColumnSpan(grantHint, 3);
+                int slotIndex = 0;
+                foreach (var field in Rc1WeaponEditing.QuickSelect(data, region))
+                {
+                    var label = new Label { Text = "Stored slot " + (++slotIndex), AutoSize = true,
+                        Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 6, 4, 6) };
+                    var choices = new ComboBox { Name = "Rc1Edit_" + field.Key, DropDownStyle = ComboBoxStyle.DropDownList,
+                        Dock = DockStyle.Fill, Margin = new Padding(4, 6, 4, 6) };
+                    choices.Items.AddRange(field.Options.Cast<object>().ToArray());
+                    choices.SelectedItem = field.Options.Single(option => option.Value == field.Current);
+                    uint selected = field.Current;
+                    choices.SelectedIndexChanged += (_, _) =>
+                    {
+                        if (loading || choices.SelectedItem is not Rc1QuickOption option) return;
+                        if (TryStage(field.Key, option.Value, field.Current)) { selected = option.Value; return; }
+                        loading = true; choices.SelectedItem = field.Options.Single(item => item.Value == selected); loading = false;
+                    };
+                    AddPageRow("Quick select", label, choices); layout.SetColumnSpan(choices, 2);
+                }
+                var slotHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
+                    Text = "Choose an owned combat weapon or Empty. Clear an item's old slot before moving it. Stored slot numbers are not wheel positions.", Margin = new Padding(4, 10, 4, 8) };
+                AddPageRow("Quick select", slotHint); layout.SetColumnSpan(slotHint, 3);
+                category.SelectedItem = "Weapon ammo";
             }
             finally { loading = false; ResumeLayout(true); }
         }
@@ -94,10 +149,37 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             for (int column = 0; column < controls.Length; column++) layout.Controls.Add(controls[column], column, row);
         }
 
+        private void AddPageRow(string page, params Control[] controls)
+        {
+            AddRow(controls);
+            foreach (var control in controls) pages.Add(control, page);
+        }
+
+        private void ShowCategory()
+        {
+            layout.SuspendLayout();
+            foreach (var pair in pages) pair.Key.Visible = pair.Value == category.Text;
+            layout.ResumeLayout(true);
+        }
+
+        private bool TryStage(string key, decimal value, decimal baseline)
+        {
+            if (!ValidateInputs()) return false;
+            var candidate = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
+            if (value == baseline) candidate.Remove(key); else candidate[key] = value;
+            try { Rc1SaveEditing.Apply(snapshot, snapshotRegion, candidate); }
+            catch (InvalidDataException error) { notice.Text = error.Message; return false; }
+            pending.Clear(); foreach (var edit in candidate) pending.Add(edit.Key, edit.Value);
+            notice.Text = "Changes staged · Save All applies them with an original backup.";
+            EditsChanged?.Invoke(this, EventArgs.Empty);
+            return true;
+        }
+
         public bool ValidateInputs()
         {
             var invalid = inputs.Values.FirstOrDefault(input => !input.IsValid);
             if (invalid == null) return true;
+            if (category != null) category.SelectedItem = "Weapon ammo";
             invalid.Focus(); invalid.SelectAll();
             return false;
         }

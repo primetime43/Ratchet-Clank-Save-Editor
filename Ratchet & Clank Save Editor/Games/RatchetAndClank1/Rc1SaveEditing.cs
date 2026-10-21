@@ -14,6 +14,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
     {
         public static IReadOnlyList<Rc1AmmoField> Ammo { get; }
         public static IReadOnlyList<Rc1RecordDefinition> PlayerRecords { get; }
+        public static IReadOnlyList<Rc1WeaponDefinition> Weapons { get; }
 
         static Rc1Research()
         {
@@ -27,6 +28,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             PlayerRecords = Array.AsReadOnly(document.RootElement.GetProperty("player_records").EnumerateArray().Select(item =>
                 new Rc1RecordDefinition(item.GetProperty("id").GetUInt32(), item.GetProperty("length").GetInt32(),
                     item.GetProperty("offset").GetInt32())).ToArray());
+            Weapons = Array.AsReadOnly(document.RootElement.GetProperty("weapons").EnumerateArray().Select(item =>
+                new Rc1WeaponDefinition(item.GetProperty("id").GetInt32(), item.GetProperty("name").GetString(),
+                    item.GetProperty("maximum").GetInt32(), item.GetProperty("initial_ammo").GetInt32(),
+                    item.GetProperty("grant_supported").GetBoolean(), item.GetProperty("acquisition_list").GetBoolean(),
+                    item.GetProperty("ownership_offset").GetInt32(), item.GetProperty("acquisition_flag_offset").GetInt32(),
+                    item.GetProperty("ammo_offset").GetInt32())).ToArray());
         }
     }
 
@@ -58,20 +65,25 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             ArgumentNullException.ThrowIfNull(original);
             ArgumentNullException.ThrowIfNull(edits);
             if (edits.Count == 0) return (byte[])original.Clone();
-            if (!Supports(original, region)) throw new InvalidDataException("RC1 ammo editing requires the verified European NPEA00385 save layout.");
+            if (!Supports(original, region)) throw new InvalidDataException("RC1 mapped editing requires the verified European NPEA00385 save layout.");
             var fields = Fields(original, region).ToDictionary(field => field.Key, StringComparer.Ordinal);
-            // Validate the complete batch before allocating or applying any edits.
+            // Only detached candidates receive writes; a rejected batch never
+            // modifies the original array or committed session baseline.
             foreach (var edit in edits)
             {
                 if (!fields.TryGetValue(edit.Key, out var field))
+                {
+                    if (Rc1WeaponEditing.IsKey(edit.Key)) continue;
                     throw new InvalidDataException("Unsupported RC1 edit or unavailable owned weapon: " + edit.Key);
+                }
                 if (edit.Value != decimal.Truncate(edit.Value) || edit.Value < 0 || edit.Value > field.Maximum)
                     throw new InvalidDataException($"{field.Name} ammo must be a whole number between 0 and {field.Maximum}.");
             }
             byte[] result = (byte[])original.Clone();
             foreach (var edit in edits)
-                BinaryPrimitives.WriteInt32BigEndian(result.AsSpan(fields[edit.Key].Offset, 4), (int)edit.Value);
-            return result;
+                if (fields.TryGetValue(edit.Key, out var field))
+                    BinaryPrimitives.WriteInt32BigEndian(result.AsSpan(field.Offset, 4), (int)edit.Value);
+            return Rc1WeaponEditing.Apply(original, result, region, edits);
         }
     }
 }

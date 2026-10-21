@@ -17,11 +17,13 @@ public class TraceRc1Ammo extends GhidraScript {
         if (getScriptArgs().length != 1) throw new IllegalArgumentException("Supply a report output path.");
         currentProgram.getProgramContext().setValue(currentProgram.getRegister("r2"),
             toAddr(0x10230), toAddr(0x64ed7f), BigInteger.valueOf(0x722328));
-        long[] addresses = {0xe6cd8, 0xe6fe4, 0xe784c, 0xe7984, 0x8e0f4, 0xaa258, 0xaa2e8, 0xeb0f4};
+        long[] addresses = {0xe6cd8, 0xe6fe4, 0xe784c, 0xe7984, 0x8e0f4, 0xaa258, 0xaa2e8, 0xeb0f4,
+            0x112e18, 0x16cc50, 0x143980, 0x143c30, 0x143cbc};
         DecompInterface decompiler = new DecompInterface();
         decompiler.openProgram(currentProgram);
         try (PrintWriter output = new PrintWriter(getScriptArgs()[0])) {
-            output.println("RC1 native save/ammo trace. Generated pseudocode must be checked against instruction bytes.");
+            output.println("RC1 native save/ammo/grant/quick-select trace. Generated pseudocode must be checked against instruction bytes.");
+            output.println("The grant helper's Cell-vector notification path has unsupported instructions. Only grants with both notification IDs -1 bypass that path; see the pinned native map.");
             for (long value : addresses) {
                 monitor.checkCancelled();
                 Address entry = toAddr(value);

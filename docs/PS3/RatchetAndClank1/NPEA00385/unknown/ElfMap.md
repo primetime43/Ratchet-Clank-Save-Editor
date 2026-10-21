@@ -1,4 +1,4 @@
-# European trilogy RC1 native save and ammo map
+# European trilogy RC1 native save and inventory map
 
 [Reference identity](README.md) · [Save format](../../SaveFormat.md) · [Extracted map](maps/NativeMap.json)
 
@@ -30,8 +30,9 @@ The world descriptor table starts at `0x7269A0`. The writer's first prefix word 
 | --- | --- | --- | --- |
 | 9, 148 bytes | `0x96C0AC` | `0x11C` | 37 ammo words, indexed by item ID |
 | 10, 37 bytes | `0x96C140` | `0x1B8` | Item ownership/unlock bytes |
-| 11, 37 bytes | `0x96C165` | `0x1E8` | Independent per-item state; not changed by this feature |
-| 13, 32 bytes | `0x96C1DC` | `0x22C` | Eight stored quick-select IDs; unchanged by ammo edits |
+| 11, 37 bytes | `0x96C165` | `0x1E8` | Per-item flag set by ordinary grants; not a gold-upgrade flag |
+| 12, 12 bytes | `0x71FB2C` | `0x218` | Acquisition list: six-bit item IDs with high flags; `FF` is empty |
+| 13, 32 bytes | `0x96C1DC` | `0x22C` | Eight stored quick-select IDs; zero is empty |
 
 The writer copies the descriptor payloads without normalizing neighboring records or alignment bytes. The reader accepts differing lengths with a bounded copy and a status result; the editor deliberately requires the exact observed table shape for new mapped edits.
 
@@ -66,9 +67,57 @@ Names retain the existing [external RC1 reference](https://github.com/RatchetMod
 
 The editor exposes these 11 potential ammo fields only for the matching `NPEA00385` layout, and only when the individual ownership byte is exactly `1` and existing ammo lies in `0..reference capacity`. Native ownership accepts other nonzero bytes, but unusual saved flags remain read-only in this implementation. US and Japanese IDs retain currency editing and inspection without these new ammo writes.
 
-Each requested ammo change writes one BE32 at `0x11C + item_id * 4`. The refill action stages the same allowed edits for eligible owned weapons. It does not grant weapons, change quick select, alter record 11 or synthesize ammo-consumption statistics. Unknown keys, fractional/negative/excessive values and malformed layouts reject the complete batch before writes.
+Each requested ammo change writes one BE32 at `0x11C + item_id * 4`. The refill action stages the same allowed ammo edits for eligible owned weapons. Ammo-only changes do not grant weapons, change quick select, alter record 11 or synthesize ammo-consumption statistics. Unknown keys, fractional/negative/excessive values and malformed layouts reject the complete batch before source writes.
 
 Save All uses the existing backup, isolated-candidate and encryption verification workflow, then refreshes the session baseline. Subsequent currency-only saves retain earlier ammo edits. As with existing bolt writes, the player checksum word is set to `FFFFFFFF`. The supplied plaintext sample passed exact software byte comparisons and reopen checks on a disposable copy; gameplay reload acceptance remains unverified.
+
+## Weapon grants
+
+The native grant helper is `0x112E18`, called by the successful weapon purchase branch in `0x16CC50`. The surrounding vendor code charges bolts; the editor offers an explicit grant action and does not simulate that purchase. The persistent writes recovered from the helper are:
+
+1. Set `record11[item_id]` and, for a newly owned item, `record10[item_id]` to `1`.
+2. For ammo-using items, raise current ammo to at least the BE16 starting amount at `0x737D30 + item_id * 24 + 18`. Existing larger, in-range ammo is retained.
+3. If the ID occurs in the 20-word list at `0x737BF0`, add it to the acquisition list as `item_id | 0x40`. The editor bounds this to the physical 12-byte record and refuses overflow or conflicting retained entries.
+4. For combat items (native type zero at `0x721008 + item_id * 76`), insert the ID in the first zero quick-select slot when one exists. The editor preserves occupied slots and avoids adding a second copy of an already retained ID.
+
+Runtime equipment selectors, notification buffers and trophy callbacks are outside these saved writes and are not simulated.
+
+### Notification-path boundary
+
+The helper selects a message from a two-bank table at `0x729380`, depending on saved ownership. It compares that message ID with `-1` at `0x112E9C`; opcode `41820090` at `0x112EA0` branches to `0x112F30` when no notification is required. This bypasses the Cell-vector notification block. Ghidra's selected language does not decode the vector loads at `0x112EC8` / `0x112ECC`, so that block is not treated as fully reversed.
+
+The new grant allowlist contains only combat items whose **both** message entries are `-1`. Suck Cannon (ID9), Morph-o-Ray (ID21) and R.Y.N.O. (ID23) do not satisfy this check and remain unavailable for granting. Their existing owned state and applicable ammo edits remain supported. Gadgets and story equipment are excluded from the combat-grant allowlist.
+
+| Grant ID | Weapon | Starting ammo |
+| --- | --- | --- |
+| 10 | Bomb Glove | 10 |
+| 11 | Devastator | 10 |
+| 13 | Visibomb Gun | 10 |
+| 14 | Taunter | 0 (no ammo field initialized) |
+| 15 | Blaster | 100 |
+| 16 | Pyrocitor | 120 |
+| 17 | Mine Glove | 25 |
+| 18 | Walloper | 0 (no ammo field initialized) |
+| 19 | Tesla Claw | 120 |
+| 20 | Glove of Doom | 3 |
+| 24 | Drone Device | 3 |
+| 25 | Decoy Glove | 10 |
+
+New grants require ownership and record-11 flags to be zero, and a nonnegative in-range ammo word. Acquisition-list items also require a free byte and no conflicting retained entry for the same ID. Existing owned weapons are shown as owned; repeated grants are byte-preserving no-ops and cannot remove ownership or refill ammo.
+
+Combined grants run in ascending native ID order, so dictionary insertion order cannot change their placement. Explicit quick-select edits run first. New ammo/slot choices become available after saving the grant and loading the refreshed baseline. The editor does not edit gold-upgrade state, spend bolts, synthesize world pickups or award trophies.
+
+## Quick-select editing
+
+`0x143C30` copies the eight saved words to the menu's working bank. `0x143CBC` copies all eight working words back unchanged. `0x143980` handles an owned item's assignment, clearing its prior occurrence before putting it in the chosen slot; it also maintains separate UI-use statistics that the editor leaves untouched.
+
+The editor offers the 15 recognized combat IDs with canonical saved ownership byte `1`, plus Empty (`0`). Unknown current IDs and noncombat assignments can be retained unchanged or cleared, but are not offered as new assignments in other slots. Stored indices are not claimed to be wheel positions.
+
+Complete batches support moves and swaps. A new nonzero assignment is rejected if it would duplicate an ID in the final eight-word bank; existing duplicates remain untouched until explicitly changed. UI users clear the old slot before assigning a weapon elsewhere. Grants use only remaining empty slots and never overwrite a full bank.
+
+## Validation added for grants and slots
+
+The RC1 runner verifies each grant's exact changed bytes, all 12 supported IDs, starting ammo, acquisition-list bounds, canonical flag guards, no-op preservation, deterministic batches, atomic slot moves/swaps, preserved unknown IDs, hidden invalid input, staging/cancellation, game reloads and failed-encryption preservation. The supplied save was tested on a disposable copy with a Blaster grant plus a Bomb Glove slot move; independent expected bytes matched exactly, and the source folder remained unchanged. This remains software validation rather than gameplay acceptance.
 
 ## Reproduction
 

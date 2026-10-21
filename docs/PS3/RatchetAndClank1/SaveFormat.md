@@ -35,7 +35,8 @@ The inspector rejects duplicate IDs, truncated headers, out-of-bounds lengths, m
 | 1 | `0x24` | 4 | Current bolts; existing editable field |
 | 9 | `0x11C` | 148 | Contains reference ammo words |
 | 10 | `0x1B8` | 37 | Contains reference weapon/gadget unlock bytes |
-| 11 | `0x1E8` | 37 | Uninterpreted; not treated as the same unlock flags |
+| 11 | `0x1E8` | 37 | Per-item flag set by ordinary grants, independently of ownership |
+| 12 | `0x218` | 12 | Acquisition entries: flagged item IDs; `FF` marks an empty byte |
 | 13 | `0x22C` | 32 | Eight raw quick-select IDs, BE32 |
 
 The ammo and unlock names/offsets come from [Slim's Editor RC1 definitions](https://github.com/RatchetModding/slimseditor/blob/master/slimseditor/game/rac.json). Its [PS3 backend](https://github.com/RatchetModding/slimseditor/blob/master/slimseditor/backends.py) selects the same RC1 IDs and big-endian decoding. These mappings are external reference evidence, not independently traced executable functions. Values are shown as stored; an unlock flag does not prove current usability, and quick-select IDs are not translated to guessed names. Unmapped ammo remains explicitly unmapped.
@@ -48,6 +49,8 @@ The supplied `BCES01503` trilogy's decrypted `RC1.ppu.elf` independently confirm
 
 The matching European `NPEA00385` format supports ammo editing/refill for 11 potential weapons. A weapon must already have ownership byte `1` and an existing ammo word inside its recovered reference limit. Writes change only the requested BE32 ammo words; Save All also applies the existing player checksum sentinel. Record 11, quick select, world data, statistics and alignment bytes are retained. Other RC1 regions remain inspection/currency-only for now.
 
+Separate **Weapon unlocks** and **Quick select** categories now support 12 combat grants and edits to the eight stored quick-select words. A new grant sets ownership and the independent record-11 flag, raises ammo to its starting amount, updates the bounded acquisition list when required, and uses a free quick-select slot. Explicit slot edits take precedence. Three combat grants with a partly decoded notification path remain excluded. See the [grant evidence and exact boundaries](NPEA00385/unknown/ElfMap.md#weapon-grants).
+
 ## Reproducible validation
 
 ```powershell
@@ -55,6 +58,6 @@ dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release -- --rc1
 dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release -- --rc1-save "path/to/NPEA00385_RC1_SAVEDATA_A"
 ```
 
-The first command checks framing, alignment preservation, snapshot isolation, malformed data, optional mapping guards, ammo limits/ownership, invalid-input UI behavior, game switching, backup handling and later currency saves retaining committed ammo. The second also copies a supplied plaintext RPCS3 save into disposable directories, verifies automatic backups, edits bolts and refills eligible ammo, reopens the results, compares every byte against the explicitly allowed changes and verifies the source remains unchanged. No user save files are committed to the repository.
+The first command checks framing, alignment preservation, snapshot isolation, malformed data, ammo limits/ownership, grant allowlists/coupled writes, acquisition-list bounds, slot moves/swaps, hidden invalid input, game switching, backups and later currency saves retaining committed mapped edits. The second also copies a supplied plaintext RPCS3 save into disposable directories, verifies backups, edits bolts, refills eligible ammo, grants a Blaster and moves slots, reopens the results, compares every byte against independently expected changes and verifies the source remains unchanged. No user save files are committed to the repository.
 
 Before enabling more edits, validate each field with controlled before/after gameplay saves or the matching RC1 executable. In-game reload testing is still needed for acceptance of edited output.

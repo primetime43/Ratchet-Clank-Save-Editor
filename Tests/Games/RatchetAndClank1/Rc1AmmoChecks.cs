@@ -81,7 +81,7 @@ internal static partial class Program
             }
             var malformed = Rc1AmmoFixture(); malformed[0x1F] ^= 1;
             True(!Rc1SaveEditing.Supports(malformed, "NPEA00385"), "A record-ID mismatch must reject mapped edits.");
-            Throws<InvalidDataException>(() => Rc1SaveEditing.Apply(Rc1AmmoFixture(), "NPEA00385", new Dictionary<string, decimal> { ["rc1_grant_10"] = 1 }));
+            Throws<InvalidDataException>(() => Rc1SaveEditing.Apply(Rc1AmmoFixture(), "NPEA00385", new Dictionary<string, decimal> { ["rc1_grant_999"] = 1 }));
         });
         Check("RC1 UI loads on a hidden tab, stages ammo, blocks invalid bulk input and clears when switching games", () =>
         {

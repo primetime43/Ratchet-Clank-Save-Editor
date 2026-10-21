@@ -36,7 +36,9 @@ Changing encrypted metadata needs original signing keys that the editor does not
 
 ## Mapped-field edits
 
-For European RC1 (`NPEA00385`), **Game Save Editing → Mapped fields** offers ammo for already-owned weapons, up to the capacities recovered from the supplied trilogy executable. **Refill owned weapon ammo** stages the same changes for all eligible weapons; **Save All** commits them with a backup. Unowned weapons and unusual ownership/ammo values stay read-only. These actions do not grant weapons or alter quick select, progression or statistics. See the [native evidence and limitations](PS3/RatchetAndClank1/NPEA00385/unknown/ElfMap.md).
+For European RC1 (`NPEA00385`), **Game Save Editing → Mapped fields** offers **Weapon ammo**, **Weapon unlocks** and **Quick select**. Ammo edits and **Refill owned weapon ammo** use native reference limits. The unlock page supports 12 combat grants with starting ammo and associated inventory entries; it fills a free quick-select slot when possible without spending bolts. Existing owned weapons are unchanged. Suck Cannon, Morph-o-Ray and R.Y.N.O. grants remain unavailable. Save a grant before editing that weapon's ammo or assigning its specific slot.
+
+RC1 quick-select choices include owned combat weapons and Empty. Clear an item's old slot before assigning it elsewhere; new duplicates are rejected. Unknown current values can be retained or cleared. Pending ammo survives category switches, and invalid text blocks saving and other staging actions. **Save All** commits the complete batch with a backup. Progression, gold upgrades, story equipment and statistics are preserved. See the [native evidence and limitations](PS3/RatchetAndClank1/NPEA00385/unknown/ElfMap.md).
 
 **Game Save Editing → Mapped fields** supports the matching Tools of Destruction USA (`BCUS98127`) plaintext layout:
 

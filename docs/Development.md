@@ -8,7 +8,7 @@ The bundled `pfdtool.exe` and `sfopatcher.exe` also require the **Visual C++ 201
 
 ## Source organization
 
-Game-specific application code lives under `Ratchet & Clank Save Editor/Games/<GameName>/`. `Games/ToolsOfDestruction/` contains its editors, inventory previews, research helpers and inspection UI. `Games/RatchetAndClank1/` contains RC1 inspection, ammo editing and the bundled native-map reader. Shared save sessions, profiles, encryption, metadata, numeric controls, theming and the main window remain at the application root.
+Game-specific application code lives under `Ratchet & Clank Save Editor/Games/<GameName>/`. `Games/ToolsOfDestruction/` contains its editors, inventory previews, research helpers and inspection UI. `Games/RatchetAndClank1/` contains RC1 inspection, ammo/grant/quick-select editing and the bundled native-map reader. Shared save sessions, profiles, encryption, metadata, numeric controls, theming and the main window remain at the application root.
 
 Game-specific C# regression checks mirror that layout under `Tests/Games/<GameName>/`; shared UI and validation checks remain at the test root. The native research checks, tools and documentation retain their existing game/region/version folders under `Tests/PS3/`, `Tools/PS3/` and `docs/PS3/`.
 
@@ -54,7 +54,7 @@ The .NET runner covers save formats, backups, encryption, rollback, metadata bin
 
 To include an actual Tools of Destruction save, append `-- --tod-save "path/to/save-folder"` to the .NET command. Source files are read-only; edit/reopen tests use disposable copies.
 
-Use `-- --rc1` for the RC1 inspector and ammo-editing checks, or `-- --rc1-save "path/to/save-folder"` to also test a plaintext RPCS3 RC1 save. The latter edits only disposable copies and verifies byte preservation and the untouched source. UI previews are written to ignored `artifacts/rc1-inspector.png` and `artifacts/rc1-ammo-editor.png`. See the [RC1 format notes](PS3/RatchetAndClank1/SaveFormat.md) and [native research tools](../Tools/PS3/RatchetAndClank1/NPEA00385/unknown/README.md).
+Use `-- --rc1` for RC1 inspection, ammo, grants and quick-select checks, or `-- --rc1-save "path/to/save-folder"` to also test a plaintext RPCS3 RC1 save. The latter edits only disposable copies and verifies byte preservation and the untouched source. UI previews are written to ignored `artifacts/rc1-inspector.png`, `artifacts/rc1-ammo-editor.png`, `artifacts/rc1-grants.png` and `artifacts/rc1-quick-select.png`. See the [RC1 format notes](PS3/RatchetAndClank1/SaveFormat.md) and [native research tools](../Tools/PS3/RatchetAndClank1/NPEA00385/unknown/README.md).
 
 Optional public integration samples:
 

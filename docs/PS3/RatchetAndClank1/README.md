@@ -8,7 +8,13 @@ The first game in the PS3 Trilogy/Collection saves under its individual game ID.
 - [European reference sample, executable version unknown](NPEA00385/unknown/README.md)
 - [Native save serialization and ammo findings](NPEA00385/unknown/ElfMap.md)
 
-**Game Save Editing → Mapped fields** now offers ammo edits for 11 potential owned weapons in the verified European `NPEA00385` format, plus **Refill owned weapon ammo**. Only canonical owned weapons with existing ammo inside the native reference limit are editable. Changes remain staged until Save All and use the existing backup workflow. Grants, progression and quick-select edits require further research.
+**Game Save Editing → Mapped fields** offers three categories for the verified European `NPEA00385` format:
+
+- **Weapon ammo**: edits for 11 potential owned weapons, plus **Refill owned weapon ammo**. Only canonical owned weapons with existing ammo inside the native reference limit are editable.
+- **Weapon unlocks**: 12 supported combat grants, with starting ammo and associated inventory/quick-select entries. Existing weapons are preserved; Suck Cannon, Morph-o-Ray and R.Y.N.O. grants require further research.
+- **Quick select**: assign owned combat weapons or clear any of the eight stored slots. New duplicates are rejected; unknown current IDs can be retained.
+
+Changes remain staged until Save All and use the existing backup workflow. Save grants before editing their ammo or choosing a specific slot for the new weapon. Progression, gold upgrades and story equipment remain outside these edits.
 
 The save inspector offers player summary, weapon/gadget unlock flags and ammo, raw quick-select IDs, player records, save layout, metadata and hex bytes. These views are read-only and exclude pending edits. Tools of Destruction mappings do not apply.
 
