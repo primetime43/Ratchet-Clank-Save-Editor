@@ -19,6 +19,21 @@ internal static partial class Program
                 .SequenceEqual(new[] { "&System", "&Light", "&Dark" }), "All theme preferences must be available.");
             Equal(1, theme.DropDownItems.OfType<ToolStripMenuItem>().Count(item => item.Checked));
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Theme setup must not stage save changes.");
+            form.StartPosition = FormStartPosition.Manual;
+            form.Location = new Point(-20000, -20000);
+            form.ShowInTaskbar = false;
+            form.Show();
+            string mode = SystemColors.Window.GetBrightness() < 0.5f ? "dark" : "light";
+            string artifacts = Path.GetFullPath("artifacts");
+            Directory.CreateDirectory(artifacts);
+            Capture(form, Path.Combine(artifacts, $"ui-theme-{mode}-disabled.png"));
+            theme.DropDown.Size = theme.DropDown.GetPreferredSize(Size.Empty);
+            theme.DropDown.PerformLayout();
+            using (var image = new Bitmap(theme.DropDown.Width, theme.DropDown.Height))
+            {
+                theme.DropDown.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size));
+                image.Save(Path.Combine(artifacts, $"ui-theme-{mode}-menu.png"));
+            }
         });
         Check("All tabs render with readable input and inspector colors in the selected theme", () =>
         {
@@ -53,6 +68,19 @@ internal static partial class Program
                 Equal(SystemColors.Control, tabs.SelectedTab.BackColor);
                 Capture(form, Path.Combine(artifacts, $"ui-theme-{mode}-{index}.png"));
             }
+            using var artwork = new Bitmap(32, 32);
+            using var artworkWindow = (Form)typeof(TodInventoryPreviewControl)
+                .GetMethod("CreateArtworkWindow", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(Descendants(form).OfType<TodInventoryPreviewControl>().Single(),
+                    new object[] { "Artwork theme preview", new System.Collections.Generic.Dictionary<string, Bitmap> { ["Save artwork"] = artwork } });
+            artworkWindow.StartPosition = FormStartPosition.Manual;
+            artworkWindow.Location = form.Location;
+            artworkWindow.ShowInTaskbar = false;
+            artworkWindow.Show();
+            Equal(form.BackColor, artworkWindow.BackColor);
+            using var preview = new Bitmap(artworkWindow.Width, artworkWindow.Height);
+            artworkWindow.DrawToBitmap(preview, new Rectangle(Point.Empty, preview.Size));
+            preview.Save(Path.Combine(artifacts, $"ui-theme-{mode}-artwork.png"));
         });
     }
 }

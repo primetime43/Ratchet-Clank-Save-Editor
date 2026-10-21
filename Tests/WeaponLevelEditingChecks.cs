@@ -127,7 +127,7 @@ internal static partial class Program
             foreach (decimal value in new[] { -1m, 4m, 5.5m, 10m, 255m })
                 Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits(("voice_volume", 25), ("weapon_level_1", value))));
             Throws<InvalidDataException>(() => TodSaveEditing.Apply(WeaponLevelFixture(4), "BCUS98127", Edits(("weapon_level_1", 5))));
-            foreach (string key in new[] { "weapon_level_0", "weapon_level_16", "weapon_xp_1", "hero_xp", "modifier_mask" })
+            foreach (string key in new[] { "weapon_level_0", "weapon_level_16", "weapon_xp_1", "hero_level", "modifier_mask" })
                 Throws<InvalidDataException>(() => TodSaveEditing.Apply(data, "BCUS98127", Edits((key, 1))));
             True(data.SequenceEqual(before), "Rejected batches must leave the original completely unchanged.");
         });

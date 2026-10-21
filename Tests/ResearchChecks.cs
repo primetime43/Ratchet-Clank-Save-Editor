@@ -1680,7 +1680,7 @@ internal static partial class Program
             form.ShowInTaskbar = false;
             form.Show();
             var tabs = Field<TabControl>(form, "TabControl");
-            tabs.SelectedIndex = 3;
+            tabs.SelectedTab = tabs.TabPages["ResearchTab"];
             var tree = Descendants(form).OfType<TreeView>().Single();
             var search = Descendants(form).OfType<TextBox>().Single(c => c.Name == "ResearchSearch");
             var text = Descendants(form).OfType<TextBox>().Single(c => c.Name == "ResearchDetails");
@@ -1699,7 +1699,7 @@ internal static partial class Program
             typeof(MainForm).GetField("session", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(form, session);
             typeof(MainForm).GetMethod("ShowSession", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(form, null);
             typeof(MainForm).GetMethod("SetBusy", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(form, new object[] { false });
-            tabs.SelectedIndex = 2;
+            tabs.SelectedTab = tabs.TabPages["SaveInspectorTab"];
             var inspector = Field<SaveInspectorControl>(form, "saveInspector");
             var grid = Descendants(inspector).OfType<DataGridView>().Single();
             var views = Descendants(inspector).OfType<ComboBox>().Single(c => c.Name == "InspectionView");
@@ -1707,9 +1707,9 @@ internal static partial class Program
             Equal(32, grid.Rows.Count);
             typeof(DataGridView).GetMethod("OnCellDoubleClick", BindingFlags.Instance | BindingFlags.NonPublic)
                 .Invoke(grid, new object[] { new DataGridViewCellEventArgs(0, 1) });
-            Equal(3, tabs.SelectedIndex);
+            Equal("ResearchTab", tabs.SelectedTab.Name);
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Weapon navigation must show the correct embedded definition.");
-            tabs.SelectedIndex = 2;
+            tabs.SelectedTab = tabs.TabPages["SaveInspectorTab"];
             foreach (string view in views.Items) views.SelectedItem = view;
             views.SelectedItem = "Weapons & gadgets";
             True(!Field<ToolStripMenuItem>(form, "saveAllToolStripMenuItem").Enabled, "Browsing research must not dirty the session.");
@@ -1743,7 +1743,7 @@ internal static partial class Program
             typeof(DataGridView).GetMethod("OnCellDoubleClick", BindingFlags.Instance | BindingFlags.NonPublic)
                 .Invoke(grid, new object[] { new DataGridViewCellEventArgs(0, combusterRow) });
             True(text.Text.Contains("Combuster") && text.Text.Contains("Shipped level tables"), "Sorted friendly rows must retain their weapon IDs.");
-            tabs.SelectedIndex = 2;
+            tabs.SelectedTab = tabs.TabPages["SaveInspectorTab"];
             foreach (var expected in new[] { ("Skill points", 3, 8), ("Dance progress", 2, 6), ("Armor", 3, 7), ("Skins", 4, 7), ("Special bolts", 3, 7), ("Player summary", 2, 6),
                 ("Objects & equipment", 2, 9), ("Blueprints", 2, 7), ("Bonuses & cheats", 3, 8), ("Stored state blocks", 4, 9), ("World progress", 4, 9), ("World object flags", 3, 7), ("Gameplay segments", 5, 9), ("Reset-event counters", 3, 5), ("Quick select", 2, 6), ("Saved locations", 3, 5), ("Save layout", 3, 4), ("Files & metadata", 3, 5) })
             {
@@ -1774,7 +1774,7 @@ internal static partial class Program
             views.SelectedItem = "Weapons & gadgets";
             True(!weaponFilter.Visible, "Upgrade filter must not appear on other views.");
             form.ClientSize = new Size(1050, 650);
-            tabs.SelectedIndex = 3;
+            tabs.SelectedTab = tabs.TabPages["ResearchTab"];
             tree.Nodes[1].Expand();
             tree.SelectedNode = tree.Nodes[1].Nodes[1];
             Capture(form, Path.GetFullPath("artifacts/ui-research-expanded.png"));
@@ -1925,7 +1925,7 @@ internal static partial class Program
             True(form.Text.Contains(session.Profile.Name), "The loaded game name must appear in the title.");
             Field<TabControl>(form, "TabControl").SelectedIndex = 0;
             Capture(form, Path.GetFullPath("artifacts/ui-save-information-reference.png"));
-            Field<TabControl>(form, "TabControl").SelectedIndex = 2;
+            Field<TabControl>(form, "TabControl").SelectedTab = Field<TabControl>(form, "TabControl").TabPages["SaveInspectorTab"];
             Capture(form, Path.GetFullPath("artifacts/ui-inspector-reference.png"));
             var inspectorViews = Descendants(form).OfType<ComboBox>().Single(c => c.Name == "InspectionView");
             inspectorViews.SelectedItem = "Upgrade nodes";

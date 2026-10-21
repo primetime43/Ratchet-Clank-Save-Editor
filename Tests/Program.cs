@@ -17,6 +17,8 @@ internal static partial class Program
     [STAThread]
     private static int Main(string[] args)
     {
+        // Report UI test exceptions to the runner instead of opening JIT error dialogs.
+        Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
         ApplicationConfiguration.Initialize();
         if (args.Contains("--dark-mode"))
         {
@@ -760,7 +762,9 @@ internal static partial class Program
                 var message = Message.Create(form.Handle, 0x02E0, new IntPtr(dpi | (dpi << 16)), rectangle);
                 typeof(Form).GetMethod("WndProc", BindingFlags.Instance | BindingFlags.NonPublic)
                     .Invoke(form, new object[] { message });
-                foreach (var child in children) SendDpiNotification(child, 0x02E3, dpi);
+                // Inventory cards can be rebuilt when the parent font scales.
+                // Windows no longer sends notifications to their destroyed handles.
+                foreach (var child in children.Where(child => !child.IsDisposed)) SendDpiNotification(child, 0x02E3, dpi);
                 form.PerformLayout();
                 Equal(dpi, form.DeviceDpi);
                 True(Math.Abs(form.Font.SizeInPoints - initialFont * dpi / initialDpi) < 0.2f,
