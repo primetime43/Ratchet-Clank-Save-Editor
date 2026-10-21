@@ -20,11 +20,11 @@ All offsets below are plaintext `USR-DATA` file offsets. Multi-byte game values 
 | `0xC` | `0` | Stored player checksum; not verified by inspection |
 | `0x10` | Record ID 0 | Start of player records |
 | `0x153C` | `FFFFFFFF 00000000` | Record terminator |
-| `0x1544` | Next block | End of player payload; all later bytes retained opaquely |
+| `0x1544` | Next block | End of player payload; first of twenty world blocks |
 
 `USR-DATA` is `0xB0000` (720,896) bytes. A player record has a BE32 ID, BE32 payload length, payload bytes, then alignment bytes up to the next four-byte boundary. IDs are not necessarily contiguous or sorted: record 6 is absent and record 19 precedes record 14. There are 48 non-terminator records in the sample.
 
-Record 10 has 37 bytes followed by three `0F` bytes. These alignment bytes are not assumed zero or disposable. Record 1010 has 150 bytes and two alignment bytes. Unknown records, headers and the complete tail must be preserved.
+Record 10 has 37 bytes followed by three `0F` bytes. These alignment bytes are not assumed zero or disposable. Record 1010 has 150 bytes and two alignment bytes. Unknown records, alignment bytes and the reserved tail are preserved. Gold-bolt edits change only their explicitly mapped world bytes and affected checksum words.
 
 The inspector rejects duplicate IDs, truncated headers, out-of-bounds lengths, missing/invalid terminators and a mismatched bolt record. A recognized structure alone does not authorize additional edits. Optional mapped views also require their reference record lengths and offsets; failure leaves raw structural inspection available.
 
@@ -57,6 +57,8 @@ Separate **Weapon unlocks** and **Quick select** categories support all 15 comba
 **Gadget unlocks** grants six handheld gadgets and three passive upgrades using the same ownership/grant banks. Handheld items use a free quick-select word; passive items do not. Ammo and acquisition-list bytes are preserved, including unusual unused ammo values. No mission, movement-equipment or equipped-item state is changed. Quick select offers owned supported handheld gadgets after saving. See [gadget evidence and limits](NPEA00385/unknown/ElfMap.md#gadget-grants).
 
 **Equipment unlocks** grants nine packs/headgear/boots/hoverboard entries using only their ownership and ordinary grant flags. Ammo, acquisition entries, quick select, world state and both saved equipment-selection records are retained. Select a pack in-game after saving/reloading; these grants do not complete associated quests or races. See [equipment evidence and limits](NPEA00385/unknown/ElfMap.md#equipment-grants).
+
+**Gold bolts** adds collection flags for all forty shipped pickups. World record3003 has four reserved bytes at block-relative `0x8024`, indexed by world and pickup slot. All twenty world block layouts must match. Only the forty indices confirmed against the native count table and actual PAL level assets are writable; unused/unknown flags are retained. Individual collection, planet filtering and collect-all requests share staged previews of collected/spent/available gold bolts. Changed world checksum words receive `FFFFFFFF`; no-op/untouched world words remain unchanged. See [gold-bolt evidence](NPEA00385/unknown/ElfMap.md#gold-bolt-collection).
 
 ## Reproducible validation
 

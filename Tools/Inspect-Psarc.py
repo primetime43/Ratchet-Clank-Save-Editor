@@ -1,6 +1,6 @@
 """Read-only PSARC v1.2/v1.4 listing and bounded single-entry extraction.
 
-Only plaintext TOCs, 30-byte records, 64 KiB zlib blocks are supported.
+Only plaintext TOCs, 30-byte records, 64 KiB zlib/LZMA-alone blocks are supported.
 Never executes payloads or rebuilds archives. --out is an explicit new file,
 not a destination derived from potentially unsafe archive paths.
 """
@@ -8,6 +8,7 @@ import argparse
 from dataclasses import dataclass
 import hashlib
 import json
+import lzma
 from pathlib import Path
 import struct
 import zlib
@@ -33,8 +34,9 @@ class Psarc:
             magic, self.version, compression, toc_end, stride, count, self.block_size, self.flags = struct.unpack(">4sI4sIIIII", header)
             if magic != b"PSAR" or self.version not in (0x10002, 0x10004):
                 raise ValueError("Unsupported PSARC magic/version")
-            if compression != b"zlib" or stride != 30 or self.block_size != 65536 or self.flags & ~3:
-                raise ValueError("Only plaintext 30-byte/64 KiB/zlib PSARC archives are supported")
+            if compression not in (b"zlib", b"lzma") or stride != 30 or self.block_size != 65536 or self.flags & ~3:
+                raise ValueError("Only plaintext 30-byte/64 KiB/zlib or LZMA PSARC archives are supported")
+            self.compression = compression.decode('ascii')
             table_end = 32 + count * stride
             if not 1 <= count <= 1_000_000 or not table_end <= toc_end <= min(self.size, 64 * 1024 * 1024):
                 raise ValueError("Invalid PSARC TOC bounds")
@@ -94,10 +96,16 @@ class Psarc:
                 if stored_size == 0 or stored_size == expected:
                     decoded = raw
                 else:
-                    decoder = zlib.decompressobj()
-                    decoded = decoder.decompress(raw, expected + 1)
-                    if not decoder.eof or decoder.unconsumed_tail or decoder.unused_data:
-                        raise ValueError(f"Entry {index}: incomplete/oversized/trailing zlib data")
+                    if self.compression == 'zlib':
+                        decoder = zlib.decompressobj()
+                        decoded = decoder.decompress(raw, expected + 1)
+                        remaining = decoder.unconsumed_tail
+                    else:
+                        decoder = lzma.LZMADecompressor(format=lzma.FORMAT_ALONE, memlimit=64 * 1024 * 1024)
+                        decoded = decoder.decompress(raw, max_length=expected + 1)
+                        remaining = b''
+                    if not decoder.eof or remaining or decoder.unused_data:
+                        raise ValueError(f"Entry {index}: incomplete/oversized/trailing compressed data")
                 if len(decoded) != expected:
                     raise ValueError(f"Entry {index}: decompressed block length mismatch")
                 output.extend(decoded)
@@ -107,6 +115,7 @@ class Psarc:
     def report(self):
         return {
             "archive": self.path.name, "size": self.size, "version": f"0x{self.version:08X}",
+            "compression": self.compression,
             "flags": self.flags, "toc_end": self.toc_end, "block_size": self.block_size,
             "entry_count": len(self.entries), "filename_hash_match_count": sum(self.name_hashes_match),
             "filename_hash_mode": self.filename_hash_mode,
@@ -156,7 +165,7 @@ def main():
             print(json.dumps(extract(archive, index, args.out, args.max_bytes), indent=2))
         else:
             print(json.dumps(archive.report(), indent=2))
-    except (ValueError, OSError, zlib.error) as error:
+    except (ValueError, OSError, zlib.error, lzma.LZMAError) as error:
         parser.exit(2, f"PSARC inspection failed: {error}\n")
 
 

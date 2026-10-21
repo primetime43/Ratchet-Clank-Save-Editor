@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import importlib.util
+import lzma
 from pathlib import Path
 import struct
 import sys
@@ -17,7 +18,7 @@ SPEC.loader.exec_module(READER)
 ARCHIVE = None
 
 
-def fixture(files, compressed=False, uppercase=False):
+def fixture(files, compressed=False, uppercase=False, codec='zlib'):
     names = list(files)
     payloads = [("\n".join(names) + "\n").encode()] + list(files.values())
     blocks, streams, records = [], [], []
@@ -26,7 +27,7 @@ def fixture(files, compressed=False, uppercase=False):
         stream = bytearray()
         for start in range(0, len(payload), 65536):
             raw = payload[start:start + 65536]
-            packed = zlib.compress(raw) if compressed else raw
+            packed = (lzma.compress(raw, format=lzma.FORMAT_ALONE) if codec == 'lzma' else zlib.compress(raw)) if compressed else raw
             if len(packed) >= len(raw):
                 packed = raw
             blocks.append(len(packed) if len(packed) < 65536 else 0)
@@ -35,7 +36,7 @@ def fixture(files, compressed=False, uppercase=False):
         records.append((hashlib.md5(name.encode()).digest() if i else bytes(16), first, len(payload)))
         streams.append(stream)
     toc_end = 32 + 30 * len(records) + 2 * len(blocks)
-    result = bytearray(struct.pack(">4sI4sIIIII", b"PSAR", 0x10002, b"zlib", toc_end, 30, len(records), 65536, 3 if uppercase else 0))
+    result = bytearray(struct.pack(">4sI4sIIIII", b"PSAR", 0x10002, codec.encode(), toc_end, 30, len(records), 65536, 3 if uppercase else 0))
     offset = toc_end
     for (digest, first, length), stream in zip(records, streams):
         result.extend(digest + first.to_bytes(4, "big") + length.to_bytes(5, "big") + offset.to_bytes(5, "big"))
@@ -75,9 +76,26 @@ class PsarcChecks(unittest.TestCase):
         self.assertEqual(archive.filename_hash_mode, "ascii-uppercase")
         self.assertEqual(archive.name_hashes_match, [True])
 
+    def test_lzma_alone_multiblock_and_bad_output(self):
+        files = {'/level/gameplay': b'pickup flag' * 10000, '/level/raw': b'xyz', '/empty': b''}
+        archive = self.open_fixture(fixture(files, compressed=True, codec='lzma'))
+        self.assertEqual('lzma', archive.compression)
+        for index, payload in enumerate(files.values(), 1):
+            self.assertEqual(payload, archive.read_entry(index))
+        data = fixture({'/a': b'a' * 10000}, compressed=True, codec='lzma')
+        data[62 + 20:62 + 25] = (1).to_bytes(5, 'big')
+        with self.assertRaises(ValueError):
+            self.open_fixture(data).read_entry(1)
+        data = fixture({'/a': b'a' * 10000}, compressed=True, codec='lzma')
+        data.extend(b'x')
+        block_offset = 32 + 60 + 2
+        data[block_offset:block_offset + 2] = (int.from_bytes(data[block_offset:block_offset + 2], 'big') + 1).to_bytes(2, 'big')
+        with self.assertRaises(ValueError):
+            self.open_fixture(data).read_entry(1)
+
     def test_bounds_and_unsupported_headers(self):
         original = fixture({"/a": b"data"})
-        bad_headers = [(0, b"FAIL"), (4, (0x10003).to_bytes(4, "big")), (8, b"lzma"),
+        bad_headers = [(0, b"FAIL"), (4, (0x10003).to_bytes(4, "big")), (8, b"nope"),
                        (12, (31).to_bytes(4, "big")), (16, (31).to_bytes(4, "big")),
                        (20, bytes(4)), (24, (1024).to_bytes(4, "big")), (28, (4).to_bytes(4, "big"))]
         for offset, value in bad_headers:

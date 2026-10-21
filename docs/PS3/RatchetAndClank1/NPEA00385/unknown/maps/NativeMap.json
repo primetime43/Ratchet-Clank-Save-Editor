@@ -152,6 +152,31 @@
       "address": "0x23e140",
       "size": 880,
       "sha256": "35054985E0BD942759167C3C08A4996C5C1F4BE591AAF3969EF58A64CA9A4659"
+    },
+    "count_gold_bolts": {
+      "address": "0x11b1b4",
+      "size": 272,
+      "sha256": "3CA16FD9823A5C618EBC4F1A492C84EB5665EAF1A33BC60FA51D7D5AF029F212"
+    },
+    "gold_bolt_pickup": {
+      "address": "0x1d9d48",
+      "size": 2800,
+      "sha256": "D41770E2C45F5787680B623ED92203E20C6CFDFBD71E3894CE7CD5EF7E1278FA"
+    },
+    "gold_bolt_spawn": {
+      "address": "0x1da838",
+      "size": 424,
+      "sha256": "B2434603CFE2599B5D79F7E0C288FD966418F0A8800A584A6773D06D48187AE6"
+    },
+    "gold_bolt_world_menu": {
+      "address": "0x147044",
+      "size": 684,
+      "sha256": "2CBC59D4DE4B512D39AC99F82C5A84EE949EB1DDC3624791A49D0D8A40BA5348"
+    },
+    "save_load_callback": {
+      "address": "0xe8ca0",
+      "size": 640,
+      "sha256": "FB8FB3252E14EB33DA1F68D50EEEAC1467D1F645D4AD7F05088BDBAA85DB0E6A"
     }
   },
   "player_records": [
@@ -1245,6 +1270,353 @@
       "editor_requests_equip": false
     }
   ],
+  "gold_bolts": {
+    "world_start": 5444,
+    "world_stride": 33444,
+    "world_count": 20,
+    "world_records": [
+      {
+        "id": 3001,
+        "length": 1,
+        "offset": 16,
+        "runtime_address": "0x96ca20"
+      },
+      {
+        "id": 3002,
+        "length": 32768,
+        "offset": 28,
+        "runtime_address": "0x96ca34"
+      },
+      {
+        "id": 3003,
+        "length": 4,
+        "offset": 32804,
+        "runtime_address": "0xa0ca34"
+      },
+      {
+        "id": 3004,
+        "length": 16,
+        "offset": 32816,
+        "runtime_address": "0xa0ca84"
+      },
+      {
+        "id": 3005,
+        "length": 256,
+        "offset": 32840,
+        "runtime_address": "0xa0cd1c"
+      },
+      {
+        "id": 3006,
+        "length": 256,
+        "offset": 33104,
+        "runtime_address": "0xa0e11c"
+      },
+      {
+        "id": 3007,
+        "length": 8,
+        "offset": 33368,
+        "runtime_address": "0xa0fd24"
+      },
+      {
+        "id": 3008,
+        "length": 16,
+        "offset": 33384,
+        "runtime_address": "0xa0cbc4"
+      },
+      {
+        "id": 4000,
+        "length": 4,
+        "offset": 33408,
+        "runtime_address": "0xa0f6e4"
+      },
+      {
+        "id": 4001,
+        "length": 4,
+        "offset": 33420,
+        "runtime_address": "0xa0f734"
+      },
+      {
+        "id": 4002,
+        "length": 4,
+        "offset": 33432,
+        "runtime_address": "0xa0f784"
+      }
+    ],
+    "record_id": 3003,
+    "flag_offset": 32804,
+    "counts_address": "0x738608",
+    "counts": [
+      0,
+      3,
+      4,
+      3,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      2,
+      1,
+      4,
+      2,
+      2,
+      2,
+      3
+    ],
+    "fields": [
+      {
+        "world": 1,
+        "planet": "Novalis",
+        "slot": 0,
+        "offset": 71692
+      },
+      {
+        "world": 1,
+        "planet": "Novalis",
+        "slot": 1,
+        "offset": 71693
+      },
+      {
+        "world": 1,
+        "planet": "Novalis",
+        "slot": 2,
+        "offset": 71694
+      },
+      {
+        "world": 2,
+        "planet": "Aridia",
+        "slot": 0,
+        "offset": 105136
+      },
+      {
+        "world": 2,
+        "planet": "Aridia",
+        "slot": 1,
+        "offset": 105137
+      },
+      {
+        "world": 2,
+        "planet": "Aridia",
+        "slot": 2,
+        "offset": 105138
+      },
+      {
+        "world": 2,
+        "planet": "Aridia",
+        "slot": 3,
+        "offset": 105139
+      },
+      {
+        "world": 3,
+        "planet": "Kerwan",
+        "slot": 0,
+        "offset": 138580
+      },
+      {
+        "world": 3,
+        "planet": "Kerwan",
+        "slot": 1,
+        "offset": 138581
+      },
+      {
+        "world": 3,
+        "planet": "Kerwan",
+        "slot": 2,
+        "offset": 138582
+      },
+      {
+        "world": 4,
+        "planet": "Eudora",
+        "slot": 0,
+        "offset": 172024
+      },
+      {
+        "world": 5,
+        "planet": "Rilgar",
+        "slot": 0,
+        "offset": 205468
+      },
+      {
+        "world": 5,
+        "planet": "Rilgar",
+        "slot": 1,
+        "offset": 205469
+      },
+      {
+        "world": 6,
+        "planet": "Nebula G34",
+        "slot": 0,
+        "offset": 238912
+      },
+      {
+        "world": 6,
+        "planet": "Nebula G34",
+        "slot": 1,
+        "offset": 238913
+      },
+      {
+        "world": 7,
+        "planet": "Umbris",
+        "slot": 0,
+        "offset": 272356
+      },
+      {
+        "world": 7,
+        "planet": "Umbris",
+        "slot": 1,
+        "offset": 272357
+      },
+      {
+        "world": 8,
+        "planet": "Batalia",
+        "slot": 0,
+        "offset": 305800
+      },
+      {
+        "world": 8,
+        "planet": "Batalia",
+        "slot": 1,
+        "offset": 305801
+      },
+      {
+        "world": 9,
+        "planet": "Gaspar",
+        "slot": 0,
+        "offset": 339244
+      },
+      {
+        "world": 9,
+        "planet": "Gaspar",
+        "slot": 1,
+        "offset": 339245
+      },
+      {
+        "world": 10,
+        "planet": "Orxon",
+        "slot": 0,
+        "offset": 372688
+      },
+      {
+        "world": 10,
+        "planet": "Orxon",
+        "slot": 1,
+        "offset": 372689
+      },
+      {
+        "world": 11,
+        "planet": "Pokitaru",
+        "slot": 0,
+        "offset": 406132
+      },
+      {
+        "world": 12,
+        "planet": "Hoven",
+        "slot": 0,
+        "offset": 439576
+      },
+      {
+        "world": 12,
+        "planet": "Hoven",
+        "slot": 1,
+        "offset": 439577
+      },
+      {
+        "world": 13,
+        "planet": "Gemlik Base",
+        "slot": 0,
+        "offset": 473020
+      },
+      {
+        "world": 14,
+        "planet": "Oltanis",
+        "slot": 0,
+        "offset": 506464
+      },
+      {
+        "world": 14,
+        "planet": "Oltanis",
+        "slot": 1,
+        "offset": 506465
+      },
+      {
+        "world": 14,
+        "planet": "Oltanis",
+        "slot": 2,
+        "offset": 506466
+      },
+      {
+        "world": 14,
+        "planet": "Oltanis",
+        "slot": 3,
+        "offset": 506467
+      },
+      {
+        "world": 15,
+        "planet": "Quartu",
+        "slot": 0,
+        "offset": 539908
+      },
+      {
+        "world": 15,
+        "planet": "Quartu",
+        "slot": 1,
+        "offset": 539909
+      },
+      {
+        "world": 16,
+        "planet": "Kalebo III",
+        "slot": 0,
+        "offset": 573352
+      },
+      {
+        "world": 16,
+        "planet": "Kalebo III",
+        "slot": 1,
+        "offset": 573353
+      },
+      {
+        "world": 17,
+        "planet": "Drek's Fleet",
+        "slot": 0,
+        "offset": 606796
+      },
+      {
+        "world": 17,
+        "planet": "Drek's Fleet",
+        "slot": 1,
+        "offset": 606797
+      },
+      {
+        "world": 18,
+        "planet": "Veldin (finale)",
+        "slot": 0,
+        "offset": 640240
+      },
+      {
+        "world": 18,
+        "planet": "Veldin (finale)",
+        "slot": 1,
+        "offset": 640241
+      },
+      {
+        "world": 18,
+        "planet": "Veldin (finale)",
+        "slot": 2,
+        "offset": 640242
+      }
+    ],
+    "pickup_store": {
+      "start": "0x1da110",
+      "instruction_count": 11,
+      "value": 1,
+      "address_rule": "0xA0CA34 + world * 4 + slot"
+    },
+    "name_reference": "https://github.com/bordplate/rac1-randomizer/blob/main/table_id.lua",
+    "slot_verification_tool": "Tools/PS3/RatchetAndClank1/NPEA00385/unknown/Inspect-Rc1GoldPickups.py"
+  },
   "grant_layout": {
     "flag_record": 11,
     "acquisition_record": 12,

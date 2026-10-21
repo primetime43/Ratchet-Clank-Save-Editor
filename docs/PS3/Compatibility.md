@@ -19,7 +19,7 @@ These are the title IDs recognized by the editor. Region recognition and softwar
 
 Disc trilogy collections use the individual game's save-directory ID, not the enclosing collection disc ID. PS2 Classics, PSP and Vita formats are outside this editor's scope.
 
-The European BCES01503 trilogy's supplied RC1 RPCS3 save resolves to `NPEA00385` and matches the existing bolt layout. That matching European format also supports bounded ammo edits/refills, all 15 combat grants, nine gadget/passive grants, nine equipment grants, ten gold upgrades for owned weapons and eight-slot quick-select editing, based on native executable research. RC1 inspection remains read-only; see [sample evidence and limitations](RatchetAndClank1/SaveFormat.md). These mapped writes are not enabled for US/Japanese RC1 or RC2/RC3 formats.
+The European BCES01503 trilogy's supplied RC1 RPCS3 save resolves to `NPEA00385` and matches the existing bolt layout. That matching European format also supports bounded ammo edits/refills, all 15 combat grants, nine gadget/passive grants, nine equipment grants, forty gold-bolt collection flags, ten gold upgrades for owned weapons and eight-slot quick-select editing, based on native executable/asset research. Gold-bolt collection additionally requires exact world block layouts. RC1 inspection remains read-only; see [sample evidence and limitations](RatchetAndClank1/SaveFormat.md). These mapped writes are not enabled for US/Japanese RC1 or RC2/RC3 formats.
 
 ## Format notes
 

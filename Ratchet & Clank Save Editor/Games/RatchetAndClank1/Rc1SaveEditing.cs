@@ -18,6 +18,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public static IReadOnlyList<Rc1GoldUpgradeField> GoldUpgrades { get; }
         public static IReadOnlyList<Rc1GadgetDefinition> Gadgets { get; }
         public static IReadOnlyList<Rc1EquipmentDefinition> Equipment { get; }
+        public static IReadOnlyList<Rc1GoldBoltField> GoldBolts { get; }
+        public static IReadOnlyList<Rc1RecordDefinition> WorldRecords { get; }
 
         static Rc1Research()
         {
@@ -48,6 +50,14 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             Equipment = Array.AsReadOnly(document.RootElement.GetProperty("equipment").EnumerateArray().Select(item =>
                 new Rc1EquipmentDefinition(item.GetProperty("id").GetInt32(), item.GetProperty("name").GetString(),
                     item.GetProperty("ownership_offset").GetInt32(), item.GetProperty("acquisition_flag_offset").GetInt32())).ToArray());
+            var goldBolts = document.RootElement.GetProperty("gold_bolts");
+            GoldBolts = Array.AsReadOnly(goldBolts.GetProperty("fields").EnumerateArray().Select(item =>
+                new Rc1GoldBoltField("rc1_bolt_" + item.GetProperty("world").GetInt32() + "_" + item.GetProperty("slot").GetInt32(),
+                    item.GetProperty("world").GetInt32(), item.GetProperty("planet").GetString(), item.GetProperty("slot").GetInt32(),
+                    item.GetProperty("offset").GetInt32(), false)).ToArray());
+            WorldRecords = Array.AsReadOnly(goldBolts.GetProperty("world_records").EnumerateArray().Select(item =>
+                new Rc1RecordDefinition(item.GetProperty("id").GetUInt32(), item.GetProperty("length").GetInt32(),
+                    item.GetProperty("offset").GetInt32())).ToArray());
         }
     }
 
@@ -88,7 +98,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!fields.TryGetValue(edit.Key, out var field))
                 {
                     if (Rc1WeaponEditing.IsKey(edit.Key) || Rc1GoldUpgradeEditing.IsKey(edit.Key) ||
-                        Rc1GadgetEditing.IsKey(edit.Key) || Rc1EquipmentEditing.IsKey(edit.Key)) continue;
+                        Rc1GadgetEditing.IsKey(edit.Key) || Rc1EquipmentEditing.IsKey(edit.Key) || Rc1GoldBoltEditing.IsKey(edit.Key)) continue;
                     throw new InvalidDataException("Unsupported RC1 edit or unavailable owned weapon: " + edit.Key);
                 }
                 if (edit.Value != decimal.Truncate(edit.Value) || edit.Value < 0 || edit.Value > field.Maximum)
@@ -101,7 +111,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             Rc1WeaponEditing.Apply(original, result, region, edits);
             Rc1GadgetEditing.Apply(original, result, region, edits);
             Rc1EquipmentEditing.Apply(original, result, region, edits);
-            return Rc1GoldUpgradeEditing.Apply(original, result, region, edits);
+            Rc1GoldUpgradeEditing.Apply(original, result, region, edits);
+            return Rc1GoldBoltEditing.Apply(original, result, region, edits);
         }
     }
 }

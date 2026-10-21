@@ -13,7 +13,11 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         private readonly Dictionary<string, NumericTextBox> inputs = new(StringComparer.Ordinal);
         private readonly Dictionary<string, decimal> pending = new(StringComparer.Ordinal);
         private readonly Dictionary<Control, string> pages = new();
+        private readonly Dictionary<Control, int> goldBoltRows = new();
+        private sealed record GoldWorld(int Id, string Name) { public override string ToString() => Name; }
         private ComboBox category;
+        private ComboBox goldWorld;
+        private Label goldBoltSummary;
         private Label notice;
         private byte[] snapshot;
         private string snapshotRegion;
@@ -46,7 +50,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             {
                 foreach (Control control in layout.Controls.Cast<Control>().ToArray()) control.Dispose();
                 layout.Controls.Clear(); layout.RowStyles.Clear(); layout.RowCount = 0;
-                inputs.Clear(); pending.Clear(); pages.Clear();
+                inputs.Clear(); pending.Clear(); pages.Clear(); goldBoltRows.Clear(); goldWorld = null; goldBoltSummary = null;
                 snapshot = data == null ? null : (byte[])data.Clone(); snapshotRegion = region;
                 bool isRc1 = Rc1SaveInspection.Supports(region);
                 Visible = isRc1;
@@ -61,7 +65,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!supported) return;
                 category = new ComboBox { Name = "Rc1EditCategory", DropDownStyle = ComboBoxStyle.DropDownList,
                     Dock = DockStyle.Fill, Margin = new Padding(4, 4, 4, 12), Sorted = true };
-                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select", "Gold upgrades", "Gadget unlocks", "Equipment unlocks" });
+                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select", "Gold upgrades", "Gadget unlocks", "Equipment unlocks", "Gold bolts" });
                 category.SelectedIndexChanged += (_, _) => ShowCategory();
                 AddRow(category); layout.SetColumnSpan(category, 3);
                 var refill = new Button { Name = "Rc1RefillAmmo", Text = "Refill owned weapon ammo", AutoSize = true,
@@ -152,6 +156,52 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "Quest progress, race results, health and world pickups are preserved.",
                     Margin = new Padding(4, 10, 4, 8) };
                 AddPageRow("Equipment unlocks", equipmentHint); layout.SetColumnSpan(equipmentHint, 3);
+                var collectionFields = Rc1GoldBoltEditing.Fields(data, region);
+                goldBoltSummary = new Label { Name = "Rc1GoldBoltSummary", AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(4, 8, 4, 8) };
+                UpdateGoldBoltSummary(data);
+                AddPageRow("Gold bolts", goldBoltSummary); layout.SetColumnSpan(goldBoltSummary, 3);
+                if (Rc1GoldBoltEditing.Supports(data, region))
+                {
+                    var collectionChecks = new List<CheckBox>();
+                    var collectAll = new Button { Name = "Rc1CollectGoldBolts", Text = "Collect all supported gold bolts", AutoSize = true,
+                        Enabled = collectionFields.Any(field => !field.Collected), Margin = new Padding(4, 4, 4, 12) };
+                    collectAll.Click += (_, _) =>
+                    {
+                        var candidate = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
+                        foreach (var field in collectionFields.Where(field => !field.Collected)) candidate[field.Key] = 1;
+                        if (!TryStageCandidate(candidate)) return;
+                        loading = true;
+                        try { foreach (var check in collectionChecks) check.Checked = true; }
+                        finally { loading = false; }
+                    };
+                    AddPageRow("Gold bolts", collectAll); layout.SetColumnSpan(collectAll, 3);
+                    goldWorld = new ComboBox { Name = "Rc1GoldBoltWorld", DropDownStyle = ComboBoxStyle.DropDownList,
+                        Dock = DockStyle.Fill, Sorted = true, Margin = new Padding(4, 4, 4, 12) };
+                    var worlds = Rc1Research.GoldBolts.GroupBy(field => field.World).Select(group => new GoldWorld(group.Key, group.First().Planet)).ToArray();
+                    goldWorld.Items.AddRange(worlds.Cast<object>().ToArray());
+                    goldWorld.SelectedItem = worlds.First(world => world.Id == 1);
+                    goldWorld.SelectedIndexChanged += (_, _) => ShowCategory();
+                    AddPageRow("Gold bolts", goldWorld); layout.SetColumnSpan(goldWorld, 3);
+                    foreach (var field in collectionFields)
+                    {
+                        var check = new CheckBox { Name = "Rc1Edit_" + field.Key, Text = "Gold bolt " + (field.Slot + 1),
+                            Checked = field.Collected, Enabled = !field.Collected, AutoSize = true, Margin = new Padding(4, 6, 4, 6) };
+                        check.CheckedChanged += (_, _) =>
+                        {
+                            if (loading) return;
+                            if (TryStage(field.Key, check.Checked ? 1 : 0, field.Collected ? 1 : 0)) return;
+                            loading = true; check.Checked = !check.Checked; loading = false;
+                        };
+                        collectionChecks.Add(check); goldBoltRows.Add(check, field.World);
+                        AddPageRow("Gold bolts", check); layout.SetColumnSpan(check, 3);
+                    }
+                    var collectionHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
+                        Text = "Collection is add-only. Save All applies checked bolts, including those on other planets.\r\n" +
+                            "Available gold bolts account for four spent per gold weapon upgrade.\r\n" +
+                            "Mission progress and weapon upgrades are preserved. Unrecognized flags stay unchanged.",
+                        Margin = new Padding(4, 10, 4, 8) };
+                    AddPageRow("Gold bolts", collectionHint); layout.SetColumnSpan(collectionHint, 3);
+                }
                 var goldFields = Rc1GoldUpgradeEditing.Fields(data, region);
                 foreach (var field in goldFields)
                 {
@@ -215,6 +265,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         {
             layout.SuspendLayout();
             foreach (var pair in pages) pair.Key.Visible = pair.Value == category.Text;
+            if (category.Text == "Gold bolts" && goldWorld?.SelectedItem is GoldWorld world)
+                foreach (var pair in goldBoltRows) pair.Key.Visible = pair.Value == world.Id;
             layout.ResumeLayout(true);
         }
 
@@ -223,12 +275,28 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             if (!ValidateInputs()) return false;
             var candidate = new Dictionary<string, decimal>(pending, StringComparer.Ordinal);
             if (value == baseline) candidate.Remove(key); else candidate[key] = value;
-            try { Rc1SaveEditing.Apply(snapshot, snapshotRegion, candidate); }
+            return TryStageCandidate(candidate);
+        }
+
+        private bool TryStageCandidate(Dictionary<string, decimal> candidate)
+        {
+            if (!ValidateInputs()) return false;
+            byte[] preview;
+            try { preview = Rc1SaveEditing.Apply(snapshot, snapshotRegion, candidate); }
             catch (InvalidDataException error) { notice.Text = error.Message; return false; }
             pending.Clear(); foreach (var edit in candidate) pending.Add(edit.Key, edit.Value);
+            UpdateGoldBoltSummary(preview);
             notice.Text = "Changes staged · Save All applies them with an original backup.";
             EditsChanged?.Invoke(this, EventArgs.Empty);
             return true;
+        }
+
+        private void UpdateGoldBoltSummary(byte[] data)
+        {
+            if (goldBoltSummary == null) return;
+            var summary = Rc1GoldBoltEditing.Summary(data, snapshotRegion);
+            goldBoltSummary.Text = summary == null ? "Gold-bolt edits require all 20 verified world blocks." :
+                $"Collected: {summary.Collected} / 40 · Spent on gold upgrades: {summary.Spent} · Available: {summary.Available}";
         }
 
         public bool ValidateInputs()

@@ -20,12 +20,14 @@ public class TraceRc1Ammo extends GhidraScript {
         long[] addresses = {0xe6cd8, 0xe6fe4, 0xe784c, 0xe7984, 0x8e0f4, 0xaa258, 0xaa2e8, 0xeb0f4,
             0x112e18, 0x16cc50, 0x143980, 0x143c30, 0x143cbc, 0x7b740, 0x5cc8d8,
             0x339b70, 0x11b124, 0x11b2c4, 0x14b214, 0x80910, 0xeb22c, 0xe22f4, 0x87a88,
-            0x85b30, 0x8b690, 0x950e8, 0xa2750, 0x3d8ca0, 0x23e140};
+            0x85b30, 0x8b690, 0x950e8, 0xa2750, 0x3d8ca0, 0x23e140,
+            0x11b1b4, 0x1d9d48, 0x1da838, 0x147044, 0xe8ca0};
         DecompInterface decompiler = new DecompInterface();
         decompiler.openProgram(currentProgram);
         try (PrintWriter output = new PrintWriter(getScriptArgs()[0])) {
             output.println("RC1 native save/ammo/grant/gold/gadget/equipment/quick-select trace. Generated pseudocode must be checked against instruction bytes.");
             output.println("Ghidra cannot decode the grant helper's Cell lvlx instructions. Inspect-Rc1Native.py separately audits all35 notification instructions and both callees; notification writes are outside serialized records.");
+            output.println("Gold-bolt pickup pseudocode also truncates at Cell instructions. The native inspector verifies the separate11-instruction persistent flag-store block; presentation callbacks are not simulated.");
             for (long value : addresses) {
                 monitor.checkCancelled();
                 Address entry = toAddr(value);

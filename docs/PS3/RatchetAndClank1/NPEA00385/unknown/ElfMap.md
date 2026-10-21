@@ -24,7 +24,7 @@ ELF is big-endian PowerPC64 with PS3 32-bit addresses. Function descriptors occu
 
 The player descriptor table at `0x726690` has 48 entries of 16 bytes, followed by a zero entry. Each entry stores runtime address, byte length, record ID and a mutable load-status word. The table reproduces every player record ID, length, order and payload offset in the supplied save. Record IDs are not a sorted or contiguous enumeration.
 
-The world descriptor table starts at `0x7269A0`. The writer's first prefix word is the complete player block stride `0x153C`; its second is the repeated world block stride `0x82A4`. The player payload begins at save offset `0x10` and ends at `0x1544`; the first complete player block begins at `0x8`. The editor leaves all following world data unchanged.
+The world descriptor table starts at `0x7269A0`. The writer's first prefix word is the complete player block stride `0x153C`; its second is the repeated world block stride `0x82A4`. The player payload begins at save offset `0x10` and ends at `0x1544`; the first complete player block begins at `0x8`. Player-only edits preserve all following world data. Gold-bolt collection has its own stricter world-record validation below.
 
 | Player record | Runtime root | Save payload | Meaning established here |
 | --- | --- | --- | --- |
@@ -210,6 +210,35 @@ Additional pinned native consumers distinguish possession from selection and gam
 Only the two requested flag bytes per new item change. Both saved selection records, unused ammo words, quick-select words, acquisition entries, currency, health, statistics and all world data are preserved unless independently edited. Packs are not automatically selected; select them in-game after saving/reloading. Equipment grants do not complete quests, award race results, spawn pickups or replace story prerequisites. IDs1, 8 and 36 remain excluded. Inventory round trips do not establish gameplay acceptance.
 
 Tests independently compare every byte for each equipment grant and a combined nine-item batch, retaining opaque ammo, full acquisition/quick-select banks and unusual saved selection values. Mixed ammo/weapon/gadget/gold/slot batches, no-op preservation, invalid ownership/flags, UI staging/cancellation, hidden invalid input, original backups, later currency saves and failed encryption are covered. The reference-save check edits only a disposable copy, reopens it and verifies the source folder stays unchanged.
+
+## Gold-bolt collection
+
+Gold bolts live in world record **3003**, not the player block. The native descriptor at `0x7269C0` maps four bytes per world from runtime `0xA0CA34 + world * 4`. All twenty world blocks begin at `0x1544 + world * 0x82A4`; record 3003's payload is at block-relative `0x8024`. Its absolute byte offset is therefore `0x1544 + world * 0x82A4 + 0x8024 + slot`.
+
+The new world map extracts all eleven descriptors from `0x7269A0`, reproducing the complete stride and exact record framing. The application checks every world header, all eleven record IDs/lengths and every terminator before offering collectible writes. A failed check disables only gold-bolt editing; existing player-only editing retains its prior scope. Alignment bytes and unrelated world payloads remain opaque and preserved.
+
+| Function / table | Confirmed role |
+| --- | --- |
+| `0x1D9D48` | Gold-bolt actor checks the collection flag when initializing; already-collected actors are removed. |
+| `0x1DA110..0x1DA138` | Eleven-instruction straight-line store loads the actor's slot, forms `0xA0CA34 + world * 4 + slot`, and stores literal byte `1`. The inspector checks every instruction word in this block. |
+| `0x1DA838` | Spawn helper accepts only slot IDs below four and requires an uncollected flag. |
+| `0x147044` | Planet menu counts nonzero flags across the four slots and reads the world's displayed total from `0x738608 + world * 4`. |
+| `0x11B1B4` | Counts nonzero flags across all 80 reserved bytes and clamps total collection to 40. |
+| `0x11B2C4` | Computes available gold bolts from clamped collection minus four per counted gold weapon upgrade, clamped to `0..40`. |
+
+There are **19 count-table entries**, not twenty: the following word belongs to different data. Counts for world IDs0–18 are `0,3,4,3,1,2,2,2,2,2,2,1,2,1,4,2,2,2,3`, totaling forty. World0 and reserved world19 have no exposed collection requests. Unused slots within other worlds are also never written.
+
+The [asset verifier](../../../../../Tools/PS3/RatchetAndClank1/NPEA00385/unknown/Inspect-Rc1GoldPickups.py) independently reads all nineteen supplied `levelN/gameplay_pal` assets from the original RC1 LZMA PSARC. It locates gold-bolt actors (class1134), follows their bounded PVAR descriptors and reads the stored slot IDs. Each world's actual slot set matches `0..count-1`, confirming all forty permitted flags. Archive size is **422,267,854 bytes**, SHA-256 `45375F8EF6150FDECE8680102D2E2A6B6CC5C289F24630AD9F812389A811616C`. Per-asset hashes and slot lists are reproducible without executing or modifying assets.
+
+Gameplay structure offsets were checked against Replanetizer's [gameplay header](https://github.com/RatchetModding/Replanetizer/blob/master/LibReplanetizer/Headers/GameplayHeader.cs), [RC1 actor layout](https://github.com/RatchetModding/Replanetizer/blob/master/LibReplanetizer/Level%20Objects/Gameplay/Moby.cs) and [gold-bolt PVAR declaration](https://github.com/RatchetModding/Replanetizer/blob/master/Replanetizer/PvarConfigs/moby1134.h). Planet labels use the independent [PAL randomizer ID reference](https://github.com/bordplate/rac1-randomizer/blob/main/table_id.lua); native counts, save offsets and actual pickup indices come from the supplied executable/assets. Bolt numbers identify saved slots rather than described physical locations.
+
+**Gold bolts** provides planet filtering, add-only individual flags and **Collect all supported gold bolts**. Canonical flags0/1 are editable; collected flags are disabled in the UI and cannot be removed. Unknown flag values are preserved and excluded from bulk requests. The balance preview follows the native nonzero-count semantics, including retained unknown/unused bytes, and updates for both staged collection and staged gold upgrades. Bulk collection retains edits from every other category and is blocked by invalid numeric text.
+
+Changed world blocks receive the existing remaster disabled-checksum sentinel (`FFFFFFFF`) at block-relative offset4; untouched blocks and no-ops preserve their checksum words. Save All also retains the existing player-checksum behavior. The pinned `0xE8CA0 → 0xE6FE4 → 0xE6CD8` load path consumes world lengths/records without reading those checksum words; the native writer initializes them to zero. No PS2 checksum calculation is introduced.
+
+Only requested collection flags and affected checksum words change. Gold upgrades, ordinary currency, inventory, world visits, mission/race state and the reserved tail remain unchanged unless separately edited. Runtime pickup animations, notifications and trophy calls are not simulated. The actor decompilation still truncates at Cell instructions; the explicitly verified flag-store block, counts and spawn tests establish the persisted field, without treating incomplete pseudocode as a full side-effect audit. Gameplay acceptance and trophy behavior remain untested.
+
+Tests cover every valid flag, unused/world bounds, malformed framing in early/late worlds, unknown flags, exact-byte preservation, checksum no-ops, mixed-category batches, balance clamping, hidden invalid input, filtering, bulk collection, backup/reopen and failed commits. The supplied save is edited only on disposable copies and compared byte-for-byte with independently expected changes.
 
 ## Quick-select editing
 

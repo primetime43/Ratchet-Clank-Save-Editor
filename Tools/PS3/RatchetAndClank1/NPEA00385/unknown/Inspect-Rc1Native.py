@@ -41,6 +41,11 @@ FUNCTIONS = {
     "swimming_equipment": (0xA2750, 0x2B8, "66C7E9C438D7F2F98D6D1412DCF8F45EDE675389E3ED89EBE4EFF5A96B4F9512"),
     "sonic_summoner_consumer": (0x3D8CA0, 0x4FC, "AC81E936D6419B5F36FAC76A3F268B2D96BE133DED79F0D1F6C1BCAEC441DA69"),
     "pilots_helmet_pickup": (0x23E140, 0x370, "35054985E0BD942759167C3C08A4996C5C1F4BE591AAF3969EF58A64CA9A4659"),
+    "count_gold_bolts": (0x11B1B4, 0x110, "3CA16FD9823A5C618EBC4F1A492C84EB5665EAF1A33BC60FA51D7D5AF029F212"),
+    "gold_bolt_pickup": (0x1D9D48, 0xAF0, "D41770E2C45F5787680B623ED92203E20C6CFDFBD71E3894CE7CD5EF7E1278FA"),
+    "gold_bolt_spawn": (0x1DA838, 0x1A8, "B2434603CFE2599B5D79F7E0C288FD966418F0A8800A584A6773D06D48187AE6"),
+    "gold_bolt_world_menu": (0x147044, 0x2AC, "2CBC59D4DE4B512D39AC99F82C5A84EE949EB1DDC3624791A49D0D8A40BA5348"),
+    "save_load_callback": (0xE8CA0, 0x280, "FB8FB3252E14EB33DA1F68D50EEEAC1467D1F645D4AD7F05088BDBAA85DB0E6A"),
 }
 ITEM_NAMES = {10: "Bomb Glove", 11: "Devastator", 13: "Visibomb Gun", 15: "Blaster",
               16: "Pyrocitor", 17: "Mine Glove", 19: "Tesla Claw", 20: "Glove of Doom",
@@ -50,6 +55,9 @@ GADGET_NAMES = {12: 'Swingshot', 22: 'Hydrodisplacer', 26: 'Trespasser', 27: 'Me
                 31: 'Hologuise', 32: 'Gadgetron PDA', 33: 'Map-o-matic', 34: 'Bolt Grabber', 35: 'Persuader'}
 EQUIPMENT_NAMES = {2: 'Heli-Pack', 3: 'Thruster-Pack', 4: 'Hydro-Pack', 5: 'Sonic Summoner',
                    6: 'O2 Mask', 7: "Pilot's Helmet", 28: 'Magneboots', 29: 'Grindboots', 30: 'Hoverboard'}
+WORLD_NAMES = ['Veldin (opening)', 'Novalis', 'Aridia', 'Kerwan', 'Eudora', 'Rilgar', 'Nebula G34',
+               'Umbris', 'Batalia', 'Gaspar', 'Orxon', 'Pokitaru', 'Hoven', 'Gemlik Base', 'Oltanis',
+               'Quartu', 'Kalebo III', "Drek's Fleet", 'Veldin (finale)']
 
 
 def audit_notification(read, saved_ranges):
@@ -237,10 +245,11 @@ def inspect(path):
     gold = extract_gold_upgrades(read, by_id, weapons)
     gadgets = extract_gadgets(read, by_id)
     equipment = extract_equipment(read, by_id)
+    gold_bolts = extract_gold_bolts(read)
     return dict(collection_id='BCES01503', save_id='NPEA00385', executable_version='unknown',
                 binary=dict(file='RC1.ppu.elf', size=ELF_SIZE, sha256=ELF_SHA256),
                 functions=guards, player_records=records, ammo=ammo, weapons=weapons, notification=notification,
-                gold_upgrades=gold, gadgets=gadgets, equipment=equipment,
+                gold_upgrades=gold, gadgets=gadgets, equipment=equipment, gold_bolts=gold_bolts,
                 grant_layout=dict(flag_record=11, acquisition_record=12, acquisition_offset=by_id[12]['offset'],
                                   acquisition_bytes=12, acquisition_empty=255, acquisition_flag=64,
                                   quick_record=13, quick_offset=by_id[13]['offset'], quick_slots=8, quick_empty=0,
@@ -250,6 +259,41 @@ def inspect(path):
                        "Capacities are shipped reference limits, not a live runtime query.",
                        "Record 11 and ownership bytes are not changed by ammo edits.",
                        "Software round trips do not establish gameplay acceptance."])
+
+
+def extract_gold_bolts(read):
+    records, offset = [], 8
+    for index in range(12):
+        address, size, record_id, state = struct.unpack('>IIII', read(0x7269A0 + index * 16, 16))
+        if not address:
+            break
+        if not 0 < size <= 0x8000 or state != 0:
+            raise ValueError('Unexpected world descriptor')
+        records.append(dict(id=record_id, length=size, offset=offset + 8, runtime_address=hex(address)))
+        offset += 8 + ((size + 3) & ~3)
+    if len(records) != 11 or len({item['id'] for item in records}) != 11 or offset + 8 != 0x82A4:
+        raise ValueError('Unexpected world table shape')
+    gold = next(item for item in records if item['id'] == 3003)
+    if (gold['runtime_address'], gold['offset'], gold['length']) != ('0xa0ca34', 0x8024, 4):
+        raise ValueError('Unexpected world gold-bolt record')
+    counts = struct.unpack('>19I', read(0x738608, 76))
+    if counts != (0, 3, 4, 3, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 4, 2, 2, 2, 3):
+        raise ValueError('Unexpected world gold-bolt totals')
+    # Straight-line flag store: load slot from actor PVARs, load current world,
+    # form 0xA0CA34 + slot + world*4 and stbx literal 1. No calls in this block.
+    words = (0x3C600097, 0x80BE0000, 0x3C8000A1, 0x38C00001, 0x3084CA34, 0x80639C70,
+             0x7C852014, 0x5463103A, 0x78840020, 0x7C6307B4, 0x7CC419AE)
+    if read(0x1DA110, 44) != struct.pack('>11I', *words):
+        raise ValueError('Gold-bolt pickup flag store changed')
+    fields = [dict(world=world, planet=WORLD_NAMES[world], slot=slot,
+                   offset=0x1544 + world * 0x82A4 + gold['offset'] + slot)
+              for world, count in enumerate(counts) for slot in range(count)]
+    return dict(world_start=0x1544, world_stride=0x82A4, world_count=20, world_records=records,
+                record_id=3003, flag_offset=gold['offset'], counts_address='0x738608', counts=list(counts), fields=fields,
+                pickup_store=dict(start='0x1da110', instruction_count=11, value=1,
+                                  address_rule='0xA0CA34 + world * 4 + slot'),
+                name_reference='https://github.com/bordplate/rac1-randomizer/blob/main/table_id.lua',
+                slot_verification_tool='Tools/PS3/RatchetAndClank1/NPEA00385/unknown/Inspect-Rc1GoldPickups.py')
 
 
 def extract_equipment(read, records):

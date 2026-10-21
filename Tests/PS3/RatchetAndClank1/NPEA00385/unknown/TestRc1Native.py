@@ -12,9 +12,57 @@ spec = importlib.util.spec_from_file_location('rc1_native', TOOL)
 native = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(native)
 ELF = None
+ARCHIVE = None
 
 
 class NativeChecks(unittest.TestCase):
+    def test_world_gold_bolt_map_and_exact_pickup_store(self):
+        gold = native.inspect(ELF)['gold_bolts']
+        self.assertEqual((0x1544, 0x82A4, 20, 3003, 0x8024),
+                         (gold['world_start'], gold['world_stride'], gold['world_count'], gold['record_id'], gold['flag_offset']))
+        self.assertEqual(11, len(gold['world_records']))
+        self.assertEqual(40, len(gold['fields']))
+        self.assertEqual(40, sum(gold['counts']))
+        for field in gold['fields']:
+            self.assertIn(field['world'], range(1, 19))
+            self.assertLess(field['slot'], gold['counts'][field['world']])
+            self.assertEqual(0x1544 + field['world'] * 0x82A4 + 0x8024 + field['slot'], field['offset'])
+        self.assertEqual(11, gold['pickup_store']['instruction_count'])
+        raw = ELF.read_bytes()
+        for address in (0x73860C, 0x1DA138, 0x7269C4):
+            def changed(current, length):
+                result = bytearray(raw[current - 0x10000:current - 0x10000 + length])
+                if current <= address < current + length:
+                    result[address - current] ^= 1
+                return bytes(result)
+            with self.subTest(address=hex(address)), self.assertRaises(ValueError):
+                native.extract_gold_bolts(changed)
+
+    def test_gold_pickup_asset_reader_rejects_bad_pvars_and_slot_ids(self):
+        import struct
+        tool = TOOL.with_name('Inspect-Rc1GoldPickups.py')
+        spec = importlib.util.spec_from_file_location('gold_assets_test', tool)
+        assets = importlib.util.module_from_spec(spec); spec.loader.exec_module(assets)
+        data = bytearray(0x400)
+        for offset, value in ((0x44, 0x100), (0x54, 0x200), (0x58, 0x220), (0x100, 1),
+                              (0x128, 1134), (0x168, 0), (0x200, 0), (0x204, 0x80), (0x220, 3)):
+            struct.pack_into('>I', data, offset, value)
+        self.assertEqual([3], assets.slots(data))
+        for offset, value in ((0x220, 4), (0x168, 0xFFFFFFFF), (0x204, 4), (0x100, 0xFFFFFF)):
+            broken = bytearray(data); struct.pack_into('>I', broken, offset, value)
+            with self.subTest(offset=hex(offset)), self.assertRaises(ValueError): assets.slots(broken)
+
+    def test_reference_gold_pickups_match_all_native_slots(self):
+        if ARCHIVE is None:
+            self.skipTest('Pass --archive to verify all nineteen local PAL gameplay assets')
+        tool = TOOL.with_name('Inspect-Rc1GoldPickups.py')
+        spec = importlib.util.spec_from_file_location('gold_assets_reference', tool)
+        assets = importlib.util.module_from_spec(spec); spec.loader.exec_module(assets)
+        report = assets.inspect(ARCHIVE, ELF)
+        self.assertEqual(40, report['total'])
+        self.assertEqual(19, len(report['worlds']))
+        self.assertEqual('45375F8EF6150FDECE8680102D2E2A6B6CC5C289F24630AD9F812389A811616C', report['archive']['sha256'])
+
     def test_map_reproduces(self):
         expected = json.loads((ROOT / 'docs/PS3/RatchetAndClank1/NPEA00385/unknown/maps/NativeMap.json').read_text(encoding='utf-8'))
         self.assertEqual(expected, native.inspect(ELF))
@@ -190,6 +238,8 @@ class NativeChecks(unittest.TestCase):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--elf', required=True, type=Path)
+    parser.add_argument('--archive', type=Path)
     args, remaining = parser.parse_known_args()
     ELF = args.elf
+    ARCHIVE = args.archive
     unittest.main(argv=[__file__, *remaining])
