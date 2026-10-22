@@ -65,7 +65,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!supported) return;
                 category = new ComboBox { Name = "Rc1EditCategory", DropDownStyle = ComboBoxStyle.DropDownList,
                     Dock = DockStyle.Fill, Margin = new Padding(4, 4, 4, 12), Sorted = true };
-                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select", "Gold upgrades", "Gadget unlocks", "Equipment unlocks", "Gold bolts" });
+                category.Items.AddRange(new object[] { "Weapon ammo", "Weapon unlocks", "Quick select", "Gold upgrades", "Gadget unlocks", "Equipment unlocks", "Gold bolts", "Nanotech" });
                 category.SelectedIndexChanged += (_, _) => ShowCategory();
                 AddRow(category); layout.SetColumnSpan(category, 3);
                 var refill = new Button { Name = "Rc1RefillAmmo", Text = "Refill owned weapon ammo", AutoSize = true,
@@ -222,6 +222,32 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                         "The game counts four gold bolts spent per upgrade; the available balance may fall to zero.",
                     Margin = new Padding(4, 10, 4, 8) };
                 AddPageRow("Gold upgrades", goldHint); layout.SetColumnSpan(goldHint, 3);
+                var nanotech = Rc1NanotechEditing.State(data, region);
+                if (nanotech != null)
+                {
+                    var healthLabel = new Label { Text = "Health capacity", AutoSize = true, Dock = DockStyle.Fill,
+                        TextAlign = ContentAlignment.MiddleLeft, Margin = new Padding(4, 6, 4, 6) };
+                    var tiers = new ComboBox { Name = "Rc1Edit_" + Rc1NanotechEditing.Key, DropDownStyle = ComboBoxStyle.DropDownList,
+                        Dock = DockStyle.Fill, Margin = new Padding(4, 6, 4, 6) };
+                    tiers.Items.AddRange(Rc1Research.NanotechTiers.Where(tier => tier.Level >= nanotech.Level).Cast<object>().ToArray());
+                    tiers.SelectedItem = nanotech;
+                    tiers.Enabled = nanotech.Level < 2;
+                    var selectedTier = nanotech;
+                    tiers.SelectedIndexChanged += (_, _) =>
+                    {
+                        if (loading || tiers.SelectedItem is not Rc1NanotechTier tier) return;
+                        if (TryStage(Rc1NanotechEditing.Key, tier.Level, nanotech.Level)) { selectedTier = tier; return; }
+                        loading = true; tiers.SelectedItem = selectedTier; loading = false;
+                    };
+                    AddPageRow("Nanotech", healthLabel, tiers); layout.SetColumnSpan(tiers, 2);
+                }
+                var nanotechHint = new Label { AutoSize = true, Dock = DockStyle.Fill,
+                    Text = nanotech == null ? "Nanotech editing requires consistent upgrade flags and health capacity (4, 5 or 8)." :
+                        "Premium Nanotech raises health capacity to 5. Ultra raises it to 8 and includes Premium.\r\n" +
+                        "Choose an upgrade, then Save All. Installed upgrades cannot be removed.\r\n" +
+                        "Upgrades do not spend bolts or award trophies.",
+                    Margin = new Padding(4, 10, 4, 8) };
+                AddPageRow("Nanotech", nanotechHint); layout.SetColumnSpan(nanotechHint, 3);
                 int slotIndex = 0;
                 foreach (var field in Rc1WeaponEditing.QuickSelect(data, region))
                 {

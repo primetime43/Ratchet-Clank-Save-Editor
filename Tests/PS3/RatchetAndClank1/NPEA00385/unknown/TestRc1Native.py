@@ -16,6 +16,26 @@ ARCHIVE = None
 
 
 class NativeChecks(unittest.TestCase):
+    def test_nanotech_roots_prerequisites_and_health_stores(self):
+        report, raw = native.inspect(ELF), ELF.read_bytes()
+        health = report['nanotech']
+        self.assertEqual((5, 0x5C, 0x5D, 19, 0x254),
+                         (health['flag_record'], health['premium_offset'], health['ultra_offset'], health['capacity_record'], health['capacity_offset']))
+        self.assertEqual([4, 5, 8], [tier['capacity'] for tier in health['tiers']])
+        self.assertFalse(health['runtime_health_serialized'])
+        records = {item['id']: item for item in report['player_records']}
+        for address in (0x24A8C8, 0x24A91C, 0x24A934, 0x24A9D8, 0x24AA04, 0xE716C, 0x7F2E0, 0x13E970):
+            def changed(current, length):
+                result = bytearray(raw[current - 0x10000:current - 0x10000 + length])
+                if current <= address < current + length:
+                    result[address - current] ^= 1
+                return bytes(result)
+            with self.subTest(address=hex(address)), self.assertRaises(ValueError):
+                native.extract_nanotech(changed, records)
+        altered = {key: dict(value) for key, value in records.items()}; altered[19]['length'] = 8
+        with self.assertRaises(ValueError):
+            native.extract_nanotech(lambda address, length: raw[address - 0x10000:address - 0x10000 + length], altered)
+
     def test_world_gold_bolt_map_and_exact_pickup_store(self):
         gold = native.inspect(ELF)['gold_bolts']
         self.assertEqual((0x1544, 0x82A4, 20, 3003, 0x8024),

@@ -177,6 +177,26 @@
       "address": "0xe8ca0",
       "size": 640,
       "sha256": "FB8FB3252E14EB33DA1F68D50EEEAC1467D1F645D4AD7F05088BDBAA85DB0E6A"
+    },
+    "nanotech_vendor": {
+      "address": "0x24a600",
+      "size": 1300,
+      "sha256": "E716A3D6334D2804DCFFCAD34ABB1C1CD61E56B905C77FB4C7424A6B311FE28D"
+    },
+    "initialize_player_health": {
+      "address": "0x7f018",
+      "size": 868,
+      "sha256": "02F7658F28285E7DCE29E78A718F08362AB0D6E42E2F18BD586C2B41C87DD0A7"
+    },
+    "new_game_plus": {
+      "address": "0x13e634",
+      "size": 1044,
+      "sha256": "CE405C620FDA5DC05CAAF3E90672A9EC4DB3E8C2DFD05D14AA398DC92E33CB74"
+    },
+    "initialize_save_state": {
+      "address": "0xe7154",
+      "size": 1252,
+      "sha256": "840388262AF5BB6DECBBA01109A07B0C4880D2E24DCE002DDE485555413EF325"
     }
   },
   "player_records": [
@@ -1616,6 +1636,33 @@
     },
     "name_reference": "https://github.com/bordplate/rac1-randomizer/blob/main/table_id.lua",
     "slot_verification_tool": "Tools/PS3/RatchetAndClank1/NPEA00385/unknown/Inspect-Rc1GoldPickups.py"
+  },
+  "nanotech": {
+    "flag_record": 5,
+    "premium_offset": 92,
+    "ultra_offset": 93,
+    "capacity_record": 19,
+    "capacity_offset": 596,
+    "tiers": [
+      {
+        "level": 0,
+        "name": "Standard",
+        "capacity": 4
+      },
+      {
+        "level": 1,
+        "name": "Premium Nanotech",
+        "capacity": 5
+      },
+      {
+        "level": 2,
+        "name": "Ultra Nanotech",
+        "capacity": 8
+      }
+    ],
+    "runtime_health": "0x96bf88",
+    "runtime_health_serialized": false,
+    "rule": "Add-only canonical tiers; Ultra includes Premium. Preserve currency, progression and trophy state."
   },
   "grant_layout": {
     "flag_record": 11,

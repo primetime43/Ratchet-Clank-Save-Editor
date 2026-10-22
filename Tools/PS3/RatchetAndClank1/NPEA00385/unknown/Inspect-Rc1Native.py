@@ -46,6 +46,10 @@ FUNCTIONS = {
     "gold_bolt_spawn": (0x1DA838, 0x1A8, "B2434603CFE2599B5D79F7E0C288FD966418F0A8800A584A6773D06D48187AE6"),
     "gold_bolt_world_menu": (0x147044, 0x2AC, "2CBC59D4DE4B512D39AC99F82C5A84EE949EB1DDC3624791A49D0D8A40BA5348"),
     "save_load_callback": (0xE8CA0, 0x280, "FB8FB3252E14EB33DA1F68D50EEEAC1467D1F645D4AD7F05088BDBAA85DB0E6A"),
+    "nanotech_vendor": (0x24A600, 0x514, "E716A3D6334D2804DCFFCAD34ABB1C1CD61E56B905C77FB4C7424A6B311FE28D"),
+    "initialize_player_health": (0x7F018, 0x364, "02F7658F28285E7DCE29E78A718F08362AB0D6E42E2F18BD586C2B41C87DD0A7"),
+    "new_game_plus": (0x13E634, 0x414, "CE405C620FDA5DC05CAAF3E90672A9EC4DB3E8C2DFD05D14AA398DC92E33CB74"),
+    "initialize_save_state": (0xE7154, 0x4E4, "840388262AF5BB6DECBBA01109A07B0C4880D2E24DCE002DDE485555413EF325"),
 }
 ITEM_NAMES = {10: "Bomb Glove", 11: "Devastator", 13: "Visibomb Gun", 15: "Blaster",
               16: "Pyrocitor", 17: "Mine Glove", 19: "Tesla Claw", 20: "Glove of Doom",
@@ -250,6 +254,7 @@ def inspect(path):
                 binary=dict(file='RC1.ppu.elf', size=ELF_SIZE, sha256=ELF_SHA256),
                 functions=guards, player_records=records, ammo=ammo, weapons=weapons, notification=notification,
                 gold_upgrades=gold, gadgets=gadgets, equipment=equipment, gold_bolts=gold_bolts,
+                nanotech=extract_nanotech(read, by_id),
                 grant_layout=dict(flag_record=11, acquisition_record=12, acquisition_offset=by_id[12]['offset'],
                                   acquisition_bytes=12, acquisition_empty=255, acquisition_flag=64,
                                   quick_record=13, quick_offset=by_id[13]['offset'], quick_slots=8, quick_empty=0,
@@ -259,6 +264,34 @@ def inspect(path):
                        "Capacities are shipped reference limits, not a live runtime query.",
                        "Record 11 and ownership bytes are not changed by ammo edits.",
                        "Software round trips do not establish gameplay acceptance."])
+
+
+def extract_nanotech(read, records):
+    flags, health = records[5], records[19]
+    if (flags['runtime_address'], flags['length']) != ('0x96bff0', 128) or (
+            health['runtime_address'], health['length']) != ('0x71fb28', 4):
+        raise ValueError('Unexpected nanotech serialization roots')
+    # Independently bind key instructions to the separately fingerprinted traces.
+    # The vendor's later Cell presentation block is not part of these stores.
+    expected = {0x24A8B8: 0x3F800097, 0x24A8BC: 0x339CBFF0,
+                0x24A8C0: 0x887C0004, 0x24A8C8: 0x408200A4,
+                0x24A910: 0x3BA00001, 0x24A91C: 0x9BBC0004,
+                0x24A930: 0x3CA00072, 0x24A934: 0x38C00005, 0x24A940: 0x90C5FB28,
+                0x24A96C: 0x887C0005, 0x24A9C8: 0x38800001, 0x24A9D8: 0x989C0005,
+                0x24AA00: 0x3CA00072, 0x24AA04: 0x38C00008, 0x24AA10: 0x90C5FB28,
+                0xE7164: 0x3C600072, 0xE716C: 0x3A000004, 0xE7190: 0x9203FB28,
+                0x7F2E0: 0x8063FB28, 0x7F2E8: 0x907F22A8,
+                0x13E948: 0x38A00005, 0x13E94C: 0x987F0004, 0x13E950: 0x90A4FB28,
+                0x13E968: 0x38A00008, 0x13E96C: 0x987F0005, 0x13E970: 0x90A4FB28}
+    if any(struct.unpack('>I', read(address, 4))[0] != word for address, word in expected.items()):
+        raise ValueError('Nanotech ownership, prerequisite or capacity instructions changed')
+    return dict(flag_record=5, premium_offset=flags['offset'] + 4, ultra_offset=flags['offset'] + 5,
+                capacity_record=19, capacity_offset=health['offset'],
+                tiers=[dict(level=0, name='Standard', capacity=4),
+                       dict(level=1, name='Premium Nanotech', capacity=5),
+                       dict(level=2, name='Ultra Nanotech', capacity=8)],
+                runtime_health='0x96bf88', runtime_health_serialized=False,
+                rule='Add-only canonical tiers; Ultra includes Premium. Preserve currency, progression and trophy state.')
 
 
 def extract_gold_bolts(read):

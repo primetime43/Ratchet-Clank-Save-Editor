@@ -28,11 +28,13 @@ The world descriptor table starts at `0x7269A0`. The writer's first prefix word 
 
 | Player record | Runtime root | Save payload | Meaning established here |
 | --- | --- | --- | --- |
+| 5, 128 bytes | `0x96BFF0` | `0x58` | Mixed player flags; bytes4/5 are Premium/Ultra Nanotech |
 | 9, 148 bytes | `0x96C0AC` | `0x11C` | 37 ammo words, indexed by item ID |
 | 10, 37 bytes | `0x96C140` | `0x1B8` | Item ownership/unlock bytes |
 | 11, 37 bytes | `0x96C165` | `0x1E8` | Per-item flag set by ordinary grants; not a gold-upgrade flag |
 | 12, 12 bytes | `0x71FB2C` | `0x218` | Acquisition list: six-bit item IDs with high flags; `FF` is empty |
 | 13, 32 bytes | `0x96C1DC` | `0x22C` | Eight stored quick-select IDs; zero is empty |
+| 19, 4 bytes | `0x71FB28` | `0x254` | Saved health capacity: 4, 5 or 8 for canonical nanotech tiers |
 | 30, 40 bytes | `0x969CA8` | `0x11D8` | Per-item gold-upgrade flags; ten combat items are supported |
 
 The writer copies the descriptor payloads without normalizing neighboring records or alignment bytes. The reader accepts differing lengths with a bounded copy and a status result; the editor deliberately requires the exact observed table shape for new mapped edits.
@@ -251,6 +253,35 @@ Complete batches support moves and swaps. A new nonzero assignment is rejected i
 ## Validation added for grants and slots
 
 The RC1 runner verifies each grant's exact changed bytes, all 15 supported IDs, starting ammo, acquisition-list bounds, canonical flag guards, no-op preservation, deterministic batches, atomic slot moves/swaps, preserved unknown IDs, hidden invalid input, staging/cancellation, game reloads and failed-encryption preservation. The supplied save was tested on disposable copies with a Blaster/slot edit and with all three notification-path grants; independently expected bytes matched exactly, reopening retained ownership and R.Y.N.O. ammo, and the source folder remained unchanged. Native tests also reject untraced stores/calls and serialized-address overlap. This remains software validation rather than gameplay acceptance.
+
+## Nanotech upgrades
+
+The native nanotech vendor at `0x24A600` establishes two ownership flags inside player record5 and a linked health-capacity word in record19:
+
+| State | Premium byte `0x5C` | Ultra byte `0x5D` | BE32 capacity `0x254` |
+| --- | --- | --- | --- |
+| Standard | 0 | 0 | 4 |
+| Premium Nanotech | 1 | 0 | 5 |
+| Ultra Nanotech | 1 | 1 | 8 |
+
+Record5 is rooted at runtime `0x96BFF0`, with Premium at `+4` and Ultra at `+5`. Record19 serializes runtime `0x71FB28`. These offsets come from the native player descriptor table, independently of inventory item IDs; nanotech flags do not use the weapon/gadget ownership bank.
+
+| Native address | Evidence |
+| --- | --- |
+| `0xE7154` | Initial save state sets capacity4 and clears the mixed player flag bank |
+| `0x24A8C0..0x24A8C8` | Premium flag test branches to the Ultra path only when Premium is already installed |
+| `0x24A91C`, `0x24A934..0x24A944` | Premium purchase stores flag1, capacity5 and runtime health5; the separate payment subtracts4,000 ordinary bolts |
+| `0x24A96C`, `0x24A9D8`, `0x24AA04..0x24AA14` | Ultra tests its flag, stores flag1 and sets capacity/runtime health8; payment subtracts30,000 bolts |
+| `0x7F018`, especially `0x7F2E0..0x7F2E8` | Player initialization copies saved capacity into runtime current health at `0x96BF88` |
+| `0x13E634`, especially `0x13E940..0x13E970` | New Game Plus retains both upgrade flags and restores capacity5/8 accordingly |
+
+Current runtime health at `0x96BF88` is outside the serialized record ranges. The editor promotes the persistent tier and relies on normal save loading to initialize health. It does not expose an arbitrary current-health number.
+
+The extractor adds four complete function fingerprints and checks the key instruction words for prerequisite branching, ownership stores, capacity values and initializer/New Game Plus consumers. Ghidra truncates the vendor's later presentation path at Cell instructions (`0x24AA8C`/`0x24AAAC`); both upgrade flag/capacity stores precede those instructions. Vendor payment, presentation and `0x112DC0` trophy calls are not simulated by the editor.
+
+**Nanotech** uses one staged tier selection, with only the current tier and higher tiers offered. Direct Standard→Ultra installs Premium too. Returning to the original tier cancels the pending change; committed upgrades cannot be removed. Only canonical flag/capacity tuples above enable the selector. Unknown flags, Ultra without Premium, mismatched capacity, unsupported keys, fractional/out-of-range tiers and downgrades reject the detached batch. An unavailable selector does not disable other mapped fields.
+
+Writes affect only the two nanotech bytes and saved capacity, plus the existing player checksum sentinel during Save All. Currency, ammo, inventory, selection, world blocks, progression and trophy state are preserved unless separately edited. Regression checks cover every permitted promotion, exact byte preservation, repeated no-ops, mixed-category composition, invalid states, UI staging/cancellation, hidden invalid ammo, backups, reopening and subsequent currency saves. A disposable copy of the supplied RPCS3 save successfully round-tripped Ultra with an independently expected byte comparison. In-game acceptance remains untested.
 
 ## Reproduction
 

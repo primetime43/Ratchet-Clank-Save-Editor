@@ -41,6 +41,7 @@ internal static partial class Program
                 Rc1GadgetChecks(root);
                 Rc1EquipmentChecks(root);
                 Rc1GoldBoltChecks(root);
+                Rc1NanotechChecks(root);
                 if (args.Length == 2)
                 {
                     Rc1ReferenceChecks(root, Path.GetFullPath(args[1]));
@@ -51,6 +52,7 @@ internal static partial class Program
                     Rc1GadgetReferenceChecks(root, Path.GetFullPath(args[1]));
                     Rc1EquipmentReferenceChecks(root, Path.GetFullPath(args[1]));
                     Rc1GoldBoltReferenceChecks(root, Path.GetFullPath(args[1]));
+                    Rc1NanotechReferenceChecks(root, Path.GetFullPath(args[1]));
                 }
                 Console.WriteLine($"All {passed} RC1 checks passed.");
                 return 0;
@@ -328,6 +330,7 @@ internal static partial class Program
             Rc1GadgetChecks(root);
             Rc1EquipmentChecks(root);
             Rc1GoldBoltChecks(root);
+            Rc1NanotechChecks(root);
             NativeCryptoChecks(root);
             Check("Missing, unsupported, truncated and invalid saves are rejected", () =>
             {

@@ -28,7 +28,7 @@ Backups are created on opening and before saving, under `Backups` beside the exe
 
 Support is limited to listed PS3 formats and [regions](docs/PS3/Compatibility.md). It does not cover every save field or guarantee in-game acceptance for every release.
 
-PS3 Trilogy/Collection saves use the individual game's save ID. [RC1 support](docs/PS3/RatchetAndClank1/README.md) includes bolt editing, ammo edits/refills, all 15 combat grants, nine gadget/passive grants, nine equipment grants, forty gold-bolt collection flags, ten gold upgrades and eight-slot quick-select editing for the European `NPEA00385` layout, alongside read-only inspection.
+PS3 Trilogy/Collection saves use the individual game's save ID. [RC1 support](docs/PS3/RatchetAndClank1/README.md) includes bolt editing, ammo edits/refills, all 15 combat grants, nine gadget/passive grants, nine equipment grants, Premium/Ultra Nanotech, forty gold-bolt collection flags, ten gold upgrades and eight-slot quick-select editing for the European `NPEA00385` layout, alongside read-only inspection.
 
 ## Documentation
 

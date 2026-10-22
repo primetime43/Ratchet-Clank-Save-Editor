@@ -20,6 +20,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
         public static IReadOnlyList<Rc1EquipmentDefinition> Equipment { get; }
         public static IReadOnlyList<Rc1GoldBoltField> GoldBolts { get; }
         public static IReadOnlyList<Rc1RecordDefinition> WorldRecords { get; }
+        public static Rc1NanotechDefinition Nanotech { get; }
+        public static IReadOnlyList<Rc1NanotechTier> NanotechTiers { get; }
 
         static Rc1Research()
         {
@@ -58,6 +60,12 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             WorldRecords = Array.AsReadOnly(goldBolts.GetProperty("world_records").EnumerateArray().Select(item =>
                 new Rc1RecordDefinition(item.GetProperty("id").GetUInt32(), item.GetProperty("length").GetInt32(),
                     item.GetProperty("offset").GetInt32())).ToArray());
+            var nanotech = document.RootElement.GetProperty("nanotech");
+            Nanotech = new Rc1NanotechDefinition(nanotech.GetProperty("premium_offset").GetInt32(),
+                nanotech.GetProperty("ultra_offset").GetInt32(), nanotech.GetProperty("capacity_offset").GetInt32());
+            NanotechTiers = Array.AsReadOnly(nanotech.GetProperty("tiers").EnumerateArray().Select(item =>
+                new Rc1NanotechTier(item.GetProperty("level").GetInt32(), item.GetProperty("name").GetString(),
+                    item.GetProperty("capacity").GetInt32())).ToArray());
         }
     }
 
@@ -98,7 +106,8 @@ namespace primetime43_Ratchet_Clank_Save_Editor
                 if (!fields.TryGetValue(edit.Key, out var field))
                 {
                     if (Rc1WeaponEditing.IsKey(edit.Key) || Rc1GoldUpgradeEditing.IsKey(edit.Key) ||
-                        Rc1GadgetEditing.IsKey(edit.Key) || Rc1EquipmentEditing.IsKey(edit.Key) || Rc1GoldBoltEditing.IsKey(edit.Key)) continue;
+                        Rc1GadgetEditing.IsKey(edit.Key) || Rc1EquipmentEditing.IsKey(edit.Key) || Rc1GoldBoltEditing.IsKey(edit.Key) ||
+                        Rc1NanotechEditing.IsKey(edit.Key)) continue;
                     throw new InvalidDataException("Unsupported RC1 edit or unavailable owned weapon: " + edit.Key);
                 }
                 if (edit.Value != decimal.Truncate(edit.Value) || edit.Value < 0 || edit.Value > field.Maximum)
@@ -112,6 +121,7 @@ namespace primetime43_Ratchet_Clank_Save_Editor
             Rc1GadgetEditing.Apply(original, result, region, edits);
             Rc1EquipmentEditing.Apply(original, result, region, edits);
             Rc1GoldUpgradeEditing.Apply(original, result, region, edits);
+            Rc1NanotechEditing.Apply(original, result, region, edits);
             return Rc1GoldBoltEditing.Apply(original, result, region, edits);
         }
     }

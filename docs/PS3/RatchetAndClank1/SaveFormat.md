@@ -60,6 +60,8 @@ Separate **Weapon unlocks** and **Quick select** categories support all 15 comba
 
 **Gold bolts** adds collection flags for all forty shipped pickups. World record3003 has four reserved bytes at block-relative `0x8024`, indexed by world and pickup slot. All twenty world block layouts must match. Only the forty indices confirmed against the native count table and actual PAL level assets are writable; unused/unknown flags are retained. Individual collection, planet filtering and collect-all requests share staged previews of collected/spent/available gold bolts. Changed world checksum words receive `FFFFFFFF`; no-op/untouched world words remain unchanged. See [gold-bolt evidence](NPEA00385/unknown/ElfMap.md#gold-bolt-collection).
 
+**Nanotech** adds Premium and Ultra upgrades by changing record5 bytes4/5 (save `0x5C`/`0x5D`) and the BE32 capacity in record19 (`0x254`). Supported states are `(0,0,4)`, `(1,0,5)` and `(1,1,8)`; upgrades are add-only and direct Ultra also installs Premium. Unknown/inconsistent states are preserved and disable only nanotech editing. Current runtime health is initialized from this saved capacity and is not independently serialized. Currency, world data, progression and trophy state are preserved. See [nanotech evidence](NPEA00385/unknown/ElfMap.md#nanotech-upgrades).
+
 ## Reproducible validation
 
 ```powershell
@@ -67,6 +69,6 @@ dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release -- --rc1
 dotnet run --project Tests/SaveEditor.RegressionTests.csproj -c Release -- --rc1-save "path/to/NPEA00385_RC1_SAVEDATA_A"
 ```
 
-The first command checks framing, alignment preservation, snapshot isolation, malformed data, ammo limits/ownership, grant allowlists/coupled writes, acquisition-list bounds, slot moves/swaps, hidden invalid input, game switching, backups and later currency saves retaining committed mapped edits. The second also copies a supplied plaintext RPCS3 save into disposable directories, verifies backups, edits bolts, refills eligible ammo, grants a Blaster and moves slots, reopens the results, compares every byte against independently expected changes and verifies the source remains unchanged. No user save files are committed to the repository.
+The first command checks framing, alignment preservation, snapshot isolation, malformed data, ammo limits/ownership, grant allowlists/coupled writes, nanotech prerequisites/capacity, acquisition-list bounds, slot moves/swaps, hidden invalid input, game switching, backups and later currency saves retaining committed mapped edits. The second also copies a supplied plaintext RPCS3 save into disposable directories, verifies backups, exercises all mapped categories including Ultra Nanotech, reopens the results, compares every byte against independently expected changes and verifies the source remains unchanged. No user save files are committed to the repository.
 
 Before enabling more edits, validate each field with controlled before/after gameplay saves or the matching RC1 executable. In-game reload testing is still needed for acceptance of edited output.
